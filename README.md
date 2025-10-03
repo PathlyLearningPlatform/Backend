@@ -1,6 +1,21 @@
 # Project Goal
 
-This project aims to make learning more effective and enjoyable by tackling the biggest killers of progress: lack of structure, fading motivation, and creeping self-doubt. With clear guidance and well-designed learning paths, students can focus on growing instead of wondering where to start.
+This project aims to make learning more effective and enjoyable by tackling the biggest killers of progress: fading motivation, self-doubt and not knowing current progress. With clear guidance and well-designed learning paths, students can focus on growing instead of wondering where to start.
+
+### 1. Fading Motivation
+
+**The problem:** Learning often feels endless, and without clear milestones, it’s easy to burn out.  
+**Our solution:** Structured learning paths with visible checkpoints that make progress feel rewarding and keep momentum alive.
+
+### 2. Self-Doubt
+
+**The problem:** Without feedback or guidance, learners question whether they’re on the right track.  
+**Our solution:** A guided path that shows exactly what to learn next, removing uncertainty and building confidence step by step.
+
+### 3. Not Knowing Current Progress
+
+**The problem:** Students lose track of how much they’ve achieved and what remains, which makes progress invisible.  
+**Our solution:** Transparent progress tracking that highlights completed milestones and what’s ahead, so learners always see their growth.
 
 Research confirms the problem:
 
