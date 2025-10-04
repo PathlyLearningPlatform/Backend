@@ -48,3 +48,7 @@ With progress made visible and measurable, students can track their journey in a
 
 No more guessing where to start or what to learn next.  
 Each path is **structured and personalized**, combining resources, exercises, and projects that fit the learner’s needs while keeping progress consistent and rewarding.
+
+# If You Are a Developer
+
+If you are a developer, please make yourself familiar with [github strategy](./git.md) and [collaboration rules](./collaboration.md)
