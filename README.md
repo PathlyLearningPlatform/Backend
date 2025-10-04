@@ -1,33 +1,50 @@
-# Project Goal
+# Problems And How This Project Solves Them
 
-This project aims to make learning more effective and enjoyable by tackling the biggest killers of progress: fading motivation, self-doubt and not knowing current progress. With clear guidance and well-designed learning paths, students can focus on growing instead of wondering where to start.
+The project aims to improve learning efficiency and satisfaction by tackling the following problems.
 
-### 1. Fading Motivation
+![diagram summarizing problems and solutions](./docs/diagrams/problems-and-solutions.excalidraw.png)
 
-**The problem:** Learning often feels endless, and without clear milestones, it’s easy to burn out.  
-**Our solution:** Structured learning paths with visible checkpoints that make progress feel rewarding and keep momentum alive.
+## Not Knowing Where To Start
 
-### 2. Self-Doubt
+Having too few resources leaves students lost. Having too many leaves them overwhelmed. The result is the same: motivation drops and learning stalls. Jumping from site to site or binge-watching tutorials leads straight into _tutorial hell_ — more time searching, less time learning.
 
-**The problem:** Without feedback or guidance, learners question whether they’re on the right track.  
-**Our solution:** A guided path that shows exactly what to learn next, removing uncertainty and building confidence step by step.
+Our solution is **structured learning paths** that combine the essentials: carefully chosen resources, practical exercises, and real projects. Each path is personalized, so every student can find a clear, confidence-building starting point.
 
-### 3. Not Knowing Current Progress
+## Uncertainty Whether You Are On The Right Path
 
-**The problem:** Students lose track of how much they’ve achieved and what remains, which makes progress invisible.  
-**Our solution:** Transparent progress tracking that highlights completed milestones and what’s ahead, so learners always see their growth.
+It’s easy to wonder: _Am I learning the wrong way? Is there a better path I should be following?_  
+This kind of self-doubt is paralyzing — instead of moving forward, students second-guess every step.
 
-Research confirms the problem:
+Our solution is **guided learning paths** with exercises and instant feedback. By testing skills along the way and offering clear insights, learners gain confidence that they’re heading in the right direction.
 
-- [Perseverance in action and its importance for students' academic achievements](https://przegladpedagogiczny.ukw.edu.pl/archive/article/597/wytrwalosc-w-dzialaniu-i-jej-znaczenie-dla-osiagniec-szkolnych-uczniow/)
-- [Polish adaptation of the Scale for examining the motivation of students in primary school](https://pfp.ukw.edu.pl/archive/article/479/nikel_polska_adaptacja_skali_do_badania_motywacji_uczniow/)
-- [Teenagers’ motivation dips in high school. But research shows supportive teachers can really help](https://www.unsw.edu.au/newsroom/news/2024/08/teenagers--motivation-dips-in-high-school--but-research-shows-su)
+## Not Knowing Current Progress And How To Measure It
+
+Learning without knowing where you stand is like walking in the dark — frustrating and demotivating.  
+When progress is invisible, students feel lost and start questioning if their effort is even paying off.
+
+Our solution is **advanced progress tracking** with detailed statistics and insights. Learners can clearly see what they’ve achieved, how far they’ve come, and what’s next. By making growth measurable and visible, the platform helps students stay motivated and confident in their journey.
 
 # What This Project Is
 
-A learning platform designed to guide students step by step through new skills and knowledge. Instead of wandering through scattered resources, learners follow curated paths that give clarity, consistency, and momentum.
+This project is a learning platform designed to guide students step by step as they build new skills.  
+It provides **structured learning paths** with clear guidance, and **advanced progress tracking** with meaningful statistics and insights.  
+Instead of wandering through scattered resources, learners follow a clear path, measure their growth, and stay motivated.
 
 # Core Features
 
-- **Learning paths** – structured, goal-oriented routes through complex subjects
-- **Progress tracking** – detailed insights that help learners see how far they’ve come and what’s next
+## Progress Tracking
+
+![Advanced learning dashboard](./docs/diagrams/progress-tracking.png)
+
+_<a href="http://www.freepik.com">Dashboard image designed by Freepik</a>_
+
+Stay motivated with **advanced tracking tools** that go beyond a simple progress bar.  
+Learners get access to a **customizable dashboard** that displays detailed statistics, highlights milestones, and provides clear insights into what’s been mastered and what comes next.  
+With progress made visible and measurable, students can track their journey in a way that fits their own learning style.
+
+## Tailored Learning Paths
+
+![Learning paths](./docs/diagrams/learning-paths.excalidraw.png)
+
+No more guessing where to start or what to learn next.  
+Each path is **structured and personalized**, combining resources, exercises, and projects that fit the learner’s needs while keeping progress consistent and rewarding.
