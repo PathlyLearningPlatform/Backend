@@ -1,3 +1,22 @@
+# Who Is This Project For
+
+This project is for students and learners who want learn in a structured way with ability to measure their progress precisely as well as for teachers and field experts who want to contribute to creating structured learning experiences for learners and students all over the world.
+
+## Students
+
+Students in all education levels as well as learners can use and will benefit from this learning platform. They will be given access to features that will help them learn faster and better such as:
+
+- learning paths,
+- progress tracking
+
+and even more in the future.
+
+## Teachers And Field Experts
+
+Teachers and field experts from all over the world will be able to help students and learners achieve educational goals by creating structured learning paths, which will include necessary knowledge as well as tools to assess progress and test skills. They will be provided with:
+
+- toolkit for creating such learning paths with the help of AI.
+
 # Problems And How This Project Solves Them
 
 The project aims to improve learning efficiency and satisfaction by tackling the following problems.
@@ -15,7 +34,7 @@ Our solution is **structured learning paths** that combine the essentials: caref
 It’s easy to wonder: _Am I learning the wrong way? Is there a better path I should be following?_  
 This kind of self-doubt is paralyzing — instead of moving forward, students second-guess every step.
 
-Our solution is **guided learning paths** with exercises and instant feedback. By testing skills along the way and offering clear insights, learners gain confidence that they’re heading in the right direction.
+Our solution are exercises, tests and projects. By testing skills, receiving feedback along the way and offering clear insights, learners gain confidence that they’re heading in the right direction.
 
 ## Not Knowing Current Progress And How To Measure It
 
@@ -26,15 +45,17 @@ Our solution is **advanced progress tracking** with detailed statistics and insi
 
 # What This Project Is
 
-This project is a learning platform designed to guide students step by step as they build new skills.  
-It provides **structured learning paths** with clear guidance, and **advanced progress tracking** with meaningful statistics and insights.  
-Instead of wandering through scattered resources, learners follow a clear path, measure their growth, and stay motivated.
+This project is a learning platform designed to guide students and learners step by step as they build new skills as well as the way for teachers and field experts help students and learners all over the world learn, by sharing and testing knowledge in a structured way.
+
+It provides **structured learning paths** with clear guidance, **advanced progress tracking** with meaningful statistics and insights and **toolkit for creating learning paths** with the help of AI.
+
+Instead of wandering through scattered resources, learners follow a clear path, measure their growth, and stay motivated and teachers and field experts get a way to help students and learnes achieve their educational goals.
 
 # Core Features
 
 ## Progress Tracking
 
-![Advanced learning dashboard](./docs/diagrams/progress-tracking.png)
+![Progress dashboard](./docs/diagrams/progress-tracking.png)
 
 _<a href="http://www.freepik.com">Dashboard image designed by Freepik</a>_
 
@@ -42,7 +63,7 @@ Stay motivated with **advanced tracking tools** that go beyond a simple progress
 Learners get access to a **customizable dashboard** that displays detailed statistics, highlights milestones, and provides clear insights into what’s been mastered and what comes next.  
 With progress made visible and measurable, students can track their journey in a way that fits their own learning style.
 
-## Tailored Learning Paths
+## Learning Paths
 
 ![Learning paths](./docs/diagrams/learning-paths.excalidraw.png)
 
