@@ -13,13 +13,13 @@ and even more in the future.
 
 ## Teachers And Field Experts
 
-Teachers and field experts from all over the world will be able to help students and learners achieve educational goals by creating structured learning paths, which will include necessary knowledge as well as tools to assess progress and test skills. They will be provided with:
+Teachers and field experts from all over the world will be able to help students and learners achieve their educational goals by creating structured learning paths, which will include necessary knowledge as well as tools to assess progress and test skills. They will be provided with:
 
 - toolkit for creating such learning paths with the help of AI.
 
 # Problems And How This Project Solves Them
 
-The project aims to improve learning efficiency and satisfaction by tackling the following problems.
+The project aims to improve learning efficiency and perseverance by tackling the most common problems when it comes to learning.
 
 ![diagram summarizing problems and solutions](./docs/diagrams/problems-and-solutions.excalidraw.png)
 
@@ -34,11 +34,11 @@ Our solution is **structured learning paths** that combine the essentials: caref
 It’s easy to wonder: _Am I learning the wrong way? Is there a better path I should be following?_  
 This kind of self-doubt is paralyzing — instead of moving forward, students second-guess every step.
 
-Our solution are exercises, tests and projects. By testing skills, receiving feedback along the way and offering clear insights, learners gain confidence that they’re heading in the right direction.
+Our solution are exercises, tests and projects. By assessing progress, testing skills, receiving feedback along the way and offering clear insights, learners gain confidence that they’re heading in the right direction and that they actually learned something.
 
 ## Not Knowing Current Progress And How To Measure It
 
-Learning without knowing where you stand is like walking in the dark — frustrating and demotivating.  
+Learning without knowing where you stand is like walking in the dark — frustrating and demotivating.
 When progress is invisible, students feel lost and start questioning if their effort is even paying off.
 
 Our solution is **advanced progress tracking** with detailed statistics and insights. Learners can clearly see what they’ve achieved, how far they’ve come, and what’s next. By making growth measurable and visible, the platform helps students stay motivated and confident in their journey.
@@ -53,6 +53,15 @@ Instead of wandering through scattered resources, learners follow a clear path, 
 
 # Core Features
 
+## Learning Paths
+
+![Learning paths](./docs/diagrams/learning-paths.excalidraw.png)
+
+No more guessing where to start or what to learn next.  
+Each path is **structured and personalized**, combining resources, exercises, and projects that fit the learner’s needs while keeping progress consistent and rewarding.
+
+[More details about this feature](./docs/idea/features/paths.md)
+
 ## Progress Tracking
 
 ![Progress dashboard](./docs/diagrams/progress-tracking.png)
@@ -63,12 +72,13 @@ Stay motivated with **advanced tracking tools** that go beyond a simple progress
 Learners get access to a **customizable dashboard** that displays detailed statistics, highlights milestones, and provides clear insights into what’s been mastered and what comes next.  
 With progress made visible and measurable, students can track their journey in a way that fits their own learning style.
 
-## Learning Paths
+[More details about this feature](./docs/idea/features/progress-tracking.md)
 
-![Learning paths](./docs/diagrams/learning-paths.excalidraw.png)
+## Toolkit For Creating Learning Paths With The Help Of AI
 
-No more guessing where to start or what to learn next.  
-Each path is **structured and personalized**, combining resources, exercises, and projects that fit the learner’s needs while keeping progress consistent and rewarding.
+Support students and learners on all education levels by creating learning paths, which will help them learn faster, better and with confidence. Make education easier and more accessible by sharing your knowledge in a structured way.
+
+[More details about this feature](./docs/idea/features/path-creation.md)
 
 # If You Are a Developer
 
