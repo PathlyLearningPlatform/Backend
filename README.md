@@ -19,7 +19,7 @@ Teachers and field experts from all over the world will be able to help students
 
 # Problems And How This Project Solves Them
 
-The project aims to improve learning efficiency and perseverance by tackling the most common problems when it comes to learning.
+The project aims to improve learning quality, perseverance and motivation by tackling the most common problems when it comes to learning.
 
 ![diagram summarizing problems and solutions](./docs/diagrams/problems-and-solutions.excalidraw.png)
 
@@ -29,14 +29,14 @@ Having too few resources leaves students lost. Having too many leaves them overw
 
 Our solution is **structured learning paths** that combine the essentials: carefully chosen resources, practical exercises, and real projects. Each path is personalized, so every student can find a clear, confidence-building starting point.
 
-## Uncertainty Whether You Are On The Right Path
+## Doubt And Lack Of Confidence
 
 It’s easy to wonder: _Am I learning the wrong way? Is there a better path I should be following?_  
 This kind of self-doubt is paralyzing — instead of moving forward, students second-guess every step.
 
 Our solution are exercises, tests and projects. By assessing progress, testing skills, receiving feedback along the way and offering clear insights, learners gain confidence that they’re heading in the right direction and that they actually learned something.
 
-## Not Knowing Current Progress And How To Measure It
+## Lack Of Progress Assessment Capabilities
 
 Learning without knowing where you stand is like walking in the dark — frustrating and demotivating.
 When progress is invisible, students feel lost and start questioning if their effort is even paying off.
@@ -60,7 +60,7 @@ Instead of wandering through scattered resources, learners follow a clear path, 
 No more guessing where to start or what to learn next.  
 Each path is **structured and personalized**, combining resources, exercises, and projects that fit the learner’s needs while keeping progress consistent and rewarding.
 
-[More details about this feature](./docs/idea/features/paths.md)
+[More details about this feature](./docs/idea/features.md#learning-paths)
 
 ## Progress Tracking
 
@@ -72,13 +72,13 @@ Stay motivated with **advanced tracking tools** that go beyond a simple progress
 Learners get access to a **customizable dashboard** that displays detailed statistics, highlights milestones, and provides clear insights into what’s been mastered and what comes next.  
 With progress made visible and measurable, students can track their journey in a way that fits their own learning style.
 
-[More details about this feature](./docs/idea/features/progress-tracking.md)
+[More details about this feature](./docs/idea/features.md#progress-tracking)
 
 ## Toolkit For Creating Learning Paths With The Help Of AI
 
 Support students and learners on all education levels by creating learning paths, which will help them learn faster, better and with confidence. Make education easier and more accessible by sharing your knowledge in a structured way.
 
-[More details about this feature](./docs/idea/features/path-creation.md)
+[More details about this feature](./docs/idea/features.md#toolkit-for-creating-learning-paths)
 
 # If You Are a Developer
 
