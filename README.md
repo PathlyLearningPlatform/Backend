@@ -2,9 +2,9 @@
 
 This project is for students and learners who want learn in a structured way with ability to measure their progress precisely as well as for teachers and field experts who want to contribute to creating structured learning experiences for learners and students all over the world.
 
-## Students
+## Learners
 
-Students in all education levels as well as learners can use and will benefit from this learning platform. They will be given access to features that will help them learn faster and better such as:
+Learners in all education levels can use and will benefit from this project. They will be given access to features that will help them learn faster and better such as:
 
 - learning paths,
 - progress tracking
@@ -13,7 +13,7 @@ and even more in the future.
 
 ## Teachers And Field Experts
 
-Teachers and field experts from all over the world will be able to help students and learners achieve their educational goals by creating structured learning paths, which will include necessary knowledge as well as tools to assess progress and test skills. They will be provided with:
+Teachers and field experts from all over the world will be able to help learners achieve their educational goals by creating structured learning paths, which will include necessary knowledge as well as tools to assess progress and test skills. They will be provided with:
 
 - toolkit for creating such learning paths with the help of AI.
 
@@ -25,11 +25,11 @@ The project aims to improve learning quality, perseverance and motivation by tac
 
 ## Not Knowing Where To Start
 
-Having too few resources leaves students lost. Having too many leaves them overwhelmed. The result is the same: motivation drops and learning stalls. Jumping from site to site or binge-watching tutorials leads straight into _tutorial hell_ — more time searching, less time learning.
+Having too few resources leaves learners lost. Having too many leaves them overwhelmed. The result is the same: motivation drops and learning stalls. Jumping from site to site or binge-watching tutorials leads straight into _tutorial hell_ — more time searching, less time learning.
 
 Our solution is **structured learning paths** that combine the essentials: carefully chosen resources, practical exercises, and real projects. Each path is personalized, so every student can find a clear, confidence-building starting point.
 
-## Doubt And Lack Of Confidence
+## Doubt And Low Confidence
 
 It’s easy to wonder: _Am I learning the wrong way? Is there a better path I should be following?_  
 This kind of self-doubt is paralyzing — instead of moving forward, students second-guess every step.
@@ -58,7 +58,7 @@ Instead of wandering through scattered resources, learners follow a clear path, 
 ![Learning paths](./docs/diagrams/learning-paths.excalidraw.png)
 
 No more guessing where to start or what to learn next.  
-Each path is **structured and personalized**, combining resources, exercises, and projects that fit the learner’s needs while keeping progress consistent and rewarding.
+Each path is **structured and personalized**, combining theory, exercises, quizes, and projects that fit the learner’s needs while keeping progress consistent and rewarding.
 
 [More details about this feature](./docs/idea/features.md#learning-paths)
 
@@ -76,7 +76,7 @@ With progress made visible and measurable, students can track their journey in a
 
 ## Toolkit For Creating Learning Paths With The Help Of AI
 
-Support students and learners on all education levels by creating learning paths, which will help them learn faster, better and with confidence. Make education easier and more accessible by sharing your knowledge in a structured way.
+Support learners on all education levels by creating learning paths, which will help them learn faster, better and with confidence. Make education easier and more accessible by sharing your knowledge in a structured way.
 
 [More details about this feature](./docs/idea/features.md#toolkit-for-creating-learning-paths)
 
