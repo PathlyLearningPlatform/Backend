@@ -2,7 +2,7 @@
 
 ## Motivation And It's Role
 
-Motivation is the feeling that makes us want to pursue certain goal. It plays important role in achieving educational goals, because it initiates the process. It usually comes first accompanied by consideration of various desires, consts and consequences. It helps to form the intention, which is crucial because that's what will be implemented in the future. A lot of students lack motivation. It's absence can be caused by internal factors like **character traits** or **mental state**, but also exrernal factors like **not knowing where to start (because of resources abundance)** or **encountered difficulties**.
+Motivation is the feeling that makes us want to pursue certain goal. It plays important role in achieving educational goals, because it initiates the process. It usually comes first accompanied by consideration of various desires, consts and consequences. It helps to form the intention, which is crucial because that's what will be implemented in the future. A lot of students experience low or lack of motivation. It's absence can be caused by internal factors like **character traits** or **mental state**, but also exrernal factors like **not knowing where to start (because of resources abundance)** or **encountered difficulties**.
 
 ## Solution
 
@@ -14,15 +14,18 @@ Our solution for this problem is [**structured learning**](./solutions.md#struct
 
 [See summary and visualization of above research paper](https://notebooklm.google.com/notebook/c43560e2-d194-49d3-bd48-a86f50b5d760).
 
-# Low Or Lack Of Perseverance
+# Low Perseverance
 
 ## Perseverance And It's Role
 
-Motivation initiates the process or pursuing certain goal, but it is not enough. To complete the process **perseverance** is crucial. Perseverance is will to follow an objective regardless of feelings or difficulties on the way. Perseverance is not innate, it is ability that anyone can develop. It requires effort, but is essential for achieving all types of goals. Low perseverance can be directly caused by low or lack of **volitional control** and by **state orientation (focusing on past failures and difficulties, overthinking)**. In order to succed learner must be **action-oriented (focus on tasks that have to be done)** and develop volitional control which helps in avoiding distractions and pursuing the goal.
+Motivation initiates the process of pursuing certain goal, but it is not enough to achieve it. To complete it, **perseverance** is crucial. Perseverance is will to follow an objective regardless of feelings or difficulties on the way. Perseverance is not innate, it is ability that anyone can develop. It requires effort, but is essential for achieving all types of goals. Low perseverance can be directly caused by low **volitional control** and by **state orientation (focusing on past failures and difficulties, overthinking)**. In order to succed learner must be **action-oriented (focus on tasks that have to be done)** and develop volitional control which helps in avoiding distractions and pursuing the goal.
 
 ## Solution
 
-Our solutions for this problem are [**skill tests and feedback**](./solutions.md#skill-tests-and-feedback).
+Our solutions for these problems are:
+
+- [**projects, exercises and feedback**](./solutions.md#skill-tests-and-feedback),
+- [**structured learning**](./solutions.md#structured-learning)
 
 ## Research
 
@@ -34,11 +37,11 @@ Our solutions for this problem are [**skill tests and feedback**](./solutions.md
 
 ## Progress Measurement And It's Role
 
-Progress assessment plays crucial role in improving **learning quality**, fostering self-belief and improcing performance. It allows students to visualize their effort and get a clear understanding of what they have already learned and what is next. It is also useful tool for setting new goals and priorities. It provides guidance. Without measurement progress can feel invisible and this can lead to drop in motivation and perseverance. **Feedback** that comes from progress assessment clearly shows strengths and weaknesses that need to be worked on and thus improving learning quality.
+Progress assessment plays crucial role in improving **learning quality**, fostering self-belief and improving performance. It allows students to visualize their effort and get a clear understanding of **what they have already learned**, **where they are** and **what is next**. It is also useful tool for setting new goals and priorities. It provides guidance. Without measurement progress can feel invisible and this can lead to drop in motivation and perseverance.
 
 ## Solution
 
-Our solution for this problem is [**advanced progress tracking**](./solutions.md#progress-assessment).
+Our solution for this problem is [**progress tracking**](./solutions.md#progress-assessment).
 
 ## Research
 
