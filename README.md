@@ -21,7 +21,7 @@ Teachers and field experts from all over the world will be able to help learners
 
 The project aims to improve learning quality, perseverance and motivation by tackling the most common problems when it comes to learning.
 
-![diagram summarizing problems and solutions](./docs/diagrams/problems-and-solutions.excalidraw.png)
+![diagram summarizing problems and solutions](./docs/res/diagrams/problems-and-solutions.excalidraw.png)
 
 ## Not Knowing Where To Start
 
@@ -55,7 +55,7 @@ Instead of wandering through scattered resources, learners follow a clear path, 
 
 ## Learning Paths
 
-![Learning paths](./docs/diagrams/learning-paths.excalidraw.png)
+![Learning paths](./docs/res/diagrams/learning-paths.excalidraw.png)
 
 No more guessing where to start or what to learn next.  
 Each path is **structured and personalized**, combining theory, exercises, quizes, and projects that fit the learner’s needs while keeping progress consistent and rewarding.
@@ -64,7 +64,7 @@ Each path is **structured and personalized**, combining theory, exercises, quize
 
 ## Progress Tracking
 
-![Progress dashboard](./docs/diagrams/progress-tracking.png)
+![Progress dashboard](./docs/res/diagrams/progress-tracking.png)
 
 _<a href="http://www.freepik.com">Dashboard image designed by Freepik</a>_
 
