@@ -11,9 +11,9 @@ Learners in all education levels can use and will benefit from this project. The
 
 and even more in the future.
 
-## Teachers And Field Experts
+## Teachers And Experts
 
-Teachers and field experts from all over the world will be able to help learners achieve their educational goals by creating structured learning paths, which will include necessary knowledge as well as tools to assess progress and test skills. They will be provided with:
+Teachers and experts from all over the world will be able to help learners achieve their educational goals by creating structured learning paths, which will include necessary knowledge as well as tools to assess progress and test skills. They will be provided with:
 
 - toolkit for creating such learning paths with the help of AI.
 
