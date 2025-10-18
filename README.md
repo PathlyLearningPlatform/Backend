@@ -1,38 +1,38 @@
+# What This Project Is
+
+This project is a learning platform designed to guide learners step by step as they build new skills as well as the way for teachers and experts help them learn by creating structured learning paths.
+
+It provides **structured learning paths** with clear guidance, **advanced progress tracking** with meaningful statistics and insights and **toolkit for creating learning paths** with the help of AI.
+
+Instead of wandering through scattered resources, learners follow a clear path, measure their growth, stay motivated and experts get a way to help them achieve their educational goals.
+
 # Who Is This Project For
 
-This project is for students and learners who want learn in a structured way with ability to measure their progress precisely as well as for teachers and field experts who want to contribute to creating structured learning experiences for learners and students all over the world.
+This project is for learners who struggle with learning due to excess of resources, finding motivation or maintaining perseverance as well as for those who simply want to improve their learning quality and satisfaction by following clear learning path, receiving meaningful feedback along the way and having clear view of what they have learned, where they are and what is next. This project is also for teachers and experts who want to contribute to improving learning quality by creating structured learning paths.
 
 ## Learners
 
-Learners in all education levels can use and will benefit from this project. They will be given access to features that will help them learn faster and better such as:
-
-- learning paths,
-- progress tracking
-
-and even more in the future.
+The project will have set of features particularly useful for learners in all education levels such as learning paths and progress tracking. These features will make learning easier and more satisfying by providing structure and clear overview of progress.
 
 ## Teachers And Experts
 
-Teachers and experts from all over the world will be able to help learners achieve their educational goals by creating structured learning paths, which will include necessary knowledge as well as tools to assess progress and test skills. They will be provided with:
-
-- toolkit for creating such learning paths with the help of AI.
+Teachers and experts will be able to create learning paths easier and faster with the assistance of ai.
 
 # Problems And How This Project Solves Them
 
-The project aims to improve learning quality, perseverance and motivation by tackling the most common problems when it comes to learning.
+This project's goal is to imporve learning quality, efficiency and satisfaction by tackling the most common problems learners face when learning.
 
 ![diagram summarizing problems and solutions](./docs/res/diagrams/problems-and-solutions.excalidraw.png)
 
 ## Not Knowing Where To Start
 
-Having too few resources leaves learners lost. Having too many leaves them overwhelmed. The result is the same: motivation drops and learning stalls. Jumping from site to site or binge-watching tutorials leads straight into _tutorial hell_ — more time searching, less time learning.
+Having too few resources leaves learners lost. Having too many leaves them overwhelmed. The result is the same: motivation drops and learning stalls. Jumping from site to site or watching to many tutorials leads straight into _tutorial hell_ — more time searching than actually learning.
 
-Our solution is **structured learning paths** that combine the essentials: carefully chosen resources, practical exercises, and real projects. Each path is personalized, so every student can find a clear, confidence-building starting point.
+Our solution are _learning paths_ which include necessary theory, resources, practical exercises and projects. Learning paths are focused on learning by doing, so learners not only learn the skill but also how to apply it in real-world domains.
 
 ## Doubt And Low Confidence
 
-It’s easy to wonder: _Am I learning the wrong way? Is there a better path I should be following?_  
-This kind of self-doubt is paralyzing — instead of moving forward, students second-guess every step.
+During the learning process doubt and drop of confidence can be an issue. Learners may start to wonder if they are going the right way or if they are learning correctly. This can badly impact learning quality and experience.
 
 Our solution are exercises, tests and projects. By assessing progress, testing skills, receiving feedback along the way and offering clear insights, learners gain confidence that they’re heading in the right direction and that they actually learned something.
 
@@ -42,14 +42,6 @@ Learning without knowing where you stand is like walking in the dark — frustra
 When progress is invisible, students feel lost and start questioning if their effort is even paying off.
 
 Our solution is **advanced progress tracking** with detailed statistics and insights. Learners can clearly see what they’ve achieved, how far they’ve come, and what’s next. By making growth measurable and visible, the platform helps students stay motivated and confident in their journey.
-
-# What This Project Is
-
-This project is a learning platform designed to guide students and learners step by step as they build new skills as well as the way for teachers and field experts help students and learners all over the world learn, by sharing and testing knowledge in a structured way.
-
-It provides **structured learning paths** with clear guidance, **advanced progress tracking** with meaningful statistics and insights and **toolkit for creating learning paths** with the help of AI.
-
-Instead of wandering through scattered resources, learners follow a clear path, measure their growth, and stay motivated and teachers and field experts get a way to help students and learnes achieve their educational goals.
 
 # Core Features
 

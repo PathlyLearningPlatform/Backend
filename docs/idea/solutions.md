@@ -6,7 +6,7 @@ Structured learning will increase motivation and perseverance by fostering **act
 
 # Projects, Exercises And Feedback
 
-**Projects** and **exercises** will build **confidence** by applying knowledge in real world scenarios and prove that learner is **competent** and is heading in the **right direction**. Leraners will receive **feedback**, that will let them know if exercises and projects meet requirements and give them hints about possible improvements. We will foster **growth mindset**, which will allow learners to **reflect** on their work and **improve**.
+**Projects** and **exercises** will build confidence by applying knowledge in real world scenarios and prove that learner is competent and is heading in the right direction. Leraners will receive **feedback**, that will let them know if exercises and projects meet requirements and give them hints about possible improvements. We will foster **growth mindset**, which will allow learners to **reflect** on their work and improve.
 
 [more on projects, exercises and feedback](./features.md#learning-paths)
 
