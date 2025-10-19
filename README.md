@@ -2,13 +2,13 @@
 
 This project is a learning platform designed to guide learners step by step as they build new skills as well as the way for teachers and experts help them learn by creating structured learning paths.
 
-It provides **structured learning paths** with clear guidance, **advanced progress tracking** with meaningful statistics and insights and **toolkit for creating learning paths** with the help of AI.
+It provides **structured learning paths** with clear guidance, **advanced progress tracking** with meaningful statistics and insights as well as **toolkit for creating learning paths** with the help of AI.
 
 Instead of wandering through scattered resources, learners follow a clear path, measure their growth, stay motivated and experts get a way to help them achieve their educational goals.
 
 # Who Is This Project For
 
-This project is for learners who struggle with learning due to excess of resources, finding motivation or maintaining perseverance as well as for those who simply want to improve their learning quality and satisfaction by following clear learning path, receiving meaningful feedback along the way and having clear view of what they have learned, where they are and what is next. This project is also for teachers and experts who want to contribute to improving learning quality by creating structured learning paths.
+This project is for learners who struggle with learning due to excess of resources, finding motivation or maintaining perseverance as well as for those who want to improve their learning quality and satisfaction by following clear learning path, receiving meaningful feedback along the way and having clear view of what they have learned, where they are and what is next. This project is also useful for teachers and experts who want to contribute to improving learning quality by creating structured learning paths.
 
 ## Learners
 
@@ -20,34 +20,34 @@ Teachers and experts will be able to create learning paths easier and faster wit
 
 # Problems And How This Project Solves Them
 
-This project's goal is to imporve learning quality, efficiency and satisfaction by tackling the most common problems learners face when learning.
+This project's goal is to **improve learning quality, efficiency and satisfaction** by tackling the most common problems learners face when learning.
 
 ![diagram summarizing problems and solutions](./docs/res/diagrams/problems-and-solutions.excalidraw.png)
 
 ## Not Knowing Where To Start
 
-Having too few resources leaves learners lost. Having too many leaves them overwhelmed. The result is the same: motivation drops and learning stalls. Jumping from site to site or watching to many tutorials leads straight into _tutorial hell_ — more time searching than actually learning.
+Having too few resources leaves learners lost. Having too many leaves them overwhelmed. The result is the same: motivation drops and learning stalls. Jumping from site to site or watching to many tutorials leads straight into **tutorial hell** (more time searching than actually learning).
 
-Our solution are _learning paths_ which include necessary theory, resources, practical exercises and projects. Learning paths are focused on learning by doing, so learners not only learn the skill but also how to apply it in real-world domains.
+Our solution are **learning paths** which include necessary **theory**, **practical exercises**, **quizes** and **projects**. Learning paths are focused on learning by doing, so learners not only learn the skill but also how to apply it in real-world domains.
 
 ## Doubt And Low Confidence
 
-During the learning process doubt and drop of confidence can be an issue. Learners may start to wonder if they are going the right way or if they are learning correctly. This can badly impact learning quality and experience.
+During the learning process doubt and drop of confidence can be an issue. Learners may start to wonder if they are going the right way or if they are learning correctly. This can negatively impact learning quality and experience by slowing down progress.
 
-Our solution are exercises, tests and projects. By assessing progress, testing skills, receiving feedback along the way and offering clear insights, learners gain confidence that they’re heading in the right direction and that they actually learned something.
+Our solution are **practical exercises**, **quizes** and **projects**. By testing skills and receiving feedback along the way, learners become confident in their skills and can use them in real world.
 
 ## Lack Of Progress Assessment Capabilities
 
 Learning without knowing where you stand is like walking in the dark — frustrating and demotivating.
 When progress is invisible, students feel lost and start questioning if their effort is even paying off.
 
-Our solution is **advanced progress tracking** with detailed statistics and insights. Learners can clearly see what they’ve achieved, how far they’ve come, and what’s next. By making growth measurable and visible, the platform helps students stay motivated and confident in their journey.
+Our solution is **advanced progress tracking** with detailed statistics and insights. Learners can clearly see **what they’ve learned**, **where they are**, and **what’s next**. By making growth measurable and visible, the platform helps students stay motivated and confident in their journey.
 
 # Core Features
 
 ## Learning Paths
 
-![Learning paths](./docs/res/diagrams/learning-paths.excalidraw.png)
+![Learning paths](./docs/res/diagrams/features/learning-paths.excalidraw.png)
 
 No more guessing where to start or what to learn next.  
 Each path is **structured and personalized**, combining theory, exercises, quizes, and projects that fit the learner’s needs while keeping progress consistent and rewarding.
@@ -56,7 +56,7 @@ Each path is **structured and personalized**, combining theory, exercises, quize
 
 ## Progress Tracking
 
-![Progress dashboard](./docs/res/diagrams/progress-tracking.png)
+![Progress dashboard](./docs/res/diagrams/features/progress-tracking.png)
 
 _<a href="http://www.freepik.com">Dashboard image designed by Freepik</a>_
 
