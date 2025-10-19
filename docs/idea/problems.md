@@ -2,7 +2,7 @@
 
 ## Motivation And It's Role
 
-Motivation is the feeling that makes us want to pursue certain goal. It plays important role in achieving educational goals, because it initiates the process. It usually comes first accompanied by consideration of various desires, consts and consequences. It helps to form the intention, which is crucial because that's what will be implemented in the future. A lot of students experience low or lack of motivation. It's absence can be caused by internal factors like **character traits** or **mental state**, but also exrernal factors like **not knowing where to start (because of resources abundance)** or **encountered difficulties**.
+Motivation is the feeling that makes us want to pursue certain goal. It plays important role in achieving educational goals, because it initiates the process. It usually comes first accompanied by consideration of various desires, costs and consequences. It helps to form the intention, which is crucial because that's what will be implemented in the future. A lot of students experience low or lack of motivation. It's absence can be caused by internal factors like **character traits** or **mental state**, but also exrernal factors like **not knowing where to start** or **encountered difficulties**.
 
 ## Solution
 
@@ -18,7 +18,7 @@ Our solution for this problem is [**structured learning**](./solutions.md#struct
 
 ## Perseverance And It's Role
 
-Motivation initiates the process of pursuing certain goal, but it is not enough to achieve it. To complete it, **perseverance** is crucial. Perseverance is will to follow an objective regardless of feelings or difficulties on the way. Perseverance is not innate, it is ability that anyone can develop. It requires effort, but is essential for achieving all types of goals. Low perseverance can be directly caused by low **volitional control** and by **state orientation (focusing on past failures and difficulties, overthinking)**. In order to succed learner must be **action-oriented (focus on tasks that have to be done)** and develop volitional control which helps in avoiding distractions and pursuing the goal.
+Motivation initiates the process of pursuing certain goal, but it is not enough to achieve it. To complete it, **perseverance** is crucial. Perseverance is will to follow an objective regardless of feelings or difficulties on the way. Perseverance is not innate, it is ability that anyone can develop. It requires effort, but is essential for achieving all types of goals. Low perseverance can be directly caused by low **volitional control** and by **state orientation** (focusing on past failures, difficulties and overthinking). In order to succed learner must develop **action orientation** (focus on tasks that have to be done) and develop volitional control which helps in avoiding distractions and pursuing the goal.
 
 ## Solution
 
