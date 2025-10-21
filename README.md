@@ -75,3 +75,7 @@ Support learners on all education levels by creating learning paths, which will 
 # If You Are a Developer
 
 If you are a developer, please make yourself familiar with [github strategy](./git.md) and [collaboration rules](./collaboration.md)
+
+# Competitions
+
+All information related to competitions is [here](./competitions/)
