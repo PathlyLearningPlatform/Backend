@@ -1,22 +1,10 @@
 # What This Project Is
 
-This project is a learning platform designed to guide learners step by step as they build new skills and use them in real world, as well as the way for teachers and experts help them learn by creating structured learning paths.
-
-It provides **structured learning paths** with clear guidance, **advanced progress tracking** with meaningful statistics and insights as well as **toolkit for creating learning paths** with the help of AI.
-
-Instead of wandering through scattered resources, learners follow a clear path, measure their growth, stay motivated and experts get a way to help them achieve their educational goals.
+This project is a learning platform designed to guide learners step by step as they build new skills while providing feedback necessary to reflect and improve. It has advanced progress tracking capabilities, which allow learners to see their progress clearly. It is also way for teachers and experts to support education, by creating structured learning paths.
 
 # Who Is This Project For
 
-This project is for learners who struggle with learning due to excess of resources, finding motivation or maintaining perseverance as well as for those who want to improve their learning quality and satisfaction by following clear learning path, receiving meaningful feedback along the way and having clear view of what they have learned, where they are and what is next. This project is also useful for teachers and experts who want to contribute to improving learning quality by creating structured learning paths.
-
-## Learners
-
-The project will have set of features particularly useful for learners in all education levels such as learning paths and progress tracking. These features will make learning easier and more satisfying by providing structure and clear overview of progress.
-
-## Teachers And Experts
-
-Teachers and experts will be able to create learning paths easier and faster with the assistance of ai.
+This project is for learners who struggle with or want to improve their learning quality, efficiency and satisfaction. It is also for teachers and experts who want to improve education level by sharing their knowledge in a structured way. Learnes will be able to use their knowledge in real-world scenarios and receive meaningful feedback. Teachers and experts will be able to create learning paths with the help of AI.
 
 # Problems And How This Project Solves Them
 
