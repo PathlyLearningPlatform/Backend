@@ -1,5 +1,39 @@
 # Learning Paths
 
+![learning paths diagram](/docs/res/diagrams/features/learning-paths.excalidraw.png)
+
+## Overview
+
+Learning paths allow for structured, personalized and guided learning experience. They will be logically divided into sections, which will contain units. Units will contain thoery blocks (text, videos, visualizations), quizzes, exercises and projects. Those features will help learning in deeply understanding given concept and in applying it in real-world scenarios. Paths will also be dynamic by allowing learner to choose beetwen exercises (easier or harder) and choose specific path.
+
+## Sections
+
+Sections are largest block of knowledge in learning paths. They cover broad topics. Sections themselves do not contain any knowledge, they are just for ordering smaller chunks of knowledge which are units.
+
+## Units
+
+Units cover specific topics. They contain theory blocks, quizzes and exercises. It can be said that units are self-contained chunks of knowledge. They may require understanding of other concepts, so it is important to follow them in order.
+
+## Exercises
+
+Exercises are a way of testing if learner understands the concept and can apply it. They are specific tasks with description and expected results. Example exercise: Create an API endpoint which handles order creation.
+
+## Quizzes
+
+Quizzes are fast and fun way for testing theory understanding. They can contain closed questions with answer to choose and open question which requires learner to answer in their own words.
+
+## Projects
+
+Projects are final way to test learner understanding of multiple topics. Although project idea is given, there are no strict requirements or expected outcome. While quizzes and exercises require learner to understand certain concept and knowledge how to apply it, projects force learner to use multiple topics together to build something real. If learner completes the project it means he / she understands given subject very well.
+
 # Progress Tracking
 
-# Toolkit For Creating Learning Paths
+## Overview
+
+## Past, Present And The Future
+
+## Weaknesses
+
+## Learning Recommendations
+
+## Progress Reports
