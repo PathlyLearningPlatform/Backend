@@ -43,9 +43,7 @@ Each path is **structured and personalized**, combining theory, exercises, quize
 
 ## Progress Tracking
 
-![Progress dashboard](./docs/res/diagrams/features/progress-tracking.png)
-
-_<a href="http://www.freepik.com">Dashboard image designed by Freepik</a>_
+![Progress dashboard](./docs/res/diagrams/features/progress-tracking.excalidraw.png)
 
 Stay motivated with **advanced tracking tools** that go beyond a simple progress bar.  
 Learners get access to a **customizable dashboard** that displays detailed statistics, highlights milestones, and provides clear insights into what’s been mastered and what comes next.  
@@ -53,11 +51,9 @@ With progress made visible and measurable, students can track their journey in a
 
 [More details about this feature](./docs/idea/features.md#progress-tracking)
 
-## Toolkit For Creating Learning Paths With The Help Of AI
+# Similar Projects
 
-Support learners on all education levels by creating learning paths, which will help them learn faster, better and with confidence. Make education easier and more accessible by sharing your knowledge in a structured way.
-
-[More details about this feature](./docs/idea/features.md#toolkit-for-creating-learning-paths)
+There are already other platforms which are trying to solve mentioned problems and they are useful, but none of them has everything that Pathly will have. You can read more about it [here](./docs/idea/similar-projects.md).
 
 # If You Are a Developer
 
