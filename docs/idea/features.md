@@ -30,10 +30,20 @@ Projects are final way to test learner understanding of multiple topics. Althoug
 
 ## Overview
 
+Advanced progress tracking which is beyond just a progress bar, will allow learners to get clear overview of their learning process (what they have learned, where they are and what is next). They will be able to identify their strenghts and weaknesses, which will allow them to make better decisions about their learning. Periodical progress reports will prevent stagnation. Advanced progress tracking will maximize learning quality, efficiency and satisfaction through feedback and insights.
+
 ## Past, Present And The Future
+
+Learner should have a clear overview of what they know, where they are and what is next, progress tracking will provide it. Based on the progress insights and learning recommendations will be made.
 
 ## Weaknesses
 
+Learners should be aware of their weaknesses in order to improve better. Our progress tracking will measure performance in exercises and quizzes, time spent learning etc. to provide accurate information on weaknesses and how to improve.
+
 ## Learning Recommendations
 
+Certain topic require understanding of other topics and concepts, everything is connected. Knowledge graph will be built for each learner and based on it, platform will suggest what else to learn or what to deep dive in.
+
 ## Progress Reports
+
+It is important to assess progress periodically to avoid stagnation. The platform will provide learners with detailed progress reports, which will provide information about made progress.
