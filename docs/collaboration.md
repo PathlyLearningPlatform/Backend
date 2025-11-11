@@ -25,6 +25,6 @@ Although project is serious we are trying to use as little different tools as po
 
 # Summary
 
-Here is a helpful diagram that will help understand collaboration rules better.
+Here is a helpful diagram that will help understand collaboration.
 
-![Diagram describing collaboration](./docs/diagrams/collaboration.excalidraw.png)
+![Diagram describing collaboration](./res/diagrams/collaboration.excalidraw.png)

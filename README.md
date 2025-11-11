@@ -1,10 +1,10 @@
 # What This Project Is
 
-This project is a learning platform designed to guide learners step by step as they build new skills while providing feedback necessary to reflect and improve. It has advanced progress tracking capabilities, which allow learners to see their progress clearly. It is also way for teachers and experts to support education, by creating structured learning paths.
+This project is a learning platform designed to guide learners step by step as they build new skills while providing feedback necessary to reflect and improve. It has advanced progress tracking capabilities, which allow learners to see their progress clearly.
 
 # Who Is This Project For
 
-This project is for learners who struggle with or want to improve their learning quality, efficiency and satisfaction. It is also for teachers and experts who want to improve education level by sharing their knowledge in a structured way. Learnes will be able to use their knowledge in real-world scenarios and receive meaningful feedback. Teachers and experts will be able to create learning paths with the help of AI.
+This project is for learners who want to improve their learning quality, efficiency and satisfaction.
 
 # Problems And How This Project Solves Them
 
@@ -57,8 +57,8 @@ There are already other platforms which are trying to solve mentioned problems a
 
 # If You Are a Developer
 
-If you are a developer, please make yourself familiar with [github strategy](./git.md) and [collaboration rules](./collaboration.md)
+If you are a developer, please make yourself familiar with [github strategy](./docs/git.md) and [collaboration rules](./docs/collaboration.md)
 
 # Competitions
 
-All information related to competitions is [here](./competitions/)
+All information related to competitions is [here](./docs/competitions/)
