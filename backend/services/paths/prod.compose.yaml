@@ -1,0 +1,33 @@
+services:
+  paths:
+    build:
+      context: ../../
+      target: prod
+      dockerfile: ./services/paths/Dockerfile
+    env_file:
+      - path: .env
+        required: true
+    depends_on:
+      paths-db:
+        condition: service_healthy
+    healthcheck:
+      test: node ./healthcheck.js
+      timeout: 10s
+      start_period: 15s
+
+  paths-db:
+    build:
+      context: ./database
+    env_file:
+      - path: ./database/.env
+        required: true
+    volumes:
+      - paths-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD', 'pg_isready']
+      timeout: 30s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  paths-db-data:
