@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "rootDir": "./src",
-    "outDir": "./dist",
+    "rootDir": "./gen/ts",
+    "outDir": "./dist/ts",
     "module": "nodenext",
     "target": "esnext",
     "lib": ["esnext"],

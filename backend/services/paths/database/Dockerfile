@@ -1,5 +1,0 @@
-ARG POSTGRES_VERSION=18
-
-FROM postgres:${POSTGRES_VERSION}-alpine
-
-CMD ["postgres"]

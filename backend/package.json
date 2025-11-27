@@ -10,9 +10,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "workspaces": [
-    "libs/ts/common",
     "services/paths",
-    "libs/ts/contracts",
-    "services/api-gateway"
+    "services/api-gateway",
+    "libs/contracts",
+    "libs/ts/common"
   ]
 }

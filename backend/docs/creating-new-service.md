@@ -1,24 +1,15 @@
-# Nestjs
+# Environment
 
-In order to create new nestjs service follow the steps below:
+Each service must have the following env files:
 
-- create directory named `<service-name>` in [../services](../services/)
-- run `nest new --skip-git --strict --directory`
-- run `npm init -w ./services/<service-name>` in the [../](../) directory
-- go to `services/<service-name>` directory
-- remove node_modules and package-lock.json
-- remove baseUrl field from tsconfig and add @app/\* alias which resolves to ./src/\*
-- create jest.config.ts
-- paste jest config from package.json into jest.config.ts
-- remove jest config from package.json
-- add this to jest.config.ts
+- .env.example
+- .env
+- .env.prod
 
-```
-moduleNameMapper: {
-    '^@app/(.*)$': '<rootDir>/$1',
-  },
-```
+.env.example is file with example values for variables and is seen by git.
+.env stores env variables for development and is ignored by git.
+.env.prod stores env variables for production and is ignored by git.
 
-- add Dockerfile
-- add .env and .env.example
-- add `'@typescript-eslint/no-unsafe-call': 'warn'` to eslint config
+# Docker
+
+Each service must run in a docker container and have Dockerfile. If service has additional dependencies like database or cache it should also have compose.yaml, with the service and its crucial dependencies defined. There should also be production version of the file (compose.prod.yaml) which will configure services for production (without bind mounts, using production env files).

@@ -1,8 +1,7 @@
 {
-  "name": "common",
+  "name": "contracts",
   "version": "1.0.0",
   "description": "",
-  "keywords": [],
   "license": "ISC",
   "author": "",
   "type": "commonjs",
