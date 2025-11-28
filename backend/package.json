@@ -7,7 +7,11 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "gen:contracts": "chmod u+x ./scripts/linux/gen-contracts.sh && ./scripts/linux/gen-contracts.sh",
+    "build:libs:ts": "chmod u+x ./scripts/linux/build-ts-libs.sh && ./scripts/linux/build-ts-libs.sh",
+    "start": "chmod u+x ./scripts/linux/start.sh && ./scripts/linux/start.sh",
+    "start:prod": "chmod u+x ./scripts/linux/start-prod.sh && ./scripts/linux/start-prod.sh",
+    "stop": "docker compose down"
   },
   "workspaces": [
     "services/paths",

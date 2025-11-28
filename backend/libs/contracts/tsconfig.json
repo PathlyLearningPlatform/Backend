@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "rootDir": "./gen/ts",
+    "rootDir": "./gen/ts/proto",
     "outDir": "./dist/ts",
     "module": "nodenext",
     "target": "esnext",
