@@ -5,3 +5,6 @@ dist
 # environment
 .env
 .env.prod
+
+# vscode
+.vscode
