@@ -1,0 +1,10 @@
+# nodejs
+node_modules
+dist
+
+# environment
+.env
+.env.prod
+
+# vscode
+.vscode
