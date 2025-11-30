@@ -19,7 +19,10 @@ Every week (if neeeded) there is an online meeting, on which we asses current pr
 
 # Tools We Use
 
-Although project is serious we are trying to use as little different tools as possible to keep everything clear and in one place. As for now, discord and github are used for communication and code respectively.
+Although project is serious we are trying to use as little different tools as possible to keep everything clear and in one place. Tools:
+- github
+- discord
+- trello
 
 **Note**: We are not strictly following agile nor kanban. We are using some of theirs ideas to keep working on the project fun, engaging and avoid unnecessary bloat. Collaboration rules will evolve as the project grows to fit it's needs.
 
