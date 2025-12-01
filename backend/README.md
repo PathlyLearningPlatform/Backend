@@ -47,4 +47,4 @@ In order to run backend in production mode run [start-prod.sh](./scripts/linux/s
 
 # For Developers
 
-If you are a backend developer see [dev guide](./docs/dev-guide.md).
+If you are a backend developer see [dev guide](./docs//dev/dev-guide.md).
