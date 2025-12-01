@@ -1,6 +1,7 @@
 name: pathly-backend
 
 include:
+  - ./infra/auth/prod.compose.yaml
   - ./services/paths/prod.compose.yaml
 
 services:
@@ -14,6 +15,8 @@ services:
       - 4000:80
     depends_on:
       api-gateway:
+        condition: service_healthy
+      auth:
         condition: service_healthy
   api-gateway:
     build:
