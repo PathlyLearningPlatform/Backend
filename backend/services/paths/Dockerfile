@@ -10,6 +10,7 @@ FROM base AS builder
 COPY ./libs/ts/common/package.json ./libs/ts/common/
 COPY ./libs/contracts/package.json ./libs/contracts/
 COPY ./services/paths/package.json ./services/paths/
+COPY --from=ghcr.io/grpc-ecosystem/grpc-health-probe:v0.4.42 /ko-app/grpc-health-probe /bin/grpc_health_probe
 
 # install dependencies required only for the service
 RUN npm ci -w libs/ts/common -w libs/contracts -w services/paths
@@ -58,4 +59,4 @@ USER node
 
 WORKDIR /usr/src/app/services/paths
 
-CMD ["node", "./dist/main.js"]
+CMD ["node", "./dist/src/main.js"]
