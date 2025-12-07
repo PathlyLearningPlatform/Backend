@@ -4,13 +4,14 @@ WORKDIR /usr/src/app
 
 COPY ./package.json ./package-lock.json ./
 
+COPY --from=ghcr.io/grpc-ecosystem/grpc-health-probe:v0.4.42 /ko-app/grpc-health-probe /bin/grpc_health_probe
+
 FROM base AS builder
 
 # copying package.json files to install dependnecies
 COPY ./libs/ts/common/package.json ./libs/ts/common/
 COPY ./libs/contracts/package.json ./libs/contracts/
 COPY ./services/paths/package.json ./services/paths/
-COPY --from=ghcr.io/grpc-ecosystem/grpc-health-probe:v0.4.42 /ko-app/grpc-health-probe /bin/grpc_health_probe
 
 # install dependencies required only for the service
 RUN npm ci -w libs/ts/common -w libs/contracts -w services/paths
@@ -39,8 +40,6 @@ CMD ["npx", "nest", "start", "--watch"]
 FROM base AS prod
 
 ENV NODE_ENV=production
-
-COPY --from=builder /usr/src/app/services/paths/healthcheck.js ./services/paths/
 
 COPY --from=builder /usr/src/app/services/paths/package.json ./services/paths/
 COPY --from=builder /usr/src/app/services/paths/dist ./services/paths/dist/
