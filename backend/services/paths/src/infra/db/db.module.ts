@@ -34,7 +34,7 @@ import * as schema from './schemas';
 		{
 			provide: DiToken.DRIZZLE,
 			useFactory(pool: Pool) {
-				return drizzle(pool, { schema });
+				return drizzle({ client: pool, schema: schema });
 			},
 			inject: [DiToken.PG_POOL],
 		},
@@ -42,4 +42,4 @@ import * as schema from './schemas';
 	],
 	exports: [DiToken.DRIZZLE, DbService],
 })
-export class DbModule { }
+export class DbModule {}
