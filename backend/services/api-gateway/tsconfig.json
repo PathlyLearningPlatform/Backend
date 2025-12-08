@@ -19,6 +19,20 @@
 		"forceConsistentCasingInFileNames": true,
 		"noImplicitAny": false,
 		"strictBindCallApply": false,
-		"noFallthroughCasesInSwitch": false
+		"noFallthroughCasesInSwitch": false,
+		"paths": {
+			"@/*": [
+				"./src/*"
+			],
+			"@domain/*": [
+				"./src/domain/*"
+			],
+			"@app/*": [
+				"./src/app/*"
+			],
+			"@infra/*": [
+				"./src/infra/*"
+			]
+		}
 	}
 }
