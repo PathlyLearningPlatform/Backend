@@ -26,7 +26,7 @@ async function bootstrap() {
 					});
 
 					healthImpl.addToServer(server);
-					healthImpl.setStatus('', 'SERVING')
+					healthImpl.setStatus('', 'SERVING');
 				},
 			},
 			bufferLogs: true,
