@@ -1,6 +1,6 @@
-const port = parseInt(process.env.PORT || '3000')
+const port = parseInt(process.env.PORT || '3000', 10)
 
-if (isNaN(port)) {
+if (Number.isNaN(port)) {
 	throw new Error(`Incorrect port: ${port}`)
 }
 
