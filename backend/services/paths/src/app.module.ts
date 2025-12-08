@@ -32,4 +32,4 @@ import { DbModule } from './infra/db/db.module';
 		},
 	],
 })
-export class AppModule { }
+export class AppModule {}
