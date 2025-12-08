@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 
 import { type Request, type Response } from 'express';
+import { HttpErrorDto } from '../../dtos/http-error.dto.js';
 import { AppLogger } from '../modules/index.js';
 
 @Catch(HttpException)
@@ -30,11 +31,19 @@ export class HttpExceptionFilter implements ExceptionFilter {
       this.appLogger.debug(exception.cause);
     }
 
+    let errRes: HttpErrorDto;
+    const errObj = exception.getResponse();
+
+    if (typeof errObj === 'string') {
+      errRes = new HttpErrorDto(errObj, null)
+    } else if (errObj instanceof HttpErrorDto) {
+      errRes = errObj;
+    } else {
+      errRes = new HttpErrorDto(exception.message, null)
+    }
+
     response
       .status(status)
-      .json({
-        message: exception.message,
-        timestamp: new Date().toISOString()
-      });
+      .json(errRes);
   }
 }
