@@ -6,6 +6,7 @@ import {
   type PipeTransform
 } from '@nestjs/common';
 import { ZodError, ZodType } from 'zod';
+import { HttpErrorDto } from '../../dtos/http-error.dto.js';
 
 @Injectable()
 export class ZodValidationPipe implements PipeTransform {
@@ -32,16 +33,10 @@ export class ZodValidationPipe implements PipeTransform {
           }),
         ];
 
-        throw new BadRequestException({
-          message: err.message,
-          details: validationErrors,
-        });
+        throw new BadRequestException(new HttpErrorDto(err.message, validationErrors));
       }
 
-      throw new BadRequestException({
-        message: 'validation failed',
-        details: null,
-      });
+      throw new BadRequestException(new HttpErrorDto('validation failed', null));
     }
   }
 }

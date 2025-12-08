@@ -1,11 +1,13 @@
+import { status as GrpcStatus } from '@grpc/grpc-js';
 import {
   type ArgumentMetadata,
   Injectable,
   Logger,
   type PipeTransform,
 } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 import { ZodError, ZodType } from 'zod';
-import { GrpcInvalidArgumentException } from '../exceptions/index.js';
+import { GrpcErrorDto } from '../../dtos/grpc-error.dto.js';
 
 @Injectable()
 export class RpcValidationPipe implements PipeTransform {
@@ -22,20 +24,20 @@ export class RpcValidationPipe implements PipeTransform {
       return parsedValue;
     } catch (err) {
       if (err instanceof ZodError) {
-        throw new GrpcInvalidArgumentException('Validation failed', {
-          errors: [
-            ...err.issues.map((issue) => {
-              return {
-                fields: issue.path.length > 0 ? issue.path : null,
-                code: issue.code,
-                message: issue.message,
-              };
-            }),
-          ],
-        });
+        const validationErrors = [
+          ...err.issues.map((issue) => {
+            return {
+              fields: issue.path.length > 0 ? issue.path : null,
+              code: issue.code,
+              message: issue.message,
+            };
+          }),
+        ];
+
+        throw new RpcException(new GrpcErrorDto(err.message, GrpcStatus.INVALID_ARGUMENT, validationErrors))
       }
 
-      throw new GrpcInvalidArgumentException('Validation failed', null);
+      throw new RpcException(new GrpcErrorDto('validation failed', GrpcStatus.INVALID_ARGUMENT));
     }
   }
 }
