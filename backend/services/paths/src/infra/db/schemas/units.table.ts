@@ -1,7 +1,13 @@
-import { integer, pgTable, text, uuid, varchar } from 'drizzle-orm/pg-core';
+import {
+	integer,
+	pgTable,
+	text,
+	unique,
+	uuid,
+	varchar,
+} from 'drizzle-orm/pg-core';
 import { createdAt, updatedAt } from './helpers';
 import { sectionsTable } from './sections.table';
-import { unique } from 'drizzle-orm/pg-core';
 
 export const unitsTable = pgTable(
 	'units',

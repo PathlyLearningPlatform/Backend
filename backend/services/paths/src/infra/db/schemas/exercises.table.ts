@@ -1,6 +1,6 @@
 import { pgEnum, pgTable, text, uuid, varchar } from 'drizzle-orm/pg-core';
-import { itemsTable } from './items.table';
 import { ExerciseDifficultyEnum } from '@/domain/paths/enums';
+import { itemsTable } from './items.table';
 
 export const exerciseDifficultyEnum = pgEnum('exercise_difficulty', [
 	ExerciseDifficultyEnum.EASY,

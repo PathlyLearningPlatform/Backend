@@ -6,7 +6,7 @@ export * from './paths.table';
 export * from './projects.table';
 export * from './questions.table';
 export * from './quizzes.table';
+export * from './relations';
 export * from './sections.table';
 export * from './theory-blocks.table';
 export * from './units.table';
-export * from './relations';

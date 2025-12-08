@@ -1,7 +1,11 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core'
-import { AppLoggerModule, HttpExceptionFilter, HttpRequestInterceptor } from 'common/index.js'
+import {
+	AppLoggerModule,
+	HttpExceptionFilter,
+	HttpRequestInterceptor,
+} from 'common/index.js'
 import { AppController } from './app.controller'
 import { validateConfig } from './infra/config'
 
@@ -24,8 +28,8 @@ import { validateConfig } from './infra/config'
 		{
 			provide: APP_FILTER,
 			useClass: HttpExceptionFilter,
-		}
+		},
 	],
 	controllers: [AppController],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,1 +1,1 @@
-export * from './di-token.enum';
+export * from './di-token.enum'

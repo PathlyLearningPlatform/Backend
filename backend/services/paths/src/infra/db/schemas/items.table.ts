@@ -1,8 +1,7 @@
-import { integer, pgEnum, pgTable, uuid } from 'drizzle-orm/pg-core';
+import { integer, pgEnum, pgTable, unique, uuid } from 'drizzle-orm/pg-core';
+import { ItemTypeEnum } from '@/domain/paths/enums';
 import { createdAt, updatedAt } from './helpers';
 import { lessonsTable } from './lessons.table';
-import { unique } from 'drizzle-orm/pg-core';
-import { ItemTypeEnum } from '@/domain/paths/enums';
 
 export const itemTypeEnum = pgEnum('item_type', [
 	ItemTypeEnum.EXERCISE,

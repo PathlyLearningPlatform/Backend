@@ -1,1 +1,1 @@
-export enum DiToken { }
+export enum DiToken {}
