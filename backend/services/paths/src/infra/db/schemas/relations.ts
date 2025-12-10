@@ -11,7 +11,7 @@ import { sectionsTable } from './sections.table';
 import { theoryBlocksTable } from './theory-blocks.table';
 import { unitsTable } from './units.table';
 
-export const projectsRelations = defineRelations(
+export const relations = defineRelations(
 	{
 		projectsTable,
 		sectionsTable,

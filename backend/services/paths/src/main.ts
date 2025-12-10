@@ -7,6 +7,10 @@ import {
 	protoPath as healthCheckProtoPath,
 } from 'grpc-health-check';
 import { AppModule } from './app.module';
+import { PROTO_COMMON_PACKAGE_NAME } from 'contracts/common/types.js';
+import { Options } from '@grpc/proto-loader';
+import { join } from 'path';
+import { ReflectionService } from '@grpc/reflection';
 
 async function bootstrap() {
 	const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -14,10 +18,11 @@ async function bootstrap() {
 		{
 			transport: Transport.GRPC,
 			options: {
-				package: PROTO_PATHS_V1_PACKAGE_NAME,
+				package: [PROTO_PATHS_V1_PACKAGE_NAME, PROTO_COMMON_PACKAGE_NAME],
 				protoPath: [
 					healthCheckProtoPath,
 					'/usr/src/app/libs/contracts/proto/paths/v1/paths.proto',
+					'/usr/src/app/libs/contracts/proto/common/types.proto',
 				],
 				url: `paths:3000`,
 				onLoadPackageDefinition: (pkg, server) => {
@@ -27,7 +32,16 @@ async function bootstrap() {
 
 					healthImpl.addToServer(server);
 					healthImpl.setStatus('', 'SERVING');
+
+					new ReflectionService(pkg).addToServer(server);
 				},
+				loader: {
+					includeDirs: [
+						'/usr/src/app/libs/contracts/proto',
+						'/usr/src/app/libs/contracts/proto/paths/v1',
+						'/usr/src/app/libs/contracts/proto/common',
+					],
+				} as Options,
 			},
 			bufferLogs: true,
 		},

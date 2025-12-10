@@ -8,6 +8,7 @@ import {
 } from 'common';
 import { validateConfig } from './infra/config';
 import { DbModule } from './infra/db/db.module';
+import { PathsModule } from './infra/paths/paths.module';
 
 @Module({
 	imports: [
@@ -20,6 +21,7 @@ import { DbModule } from './infra/db/db.module';
 		AppLoggerModule.register({
 			isGlobal: true,
 		}),
+		PathsModule,
 	],
 	providers: [
 		{

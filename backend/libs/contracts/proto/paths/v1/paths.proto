@@ -2,9 +2,84 @@ syntax = "proto3";
 
 package proto.paths.v1;
 
-service TestService {
-  rpc Test(TestRequest) returns (TestResponse) {};
+import "common/types.proto";
+
+message Path {
+  string id = 1;
+  string createdAt = 2;
+  string updatedAt = 3;
+  string name = 4;
+  string description = 5;
 }
 
-message TestRequest {}
-message TestResponse {}
+enum PathsOrderByFields {
+  NAME = 0;
+  CREATED_AT = 1;
+  UPDATED_AT = 2;
+}
+
+message FindWhere {
+  optional int32 limit = 1;
+  optional int32 page = 2;
+  optional proto.common.SortType sortType = 3;
+  optional PathsOrderByFields orderBy = 4;
+}
+message FindOneWhere {
+  string id = 1;
+}
+message UpdateWhere {
+  string id = 1;
+}
+message RemoveWhere {
+  string id = 1;
+}
+
+message UpdateFields {
+  optional string name = 1;
+  optional string description = 2;
+}
+
+service PathsService {
+  rpc Find(FindRequest) returns (FindResponse) {};
+  rpc FindOne(FindOneRequest) returns (FindOneResponse) {};
+  rpc Create(CreateRequest) returns (CreateResponse) {};
+  rpc Update(UpdateRequest) returns (UpdateResponse) {};
+  rpc Remove(RemoveRequest) returns (RemoveResponse) {};
+}
+
+message FindRequest {
+  optional FindWhere where = 1;
+}
+message FindResponse {
+  repeated Path paths = 1;
+}
+
+message FindOneRequest {
+  FindOneWhere where = 1;
+}
+message FindOneResponse {
+  Path path = 1;
+}
+
+message CreateRequest {
+  string name = 1;
+  optional string description = 2;
+}
+message CreateResponse {
+  Path path = 1;
+}
+
+message UpdateRequest {
+  UpdateWhere where = 1;
+  optional UpdateFields fields = 2;
+}
+message UpdateResponse {
+  Path path = 1;
+}
+
+message RemoveRequest {
+  RemoveWhere where = 1;
+}
+message RemoveResponse {
+  Path path = 1;
+}

@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package proto.common;
+
+enum SortType {
+  ASC = 0;
+  DESC = 1;
+}

@@ -1,12 +1,11 @@
 import { pgEnum, pgTable, text, uuid, varchar } from 'drizzle-orm/pg-core';
-import { ExerciseDifficultyEnum } from '@/domain/paths/enums';
+import { ExerciseDifficulty } from '@/domain/exercises/enums';
 import { itemsTable } from './items.table';
 
-export const exerciseDifficultyEnum = pgEnum('exercise_difficulty', [
-	ExerciseDifficultyEnum.EASY,
-	ExerciseDifficultyEnum.MEDIUM,
-	ExerciseDifficultyEnum.HARD,
-]);
+export const exerciseDifficultyEnum = pgEnum(
+	'exercise_difficulty',
+	ExerciseDifficulty,
+);
 
 export const exercisesTable = pgTable('exercises', {
 	itemId: uuid()
