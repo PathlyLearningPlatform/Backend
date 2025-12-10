@@ -1,6 +1,6 @@
 import type { Config } from 'jest';
 
-export const config: Config = {
+const config: Config = {
 	moduleFileExtensions: ['js', 'json', 'ts'],
 	rootDir: 'src',
 	testRegex: '.*\\.spec\\.ts$',
@@ -11,6 +11,11 @@ export const config: Config = {
 	coverageDirectory: '../coverage',
 	testEnvironment: 'node',
 	moduleNameMapper: {
-		'^@app/(.*)$': '<rootDir>/$1',
+		'^@app/(.*)$': '<rootDir>/$1/app',
+		'^@domain/(.*)$': '<rootDir>/$1/domain',
+		'^@infra/(.*)$': '<rootDir>/$1/infra',
+		'^@/(.*)$': '<rootDir>/$1',
 	},
 };
+
+export default config;
