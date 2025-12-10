@@ -23,7 +23,7 @@ export class RpcRequestInterceptor implements NestInterceptor {
     this.appLogger.log(
       `incoming rpc request: ${context.getClass().name}.${context.getHandler().name}`
     );
-    this.appLogger.debug('request payload: ', context.switchToRpc().getData());
+    this.appLogger.debug(`request payload: ${JSON.stringify(context.switchToRpc().getData())}`);
 
     return next.handle().pipe(
       tap(() => {

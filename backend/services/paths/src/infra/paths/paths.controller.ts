@@ -5,6 +5,7 @@ import {
 	AppLogger,
 	emptyStringToNull,
 	GrpcErrorDto,
+	GrpcException,
 	nullToEmptyString,
 	RpcValidationPipe,
 	SortType,
@@ -59,7 +60,7 @@ export class PathsController {
 		private readonly removePathUseCase: RemovePathUseCase,
 		@Inject(AppLogger)
 		private readonly appLogger: AppLogger,
-	) {}
+	) { }
 
 	@GrpcMethod('PathsService')
 	async find(
@@ -76,8 +77,9 @@ export class PathsController {
 				paths: paths.map(this.domainToResponseDto),
 			};
 		} catch (err) {
-			throw new RpcException(
+			throw new GrpcException(
 				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				err,
 			);
 		}
 	}
@@ -95,13 +97,14 @@ export class PathsController {
 			return { path: this.domainToResponseDto(path) };
 		} catch (err) {
 			if (err instanceof PathNotFoundException) {
-				throw new RpcException(
+				throw new GrpcException(
 					new GrpcErrorDto('path not found', GrpcStatus.NOT_FOUND),
 				);
 			}
 
-			throw new RpcException(
+			throw new GrpcException(
 				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				err,
 			);
 		}
 	}
@@ -119,8 +122,9 @@ export class PathsController {
 
 			return { path: this.domainToResponseDto(path) };
 		} catch (err) {
-			throw new RpcException(
+			throw new GrpcException(
 				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				err,
 			);
 		}
 	}
@@ -139,13 +143,14 @@ export class PathsController {
 			return { path: this.domainToResponseDto(path) };
 		} catch (err) {
 			if (err instanceof PathNotFoundException) {
-				throw new RpcException(
+				throw new GrpcException(
 					new GrpcErrorDto('path not found', GrpcStatus.NOT_FOUND),
 				);
 			}
 
-			throw new RpcException(
+			throw new GrpcException(
 				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				err,
 			);
 		}
 	}
@@ -166,13 +171,14 @@ export class PathsController {
 			};
 		} catch (err) {
 			if (err instanceof PathNotFoundException) {
-				throw new RpcException(
+				throw new GrpcException(
 					new GrpcErrorDto('path not found', GrpcStatus.NOT_FOUND),
 				);
 			}
 
-			throw new RpcException(
+			throw new GrpcException(
 				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				err,
 			);
 		}
 	}

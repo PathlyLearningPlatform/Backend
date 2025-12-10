@@ -31,7 +31,6 @@ export class HttpRequestInterceptor implements NestInterceptor {
     this.appLogger.log(
       `incoming request: [HTTP ${req.method}] ${req.path}`
     );
-    this.appLogger.debug('request body: ', req.body);
 
     return next.handle().pipe(
       tap(() => {

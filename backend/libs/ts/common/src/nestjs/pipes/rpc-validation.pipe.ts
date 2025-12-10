@@ -19,8 +19,6 @@ export class RpcValidationPipe implements PipeTransform {
     try {
       const parsedValue = this.schema.parse(value);
 
-      this.logger.debug('parsed request body: ', parsedValue);
-
       return parsedValue;
     } catch (err) {
       if (err instanceof ZodError) {
