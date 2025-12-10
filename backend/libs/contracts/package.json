@@ -1,11 +1,11 @@
 {
-  "name": "contracts",
+  "name": "@pathly-backend/contracts",
   "version": "1.0.0",
   "description": "",
   "license": "ISC",
   "author": "",
   "type": "module",
-  "main": "index.js",
+  "main": "dist/ts/index.js",
   "scripts": {
     "build": "tsc",
     "gen": "buf generate"
