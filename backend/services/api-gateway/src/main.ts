@@ -1,6 +1,6 @@
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
-import { AppLogger } from 'common/index.js'
+import { AppLogger } from '@pathly-backend/common'
 import { AppModule } from './app.module'
 import type { AppConfig } from './infra/common/types'
 

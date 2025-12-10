@@ -5,7 +5,7 @@ import {
 	AppLoggerModule,
 	HttpExceptionFilter,
 	HttpRequestInterceptor,
-} from 'common/index.js'
+} from '@pathly-backend/common'
 import { AppController } from './app.controller'
 import { validateConfig } from './infra/config'
 
