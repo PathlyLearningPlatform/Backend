@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DbException, SortType } from 'common/index.js';
+import { DbException, SortType } from '@pathly-backend/common/index.js';
 import { asc, desc, eq } from 'drizzle-orm';
 import type {
 	CreatePathCommand,

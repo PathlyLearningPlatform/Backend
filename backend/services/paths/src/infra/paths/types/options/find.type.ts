@@ -1,4 +1,4 @@
-import type { SortType } from 'common/index.js';
+import type { SortType } from '@pathly-backend/common/index.js';
 import type { PathsOrderByFields } from '@/domain/paths/types';
 
 export type FindPathsOptions = {

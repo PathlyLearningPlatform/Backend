@@ -1,5 +1,5 @@
-import { SortType } from 'contracts/common/types.js';
-import { PathsOrderByFields } from 'contracts/paths/v1/paths.js';
+import { SortType } from '@pathly-backend/contracts/common/types.js';
+import { PathsOrderByFields } from '@pathly-backend/contracts/paths/v1/paths.js';
 import { z } from 'zod';
 
 export const findPathsSchema = z

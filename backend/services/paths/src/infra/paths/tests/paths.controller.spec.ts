@@ -1,0 +1,118 @@
+import { Test } from '@nestjs/testing';
+import { PathsController } from '../paths.controller';
+import { DiToken } from '@/infra/common/enums';
+import { mockedFindUseCase } from './mocks/use-cases.mock';
+import {
+	CreatePathUseCase,
+	FindOnePathUseCase,
+	FindPathsUseCase,
+	RemovePathUseCase,
+	UpdatePathUseCase,
+} from '@/app/paths/use-cases';
+import { mockedPath } from './mocks/paths.mock';
+import { mockedFindPayload } from './mocks/payloads.mock';
+import { FindResponse } from '@pathly-backend/contracts/paths/v1/paths.js';
+import { GrpcErrorDto, GrpcException } from '@pathly-backend/common/index.js';
+import { status as GrpcStatus } from '@grpc/grpc-js';
+
+describe('PathsController', () => {
+	let pathsController: PathsController;
+	let findUseCase: jest.Mocked<FindPathsUseCase>;
+	let findOneUseCase: jest.Mocked<FindOnePathUseCase>;
+	let createUseCase: jest.Mocked<CreatePathUseCase>;
+	let updateUseCase: jest.Mocked<UpdatePathUseCase>;
+	let removeUseCase: jest.Mocked<RemovePathUseCase>;
+
+	beforeEach(async () => {
+		const moduleRef = await Test.createTestingModule({
+			controllers: [PathsController],
+			providers: [
+				{
+					provide: DiToken.FIND_PATHS_USE_CASE,
+					useValue: mockedFindUseCase,
+				},
+				{
+					provide: DiToken.FIND_ONE_PATH_USE_CASE,
+					useValue: mockedFindUseCase,
+				},
+				{
+					provide: DiToken.CREATE_PATH_USE_CASE,
+					useValue: mockedFindUseCase,
+				},
+				{
+					provide: DiToken.UPDATE_PATH_USE_CASE,
+					useValue: mockedFindUseCase,
+				},
+				{
+					provide: DiToken.REMOVE_PATH_USE_CASE,
+					useValue: mockedFindUseCase,
+				},
+			],
+		}).compile();
+
+		pathsController = moduleRef.get(PathsController);
+
+		findUseCase = moduleRef.get(DiToken.FIND_PATHS_USE_CASE);
+		findOneUseCase = moduleRef.get(DiToken.FIND_ONE_PATH_USE_CASE);
+		createUseCase = moduleRef.get(DiToken.CREATE_PATH_USE_CASE);
+		updateUseCase = moduleRef.get(DiToken.UPDATE_PATH_USE_CASE);
+		removeUseCase = moduleRef.get(DiToken.REMOVE_PATH_USE_CASE);
+	});
+
+	describe('find', () => {
+		it('should return FindPathsResponse', async () => {
+			const expectedResult: FindResponse = {
+				paths: [mockedPath],
+			};
+
+			findUseCase.execute.mockResolvedValueOnce([mockedPath]);
+
+			const result = await pathsController.find(mockedFindPayload);
+
+			expect(result).toEqual(expectedResult);
+		});
+
+		it('should throw GrpcException with INTERNAL status', async () => {
+			findUseCase.execute.mockRejectedValueOnce(new Error());
+
+			const promise = pathsController.find(mockedFindPayload);
+
+			await expect(promise).rejects.toMatchObject({
+				constructor: GrpcException,
+				error: {
+					status: GrpcStatus.INTERNAL,
+				},
+			});
+		});
+	});
+
+	describe('findOne', () => {
+		it('should return FindOnePathResponse', async () => {});
+
+		it('should throw GrpcException with NOT_FOUND status', async () => {});
+
+		it('should throw GrpcException with INTERNAL status', async () => {});
+	});
+
+	describe('create', () => {
+		it('should return CreatePathResponse', async () => {});
+
+		it('should throw GrpcException with INTERNAL status', async () => {});
+	});
+
+	describe('update', () => {
+		it('should return UpdatePathResponse', async () => {});
+
+		it('should throw GrpcException with NOT_FOUND status', async () => {});
+
+		it('should throw GrpcException with INTERNAL status', async () => {});
+	});
+
+	describe('remove', () => {
+		it('should return RemovePathResponse', async () => {});
+
+		it('should throw GrpcException with NOT_FOUND status', async () => {});
+
+		it('should throw GrpcException with INTERNAL status', async () => {});
+	});
+});

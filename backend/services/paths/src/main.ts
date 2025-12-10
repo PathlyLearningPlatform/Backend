@@ -1,13 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { type MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { AppLogger } from 'common/index.js';
-import { PROTO_PATHS_V1_PACKAGE_NAME } from 'contracts/paths/v1/paths.js';
+import { AppLogger } from '@pathly-backend/common/index.js';
+import { PROTO_PATHS_V1_PACKAGE_NAME } from '@pathly-backend/contracts/paths/v1/paths.js';
 import {
 	HealthImplementation,
 	protoPath as healthCheckProtoPath,
 } from 'grpc-health-check';
 import { AppModule } from './app.module';
-import { PROTO_COMMON_PACKAGE_NAME } from 'contracts/common/types.js';
+import { PROTO_COMMON_PACKAGE_NAME } from '@pathly-backend/contracts/common/types.js';
 import { Options } from '@grpc/proto-loader';
 import { join } from 'path';
 import { ReflectionService } from '@grpc/reflection';

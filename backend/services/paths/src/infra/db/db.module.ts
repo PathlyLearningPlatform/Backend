@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ConfigException } from 'common/index.js';
+import { ConfigException } from '@pathly-backend/common/index.js';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
 import { DiToken } from '../common/enums';

@@ -1,6 +1,6 @@
 import { Inject, Injectable, type OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AppLogger, ConfigException } from 'common/index.js';
+import { AppLogger, ConfigException } from '@pathly-backend/common';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import type { Pool } from 'pg';
 import { DiToken } from '../common/enums';

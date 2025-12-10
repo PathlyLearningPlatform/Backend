@@ -1,5 +1,5 @@
 import { appConfigSchema } from '@infra/common/schemas';
-import { ConfigException, parseIntOrReturn } from 'common/index.js';
+import { ConfigException, parseIntOrReturn } from '@pathly-backend/common';
 
 export function validateConfig(config: Record<string, unknown>) {
 	const transformedConfig = {

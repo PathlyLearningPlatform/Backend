@@ -5,7 +5,7 @@ import {
 	AppLoggerModule,
 	RpcExceptionFilter,
 	RpcRequestInterceptor,
-} from 'common';
+} from '@pathly-backend/common';
 import { validateConfig } from './infra/config';
 import { DbModule } from './infra/db/db.module';
 import { PathsModule } from './infra/paths/paths.module';

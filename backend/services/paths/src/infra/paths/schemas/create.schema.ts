@@ -1,4 +1,4 @@
-import { emptyStringToNull } from 'common/index.js';
+import { emptyStringToNull } from '@pathly-backend/common/index.js';
 import { z } from 'zod';
 import { descriptionSchema, nameSchema } from './fields.schema';
 

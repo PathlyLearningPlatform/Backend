@@ -25,6 +25,8 @@
 		"db:push": "drizzle-kit push"
 	},
 	"dependencies": {
+		"@grpc/grpc-js": "^1.14.2",
+		"@grpc/proto-loader": "^0.8.0",
 		"@grpc/reflection": "^1.0.4",
 		"@nestjs/common": "^11.1.9",
 		"@nestjs/config": "^4.0.2",
@@ -32,8 +34,8 @@
 		"@nestjs/mapped-types": "^2.1.0",
 		"@nestjs/microservices": "^11.1.9",
 		"@nestjs/platform-express": "^11.1.9",
-		"common": "^1.0.0",
-		"contracts": "^1.0.0",
+		"@pathly-backend/common": "^1.0.0",
+		"@pathly-backend/contracts": "^1.0.0",
 		"drizzle-orm": "^1.0.0-beta.2-86f844e",
 		"grpc-health-check": "^2.1.0",
 		"pg": "^8.16.3",

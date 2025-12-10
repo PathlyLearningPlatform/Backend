@@ -1,6 +1,6 @@
 import { status as GrpcStatus } from '@grpc/grpc-js';
 import { Controller, Inject } from '@nestjs/common';
-import { GrpcMethod, Payload, RpcException } from '@nestjs/microservices';
+import { GrpcMethod, Payload } from '@nestjs/microservices';
 import {
 	AppLogger,
 	emptyStringToNull,
@@ -9,8 +9,8 @@ import {
 	nullToEmptyString,
 	RpcValidationPipe,
 	SortType,
-} from 'common/index.js';
-import { SortType as ClientSortType } from 'contracts/common/types.js';
+} from '@pathly-backend/common';
+import { SortType as ClientSortType } from '@pathly-backend/contracts/common/types.js';
 import type {
 	CreateResponse,
 	FindOneResponse,
@@ -18,7 +18,7 @@ import type {
 	Path as PathResponseDto,
 	RemoveResponse,
 	UpdateResponse,
-} from 'contracts/paths/v1/paths.js';
+} from '@pathly-backend/contracts/paths/v1/paths.js';
 import type z from 'zod';
 import type {
 	CreatePathUseCase,
@@ -60,7 +60,7 @@ export class PathsController {
 		private readonly removePathUseCase: RemovePathUseCase,
 		@Inject(AppLogger)
 		private readonly appLogger: AppLogger,
-	) { }
+	) {}
 
 	@GrpcMethod('PathsService')
 	async find(
