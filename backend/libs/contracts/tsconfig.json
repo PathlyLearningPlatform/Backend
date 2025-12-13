@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "rootDir": "./gen/ts/proto",
+    "rootDir": "./gen/ts",
     "outDir": "./dist/ts",
     "module": "nodenext",
     "target": "es2023",
