@@ -4,4 +4,4 @@
 npm run build -w libs/contracts -w libs/ts/common
 
 # for docker containers
-docker compose exec paths npm run build -w contracts -w common
+docker compose exec -w /usr/src/app paths npm run build -w libs/contracts -w libs/ts/common
