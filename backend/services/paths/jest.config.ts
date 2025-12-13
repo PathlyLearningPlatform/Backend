@@ -16,7 +16,6 @@ const config: Config = {
 		'^@infra/(.*)$': '<rootDir>/$1/infra',
 		'^@/(.*)$': '<rootDir>/$1',
 	},
-	transformIgnorePatterns: ['../../node_modules/(?!@pathly-backend)/'],
 };
 
 export default config;
