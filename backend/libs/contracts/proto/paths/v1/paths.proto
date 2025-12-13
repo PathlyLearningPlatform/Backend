@@ -18,68 +18,68 @@ enum PathsOrderByFields {
   UPDATED_AT = 2;
 }
 
-message FindWhere {
+message FindPathsWhere {
   optional int32 limit = 1;
   optional int32 page = 2;
   optional proto.common.SortType sortType = 3;
   optional PathsOrderByFields orderBy = 4;
 }
-message FindOneWhere {
+message FindOnePathWhere {
   string id = 1;
 }
-message UpdateWhere {
+message UpdatePathWhere {
   string id = 1;
 }
-message RemoveWhere {
+message RemovePathWhere {
   string id = 1;
 }
 
-message UpdateFields {
+message UpdatePathFields {
   optional string name = 1;
   optional string description = 2;
 }
 
 service PathsService {
-  rpc Find(FindRequest) returns (FindResponse) {};
-  rpc FindOne(FindOneRequest) returns (FindOneResponse) {};
-  rpc Create(CreateRequest) returns (CreateResponse) {};
-  rpc Update(UpdateRequest) returns (UpdateResponse) {};
-  rpc Remove(RemoveRequest) returns (RemoveResponse) {};
+  rpc Find(FindPathsRequest) returns (FindPathsResponse) {};
+  rpc FindOne(FindOnePathRequest) returns (FindOnePathResponse) {};
+  rpc Create(CreatePathRequest) returns (CreatePathResponse) {};
+  rpc Update(UpdatePathRequest) returns (UpdatePathResponse) {};
+  rpc Remove(RemovePathRequest) returns (RemovePathResponse) {};
 }
 
-message FindRequest {
-  optional FindWhere where = 1;
+message FindPathsRequest {
+  optional FindPathsWhere where = 1;
 }
-message FindResponse {
+message FindPathsResponse {
   repeated Path paths = 1;
 }
 
-message FindOneRequest {
-  FindOneWhere where = 1;
+message FindOnePathRequest {
+  FindOnePathWhere where = 1;
 }
-message FindOneResponse {
+message FindOnePathResponse {
   Path path = 1;
 }
 
-message CreateRequest {
+message CreatePathRequest {
   string name = 1;
   optional string description = 2;
 }
-message CreateResponse {
+message CreatePathResponse {
   Path path = 1;
 }
 
-message UpdateRequest {
-  UpdateWhere where = 1;
-  optional UpdateFields fields = 2;
+message UpdatePathRequest {
+  UpdatePathWhere where = 1;
+  optional UpdatePathFields fields = 2;
 }
-message UpdateResponse {
+message UpdatePathResponse {
   Path path = 1;
 }
 
-message RemoveRequest {
-  RemoveWhere where = 1;
+message RemovePathRequest {
+  RemovePathWhere where = 1;
 }
-message RemoveResponse {
+message RemovePathResponse {
   Path path = 1;
 }
