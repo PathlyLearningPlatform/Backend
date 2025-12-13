@@ -42,6 +42,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
       errRes = new HttpErrorDto(exception.message, null)
     }
 
+    errRes.setTimestamp();
+
     response
       .status(status)
       .json(errRes);

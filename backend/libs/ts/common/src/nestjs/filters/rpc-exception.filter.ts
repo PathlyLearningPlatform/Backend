@@ -34,6 +34,8 @@ export class RpcExceptionFilter
       errRes = new GrpcErrorDto(exception.message, GrpcStatus.UNKNOWN)
     }
 
+    errRes.setTimestamp();
+
     return throwError(() => errRes);
   }
 }
