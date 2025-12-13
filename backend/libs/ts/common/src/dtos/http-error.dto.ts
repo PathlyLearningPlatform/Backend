@@ -1,6 +1,6 @@
 export class HttpErrorDto {
   public readonly message: string;
-  public readonly timestamp: string;
+  public timestamp?: string;
   public readonly details: unknown | null;
 
   constructor(
@@ -8,6 +8,9 @@ export class HttpErrorDto {
     details: unknown | null = null) {
     this.message = message;
     this.details = details;
+  }
+
+  setTimestamp() {
     this.timestamp = new Date().toISOString()
   }
 }
