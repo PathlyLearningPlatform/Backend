@@ -6,11 +6,11 @@
 
 /* eslint-disable */
 
-export const protobufPackage = "proto.common";
+export const protobufPackage = "common";
 
 export enum SortType {
   ASC = 0,
   DESC = 1,
 }
 
-export const PROTO_COMMON_PACKAGE_NAME = "proto.common";
+export const COMMON_PACKAGE_NAME = "common";

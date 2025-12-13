@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package proto.paths.v1;
+package paths.v1;
 
 import "common/types.proto";
 
@@ -21,7 +21,7 @@ enum PathsOrderByFields {
 message FindPathsWhere {
   optional int32 limit = 1;
   optional int32 page = 2;
-  optional proto.common.SortType sortType = 3;
+  optional common.SortType sortType = 3;
   optional PathsOrderByFields orderBy = 4;
 }
 message FindOnePathWhere {

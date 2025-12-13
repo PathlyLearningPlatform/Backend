@@ -9,7 +9,7 @@ import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 import { SortType } from "../../common/types.js";
 
-export const protobufPackage = "proto.paths.v1";
+export const protobufPackage = "paths.v1";
 
 export enum PathsOrderByFields {
   NAME = 0,
@@ -91,7 +91,7 @@ export interface RemovePathResponse {
   path: Path | undefined;
 }
 
-export const PROTO_PATHS_V1_PACKAGE_NAME = "proto.paths.v1";
+export const PATHS_V1_PACKAGE_NAME = "paths.v1";
 
 export interface PathsServiceClient {
   find(request: FindPathsRequest): Observable<FindPathsResponse>;

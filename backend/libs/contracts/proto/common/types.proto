@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package proto.common;
+package common;
 
 enum SortType {
   ASC = 0;
