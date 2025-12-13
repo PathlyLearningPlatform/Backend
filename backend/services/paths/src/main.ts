@@ -3,8 +3,8 @@ import { ReflectionService } from '@grpc/reflection';
 import { NestFactory } from '@nestjs/core';
 import { type MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppLogger } from '@pathly-backend/common/index.js';
-import { PROTO_COMMON_PACKAGE_NAME } from '@pathly-backend/contracts/common/types.js';
-import { PROTO_PATHS_V1_PACKAGE_NAME } from '@pathly-backend/contracts/paths/v1/paths.js';
+import { COMMON_PACKAGE_NAME } from '@pathly-backend/contracts/common/types.js';
+import { PATHS_V1_PACKAGE_NAME } from '@pathly-backend/contracts/paths/v1/paths.js';
 import {
 	HealthImplementation,
 	protoPath as healthCheckProtoPath,
@@ -17,7 +17,7 @@ async function bootstrap() {
 		{
 			transport: Transport.GRPC,
 			options: {
-				package: [PROTO_PATHS_V1_PACKAGE_NAME, PROTO_COMMON_PACKAGE_NAME],
+				package: [PATHS_V1_PACKAGE_NAME, COMMON_PACKAGE_NAME],
 				protoPath: [
 					healthCheckProtoPath,
 					'/usr/src/app/libs/contracts/proto/paths/v1/paths.proto',
