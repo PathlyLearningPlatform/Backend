@@ -1,2 +1,2 @@
-export * from './db-entity.type';
+export * from './db.type';
 export * from './options';

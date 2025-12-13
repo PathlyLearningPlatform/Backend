@@ -3,21 +3,16 @@ import { Controller, Inject } from '@nestjs/common';
 import { GrpcMethod, Payload } from '@nestjs/microservices';
 import {
 	AppLogger,
-	emptyStringToNull,
 	GrpcErrorDto,
 	GrpcException,
-	nullToEmptyString,
 	RpcValidationPipe,
-	SortType,
 } from '@pathly-backend/common';
-import { SortType as ClientSortType } from '@pathly-backend/contracts/common/types.js';
 import type {
-	CreateResponse,
-	FindOneResponse,
-	FindResponse,
-	Path as PathResponseDto,
-	RemoveResponse,
-	UpdateResponse,
+	CreatePathResponse,
+	FindOnePathResponse,
+	FindPathsResponse,
+	RemovePathResponse,
+	UpdatePathResponse,
 } from '@pathly-backend/contracts/paths/v1/paths.js';
 import type z from 'zod';
 import type {
@@ -27,16 +22,9 @@ import type {
 	RemovePathUseCase,
 	UpdatePathUseCase,
 } from '@/app/paths/use-cases';
-import type {
-	CreatePathCommand,
-	FindOnePathCommand,
-	FindPathsCommand,
-	RemovePathCommand,
-	UpdatePathComand,
-} from '@/domain/paths/commands';
-import type { Path } from '@/domain/paths/entities';
 import { PathNotFoundException } from '@/domain/paths/exceptions';
 import { DiToken } from '../common/enums';
+import { pathEntityToClient } from './helpers';
 import {
 	createPathSchema,
 	findOnePathSchema,
@@ -67,14 +55,12 @@ export class PathsController {
 		@Payload(new RpcValidationPipe(findPathsSchema)) payload: z.infer<
 			typeof findPathsSchema
 		>,
-	): Promise<FindResponse> {
-		const command = this.findRequestToCommand(payload);
-
+	): Promise<FindPathsResponse> {
 		try {
-			const paths = await this.findPathsUseCase.execute(command);
+			const paths = await this.findPathsUseCase.execute(payload);
 
 			return {
-				paths: paths.map(this.domainToResponseDto),
+				paths: paths.map(pathEntityToClient),
 			};
 		} catch (err) {
 			throw new GrpcException(
@@ -88,13 +74,11 @@ export class PathsController {
 	async findOne(
 		@Payload(new RpcValidationPipe(findOnePathSchema))
 		payload: z.infer<typeof findOnePathSchema>,
-	): Promise<FindOneResponse> {
-		const command = this.findOneRequestToCommand(payload);
-
+	): Promise<FindOnePathResponse> {
 		try {
-			const path = await this.findOnePathUseCase.execute(command);
+			const path = await this.findOnePathUseCase.execute(payload);
 
-			return { path: this.domainToResponseDto(path) };
+			return { path: pathEntityToClient(path) };
 		} catch (err) {
 			if (err instanceof PathNotFoundException) {
 				throw new GrpcException(
@@ -114,13 +98,11 @@ export class PathsController {
 		@Payload(new RpcValidationPipe(createPathSchema)) payload: z.infer<
 			typeof createPathSchema
 		>,
-	): Promise<CreateResponse> {
-		const command = this.createRequestToCommand(payload);
-
+	): Promise<CreatePathResponse> {
 		try {
-			const path = await this.createPathUseCase.execute(command);
+			const path = await this.createPathUseCase.execute(payload);
 
-			return { path: this.domainToResponseDto(path) };
+			return { path: pathEntityToClient(path) };
 		} catch (err) {
 			throw new GrpcException(
 				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
@@ -134,13 +116,11 @@ export class PathsController {
 		@Payload(new RpcValidationPipe(updatePathSchema)) payload: z.infer<
 			typeof updatePathSchema
 		>,
-	): Promise<UpdateResponse> {
-		const command = this.updateRequestToCommand(payload);
-
+	): Promise<UpdatePathResponse> {
 		try {
-			const path = await this.updatePathUseCase.execute(command);
+			const path = await this.updatePathUseCase.execute(payload);
 
-			return { path: this.domainToResponseDto(path) };
+			return { path: pathEntityToClient(path) };
 		} catch (err) {
 			if (err instanceof PathNotFoundException) {
 				throw new GrpcException(
@@ -160,14 +140,12 @@ export class PathsController {
 		@Payload(new RpcValidationPipe(removePathSchema)) payload: z.infer<
 			typeof removePathSchema
 		>,
-	): Promise<RemoveResponse> {
-		const command = this.removeRequestToCommand(payload);
-
+	): Promise<RemovePathResponse> {
 		try {
-			const path = await this.removePathUseCase.execute(command);
+			const path = await this.removePathUseCase.execute(payload);
 
 			return {
-				path: this.domainToResponseDto(path),
+				path: pathEntityToClient(path),
 			};
 		} catch (err) {
 			if (err instanceof PathNotFoundException) {
@@ -181,48 +159,5 @@ export class PathsController {
 				err,
 			);
 		}
-	}
-
-	private domainToResponseDto(domain: Path): PathResponseDto {
-		return { ...domain, description: nullToEmptyString(domain.description) };
-	}
-	private findRequestToCommand(
-		request: z.infer<typeof findPathsSchema>,
-	): FindPathsCommand {
-		return {
-			...request,
-			where: {
-				sortType:
-					request.where?.sortType === ClientSortType.ASC
-						? SortType.ASC
-						: SortType.DESC,
-			},
-		};
-	}
-	private findOneRequestToCommand(
-		request: z.infer<typeof findOnePathSchema>,
-	): FindOnePathCommand {
-		return request;
-	}
-	private createRequestToCommand(
-		request: z.infer<typeof createPathSchema>,
-	): CreatePathCommand {
-		return {
-			...request,
-			description: emptyStringToNull(request.description),
-		};
-	}
-	private updateRequestToCommand(
-		request: z.infer<typeof updatePathSchema>,
-	): UpdatePathComand {
-		return {
-			...request,
-			fields: { description: emptyStringToNull(request.fields?.description) },
-		};
-	}
-	private removeRequestToCommand(
-		request: z.infer<typeof removePathSchema>,
-	): RemovePathCommand {
-		return request;
 	}
 }

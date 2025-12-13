@@ -1,4 +1,4 @@
-import { Path } from '@pathly-backend/contracts/paths/v1/paths.js';
+import type { Path } from '@pathly-backend/contracts/paths/v1/paths.js';
 
 export const mockedPath: Path = {
 	id: '4692163a-3f1e-46f1-abd2-8c47f05a469c',

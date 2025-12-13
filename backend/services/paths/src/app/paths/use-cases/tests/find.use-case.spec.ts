@@ -1,24 +1,24 @@
-import { Path } from "@/domain/paths/entities";
-import { FindPathsUseCase } from "../find.use-case";
-import { mockedPathsRepository } from "./mocks/paths.repository.mock";
-import { mockedPath } from "./mocks/paths.mock";
+import type { Path } from '@/domain/paths/entities';
+import { FindPathsUseCase } from '../find.use-case';
+import { mockedPath } from './mocks/paths.mock';
+import { mockedPathsRepository } from './mocks/paths.repository.mock';
 
 describe('FindPathsUseCase', () => {
-  let findPathsUseCase: FindPathsUseCase;
+	let findPathsUseCase: FindPathsUseCase;
 
-  beforeEach(() => {
-    findPathsUseCase = new FindPathsUseCase(mockedPathsRepository);
-  })
+	beforeEach(() => {
+		findPathsUseCase = new FindPathsUseCase(mockedPathsRepository);
+	});
 
-  describe('execute', () => {
-    it('should return an array of paths', async () => {
-      const expectedResult: Path[] = [mockedPath]
+	describe('execute', () => {
+		it('should return an array of paths', async () => {
+			const expectedResult: Path[] = [mockedPath];
 
-      mockedPathsRepository.find.mockResolvedValueOnce([mockedPath]);
+			mockedPathsRepository.find.mockResolvedValueOnce([mockedPath]);
 
-      const result = await findPathsUseCase.execute({});
+			const result = await findPathsUseCase.execute({});
 
-      expect(result).toEqual(expectedResult)
-    })
-  })
-})
+			expect(result).toEqual(expectedResult);
+		});
+	});
+});

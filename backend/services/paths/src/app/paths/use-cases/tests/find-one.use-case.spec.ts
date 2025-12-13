@@ -1,37 +1,37 @@
-import { FindOnePathUseCase } from "../find-one.use-case";
-import { mockedFindOneCommand } from "./mocks/commands.mock";
-import { mockedPath } from "./mocks/paths.mock";
-import { mockedPathsRepository } from "./mocks/paths.repository.mock";
-import { PathNotFoundException } from "@/domain/paths/exceptions";
+import { PathNotFoundException } from '@/domain/paths/exceptions';
+import { FindOnePathUseCase } from '../find-one.use-case';
+import { mockedFindOneCommand } from './mocks/commands.mock';
+import { mockedPath } from './mocks/paths.mock';
+import { mockedPathsRepository } from './mocks/paths.repository.mock';
 
 describe('FindOnePathUseCase', () => {
-  let findOnePathUseCase: FindOnePathUseCase;
+	let findOnePathUseCase: FindOnePathUseCase;
 
-  beforeEach(() => {
-    findOnePathUseCase = new FindOnePathUseCase(mockedPathsRepository);
-  })
+	beforeEach(() => {
+		findOnePathUseCase = new FindOnePathUseCase(mockedPathsRepository);
+	});
 
-  describe('execute', () => {
-    it('should throw a PathNotFoundException', async () => {
-      mockedPathsRepository.findOne.mockResolvedValueOnce(null);
+	describe('execute', () => {
+		it('should throw a PathNotFoundException', async () => {
+			mockedPathsRepository.findOne.mockResolvedValueOnce(null);
 
-      const promise = findOnePathUseCase.execute({
-        where: {
-          id: 'unknown id',
-        }
-      })
+			const promise = findOnePathUseCase.execute({
+				where: {
+					id: 'unknown id',
+				},
+			});
 
-      await expect(promise).rejects.toThrow(PathNotFoundException)
-    })
+			await expect(promise).rejects.toThrow(PathNotFoundException);
+		});
 
-    it('should return a path', async () => {
-      const expectedResult = mockedPath;
+		it('should return a path', async () => {
+			const expectedResult = mockedPath;
 
-      mockedPathsRepository.findOne.mockResolvedValueOnce(mockedPath);
+			mockedPathsRepository.findOne.mockResolvedValueOnce(mockedPath);
 
-      const result = await findOnePathUseCase.execute(mockedFindOneCommand)
+			const result = await findOnePathUseCase.execute(mockedFindOneCommand);
 
-      expect(result).toEqual(expectedResult)
-    })
-  })
-})
+			expect(result).toEqual(expectedResult);
+		});
+	});
+});

@@ -1,19 +1,27 @@
+import { status as GrpcStatus } from '@grpc/grpc-js';
 import { Test } from '@nestjs/testing';
-import { PathsController } from '../paths.controller';
-import { DiToken } from '@/infra/common/enums';
-import { mockedFindUseCase } from './mocks/use-cases.mock';
 import {
+	AppLogger,
+	AppLoggerModule,
+	GrpcErrorDto,
+	GrpcException,
+} from '@pathly-backend/common/index.js';
+import type {
+	FindOnePathResponse,
+	FindPathsResponse,
+} from '@pathly-backend/contracts/paths/v1/paths.js';
+import type {
 	CreatePathUseCase,
 	FindOnePathUseCase,
 	FindPathsUseCase,
 	RemovePathUseCase,
 	UpdatePathUseCase,
 } from '@/app/paths/use-cases';
+import { DiToken } from '@/infra/common/enums';
+import { PathsController } from '../paths.controller';
 import { mockedPath } from './mocks/paths.mock';
-import { mockedFindPayload } from './mocks/payloads.mock';
-import { FindResponse } from '@pathly-backend/contracts/paths/v1/paths.js';
-import { GrpcErrorDto, GrpcException } from '@pathly-backend/common/index.js';
-import { status as GrpcStatus } from '@grpc/grpc-js';
+import { mockedFindOnePayload, mockedFindPayload } from './mocks/payloads.mock';
+import { mockedFindUseCase } from './mocks/use-cases.mock';
 
 describe('PathsController', () => {
 	let pathsController: PathsController;
@@ -25,6 +33,7 @@ describe('PathsController', () => {
 
 	beforeEach(async () => {
 		const moduleRef = await Test.createTestingModule({
+			imports: [AppLoggerModule],
 			controllers: [PathsController],
 			providers: [
 				{
@@ -61,7 +70,7 @@ describe('PathsController', () => {
 
 	describe('find', () => {
 		it('should return FindPathsResponse', async () => {
-			const expectedResult: FindResponse = {
+			const expectedResult: FindPathsResponse = {
 				paths: [mockedPath],
 			};
 
@@ -79,15 +88,23 @@ describe('PathsController', () => {
 
 			await expect(promise).rejects.toMatchObject({
 				constructor: GrpcException,
-				error: {
-					status: GrpcStatus.INTERNAL,
-				},
+				error: new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
 			});
 		});
 	});
 
 	describe('findOne', () => {
-		it('should return FindOnePathResponse', async () => {});
+		it('should return FindOnePathResponse', async () => {
+			const expectedResult: FindOnePathResponse = {
+				path: mockedPath,
+			};
+
+			findOneUseCase.execute.mockResolvedValueOnce(mockedPath);
+
+			const result = await pathsController.findOne(mockedFindOnePayload);
+
+			expect(result).toEqual(expectedResult);
+		});
 
 		it('should throw GrpcException with NOT_FOUND status', async () => {});
 

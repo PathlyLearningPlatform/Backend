@@ -1,5 +1,5 @@
 import type { SortType } from '@pathly-backend/common';
-import type { PathsOrderByFields } from '../types';
+import type { PathsOrderByFields } from '../enums';
 
 export class FindPathsCommand {
 	where?: {

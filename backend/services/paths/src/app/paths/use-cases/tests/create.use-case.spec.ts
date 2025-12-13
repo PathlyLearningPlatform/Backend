@@ -1,24 +1,24 @@
-import { CreatePathUseCase } from "../create.use-case";
-import { mockedPathsRepository } from "./mocks/paths.repository.mock";
-import { mockedCreateCommand } from "./mocks/commands.mock";
-import { mockedPath } from "./mocks/paths.mock";
+import { CreatePathUseCase } from '../create.use-case';
+import { mockedCreateCommand } from './mocks/commands.mock';
+import { mockedPath } from './mocks/paths.mock';
+import { mockedPathsRepository } from './mocks/paths.repository.mock';
 
 describe('CreatePathUseCase', () => {
-  let createPathUseCase: CreatePathUseCase;
+	let createPathUseCase: CreatePathUseCase;
 
-  beforeEach(() => {
-    createPathUseCase = new CreatePathUseCase(mockedPathsRepository);
-  })
+	beforeEach(() => {
+		createPathUseCase = new CreatePathUseCase(mockedPathsRepository);
+	});
 
-  describe('execute', () => {
-    it('should return a path', async () => {
-      const path = mockedPath
+	describe('execute', () => {
+		it('should return a path', async () => {
+			const path = mockedPath;
 
-      mockedPathsRepository.create.mockResolvedValueOnce(mockedPath);
+			mockedPathsRepository.create.mockResolvedValueOnce(mockedPath);
 
-      const result = await createPathUseCase.execute(mockedCreateCommand);
+			const result = await createPathUseCase.execute(mockedCreateCommand);
 
-      expect(result).toEqual(path)
-    })
-  })
-})
+			expect(result).toEqual(path);
+		});
+	});
+});

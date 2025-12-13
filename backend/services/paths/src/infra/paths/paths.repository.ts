@@ -9,18 +9,19 @@ import type {
 	UpdatePathComand,
 } from '@/domain/paths/commands';
 import type { Path } from '@/domain/paths/entities';
+import { PathsOrderByFields } from '@/domain/paths/enums';
 import type { IPathsRepository } from '@/domain/paths/interfaces';
 import type { Db } from '@/infra/common/types';
 import { DbService } from '../db/db.service';
 import { pathsTable } from '../db/schemas';
-import type {
-	CreatePathOptions,
-	DbPathEntity,
-	FindOnePathOptions,
-	FindPathsOptions,
-	RemovePathOptions,
-	UpdatePathOptions,
-} from './types';
+import {
+	removePathCommandToDb,
+	createPathCommandToDb,
+	dbPathToEntity,
+	findOnePathCommandToDb,
+	findPathsCommandToDb,
+	updatePathCommandToDb,
+} from './helpers';
 
 @Injectable()
 export class PathsRepository implements IPathsRepository {
@@ -31,10 +32,10 @@ export class PathsRepository implements IPathsRepository {
 	}
 
 	async find(command: FindPathsCommand): Promise<Path[]> {
-		const options = this.findCommandToDb(command);
+		const options = findPathsCommandToDb(command);
 		const limit = options.where?.limit || 100;
 		const page = options.where?.page || 0;
-		const orderBy = options.where?.orderBy || 'createdAt';
+		const orderBy = options.where?.orderBy || PathsOrderByFields.CREATED_AT;
 		const sortType = options.where?.sortType || SortType.DESC;
 
 		try {
@@ -49,14 +50,14 @@ export class PathsRepository implements IPathsRepository {
 				.limit(limit)
 				.offset(page * limit);
 
-			return result.map((item) => this.dbToDomainEntity(item));
+			return result.map(dbPathToEntity);
 		} catch (err) {
 			throw new DbException('db error', err, true);
 		}
 	}
 
 	async findOne(command: FindOnePathCommand): Promise<Path | null> {
-		const options = this.findOneCommandToDb(command);
+		const options = findOnePathCommandToDb(command);
 
 		try {
 			const result = await this.db
@@ -64,14 +65,14 @@ export class PathsRepository implements IPathsRepository {
 				.from(pathsTable)
 				.where(eq(pathsTable.id, options.where.id));
 
-			return result.length <= 0 ? null : this.dbToDomainEntity(result[0]);
+			return result.length <= 0 ? null : dbPathToEntity(result[0]);
 		} catch (err) {
 			throw new DbException('db error', err, true);
 		}
 	}
 
 	async create(command: CreatePathCommand): Promise<Path> {
-		const options = this.createCommandToDb(command);
+		const options = createPathCommandToDb(command);
 
 		try {
 			const result = await this.db
@@ -79,14 +80,14 @@ export class PathsRepository implements IPathsRepository {
 				.values(options)
 				.returning();
 
-			return this.dbToDomainEntity(result[0]);
+			return dbPathToEntity(result[0]);
 		} catch (err) {
 			throw new DbException('db error', err, true);
 		}
 	}
 
 	async update(command: UpdatePathComand): Promise<Path | null> {
-		const options = this.updateCommandToDb(command);
+		const options = updatePathCommandToDb(command);
 
 		try {
 			const result = await this.db
@@ -95,14 +96,14 @@ export class PathsRepository implements IPathsRepository {
 				.where(eq(pathsTable.id, options.where.id))
 				.returning();
 
-			return result.length <= 0 ? null : this.dbToDomainEntity(result[0]);
+			return result.length <= 0 ? null : dbPathToEntity(result[0]);
 		} catch (err) {
 			throw new DbException('db error', err, true);
 		}
 	}
 
 	async remove(command: RemovePathCommand): Promise<Path | null> {
-		const options = this.removeCommandToDb(command);
+		const options = removePathCommandToDb(command);
 
 		try {
 			const result = await this.db
@@ -110,32 +111,9 @@ export class PathsRepository implements IPathsRepository {
 				.where(eq(pathsTable.id, options.where.id))
 				.returning();
 
-			return result.length <= 0 ? null : this.dbToDomainEntity(result[0]);
+			return result.length <= 0 ? null : dbPathToEntity(result[0]);
 		} catch (err) {
 			throw new DbException('db error', err, true);
 		}
-	}
-
-	private dbToDomainEntity(dbEntity: DbPathEntity): Path {
-		return {
-			...dbEntity,
-			createdAt: dbEntity.createdAt.toISOString(),
-			updatedAt: dbEntity.updatedAt.toISOString(),
-		};
-	}
-	private findCommandToDb(command: FindPathsCommand): FindPathsOptions {
-		return command;
-	}
-	private findOneCommandToDb(command: FindOnePathCommand): FindOnePathOptions {
-		return command;
-	}
-	private createCommandToDb(command: CreatePathCommand): CreatePathOptions {
-		return command;
-	}
-	private updateCommandToDb(command: UpdatePathComand): UpdatePathOptions {
-		return command;
-	}
-	private removeCommandToDb(command: RemovePathCommand): RemovePathOptions {
-		return command;
 	}
 }
