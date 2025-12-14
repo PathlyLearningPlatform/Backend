@@ -11,29 +11,29 @@ import type {
 	FindPathsResponse,
 } from '@pathly-backend/contracts/paths/v1/paths.js';
 import type {
+	CreateResponse,
+	RemoveResponse,
+	UpdateResponse,
+} from '@pathly-backend/contracts/proto/paths/v1/paths.js';
+import type {
 	CreatePathUseCase,
 	FindOnePathUseCase,
 	FindPathsUseCase,
 	RemovePathUseCase,
 	UpdatePathUseCase,
 } from '@/app/paths/use-cases';
-import { DiToken } from '@/infra/common/enums';
-import { PathsController } from '../paths.controller';
-import { mockedPath } from './mocks/paths.mock';
-import { mockedFindOnePayload, mockedFindPayload } from './mocks/payloads.mock';
-import { mockedFindUseCase } from './mocks/use-cases.mock';
-import { PathNotFoundException } from '@/domain/paths/exceptions';
 import {
 	mockedCreateCommand,
 	mockedFindOneCommand,
 	mockedRemoveCommand,
 	mockedUpdateCommand,
 } from '@/app/paths/use-cases/tests/mocks/commands.mock';
-import {
-	CreateResponse,
-	RemoveResponse,
-	UpdateResponse,
-} from '@pathly-backend/contracts/proto/paths/v1/paths.js';
+import { PathNotFoundException } from '@/domain/paths/exceptions';
+import { DiToken } from '@/infra/common/enums';
+import { PathsController } from '../paths.controller';
+import { mockedPath } from './mocks/paths.mock';
+import { mockedFindOnePayload, mockedFindPayload } from './mocks/payloads.mock';
+import { mockedFindUseCase } from './mocks/use-cases.mock';
 
 describe('PathsController', () => {
 	let pathsController: PathsController;

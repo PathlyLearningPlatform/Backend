@@ -1,5 +1,5 @@
-import { Path } from '@/domain/paths/entities';
-import { DbPath } from '../types';
+import type { Path } from '@/domain/paths/entities';
+import type { DbPath } from '../types';
 
 export function dbPathToEntity(db: DbPath): Path {
 	return {

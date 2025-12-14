@@ -1,5 +1,5 @@
+import type { Provider } from '@nestjs/common';
 import { DbService } from '@/infra/db/db.service';
-import { Provider } from '@nestjs/common';
 
 export const mockedDb = {
 	select: jest.fn().mockReturnThis(),

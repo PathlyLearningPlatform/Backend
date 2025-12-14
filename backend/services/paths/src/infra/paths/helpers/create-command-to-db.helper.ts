@@ -1,5 +1,5 @@
-import { CreatePathCommand } from '@/domain/paths/commands';
-import { CreatePathOptions } from '../types';
+import type { CreatePathCommand } from '@/domain/paths/commands';
+import type { CreatePathOptions } from '../types';
 
 export function createPathCommandToDb(
 	command: CreatePathCommand,

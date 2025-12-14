@@ -1,5 +1,5 @@
-import { FindOnePathCommand } from '@/domain/paths/commands';
-import { FindOnePathOptions } from '../types';
+import type { FindOnePathCommand } from '@/domain/paths/commands';
+import type { FindOnePathOptions } from '../types';
 
 export function findOnePathCommandToDb(
 	command: FindOnePathCommand,

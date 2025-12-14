@@ -1,8 +1,5 @@
-import { DbService } from '@/infra/db/db.service';
 import { Test } from '@nestjs/testing';
-import { mockedDb, mockedDbService } from './mocks/db.mock';
-import { PathsRepository } from '../paths.repository';
-import { mockedDbPath, mockedPath } from './mocks/paths.mock';
+import { DbException } from '@pathly-backend/common/index.js';
 import {
 	mockedCreateCommand,
 	mockedFindCommand,
@@ -10,7 +7,10 @@ import {
 	mockedRemoveCommand,
 	mockedUpdateCommand,
 } from '@/app/paths/use-cases/tests/mocks/commands.mock';
-import { DbException } from '@pathly-backend/common/index.js';
+import { DbService } from '@/infra/db/db.service';
+import { PathsRepository } from '../paths.repository';
+import { mockedDb, mockedDbService } from './mocks/db.mock';
+import { mockedDbPath, mockedPath } from './mocks/paths.mock';
 
 describe('PathsRepository', () => {
 	let pathsRepository: PathsRepository;

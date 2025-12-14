@@ -1,5 +1,5 @@
-import { RemovePathCommand } from '@/domain/paths/commands';
-import { RemovePathOptions } from '../types';
+import type { RemovePathCommand } from '@/domain/paths/commands';
+import type { RemovePathOptions } from '../types';
 
 export function removePathCommandToDb(
 	command: RemovePathCommand,

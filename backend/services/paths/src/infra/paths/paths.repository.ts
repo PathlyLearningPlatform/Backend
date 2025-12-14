@@ -15,11 +15,11 @@ import type { Db } from '@/infra/common/types';
 import { DbService } from '../db/db.service';
 import { pathsTable } from '../db/schemas';
 import {
-	removePathCommandToDb,
 	createPathCommandToDb,
 	dbPathToEntity,
 	findOnePathCommandToDb,
 	findPathsCommandToDb,
+	removePathCommandToDb,
 	updatePathCommandToDb,
 } from './helpers';
 
