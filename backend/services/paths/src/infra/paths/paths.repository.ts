@@ -23,6 +23,9 @@ import {
 	updatePathCommandToDb,
 } from './helpers';
 
+/**
+ * @description This class is a concrete implementation of IPathsRepository interface. It's reponsibility is to perform CRUD operations on paths using postgres as data source.
+ */
 @Injectable()
 export class PathsRepository implements IPathsRepository {
 	private db: Db;
@@ -31,6 +34,13 @@ export class PathsRepository implements IPathsRepository {
 		this.db = this.dbService.getDb();
 	}
 
+	/**
+	 *
+	 * @param command
+	 * @returns paths array
+	 * @throws DbException if there is db error
+	 * @description this function retrieves paths from database
+	 */
 	async find(command: FindPathsCommand): Promise<Path[]> {
 		const options = findPathsCommandToDb(command);
 		const limit = options.options?.limit || 100;
@@ -56,6 +66,13 @@ export class PathsRepository implements IPathsRepository {
 		}
 	}
 
+	/**
+	 *
+	 * @param command
+	 * @returns path or null if path is not found
+	 * @throws DbException if there is db error
+	 * @description this function retrieves one path from database
+	 */
 	async findOne(command: FindOnePathCommand): Promise<Path | null> {
 		const options = findOnePathCommandToDb(command);
 
@@ -71,6 +88,13 @@ export class PathsRepository implements IPathsRepository {
 		}
 	}
 
+	/**
+	 *
+	 * @param command
+	 * @returns created path
+	 * @throws DbException if there is db error
+	 * @description this function creates path in a database
+	 */
 	async create(command: CreatePathCommand): Promise<Path> {
 		const options = createPathCommandToDb(command);
 
@@ -86,6 +110,13 @@ export class PathsRepository implements IPathsRepository {
 		}
 	}
 
+	/**
+	 *
+	 * @param command
+	 * @returns updated path or null if path is not found
+	 * @throws DbException if there is db error
+	 * @description this function updates path in a database
+	 */
 	async update(command: UpdatePathComand): Promise<Path | null> {
 		const options = updatePathCommandToDb(command);
 
@@ -102,6 +133,13 @@ export class PathsRepository implements IPathsRepository {
 		}
 	}
 
+	/**
+	 *
+	 * @param command
+	 * @returns removed path or null if path is not found
+	 * @throws DbException if there is db error
+	 * @description this function removes path from a database
+	 */
 	async remove(command: RemovePathCommand): Promise<Path | null> {
 		const options = removePathCommandToDb(command);
 

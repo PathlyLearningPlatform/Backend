@@ -1,3 +1,6 @@
+/**
+ * @description This enum is collection of dependency injection tokens for nestjs. It's purpose is to keep them in one place to avoid using literals.
+ */
 export enum DiToken {
 	PG_POOL = 'PG_POOL',
 	DRIZZLE = 'DRIZZLE',

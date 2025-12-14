@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+/**
+ * @description This object is a validation schema for environment configuration.
+ */
 export const appConfigSchema = z
 	.object({
 		app: z

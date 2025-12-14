@@ -12,4 +12,8 @@ class OptionalFields extends PartialType(
 ) {}
 class Fields extends IntersectionType(RequiredFields, OptionalFields) {}
 
+/**
+ * @description
+ * This class represents data needed (required and optional) to create path entity.
+ */
 export class CreatePathCommand extends Fields {}
