@@ -8,6 +8,7 @@ import {
 } from '@pathly-backend/common'
 import { AppController } from './app.controller'
 import { validateConfig } from './infra/config'
+import { PathsModule } from './infra/paths/paths.module';
 
 @Module({
 	imports: [
@@ -19,6 +20,7 @@ import { validateConfig } from './infra/config'
 		AppLoggerModule.register({
 			isGlobal: true,
 		}),
+		PathsModule,
 	],
 	providers: [
 		{
