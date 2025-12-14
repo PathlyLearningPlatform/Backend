@@ -9,8 +9,8 @@ import { ZodError, ZodType } from 'zod';
 import { HttpErrorDto } from '../../dtos/http-error.dto.js';
 
 @Injectable()
-export class ZodValidationPipe implements PipeTransform {
-  private logger = new Logger(ZodValidationPipe.name);
+export class HttpValidationPipe implements PipeTransform {
+  private logger = new Logger(HttpValidationPipe.name);
 
   constructor(private readonly schema: ZodType) { }
 
