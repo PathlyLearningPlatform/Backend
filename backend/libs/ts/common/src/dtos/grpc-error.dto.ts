@@ -1,6 +1,6 @@
 export class GrpcErrorDto {
   public readonly message: string;
-  public timestamp?: string;
+  public readonly timestamp: string;
   public readonly details: unknown | null;
   public readonly code: number;
 
@@ -8,9 +8,6 @@ export class GrpcErrorDto {
     this.message = message;
     this.details = details;
     this.code = code;
-  }
-
-  setTimestamp() {
     this.timestamp = new Date().toISOString()
   }
 }
