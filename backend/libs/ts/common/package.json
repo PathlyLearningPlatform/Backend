@@ -17,6 +17,7 @@
     "@grpc/grpc-js": "^1.14.2",
     "@nestjs/common": "^11.1.9",
     "@nestjs/core": "^11.1.9",
+    "@nestjs/swagger": "^11.2.3",
     "rxjs": "^7.8.1",
     "zod": "^4.1.13"
   },
