@@ -40,6 +40,8 @@ async function bootstrap() {
 						'/usr/src/app/libs/contracts/proto/paths/v1',
 						'/usr/src/app/libs/contracts/proto/common',
 					],
+					arrays: true,
+					defaults: true,
 				} as Options,
 			},
 			bufferLogs: true,
