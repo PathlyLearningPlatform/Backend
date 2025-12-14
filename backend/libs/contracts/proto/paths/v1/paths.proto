@@ -12,33 +12,6 @@ message Path {
   string description = 5;
 }
 
-enum PathsOrderByFields {
-  NAME = 0;
-  CREATED_AT = 1;
-  UPDATED_AT = 2;
-}
-
-message FindPathsWhere {
-  optional int32 limit = 1;
-  optional int32 page = 2;
-  optional common.SortType sortType = 3;
-  optional PathsOrderByFields orderBy = 4;
-}
-message FindOnePathWhere {
-  string id = 1;
-}
-message UpdatePathWhere {
-  string id = 1;
-}
-message RemovePathWhere {
-  string id = 1;
-}
-
-message UpdatePathFields {
-  optional string name = 1;
-  optional string description = 2;
-}
-
 service PathsService {
   rpc Find(FindPathsRequest) returns (FindPathsResponse) {};
   rpc FindOne(FindOnePathRequest) returns (FindOnePathResponse) {};
@@ -47,13 +20,27 @@ service PathsService {
   rpc Remove(RemovePathRequest) returns (RemovePathResponse) {};
 }
 
+enum PathsOrderByFields {
+  NAME = 0;
+  CREATED_AT = 1;
+  UPDATED_AT = 2;
+}
+message FindPathsOptions {
+  optional int32 limit = 1;
+  optional int32 page = 2;
+  optional common.SortType sortType = 3;
+  optional PathsOrderByFields orderBy = 4;
+}
 message FindPathsRequest {
-  optional FindPathsWhere where = 1;
+  optional FindPathsOptions options = 1;
 }
 message FindPathsResponse {
   repeated Path paths = 1;
 }
 
+message FindOnePathWhere {
+  string id = 1;
+}
 message FindOnePathRequest {
   FindOnePathWhere where = 1;
 }
@@ -69,6 +56,13 @@ message CreatePathResponse {
   Path path = 1;
 }
 
+message UpdatePathFields {
+  optional string name = 1;
+  optional string description = 2;
+}
+message UpdatePathWhere {
+  string id = 1;
+}
 message UpdatePathRequest {
   UpdatePathWhere where = 1;
   optional UpdatePathFields fields = 2;
@@ -77,6 +71,9 @@ message UpdatePathResponse {
   Path path = 1;
 }
 
+message RemovePathWhere {
+  string id = 1;
+}
 message RemovePathRequest {
   RemovePathWhere where = 1;
 }

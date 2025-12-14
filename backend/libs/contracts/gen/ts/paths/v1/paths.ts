@@ -25,36 +25,23 @@ export interface Path {
   description: string;
 }
 
-export interface FindPathsWhere {
+export interface FindPathsOptions {
   limit?: number | undefined;
   page?: number | undefined;
   sortType?: SortType | undefined;
   orderBy?: PathsOrderByFields | undefined;
 }
 
-export interface FindOnePathWhere {
-  id: string;
-}
-
-export interface UpdatePathWhere {
-  id: string;
-}
-
-export interface RemovePathWhere {
-  id: string;
-}
-
-export interface UpdatePathFields {
-  name?: string | undefined;
-  description?: string | undefined;
-}
-
 export interface FindPathsRequest {
-  where?: FindPathsWhere | undefined;
+  options?: FindPathsOptions | undefined;
 }
 
 export interface FindPathsResponse {
   paths: Path[];
+}
+
+export interface FindOnePathWhere {
+  id: string;
 }
 
 export interface FindOnePathRequest {
@@ -74,6 +61,15 @@ export interface CreatePathResponse {
   path: Path | undefined;
 }
 
+export interface UpdatePathFields {
+  name?: string | undefined;
+  description?: string | undefined;
+}
+
+export interface UpdatePathWhere {
+  id: string;
+}
+
 export interface UpdatePathRequest {
   where: UpdatePathWhere | undefined;
   fields?: UpdatePathFields | undefined;
@@ -81,6 +77,10 @@ export interface UpdatePathRequest {
 
 export interface UpdatePathResponse {
   path: Path | undefined;
+}
+
+export interface RemovePathWhere {
+  id: string;
 }
 
 export interface RemovePathRequest {
