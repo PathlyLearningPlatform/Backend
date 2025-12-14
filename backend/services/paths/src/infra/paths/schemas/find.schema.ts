@@ -6,7 +6,7 @@ import { clientPathsOrderByFieldsToDomain } from '../helpers';
 
 export const findPathsSchema = z
 	.object({
-		where: z
+		options: z
 			.object({
 				limit: z.int32().optional().default(100),
 				page: z.int32().optional().default(0),

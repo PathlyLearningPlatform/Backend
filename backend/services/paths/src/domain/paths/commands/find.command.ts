@@ -2,7 +2,7 @@ import type { SortType } from '@pathly-backend/common';
 import type { PathsOrderByFields } from '../enums';
 
 export class FindPathsCommand {
-	where?: {
+	options?: {
 		limit?: number;
 		page?: number;
 		sortType?: SortType;

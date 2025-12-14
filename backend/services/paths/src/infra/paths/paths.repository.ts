@@ -33,10 +33,10 @@ export class PathsRepository implements IPathsRepository {
 
 	async find(command: FindPathsCommand): Promise<Path[]> {
 		const options = findPathsCommandToDb(command);
-		const limit = options.where?.limit || 100;
-		const page = options.where?.page || 0;
-		const orderBy = options.where?.orderBy || PathsOrderByFields.CREATED_AT;
-		const sortType = options.where?.sortType || SortType.DESC;
+		const limit = options.options?.limit || 100;
+		const page = options.options?.page || 0;
+		const orderBy = options.options?.orderBy || PathsOrderByFields.CREATED_AT;
+		const sortType = options.options?.sortType || SortType.DESC;
 
 		try {
 			const result = await this.db
