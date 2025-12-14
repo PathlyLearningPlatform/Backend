@@ -35,6 +35,8 @@ services:
       - ./services/api-gateway/@types:/usr/src/app/services/api-gateway/@types
       - ./libs/ts/common/src:/usr/src/app/libs/ts/common/src
       - ./libs/contracts/proto:/usr/src/app/libs/contracts/proto
+    ports:
+      - 3000:3000
     healthcheck:
       test: node ./healthcheck.js
       timeout: 10s
