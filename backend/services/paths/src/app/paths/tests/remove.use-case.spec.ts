@@ -1,5 +1,5 @@
 import { PathNotFoundException } from '@/domain/paths/exceptions';
-import { RemovePathUseCase } from '../remove.use-case';
+import { RemovePathUseCase } from '../use-cases';
 import { mockedRemoveCommand } from './mocks/commands.mock';
 import { mockedPath } from './mocks/paths.mock';
 import { mockedPathsRepository } from './mocks/paths.repository.mock';

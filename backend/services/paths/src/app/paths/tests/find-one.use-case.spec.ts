@@ -1,5 +1,5 @@
 import { PathNotFoundException } from '@/domain/paths/exceptions';
-import { FindOnePathUseCase } from '../find-one.use-case';
+import { FindOnePathUseCase } from '../use-cases';
 import { mockedFindOneCommand } from './mocks/commands.mock';
 import { mockedPath } from './mocks/paths.mock';
 import { mockedPathsRepository } from './mocks/paths.repository.mock';

@@ -1,5 +1,5 @@
 import { PathNotFoundException } from '@/domain/paths/exceptions';
-import { UpdatePathUseCase } from '../update.use-case';
+import { UpdatePathUseCase } from '../use-cases';
 import { mockedUpdateCommand } from './mocks/commands.mock';
 import { mockedPath, mockedUpdatedPath } from './mocks/paths.mock';
 import { mockedPathsRepository } from './mocks/paths.repository.mock';

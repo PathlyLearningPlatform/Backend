@@ -1,4 +1,4 @@
-import { CreatePathUseCase } from '../create.use-case';
+import { CreatePathUseCase } from '../use-cases';
 import { mockedCreateCommand } from './mocks/commands.mock';
 import { mockedPath } from './mocks/paths.mock';
 import { mockedPathsRepository } from './mocks/paths.repository.mock';
