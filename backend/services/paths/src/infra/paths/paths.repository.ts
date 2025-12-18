@@ -22,6 +22,7 @@ import {
 	removePathCommandToDb,
 	updatePathCommandToDb,
 } from './helpers';
+import { PathsApiConstraints } from './enums';
 
 /**
  * @description This class is a concrete implementation of IPathsRepository interface. It's reponsibility is to perform CRUD operations on paths using postgres as data source.
@@ -43,8 +44,8 @@ export class PathsRepository implements IPathsRepository {
 	 */
 	async find(command: FindPathsCommand): Promise<Path[]> {
 		const options = findPathsCommandToDb(command);
-		const limit = options.options?.limit || 100;
-		const page = options.options?.page || 0;
+		const limit = options.options?.limit || PathsApiConstraints.DEFAULT_LIMIT;
+		const page = options.options?.page || PathsApiConstraints.DEFAULT_PAGE;
 		const orderBy = options.options?.orderBy || PathsOrderByFields.CREATED_AT;
 		const sortType = options.options?.sortType || SortType.DESC;
 

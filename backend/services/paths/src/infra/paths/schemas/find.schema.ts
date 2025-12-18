@@ -3,13 +3,23 @@ import { PathsOrderByFields } from '@pathly-backend/contracts/paths/v1/paths.js'
 import { z } from 'zod';
 import { clientSortTypeToDomain } from '@/infra/common/helpers';
 import { clientPathsOrderByFieldsToDomain } from '../helpers';
+import { PathsApiConstraints } from '../enums';
 
 export const findPathsSchema = z
 	.object({
 		options: z
 			.object({
-				limit: z.int32().optional().default(100),
-				page: z.int32().optional().default(0),
+				limit: z
+					.int32()
+					.min(PathsApiConstraints.MIN_LIMIT)
+					.max(PathsApiConstraints.MAX_LIMIT)
+					.optional()
+					.default(PathsApiConstraints.DEFAULT_LIMIT),
+				page: z
+					.int32()
+					.nonnegative()
+					.optional()
+					.default(PathsApiConstraints.DEFAULT_PAGE),
 				sortType: z
 					.enum(SortType)
 					.optional()
