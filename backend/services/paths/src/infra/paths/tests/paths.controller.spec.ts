@@ -1,11 +1,6 @@
 import { status as GrpcStatus } from '@grpc/grpc-js';
 import { Test } from '@nestjs/testing';
-import {
-	AppLogger,
-	AppLoggerModule,
-	GrpcErrorDto,
-	GrpcException,
-} from '@pathly-backend/common/index.js';
+import { AppLoggerModule } from '@pathly-backend/common/index.js';
 import type {
 	FindOnePathResponse,
 	FindPathsResponse,
@@ -23,15 +18,14 @@ import type {
 	UpdatePathUseCase,
 } from '@/app/paths/use-cases';
 import {
-	mockedCreateCommand,
 	mockedFindOneCommand,
 	mockedRemoveCommand,
 	mockedUpdateCommand,
-} from '@/app/paths/use-cases/tests/mocks/commands.mock';
+} from '@/app/paths/tests/mocks/commands.mock';
 import { PathNotFoundException } from '@/domain/paths/exceptions';
 import { DiToken } from '@/infra/common/enums';
 import { PathsController } from '../paths.controller';
-import { mockedPath } from './mocks/paths.mock';
+import { mockedClientPath, mockedPath } from './mocks/paths.mock';
 import { mockedFindOnePayload, mockedFindPayload } from './mocks/payloads.mock';
 import { mockedFindUseCase } from './mocks/use-cases.mock';
 
@@ -83,7 +77,7 @@ describe('PathsController', () => {
 	describe('find', () => {
 		it('should return FindPathsResponse', async () => {
 			const expectedResult: FindPathsResponse = {
-				paths: [mockedPath],
+				paths: [mockedClientPath],
 			};
 
 			findUseCase.execute.mockResolvedValueOnce([mockedPath]);
@@ -110,7 +104,7 @@ describe('PathsController', () => {
 	describe('findOne', () => {
 		it('should return FindOnePathResponse', async () => {
 			const expectedResult: FindOnePathResponse = {
-				path: mockedPath,
+				path: mockedClientPath,
 			};
 
 			findOneUseCase.execute.mockResolvedValueOnce(mockedPath);
@@ -152,7 +146,7 @@ describe('PathsController', () => {
 	describe('create', () => {
 		it('should return CreatePathResponse', async () => {
 			const expectedResult: CreateResponse = {
-				path: mockedPath,
+				path: mockedClientPath,
 			};
 
 			createUseCase.execute.mockResolvedValueOnce(mockedPath);
@@ -185,7 +179,7 @@ describe('PathsController', () => {
 	describe('update', () => {
 		it('should return UpdatePathResponse', async () => {
 			const expectedResult: UpdateResponse = {
-				path: mockedPath,
+				path: mockedClientPath,
 			};
 
 			updateUseCase.execute.mockResolvedValueOnce(mockedPath);
@@ -227,7 +221,7 @@ describe('PathsController', () => {
 	describe('remove', () => {
 		it('should return RemovePathResponse', async () => {
 			const expectedResult: RemoveResponse = {
-				path: mockedPath,
+				path: mockedClientPath,
 			};
 
 			removeUseCase.execute.mockResolvedValueOnce(mockedPath);

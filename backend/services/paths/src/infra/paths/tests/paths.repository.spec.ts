@@ -6,7 +6,7 @@ import {
 	mockedFindOneCommand,
 	mockedRemoveCommand,
 	mockedUpdateCommand,
-} from '@/app/paths/use-cases/tests/mocks/commands.mock';
+} from '@/app/paths/tests/mocks/commands.mock';
 import { PathsRepository } from '../paths.repository';
 import { mockedDb, mockedDbService } from './mocks/db.mock';
 import { mockedDbPath, mockedPath } from './mocks/paths.mock';
