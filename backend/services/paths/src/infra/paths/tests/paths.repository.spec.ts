@@ -7,10 +7,10 @@ import {
 	mockedRemoveCommand,
 	mockedUpdateCommand,
 } from '@/app/paths/use-cases/tests/mocks/commands.mock';
-import { DbService } from '@/infra/db/db.service';
 import { PathsRepository } from '../paths.repository';
 import { mockedDb, mockedDbService } from './mocks/db.mock';
 import { mockedDbPath, mockedPath } from './mocks/paths.mock';
+import { PathsApiConstraints } from '../enums';
 
 describe('PathsRepository', () => {
 	let pathsRepository: PathsRepository;
@@ -30,6 +30,9 @@ describe('PathsRepository', () => {
 			const result = await pathsRepository.find(mockedFindCommand);
 
 			expect(result).toEqual([mockedPath]);
+			expect(result.length).toBeLessThanOrEqual(
+				PathsApiConstraints.DEFAULT_LIMIT,
+			);
 		});
 
 		it('should throw DbException', async () => {
