@@ -32,19 +32,21 @@ import {
 	removeSectionSchema,
 	updateSectionSchema,
 } from './schemas';
+import { PathNotFoundException } from '@/domain/paths/exceptions';
+import { PathsApiErrorCodes } from '@pathly-backend/contracts/paths/v1/api.js';
 
 @Controller()
 export class SectionsController {
 	constructor(
-		@Inject(DiToken.FIND_PATHS_USE_CASE)
+		@Inject(DiToken.FIND_SECTIONS_USE_CASE)
 		private readonly findSectionsUseCase: FindSectionsUseCase,
-		@Inject(DiToken.FIND_ONE_PATH_USE_CASE)
+		@Inject(DiToken.FIND_ONE_SECTION_USE_CASE)
 		private readonly findOneSectionUseCase: FindOneSectionUseCase,
-		@Inject(DiToken.CREATE_PATH_USE_CASE)
+		@Inject(DiToken.CREATE_SECTION_USE_CASE)
 		private readonly createSectionUseCase: CreateSectionUseCase,
-		@Inject(DiToken.UPDATE_PATH_USE_CASE)
+		@Inject(DiToken.UPDATE_SECTION_USE_CASE)
 		private readonly updateSectionUseCase: UpdateSectionUseCase,
-		@Inject(DiToken.REMOVE_PATH_USE_CASE)
+		@Inject(DiToken.REMOVE_SECTION_USE_CASE)
 		private readonly removeSectionUseCase: RemoveSectionUseCase,
 		@Inject(AppLogger)
 		private readonly appLogger: AppLogger,
@@ -82,7 +84,11 @@ export class SectionsController {
 		} catch (err) {
 			if (err instanceof SectionNotFoundException) {
 				throw new GrpcException(
-					new GrpcErrorDto('section not found', GrpcStatus.NOT_FOUND),
+					new GrpcErrorDto(
+						'section not found',
+						GrpcStatus.NOT_FOUND,
+						PathsApiErrorCodes.SECTION_NOT_FOUND,
+					),
 				);
 			}
 
@@ -104,6 +110,17 @@ export class SectionsController {
 
 			return { section: sectionEntityToClient(section) };
 		} catch (err) {
+			if (err instanceof PathNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						'path not found',
+						GrpcStatus.NOT_FOUND,
+						PathsApiErrorCodes.PATH_NOT_FOUND,
+					),
+					err,
+				);
+			}
+
 			throw new GrpcException(
 				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
 				err,
@@ -122,9 +139,24 @@ export class SectionsController {
 
 			return { section: sectionEntityToClient(section) };
 		} catch (err) {
+			if (err instanceof PathNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						'path not found',
+						GrpcStatus.NOT_FOUND,
+						PathsApiErrorCodes.PATH_NOT_FOUND,
+					),
+					err,
+				);
+			}
+
 			if (err instanceof SectionNotFoundException) {
 				throw new GrpcException(
-					new GrpcErrorDto('section not found', GrpcStatus.NOT_FOUND),
+					new GrpcErrorDto(
+						'section not found',
+						GrpcStatus.NOT_FOUND,
+						PathsApiErrorCodes.SECTION_NOT_FOUND,
+					),
 				);
 			}
 
@@ -150,7 +182,11 @@ export class SectionsController {
 		} catch (err) {
 			if (err instanceof SectionNotFoundException) {
 				throw new GrpcException(
-					new GrpcErrorDto('section not found', GrpcStatus.NOT_FOUND),
+					new GrpcErrorDto(
+						'section not found',
+						GrpcStatus.NOT_FOUND,
+						PathsApiErrorCodes.SECTION_NOT_FOUND,
+					),
 				);
 			}
 

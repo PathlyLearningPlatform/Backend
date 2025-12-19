@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package paths.v1;
+
+enum PathsApiErrorCodes {
+  PATH_CANNOT_BE_REMOVED = 0;
+  PATH_NOT_FOUND = 1;
+  SECTION_NOT_FOUND = 2;
+}

@@ -7,7 +7,7 @@ import {
 	mockedRemoveCommand,
 	mockedUpdateCommand,
 } from '@/app/sections/tests/mocks/commands.mock';
-import { SectionsRepository } from '../sections.repository';
+import { SectionsRepository } from '../postgres.repository';
 import { mockedDb, mockedDbService } from './mocks/db.mock';
 import { mockedDbSection, mockedSection } from './mocks/sections.mock';
 import { SectionsApiConstraints } from '../enums';

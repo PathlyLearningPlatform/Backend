@@ -25,6 +25,7 @@
 		"db:push": "drizzle-kit push"
 	},
 	"dependencies": {
+		"@drdgvhbh/postgres-error-codes": "^0.0.6",
 		"@grpc/grpc-js": "^1.14.2",
 		"@grpc/proto-loader": "^0.8.0",
 		"@grpc/reflection": "^1.0.4",

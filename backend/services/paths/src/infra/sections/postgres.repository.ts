@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DbException, SortType } from '@pathly-backend/common/index.js';
-import { asc, desc, eq } from 'drizzle-orm';
+import { DbException } from '@pathly-backend/common/index.js';
+import { eq } from 'drizzle-orm';
 import type {
 	CreateSectionCommand,
 	FindOneSectionCommand,
@@ -27,7 +27,7 @@ import { SectionsApiConstraints } from './enums';
  * @description This class is a concrete implementation of ISectionsRepository interface. It's reponsibility is to perform CRUD operations on sections using postgres as data source.
  */
 @Injectable()
-export class SectionsRepository implements ISectionsRepository {
+export class PostgresSectionsRepository implements ISectionsRepository {
 	private db: Db;
 
 	constructor(@Inject(DbService) private readonly dbService: DbService) {

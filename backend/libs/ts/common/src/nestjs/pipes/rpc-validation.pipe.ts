@@ -32,7 +32,7 @@ export class RpcValidationPipe implements PipeTransform {
           }),
         ];
 
-        throw new RpcException(new GrpcErrorDto(err.message, GrpcStatus.INVALID_ARGUMENT, validationErrors))
+        throw new RpcException(new GrpcErrorDto(err.message, GrpcStatus.INVALID_ARGUMENT, null, validationErrors))
       }
 
       throw new RpcException(new GrpcErrorDto('validation failed', GrpcStatus.INVALID_ARGUMENT));

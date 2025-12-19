@@ -20,10 +20,13 @@ import {
 	AppException,
 	GrpcErrorDto,
 	GrpcException,
-	throwGrpcError,
 } from '@pathly-backend/common'
 import { status as GrpcStatus } from '@grpc/grpc-js'
-import { PathException, PathNotFoundException } from './exceptions'
+import {
+	PathCannotBeRemovedException,
+	PathNotFoundException,
+} from './exceptions'
+import { PathsApiErrorCodes } from '@pathly-backend/contracts/paths/v1/api.js'
 
 @Injectable()
 export class PathsService implements OnModuleInit {
@@ -39,9 +42,11 @@ export class PathsService implements OnModuleInit {
 	async find(request: FindPathsRequest): Promise<FindPathsResponse> {
 		try {
 			const result = await firstValueFrom(
-				this.pathsServiceClient
-					.find(request)
-					.pipe(catchError((err: GrpcErrorDto) => throwGrpcError(err))),
+				this.pathsServiceClient.find(request).pipe(
+					catchError((err: GrpcErrorDto) => {
+						throw new GrpcException(err)
+					}),
+				),
 			)
 
 			return result
@@ -53,9 +58,11 @@ export class PathsService implements OnModuleInit {
 	async findOne(request: FindOnePathRequest): Promise<FindOnePathResponse> {
 		try {
 			const result = await firstValueFrom(
-				this.pathsServiceClient
-					.findOne(request)
-					.pipe(catchError((err: GrpcErrorDto) => throwGrpcError(err))),
+				this.pathsServiceClient.findOne(request).pipe(
+					catchError((err: GrpcErrorDto) => {
+						throw new GrpcException(err)
+					}),
+				),
 			)
 
 			return result
@@ -63,8 +70,8 @@ export class PathsService implements OnModuleInit {
 			const grpcErr = err as GrpcException
 			const errRes = grpcErr.getError() as GrpcErrorDto
 
-			switch (errRes.code) {
-				case GrpcStatus.NOT_FOUND:
+			switch (errRes.apiCode) {
+				case PathsApiErrorCodes.PATH_NOT_FOUND:
 					throw new PathNotFoundException(request.where!.id)
 				default:
 					throw new AppException('failed to find one path', true, err)
@@ -75,9 +82,11 @@ export class PathsService implements OnModuleInit {
 	async create(request: CreatePathRequest): Promise<CreatePathResponse> {
 		try {
 			const result = await firstValueFrom(
-				this.pathsServiceClient
-					.create(request)
-					.pipe(catchError((err: GrpcErrorDto) => throwGrpcError(err))),
+				this.pathsServiceClient.create(request).pipe(
+					catchError((err: GrpcErrorDto) => {
+						throw new GrpcException(err)
+					}),
+				),
 			)
 
 			return result
@@ -89,9 +98,11 @@ export class PathsService implements OnModuleInit {
 	async update(request: UpdatePathRequest): Promise<UpdatePathResponse> {
 		try {
 			const result = await firstValueFrom(
-				this.pathsServiceClient
-					.update(request)
-					.pipe(catchError((err: GrpcErrorDto) => throwGrpcError(err))),
+				this.pathsServiceClient.update(request).pipe(
+					catchError((err: GrpcErrorDto) => {
+						throw new GrpcException(err)
+					}),
+				),
 			)
 
 			return result
@@ -99,8 +110,8 @@ export class PathsService implements OnModuleInit {
 			const grpcErr = err as GrpcException
 			const errRes = grpcErr.getError() as GrpcErrorDto
 
-			switch (errRes.code) {
-				case GrpcStatus.NOT_FOUND:
+			switch (errRes.apiCode) {
+				case PathsApiErrorCodes.PATH_NOT_FOUND:
 					throw new PathNotFoundException(request.where!.id)
 				default:
 					throw new AppException('failed to update path', true, err)
@@ -111,9 +122,11 @@ export class PathsService implements OnModuleInit {
 	async remove(request: RemovePathRequest): Promise<RemovePathResponse> {
 		try {
 			const result = await firstValueFrom(
-				this.pathsServiceClient
-					.remove(request)
-					.pipe(catchError((err: GrpcErrorDto) => throwGrpcError(err))),
+				this.pathsServiceClient.remove(request).pipe(
+					catchError((err: GrpcErrorDto) => {
+						throw new GrpcException(err)
+					}),
+				),
 			)
 
 			return result
@@ -121,9 +134,11 @@ export class PathsService implements OnModuleInit {
 			const grpcErr = err as GrpcException
 			const errRes = grpcErr.getError() as GrpcErrorDto
 
-			switch (errRes.code) {
-				case GrpcStatus.NOT_FOUND:
+			switch (errRes.apiCode) {
+				case PathsApiErrorCodes.PATH_NOT_FOUND:
 					throw new PathNotFoundException(request.where!.id)
+				case PathsApiErrorCodes.PATH_CANNOT_BE_REMOVED:
+					throw new PathCannotBeRemovedException(request.where!.id)
 				default:
 					throw new AppException('failed to remove path', true, err)
 			}

@@ -9,47 +9,47 @@ import {
 import { DiToken } from '../common/enums';
 import { DbModule } from '../db/db.module';
 import { PathsController } from './paths.controller';
-import { PathsRepository } from './paths.repository';
+import { PostgresPathsRepository } from './postgres.repository';
 
 @Module({
 	imports: [DbModule],
 	controllers: [PathsController],
 	providers: [
-		PathsRepository,
+		PostgresPathsRepository,
 		{
 			provide: DiToken.FIND_PATHS_USE_CASE,
-			useFactory(repository: PathsRepository) {
+			useFactory(repository: PostgresPathsRepository) {
 				return new FindPathsUseCase(repository);
 			},
-			inject: [PathsRepository],
+			inject: [PostgresPathsRepository],
 		},
 		{
 			provide: DiToken.FIND_ONE_PATH_USE_CASE,
-			useFactory(repository: PathsRepository) {
+			useFactory(repository: PostgresPathsRepository) {
 				return new FindOnePathUseCase(repository);
 			},
-			inject: [PathsRepository],
+			inject: [PostgresPathsRepository],
 		},
 		{
 			provide: DiToken.CREATE_PATH_USE_CASE,
-			useFactory(repository: PathsRepository) {
+			useFactory(repository: PostgresPathsRepository) {
 				return new CreatePathUseCase(repository);
 			},
-			inject: [PathsRepository],
+			inject: [PostgresPathsRepository],
 		},
 		{
 			provide: DiToken.UPDATE_PATH_USE_CASE,
-			useFactory(repository: PathsRepository) {
+			useFactory(repository: PostgresPathsRepository) {
 				return new UpdatePathUseCase(repository);
 			},
-			inject: [PathsRepository],
+			inject: [PostgresPathsRepository],
 		},
 		{
 			provide: DiToken.REMOVE_PATH_USE_CASE,
-			useFactory(repository: PathsRepository) {
+			useFactory(repository: PostgresPathsRepository) {
 				return new RemovePathUseCase(repository);
 			},
-			inject: [PathsRepository],
+			inject: [PostgresPathsRepository],
 		},
 	],
 })

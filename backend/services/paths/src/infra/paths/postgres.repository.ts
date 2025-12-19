@@ -1,5 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DbException, SortType } from '@pathly-backend/common/index.js';
+import {
+	DbException,
+	InvalidReferenceException,
+	SortType,
+} from '@pathly-backend/common/index.js';
 import { asc, desc, eq } from 'drizzle-orm';
 import type {
 	CreatePathCommand,
@@ -23,12 +27,15 @@ import {
 	updatePathCommandToDb,
 } from './helpers';
 import { PathsApiConstraints } from './enums';
+import { DrizzleQueryError } from 'drizzle-orm';
+import { DatabaseError as PostgresError } from 'pg';
+import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
 
 /**
  * @description This class is a concrete implementation of IPathsRepository interface. It's reponsibility is to perform CRUD operations on paths using postgres as data source.
  */
 @Injectable()
-export class PathsRepository implements IPathsRepository {
+export class PostgresPathsRepository implements IPathsRepository {
 	private db: Db;
 
 	constructor(@Inject(DbService) private readonly dbService: DbService) {
@@ -138,7 +145,9 @@ export class PathsRepository implements IPathsRepository {
 	 *
 	 * @param command
 	 * @returns removed path or null if path is not found
-	 * @throws DbException if there is db error
+	 * @throws
+	 * {DbException} if there is db error
+	 * {InvalidReferenceException} if there is foreign key violation
 	 * @description this function removes path from a database
 	 */
 	async remove(command: RemovePathCommand): Promise<Path | null> {
@@ -152,6 +161,14 @@ export class PathsRepository implements IPathsRepository {
 
 			return result.length <= 0 ? null : dbPathToEntity(result[0]);
 		} catch (err) {
+			if (err instanceof DrizzleQueryError) {
+				if (err.cause instanceof PostgresError) {
+					if (err.cause.code === PG_FOREIGN_KEY_VIOLATION) {
+						throw new InvalidReferenceException(err.message, err);
+					}
+				}
+			}
+
 			throw new DbException('db error', err, true);
 		}
 	}

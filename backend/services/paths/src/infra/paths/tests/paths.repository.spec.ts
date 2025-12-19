@@ -7,7 +7,7 @@ import {
 	mockedRemoveCommand,
 	mockedUpdateCommand,
 } from '@/app/paths/tests/mocks/commands.mock';
-import { PathsRepository } from '../paths.repository';
+import { PathsRepository } from '../postgres.repository';
 import { mockedDb, mockedDbService } from './mocks/db.mock';
 import { mockedDbPath, mockedPath } from './mocks/paths.mock';
 import { PathsApiConstraints } from '../enums';

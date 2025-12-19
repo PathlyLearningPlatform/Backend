@@ -14,6 +14,7 @@ import type {
 	RemovePathResponse,
 	UpdatePathResponse,
 } from '@pathly-backend/contracts/paths/v1/paths.js';
+import { PathsApiErrorCodes } from '@pathly-backend/contracts/paths/v1/api.js';
 import type z from 'zod';
 import type {
 	CreatePathUseCase,
@@ -22,7 +23,10 @@ import type {
 	RemovePathUseCase,
 	UpdatePathUseCase,
 } from '@/app/paths/use-cases';
-import { PathNotFoundException } from '@/domain/paths/exceptions';
+import {
+	PathCannotBeRemovedException,
+	PathNotFoundException,
+} from '@/domain/paths/exceptions';
 import { DiToken } from '../common/enums';
 import { pathEntityToClient } from './helpers';
 import {
@@ -82,7 +86,11 @@ export class PathsController {
 		} catch (err) {
 			if (err instanceof PathNotFoundException) {
 				throw new GrpcException(
-					new GrpcErrorDto('path not found', GrpcStatus.NOT_FOUND),
+					new GrpcErrorDto(
+						'path not found',
+						GrpcStatus.NOT_FOUND,
+						PathsApiErrorCodes.PATH_NOT_FOUND,
+					),
 				);
 			}
 
@@ -124,7 +132,11 @@ export class PathsController {
 		} catch (err) {
 			if (err instanceof PathNotFoundException) {
 				throw new GrpcException(
-					new GrpcErrorDto('path not found', GrpcStatus.NOT_FOUND),
+					new GrpcErrorDto(
+						'path not found',
+						GrpcStatus.NOT_FOUND,
+						PathsApiErrorCodes.PATH_NOT_FOUND,
+					),
 				);
 			}
 
@@ -148,9 +160,23 @@ export class PathsController {
 				path: pathEntityToClient(path),
 			};
 		} catch (err) {
+			if (err instanceof PathCannotBeRemovedException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						'Path cannot be removed because it has sections',
+						GrpcStatus.FAILED_PRECONDITION,
+						PathsApiErrorCodes.PATH_CANNOT_BE_REMOVED,
+					),
+				);
+			}
+
 			if (err instanceof PathNotFoundException) {
 				throw new GrpcException(
-					new GrpcErrorDto('path not found', GrpcStatus.NOT_FOUND),
+					new GrpcErrorDto(
+						'path not found',
+						GrpcStatus.NOT_FOUND,
+						PathsApiErrorCodes.PATH_NOT_FOUND,
+					),
 				);
 			}
 

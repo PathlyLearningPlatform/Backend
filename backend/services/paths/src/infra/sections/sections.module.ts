@@ -9,47 +9,55 @@ import {
 import { DiToken } from '../common/enums';
 import { DbModule } from '../db/db.module';
 import { SectionsController } from './sections.controller';
-import { SectionsRepository } from './sections.repository';
+import { PostgresSectionsRepository } from './postgres.repository';
+import { PostgresPathsRepository } from '../paths/postgres.repository';
 
 @Module({
 	imports: [DbModule],
 	controllers: [SectionsController],
 	providers: [
-		SectionsRepository,
+		PostgresSectionsRepository,
+		PostgresPathsRepository,
 		{
-			provide: DiToken.FIND_PATHS_USE_CASE,
-			useFactory(repository: SectionsRepository) {
-				return new FindSectionsUseCase(repository);
+			provide: DiToken.FIND_SECTIONS_USE_CASE,
+			useFactory(sectionsRepository: PostgresSectionsRepository) {
+				return new FindSectionsUseCase(sectionsRepository);
 			},
-			inject: [SectionsRepository],
+			inject: [PostgresSectionsRepository],
 		},
 		{
-			provide: DiToken.FIND_ONE_PATH_USE_CASE,
-			useFactory(repository: SectionsRepository) {
-				return new FindOneSectionUseCase(repository);
+			provide: DiToken.FIND_ONE_SECTION_USE_CASE,
+			useFactory(sectionsRepository: PostgresSectionsRepository) {
+				return new FindOneSectionUseCase(sectionsRepository);
 			},
-			inject: [SectionsRepository],
+			inject: [PostgresSectionsRepository],
 		},
 		{
-			provide: DiToken.CREATE_PATH_USE_CASE,
-			useFactory(repository: SectionsRepository) {
-				return new CreateSectionUseCase(repository);
+			provide: DiToken.CREATE_SECTION_USE_CASE,
+			useFactory(
+				sectionsRepository: PostgresSectionsRepository,
+				pathsRepository: PostgresPathsRepository,
+			) {
+				return new CreateSectionUseCase(sectionsRepository, pathsRepository);
 			},
-			inject: [SectionsRepository],
+			inject: [PostgresSectionsRepository, PostgresPathsRepository],
 		},
 		{
-			provide: DiToken.UPDATE_PATH_USE_CASE,
-			useFactory(repository: SectionsRepository) {
-				return new UpdateSectionUseCase(repository);
+			provide: DiToken.UPDATE_SECTION_USE_CASE,
+			useFactory(
+				sectionsRepository: PostgresSectionsRepository,
+				pathsRepository: PostgresPathsRepository,
+			) {
+				return new UpdateSectionUseCase(sectionsRepository, pathsRepository);
 			},
-			inject: [SectionsRepository],
+			inject: [PostgresSectionsRepository, PostgresPathsRepository],
 		},
 		{
-			provide: DiToken.REMOVE_PATH_USE_CASE,
-			useFactory(repository: SectionsRepository) {
-				return new RemoveSectionUseCase(repository);
+			provide: DiToken.REMOVE_SECTION_USE_CASE,
+			useFactory(sectionsSepository: PostgresSectionsRepository) {
+				return new RemoveSectionUseCase(sectionsSepository);
 			},
-			inject: [SectionsRepository],
+			inject: [PostgresSectionsRepository],
 		},
 	],
 })

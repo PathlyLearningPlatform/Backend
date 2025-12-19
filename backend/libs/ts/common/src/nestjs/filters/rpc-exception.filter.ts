@@ -21,7 +21,7 @@ export class RpcExceptionFilter
   catch(exception: RpcException, host: ArgumentsHost): Observable<unknown> {
     const ctx = host.switchToRpc();
 
-    this.appLogger.error(exception);
+    this.appLogger.error(exception.getError());
 
     let errRes: GrpcErrorDto;
     const errObj = exception.getError();
@@ -34,6 +34,6 @@ export class RpcExceptionFilter
       errRes = new GrpcErrorDto(exception.message, GrpcStatus.UNKNOWN)
     }
 
-    return throwError(() => errRes);
+    return throwError(() => errObj);
   }
 }

@@ -1,5 +1,6 @@
 import {
 	Body,
+	ConflictException,
 	Controller,
 	Delete,
 	Get,
@@ -28,7 +29,10 @@ import {
 	UpdatePathBodyDto,
 	UpdatePathResponseDto,
 } from './dtos'
-import { PathNotFoundException } from './exceptions'
+import {
+	PathCannotBeRemovedException,
+	PathNotFoundException,
+} from './exceptions'
 import {
 	createPathBodySchema,
 	findPathsQuerySchema,
@@ -182,6 +186,12 @@ export class PathsController {
 				path: clientPathToResponseDto(result.path!),
 			}
 		} catch (err) {
+			if (err instanceof PathCannotBeRemovedException) {
+				throw new ConflictException(
+					new HttpErrorDto('path cannot be removed because it has sections'),
+				)
+			}
+
 			if (err instanceof PathNotFoundException) {
 				throw new NotFoundException(new HttpErrorDto('path not found'))
 			}
