@@ -12,12 +12,10 @@ import {
 	RemovePathResponse,
 	UpdatePathRequest,
 	UpdatePathResponse,
+	FindOnePathRequest,
+	FindOnePathResponse,
 } from '@pathly-backend/contracts/paths/v1/paths.js'
 import { catchError, firstValueFrom } from 'rxjs'
-import {
-	FindOneRequest,
-	FindOneResponse,
-} from '@pathly-backend/contracts/proto/paths/v1/paths.js'
 import {
 	AppException,
 	GrpcErrorDto,
@@ -52,7 +50,7 @@ export class PathsService implements OnModuleInit {
 		}
 	}
 
-	async findOne(request: FindOneRequest): Promise<FindOneResponse> {
+	async findOne(request: FindOnePathRequest): Promise<FindOnePathResponse> {
 		try {
 			const result = await firstValueFrom(
 				this.pathsServiceClient
