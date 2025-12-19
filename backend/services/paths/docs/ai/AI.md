@@ -15,5 +15,5 @@ DDD + Clean Architecture. Domain Model: Path (AR) → Section → Unit → Item 
 - Inward dependency: infra → domain → app (app not impl yet)
 - Domain entities ≠ persistence models (mappers not yet impl)
 - Repository interface returns domain entities only
-- Commands use @nestjs/mapped-types for DRY
+- Commands use `@nestjs/mapped-types` for DRY (treated as a normal npm utility lib; TS-only type helpers)
 - Find commands empty, ready for filtering/sorting/pagination

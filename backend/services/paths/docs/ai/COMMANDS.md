@@ -8,5 +8,5 @@ FindOnePathCommand: {} (ready for id param)
 
 Returns: Path, Path|null, Path[], Promise
 Naming: [Action][Entity]Command
-Pattern: @nestjs/mapped-types for DRY
+Pattern: `@nestjs/mapped-types` for DRY (TS-only type helpers; treated as normal npm lib)
 
