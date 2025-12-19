@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package paths.v1;
+
+import "common/types.proto";
+
+message Section {
+  string id = 1;
+  string createdAt = 2;
+  string updatedAt = 3;
+  string name = 4;
+  string description = 5;
+  int32 order = 6;
+  string pathId = 7;
+}
+
+service SectionsService {
+  rpc Find(FindSectionsRequest) returns (FindSectionsResponse) {};
+  rpc FindOne(FindOneSectionRequest) returns (FindOneSectionResponse) {};
+  rpc Create(CreateSectionRequest) returns (CreateSectionResponse) {};
+  rpc Update(UpdateSectionRequest) returns (UpdateSectionResponse) {};
+  rpc Remove(RemoveSectionRequest) returns (RemoveSectionResponse) {};
+}
+
+message FindSectionsOptions {
+  optional int32 limit = 1;
+  optional int32 page = 2;
+}
+message FindSectionsRequest {
+  optional FindSectionsOptions options = 1;
+}
+message FindSectionsResponse {
+  repeated Section sections = 1;
+}
+
+message FindOneSectionWhere {
+  string id = 1;
+}
+message FindOneSectionRequest {
+  FindOneSectionWhere where = 1;
+}
+message FindOneSectionResponse {
+  Section section = 1;
+}
+
+message CreateSectionRequest {
+  string name = 1;
+  optional string description = 2;
+  int32 order = 3;
+  string pathId = 4;
+}
+message CreateSectionResponse {
+  Section section = 1;
+}
+
+message UpdateSectionFields {
+  optional string name = 1;
+  optional string description = 2;
+  optional int32 order = 3;
+}
+message UpdateSectionWhere {
+  string id = 1;
+}
+message UpdateSectionRequest {
+  UpdateSectionWhere where = 1;
+  optional UpdateSectionFields fields = 2;
+}
+message UpdateSectionResponse {
+  Section section = 1;
+}
+
+message RemoveSectionWhere {
+  string id = 1;
+}
+message RemoveSectionRequest {
+  RemoveSectionWhere where = 1;
+}
+message RemoveSectionResponse {
+  Section section = 1;
+}
