@@ -108,7 +108,6 @@ These files should be updated whenever:
 ```
 backend/
 ├── package.json                 # npm workspace root (manages Node.js services & libs)
-├── Cargo.toml                   # Cargo workspace root (manages Rust services & libs)
 │
 ├── services/                    # Domain-organized microservices
 │   ├── paths/                   # Learning paths management
@@ -134,9 +133,11 @@ backend/
 │
 ├── compose.yaml                 # Local development orchestration
 ├── prod.compose.yaml            # Production orchestration
-├── AI.md                        # This file - General architecture
-├── AI-SERVICES.md               # Services-specific conventions
-├── AI-LIBS.md                   # Libraries-specific conventions
+├── docs/
+│   └── ai/
+│       ├── AI.md                # General architecture (this file)
+│       ├── AI-SERVICES.md       # Services-specific conventions
+│       └── AI-LIBS.md           # Libraries-specific conventions
 └── [configuration files]
 ```
 
@@ -149,7 +150,7 @@ backend/
   - `contracts/` → Language-agnostic gRPC definitions (special case)
 - **`infra/`**: Infrastructure services that support multiple domains (cache, queues, proxies, databases)
 - **`scripts/`**: Automation and setup helpers
-- **Workspace files**: `package.json` and `Cargo.toml` at root level (backend folder) to manage both services and libs
+- **Workspace files**: `package.json` at root level (backend folder). Add `Cargo.toml` when Rust services/libs are introduced.
 
 ---
 
@@ -214,6 +215,12 @@ Migrate to Nx or Turborepo when **any** of these occur:
 - **Shared utilities** - Extract only when used in 2+ places
 - **Clear boundaries** - Services shouldn't know each other's internals
 - **Language conventions** - Follow each language's idioms, not forced consistency
+
+### Dependencies
+
+- Prefer framework-agnostic dependencies in `domain/`.
+- `@nestjs/mapped-types` is treated like a normal npm utility library. It is acceptable in `domain/` when used purely for TypeScript type/DTO helpers (no Nest runtime behavior).
+- Avoid pulling Nest runtime concepts into `domain/` (DI, decorators, modules/providers).
 
 ### Quality Standards
 

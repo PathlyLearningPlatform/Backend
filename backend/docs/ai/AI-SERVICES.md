@@ -54,6 +54,12 @@ services/
 - Shared code lives in `libs/[language]/`, not duplicated
 - Infrastructure services are shared and versioned separately
 
+### Dependency Boundaries
+
+- Keep `domain/` framework-agnostic (no Nest DI/modules/decorators).
+- Framework-named but framework-agnostic utilities are OK in `domain/`.
+	- Example: `@nestjs/mapped-types` is treated as a normal npm library when used only for TypeScript type/DTO helpers.
+
 ---
 
 ## Communication Patterns
