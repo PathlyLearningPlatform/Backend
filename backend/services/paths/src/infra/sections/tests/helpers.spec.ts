@@ -1,0 +1,24 @@
+import { dbSectionToEntity, sectionEntityToClient } from '../helpers';
+import {
+	mockedClientSection,
+	mockedDbSection,
+	mockedSection,
+} from './mocks/sections.mock';
+
+describe('helpers', () => {
+	describe('dbSectionToEntity', () => {
+		it('should return domain section entity', () => {
+			const result = dbSectionToEntity(mockedDbSection);
+
+			expect(result).toEqual(mockedSection);
+		});
+	});
+
+	describe('sectionEntityToClient', () => {
+		it('should return client section', () => {
+			const result = sectionEntityToClient(mockedSection);
+
+			expect(result).toEqual(mockedClientSection);
+		});
+	});
+});

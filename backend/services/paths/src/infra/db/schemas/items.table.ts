@@ -1,5 +1,5 @@
 import { integer, pgEnum, pgTable, unique, uuid } from 'drizzle-orm/pg-core';
-import { ItemType } from '@/domain/paths/enums';
+import { ItemType } from '@/domain/items/enums';
 import { createdAt, updatedAt } from './helpers';
 import { lessonsTable } from './lessons.table';
 

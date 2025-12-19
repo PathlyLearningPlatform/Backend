@@ -9,6 +9,7 @@ import {
 import { validateConfig } from './infra/config';
 import { DbModule } from './infra/db/db.module';
 import { PathsModule } from './infra/paths/paths.module';
+import { SectionsModule } from './infra/sections/sections.module';
 
 @Module({
 	imports: [
@@ -22,6 +23,7 @@ import { PathsModule } from './infra/paths/paths.module';
 			isGlobal: true,
 		}),
 		PathsModule,
+		SectionsModule,
 	],
 	providers: [
 		{

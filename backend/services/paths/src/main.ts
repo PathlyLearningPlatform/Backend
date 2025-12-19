@@ -21,6 +21,7 @@ async function bootstrap() {
 				protoPath: [
 					healthCheckProtoPath,
 					'/usr/src/app/libs/contracts/proto/paths/v1/paths.proto',
+					'/usr/src/app/libs/contracts/proto/paths/v1/sections.proto',
 					'/usr/src/app/libs/contracts/proto/common/types.proto',
 				],
 				url: `paths:3000`,

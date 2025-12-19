@@ -1,1 +1,1 @@
-export * from './exercise-difficulty.enum';
+export * from './difficulty.enum';
