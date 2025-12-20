@@ -22,7 +22,7 @@ import {
 } from '@/app/paths/tests/mocks/commands.mock';
 import { PathNotFoundException } from '@/domain/paths/exceptions';
 import { DiToken } from '@/infra/common/enums';
-import { PathsController } from '../paths.controller';
+import { PathsController } from '../grpc.controller';
 import { mockedClientPath, mockedPath } from './mocks/paths.mock';
 import { mockedFindOnePayload, mockedFindPayload } from './mocks/payloads.mock';
 import { mockedFindUseCase } from './mocks/use-cases.mock';

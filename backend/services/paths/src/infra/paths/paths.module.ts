@@ -8,12 +8,12 @@ import {
 } from '@/app/paths/use-cases';
 import { DiToken } from '../common/enums';
 import { DbModule } from '../db/db.module';
-import { PathsController } from './paths.controller';
+import { GrpcPathsController } from './grpc.controller';
 import { PostgresPathsRepository } from './postgres.repository';
 
 @Module({
 	imports: [DbModule],
-	controllers: [PathsController],
+	controllers: [GrpcPathsController],
 	providers: [
 		PostgresPathsRepository,
 		{
@@ -53,4 +53,4 @@ import { PostgresPathsRepository } from './postgres.repository';
 		},
 	],
 })
-export class PathsModule {}
+export class PathsModule { }

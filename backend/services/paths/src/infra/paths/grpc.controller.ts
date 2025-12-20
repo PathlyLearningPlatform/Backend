@@ -38,7 +38,7 @@ import {
 } from './schemas';
 
 @Controller()
-export class PathsController {
+export class GrpcPathsController {
 	constructor(
 		@Inject(DiToken.FIND_PATHS_USE_CASE)
 		private readonly findPathsUseCase: FindPathsUseCase,
@@ -52,7 +52,7 @@ export class PathsController {
 		private readonly removePathUseCase: RemovePathUseCase,
 		@Inject(AppLogger)
 		private readonly appLogger: AppLogger,
-	) {}
+	) { }
 
 	@GrpcMethod('PathsService')
 	async find(
