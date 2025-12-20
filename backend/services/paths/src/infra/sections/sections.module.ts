@@ -8,13 +8,13 @@ import {
 } from '@/app/sections/use-cases';
 import { DiToken } from '../common/enums';
 import { DbModule } from '../db/db.module';
-import { SectionsController } from './sections.controller';
+import { GrpcSectionsController } from './grpc.controller';
 import { PostgresSectionsRepository } from './postgres.repository';
 import { PostgresPathsRepository } from '../paths/postgres.repository';
 
 @Module({
 	imports: [DbModule],
-	controllers: [SectionsController],
+	controllers: [GrpcSectionsController],
 	providers: [
 		PostgresSectionsRepository,
 		PostgresPathsRepository,

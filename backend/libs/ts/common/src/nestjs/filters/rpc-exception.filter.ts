@@ -1,4 +1,3 @@
-import { status as GrpcStatus } from '@grpc/grpc-js';
 import {
   type ArgumentsHost,
   Catch,
@@ -7,32 +6,23 @@ import {
 } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { Observable, throwError } from 'rxjs';
-import { GrpcErrorDto } from '../../dtos/grpc-error.dto.js';
 import { AppLogger } from '../modules/index.js';
+import { GrpcException } from '../exceptions/index.js';
 
-@Catch(RpcException)
-export class RpcExceptionFilter
+@Catch(GrpcException)
+export class GrpcExceptionFilter
   implements NestRpcExceptionFilter<RpcException> {
 
   constructor(@Inject(AppLogger) private readonly appLogger: AppLogger) {
-    this.appLogger.setContext(RpcExceptionFilter.name)
+    this.appLogger.setContext(GrpcExceptionFilter.name)
   }
 
-  catch(exception: RpcException, host: ArgumentsHost): Observable<unknown> {
+  catch(exception: GrpcException, host: ArgumentsHost): Observable<unknown> {
     const ctx = host.switchToRpc();
 
-    this.appLogger.error(exception.getError());
+    this.appLogger.error(exception.getGrpcError());
 
-    let errRes: GrpcErrorDto;
     const errObj = exception.getError();
-
-    if (typeof errObj === 'string') {
-      errRes = new GrpcErrorDto(errObj, GrpcStatus.UNKNOWN)
-    } else if (errObj instanceof GrpcErrorDto) {
-      errRes = errObj;
-    } else {
-      errRes = new GrpcErrorDto(exception.message, GrpcStatus.UNKNOWN)
-    }
 
     return throwError(() => errObj);
   }

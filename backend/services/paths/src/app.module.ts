@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import {
 	AppLoggerModule,
-	RpcExceptionFilter,
+	GrpcExceptionFilter,
 	RpcRequestInterceptor,
 } from '@pathly-backend/common';
 import { validateConfig } from './infra/config';
@@ -29,10 +29,6 @@ import { SectionsModule } from './infra/sections/sections.module';
 		{
 			provide: APP_INTERCEPTOR,
 			useClass: RpcRequestInterceptor,
-		},
-		{
-			provide: APP_FILTER,
-			useClass: RpcExceptionFilter,
 		},
 	],
 })

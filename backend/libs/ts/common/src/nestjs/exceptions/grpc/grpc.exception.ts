@@ -3,20 +3,22 @@ import { GrpcErrorDto } from '../../../dtos'
 import { Metadata, ServiceError } from '@grpc/grpc-js'
 
 export class GrpcException extends RpcException {
-  constructor(error: GrpcErrorDto, public readonly cause?: unknown) {
+  constructor(private grpcError: GrpcErrorDto, public readonly cause?: unknown) {
     const metadata = new Metadata()
 
-    metadata.set('timestamp', error.timestamp)
-
-    if(error.apiCode) {
-      metadata.set('api-code', error.apiCode.toString())
+    if (grpcError.apiCode != null) {
+      metadata.set('api-code', grpcError.apiCode.toString())
     }
 
     super({
-      code: error.code,
-      message: error.message,
-      details: String(error.details),
+      code: grpcError.code,
+      message: grpcError.message,
+      details: String(grpcError.details),
       metadata,
     } as ServiceError)
+  }
+
+  getGrpcError(): GrpcErrorDto {
+    return this.grpcError;
   }
 }

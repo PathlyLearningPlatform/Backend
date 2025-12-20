@@ -1,10 +1,11 @@
 import { status as GrpcStatus } from '@grpc/grpc-js';
-import { Controller, Inject } from '@nestjs/common';
+import { Controller, Inject, UseFilters } from '@nestjs/common';
 import { GrpcMethod, Payload } from '@nestjs/microservices';
 import {
 	AppLogger,
 	GrpcErrorDto,
 	GrpcException,
+	GrpcExceptionFilter,
 	RpcValidationPipe,
 } from '@pathly-backend/common';
 import type {
@@ -35,8 +36,9 @@ import {
 import { PathNotFoundException } from '@/domain/paths/exceptions';
 import { PathsApiErrorCodes } from '@pathly-backend/contracts/paths/v1/api.js';
 
+@UseFilters(GrpcExceptionFilter)
 @Controller()
-export class SectionsController {
+export class GrpcSectionsController {
 	constructor(
 		@Inject(DiToken.FIND_SECTIONS_USE_CASE)
 		private readonly findSectionsUseCase: FindSectionsUseCase,

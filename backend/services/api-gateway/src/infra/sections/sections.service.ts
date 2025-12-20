@@ -15,7 +15,7 @@ import {
 	FindOneSectionRequest,
 	FindOneSectionResponse,
 } from '@pathly-backend/contracts/paths/v1/sections.js'
-import { catchError, firstValueFrom } from 'rxjs'
+import { catchError, firstValueFrom, from, of } from 'rxjs'
 import {
 	AppException,
 	GrpcErrorDto,
@@ -25,12 +25,13 @@ import { SectionNotFoundException } from './exceptions'
 import { PathsApiErrorCodes } from '@pathly-backend/contracts/paths/v1/api.js'
 import { PathNotFoundException } from '../paths/exceptions'
 import { ServiceError } from '@grpc/grpc-js'
+import { throwGrpcException } from '@pathly-backend/common/nestjs/helpers/throw-grpc-exception.helper.js'
 
 @Injectable()
 export class SectionsService implements OnModuleInit {
 	private sectionsServiceClient: SectionsServiceClient
 
-	constructor(@Inject(DiToken.SECTIONS_PACKAGE) private client: ClientGrpc) {}
+	constructor(@Inject(DiToken.SECTIONS_PACKAGE) private client: ClientGrpc) { }
 
 	onModuleInit() {
 		this.sectionsServiceClient = this.client.getService<SectionsServiceClient>(
@@ -42,15 +43,19 @@ export class SectionsService implements OnModuleInit {
 		try {
 			const result = await firstValueFrom(
 				this.sectionsServiceClient.find(request).pipe(
-					catchError((err: GrpcErrorDto) => {
-						throw new GrpcException(err)
-					}),
+					catchError((err: ServiceError) => throwGrpcException(err)),
 				),
 			)
 
 			return result
 		} catch (err) {
-			throw new AppException('failed to find one section', true, err)
+			const grpcErr = err as GrpcException
+			const errRes = grpcErr.getGrpcError()
+
+			switch (errRes.apiCode) {
+				default:
+					throw new AppException('failed to find sections', true, err)
+			}
 		}
 	}
 
@@ -60,16 +65,14 @@ export class SectionsService implements OnModuleInit {
 		try {
 			const result = await firstValueFrom(
 				this.sectionsServiceClient.findOne(request).pipe(
-					catchError((err: GrpcErrorDto) => {
-						throw new GrpcException(err)
-					}),
+					catchError((err: ServiceError) => throwGrpcException(err)),
 				),
 			)
 
 			return result
 		} catch (err) {
 			const grpcErr = err as GrpcException
-			const errRes = grpcErr.getError() as GrpcErrorDto
+			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
 				case PathsApiErrorCodes.SECTION_NOT_FOUND:
@@ -84,31 +87,14 @@ export class SectionsService implements OnModuleInit {
 		try {
 			const result = await firstValueFrom(
 				this.sectionsServiceClient.create(request).pipe(
-					catchError((err: ServiceError) => {
-						const apiCode =
-							err.metadata.get('api-code').length <= 0
-								? null
-								: err.metadata.get('api-code')[0].toString()
-
-						throw new GrpcException(
-							new GrpcErrorDto(
-								err.message,
-								err.code,
-								apiCode ? parseInt(apiCode, 10) : null,
-								err.details,
-							),
-							err.cause,
-						)
-					}),
+					catchError((err: ServiceError) => throwGrpcException(err)),
 				),
 			)
 
 			return result
 		} catch (err) {
 			const grpcErr = err as GrpcException
-			const errRes = grpcErr.getError() as GrpcErrorDto
-
-			console.log(err)
+			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
 				case PathsApiErrorCodes.PATH_NOT_FOUND:
@@ -123,16 +109,14 @@ export class SectionsService implements OnModuleInit {
 		try {
 			const result = await firstValueFrom(
 				this.sectionsServiceClient.update(request).pipe(
-					catchError((err: GrpcErrorDto) => {
-						throw new GrpcException(err)
-					}),
+					catchError((err: ServiceError) => throwGrpcException(err)),
 				),
 			)
 
 			return result
 		} catch (err) {
 			const grpcErr = err as GrpcException
-			const errRes = grpcErr.getError() as GrpcErrorDto
+			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
 				case PathsApiErrorCodes.SECTION_NOT_FOUND:
@@ -147,16 +131,14 @@ export class SectionsService implements OnModuleInit {
 		try {
 			const result = await firstValueFrom(
 				this.sectionsServiceClient.remove(request).pipe(
-					catchError((err: GrpcErrorDto) => {
-						throw new GrpcException(err)
-					}),
+					catchError((err: ServiceError) => throwGrpcException(err)),
 				),
 			)
 
 			return result
 		} catch (err) {
 			const grpcErr = err as GrpcException
-			const errRes = grpcErr.getError() as GrpcErrorDto
+			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
 				case PathsApiErrorCodes.SECTION_NOT_FOUND:

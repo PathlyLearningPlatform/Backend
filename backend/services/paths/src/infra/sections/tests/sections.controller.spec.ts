@@ -22,7 +22,7 @@ import {
 } from '@/app/sections/tests/mocks/commands.mock';
 import { SectionNotFoundException } from '@/domain/sections/exceptions';
 import { DiToken } from '@/infra/common/enums';
-import { SectionsController } from '../sections.controller';
+import { SectionsController } from '../grpc.controller';
 import { mockedClientSection, mockedSection } from './mocks/sections.mock';
 import { mockedFindOnePayload, mockedFindPayload } from './mocks/payloads.mock';
 import { mockedFindUseCase } from './mocks/use-cases.mock';

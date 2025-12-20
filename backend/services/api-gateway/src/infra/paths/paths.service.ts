@@ -21,18 +21,19 @@ import {
 	GrpcErrorDto,
 	GrpcException,
 } from '@pathly-backend/common'
-import { status as GrpcStatus } from '@grpc/grpc-js'
+import { ServiceError } from '@grpc/grpc-js'
 import {
 	PathCannotBeRemovedException,
 	PathNotFoundException,
 } from './exceptions'
 import { PathsApiErrorCodes } from '@pathly-backend/contracts/paths/v1/api.js'
+import { throwGrpcException } from '@pathly-backend/common'
 
 @Injectable()
 export class PathsService implements OnModuleInit {
 	private pathsServiceClient: PathsServiceClient
 
-	constructor(@Inject(DiToken.PATHS_PACKAGE) private client: ClientGrpc) {}
+	constructor(@Inject(DiToken.PATHS_PACKAGE) private client: ClientGrpc) { }
 
 	onModuleInit() {
 		this.pathsServiceClient =
@@ -43,15 +44,19 @@ export class PathsService implements OnModuleInit {
 		try {
 			const result = await firstValueFrom(
 				this.pathsServiceClient.find(request).pipe(
-					catchError((err: GrpcErrorDto) => {
-						throw new GrpcException(err)
-					}),
+					catchError((err: ServiceError) => throwGrpcException(err)),
 				),
 			)
 
 			return result
 		} catch (err) {
-			throw new AppException('failed to find one path', true, err)
+			const grpcErr = err as GrpcException
+			const errRes = grpcErr.getGrpcError()
+
+			switch (errRes.apiCode) {
+				default:
+					throw new AppException('failed to find paths', true, err)
+			}
 		}
 	}
 
@@ -59,16 +64,14 @@ export class PathsService implements OnModuleInit {
 		try {
 			const result = await firstValueFrom(
 				this.pathsServiceClient.findOne(request).pipe(
-					catchError((err: GrpcErrorDto) => {
-						throw new GrpcException(err)
-					}),
+					catchError((err: ServiceError) => throwGrpcException(err)),
 				),
 			)
 
 			return result
 		} catch (err) {
 			const grpcErr = err as GrpcException
-			const errRes = grpcErr.getError() as GrpcErrorDto
+			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
 				case PathsApiErrorCodes.PATH_NOT_FOUND:
@@ -83,15 +86,19 @@ export class PathsService implements OnModuleInit {
 		try {
 			const result = await firstValueFrom(
 				this.pathsServiceClient.create(request).pipe(
-					catchError((err: GrpcErrorDto) => {
-						throw new GrpcException(err)
-					}),
+					catchError((err: ServiceError) => throwGrpcException(err)),
 				),
 			)
 
 			return result
 		} catch (err) {
-			throw new AppException('failed to create path', true, err)
+			const grpcErr = err as GrpcException
+			const errRes = grpcErr.getGrpcError()
+
+			switch (errRes.apiCode) {
+				default:
+					throw new AppException('failed to create path', true, err)
+			}
 		}
 	}
 
@@ -99,16 +106,14 @@ export class PathsService implements OnModuleInit {
 		try {
 			const result = await firstValueFrom(
 				this.pathsServiceClient.update(request).pipe(
-					catchError((err: GrpcErrorDto) => {
-						throw new GrpcException(err)
-					}),
+					catchError((err: ServiceError) => throwGrpcException(err)),
 				),
 			)
 
 			return result
 		} catch (err) {
 			const grpcErr = err as GrpcException
-			const errRes = grpcErr.getError() as GrpcErrorDto
+			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
 				case PathsApiErrorCodes.PATH_NOT_FOUND:
@@ -123,16 +128,14 @@ export class PathsService implements OnModuleInit {
 		try {
 			const result = await firstValueFrom(
 				this.pathsServiceClient.remove(request).pipe(
-					catchError((err: GrpcErrorDto) => {
-						throw new GrpcException(err)
-					}),
+					catchError((err: ServiceError) => throwGrpcException(err)),
 				),
 			)
 
 			return result
 		} catch (err) {
 			const grpcErr = err as GrpcException
-			const errRes = grpcErr.getError() as GrpcErrorDto
+			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
 				case PathsApiErrorCodes.PATH_NOT_FOUND:
