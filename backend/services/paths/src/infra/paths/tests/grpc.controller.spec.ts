@@ -20,15 +20,18 @@ import {
 	mockedRemoveCommand,
 	mockedUpdateCommand,
 } from '@/app/paths/tests/mocks/commands.mock';
-import { PathNotFoundException } from '@/domain/paths/exceptions';
+import {
+	PathCannotBeRemovedException,
+	PathNotFoundException,
+} from '@/domain/paths/exceptions';
 import { DiToken } from '@/infra/common/enums';
-import { PathsController } from '../grpc.controller';
+import { GrpcPathsController } from '../grpc.controller';
 import { mockedClientPath, mockedPath } from './mocks/paths.mock';
 import { mockedFindOnePayload, mockedFindPayload } from './mocks/payloads.mock';
 import { mockedFindUseCase } from './mocks/use-cases.mock';
 
-describe('PathsController', () => {
-	let pathsController: PathsController;
+describe('GrpcPathsController', () => {
+	let pathsController: GrpcPathsController;
 	let findUseCase: jest.Mocked<FindPathsUseCase>;
 	let findOneUseCase: jest.Mocked<FindOnePathUseCase>;
 	let createUseCase: jest.Mocked<CreatePathUseCase>;
@@ -38,7 +41,7 @@ describe('PathsController', () => {
 	beforeEach(async () => {
 		const moduleRef = await Test.createTestingModule({
 			imports: [AppLoggerModule],
-			controllers: [PathsController],
+			controllers: [GrpcPathsController],
 			providers: [
 				{
 					provide: DiToken.FIND_PATHS_USE_CASE,
@@ -63,7 +66,7 @@ describe('PathsController', () => {
 			],
 		}).compile();
 
-		pathsController = moduleRef.get(PathsController);
+		pathsController = moduleRef.get(GrpcPathsController);
 
 		findUseCase = moduleRef.get(DiToken.FIND_PATHS_USE_CASE);
 		findOneUseCase = moduleRef.get(DiToken.FIND_ONE_PATH_USE_CASE);
@@ -240,6 +243,21 @@ describe('PathsController', () => {
 				error: {
 					message: expect.any(String),
 					code: GrpcStatus.NOT_FOUND,
+				},
+			});
+		});
+
+		it('should throw GrpcException with FAILED_PRECONDITION status', async () => {
+			removeUseCase.execute.mockRejectedValueOnce(
+				new PathCannotBeRemovedException(mockedPath.id),
+			);
+
+			const promise = pathsController.remove(mockedFindOneCommand);
+
+			await expect(promise).rejects.toMatchObject({
+				error: {
+					message: expect.any(String),
+					code: GrpcStatus.FAILED_PRECONDITION,
 				},
 			});
 		});

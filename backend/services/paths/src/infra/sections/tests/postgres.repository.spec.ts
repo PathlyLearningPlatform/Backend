@@ -7,20 +7,20 @@ import {
 	mockedRemoveCommand,
 	mockedUpdateCommand,
 } from '@/app/sections/tests/mocks/commands.mock';
-import { SectionsRepository } from '../postgres.repository';
+import { PostgresSectionsRepository } from '../postgres.repository';
 import { mockedDb, mockedDbService } from './mocks/db.mock';
 import { mockedDbSection, mockedSection } from './mocks/sections.mock';
 import { SectionsApiConstraints } from '../enums';
 
 describe('SectionsRepository', () => {
-	let sectionsRepository: SectionsRepository;
+	let sectionsRepository: PostgresSectionsRepository;
 
 	beforeEach(async () => {
 		const moduleRef = await Test.createTestingModule({
-			providers: [mockedDbService, SectionsRepository],
+			providers: [mockedDbService, PostgresSectionsRepository],
 		}).compile();
 
-		sectionsRepository = moduleRef.get(SectionsRepository);
+		sectionsRepository = moduleRef.get(PostgresSectionsRepository);
 	});
 
 	describe('find', () => {

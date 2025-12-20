@@ -1,5 +1,8 @@
 import { Test } from '@nestjs/testing';
-import { DbException } from '@pathly-backend/common/index.js';
+import {
+	DbException,
+	InvalidReferenceException,
+} from '@pathly-backend/common/index.js';
 import {
 	mockedCreateCommand,
 	mockedFindCommand,
@@ -7,20 +10,23 @@ import {
 	mockedRemoveCommand,
 	mockedUpdateCommand,
 } from '@/app/paths/tests/mocks/commands.mock';
-import { PathsRepository } from '../postgres.repository';
+import { PostgresPathsRepository } from '../postgres.repository';
 import { mockedDb, mockedDbService } from './mocks/db.mock';
 import { mockedDbPath, mockedPath } from './mocks/paths.mock';
 import { PathsApiConstraints } from '../enums';
+import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
+import { DatabaseError as PostgresError } from 'pg';
+import { DrizzleQueryError } from 'drizzle-orm';
 
 describe('PathsRepository', () => {
-	let pathsRepository: PathsRepository;
+	let pathsRepository: PostgresPathsRepository;
 
 	beforeEach(async () => {
 		const moduleRef = await Test.createTestingModule({
-			providers: [mockedDbService, PathsRepository],
+			providers: [mockedDbService, PostgresPathsRepository],
 		}).compile();
 
-		pathsRepository = moduleRef.get(PathsRepository);
+		pathsRepository = moduleRef.get(PostgresPathsRepository);
 	});
 
 	describe('find', () => {
@@ -137,6 +143,19 @@ describe('PathsRepository', () => {
 			const promise = pathsRepository.remove(mockedRemoveCommand);
 
 			await expect(promise).rejects.toThrow(DbException);
+		});
+
+		it('should throw InvalidReferenceException', async () => {
+			const pgErr = new PostgresError('', 0, 'error');
+			pgErr.code = PG_FOREIGN_KEY_VIOLATION;
+
+			const drizzleErr = new DrizzleQueryError('', [], pgErr);
+
+			mockedDb.returning.mockResolvedValueOnce(drizzleErr);
+
+			const promise = pathsRepository.remove(mockedRemoveCommand);
+
+			await expect(promise).rejects.toThrow(InvalidReferenceException);
 		});
 	});
 });

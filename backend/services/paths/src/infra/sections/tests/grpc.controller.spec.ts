@@ -16,19 +16,29 @@ import type {
 	UpdateSectionUseCase,
 } from '@/app/sections/use-cases';
 import {
+	mockedCreateCommand,
 	mockedFindOneCommand,
 	mockedRemoveCommand,
 	mockedUpdateCommand,
 } from '@/app/sections/tests/mocks/commands.mock';
 import { SectionNotFoundException } from '@/domain/sections/exceptions';
 import { DiToken } from '@/infra/common/enums';
-import { SectionsController } from '../grpc.controller';
+import { GrpcSectionsController } from '../grpc.controller';
 import { mockedClientSection, mockedSection } from './mocks/sections.mock';
-import { mockedFindOnePayload, mockedFindPayload } from './mocks/payloads.mock';
+import {
+	mockedCreatePayload,
+	mockedFindOnePayload,
+	mockedFindPayload,
+	mockedRemovePayload,
+	mockedUpdatePayload,
+} from './mocks/payloads.mock';
 import { mockedFindUseCase } from './mocks/use-cases.mock';
+import { PathsApiErrorCodes } from '@pathly-backend/contracts/paths/v1/api.js';
+import { PathNotFoundException } from '@/domain/paths/exceptions';
+import { mockedPath } from '@/app/paths/tests/mocks/paths.mock';
 
-describe('SectionsController', () => {
-	let sectionsController: SectionsController;
+describe('GrpcSectionsController', () => {
+	let sectionsController: GrpcSectionsController;
 	let findUseCase: jest.Mocked<FindSectionsUseCase>;
 	let findOneUseCase: jest.Mocked<FindOneSectionUseCase>;
 	let createUseCase: jest.Mocked<CreateSectionUseCase>;
@@ -38,38 +48,38 @@ describe('SectionsController', () => {
 	beforeEach(async () => {
 		const moduleRef = await Test.createTestingModule({
 			imports: [AppLoggerModule],
-			controllers: [SectionsController],
+			controllers: [GrpcSectionsController],
 			providers: [
 				{
-					provide: DiToken.FIND_PATHS_USE_CASE,
+					provide: DiToken.FIND_SECTIONS_USE_CASE,
 					useValue: mockedFindUseCase,
 				},
 				{
-					provide: DiToken.FIND_ONE_PATH_USE_CASE,
+					provide: DiToken.FIND_ONE_SECTION_USE_CASE,
 					useValue: mockedFindUseCase,
 				},
 				{
-					provide: DiToken.CREATE_PATH_USE_CASE,
+					provide: DiToken.CREATE_SECTION_USE_CASE,
 					useValue: mockedFindUseCase,
 				},
 				{
-					provide: DiToken.UPDATE_PATH_USE_CASE,
+					provide: DiToken.UPDATE_SECTION_USE_CASE,
 					useValue: mockedFindUseCase,
 				},
 				{
-					provide: DiToken.REMOVE_PATH_USE_CASE,
+					provide: DiToken.REMOVE_SECTION_USE_CASE,
 					useValue: mockedFindUseCase,
 				},
 			],
 		}).compile();
 
-		sectionsController = moduleRef.get(SectionsController);
+		sectionsController = moduleRef.get(GrpcSectionsController);
 
-		findUseCase = moduleRef.get(DiToken.FIND_PATHS_USE_CASE);
-		findOneUseCase = moduleRef.get(DiToken.FIND_ONE_PATH_USE_CASE);
-		createUseCase = moduleRef.get(DiToken.CREATE_PATH_USE_CASE);
-		updateUseCase = moduleRef.get(DiToken.UPDATE_PATH_USE_CASE);
-		removeUseCase = moduleRef.get(DiToken.REMOVE_PATH_USE_CASE);
+		findUseCase = moduleRef.get(DiToken.FIND_SECTIONS_USE_CASE);
+		findOneUseCase = moduleRef.get(DiToken.FIND_ONE_SECTION_USE_CASE);
+		createUseCase = moduleRef.get(DiToken.CREATE_SECTION_USE_CASE);
+		updateUseCase = moduleRef.get(DiToken.UPDATE_SECTION_USE_CASE);
+		removeUseCase = moduleRef.get(DiToken.REMOVE_SECTION_USE_CASE);
 	});
 
 	describe('find', () => {
@@ -149,21 +159,33 @@ describe('SectionsController', () => {
 
 			createUseCase.execute.mockResolvedValueOnce(mockedSection);
 
-			const result = await sectionsController.create({
-				description: mockedSection.description,
-				name: mockedSection.name,
-			});
+			const result = await sectionsController.create(mockedCreatePayload);
 
 			expect(result).toEqual(expectedResult);
+		});
+
+		it('should throw GrpcException with NOT_FOUND status and apiCode PATH_NOT_FOUND', async () => {
+			createUseCase.execute.mockRejectedValueOnce(
+				new PathNotFoundException(mockedPath.id),
+			);
+
+			const promise = sectionsController.create(mockedCreatePayload);
+
+			await expect(promise).rejects.toMatchObject({
+				error: {
+					message: expect.any(String),
+					code: GrpcStatus.NOT_FOUND,
+				},
+				grpcError: {
+					apiCode: PathsApiErrorCodes.PATH_NOT_FOUND,
+				},
+			});
 		});
 
 		it('should throw GrpcException with INTERNAL status', async () => {
 			createUseCase.execute.mockRejectedValueOnce(new Error());
 
-			const promise = sectionsController.create({
-				description: mockedSection.description,
-				name: mockedSection.name,
-			});
+			const promise = sectionsController.create(mockedCreatePayload);
 
 			await expect(promise).rejects.toMatchObject({
 				error: {
@@ -182,22 +204,43 @@ describe('SectionsController', () => {
 
 			updateUseCase.execute.mockResolvedValueOnce(mockedSection);
 
-			const result = await sectionsController.update(mockedUpdateCommand);
+			const result = await sectionsController.update(mockedUpdatePayload);
 
 			expect(result).toEqual(expectedResult);
 		});
 
-		it('should throw GrpcException with NOT_FOUND status', async () => {
+		it('should throw GrpcException with NOT_FOUND status and apiCode PATH_NOT_FOUND', async () => {
 			updateUseCase.execute.mockRejectedValueOnce(
-				new SectionNotFoundException(mockedSection.id),
+				new PathNotFoundException(mockedPath.id),
 			);
 
-			const promise = sectionsController.update(mockedUpdateCommand);
+			const promise = sectionsController.update(mockedUpdatePayload);
 
 			await expect(promise).rejects.toMatchObject({
 				error: {
 					message: expect.any(String),
 					code: GrpcStatus.NOT_FOUND,
+				},
+				grpcError: {
+					apiCode: PathsApiErrorCodes.PATH_NOT_FOUND,
+				},
+			});
+		});
+
+		it('should throw GrpcException with NOT_FOUND status and apiCode SECTION_NOT_FOUND', async () => {
+			updateUseCase.execute.mockRejectedValueOnce(
+				new SectionNotFoundException(mockedSection.id),
+			);
+
+			const promise = sectionsController.update(mockedUpdatePayload);
+
+			await expect(promise).rejects.toMatchObject({
+				error: {
+					message: expect.any(String),
+					code: GrpcStatus.NOT_FOUND,
+				},
+				grpcError: {
+					apiCode: PathsApiErrorCodes.SECTION_NOT_FOUND,
 				},
 			});
 		});
@@ -205,7 +248,7 @@ describe('SectionsController', () => {
 		it('should throw GrpcException with INTERNAL status', async () => {
 			updateUseCase.execute.mockRejectedValueOnce(new Error());
 
-			const promise = sectionsController.update(mockedUpdateCommand);
+			const promise = sectionsController.update(mockedUpdatePayload);
 
 			await expect(promise).rejects.toMatchObject({
 				error: {
@@ -224,7 +267,7 @@ describe('SectionsController', () => {
 
 			removeUseCase.execute.mockResolvedValueOnce(mockedSection);
 
-			const result = await sectionsController.remove(mockedRemoveCommand);
+			const result = await sectionsController.remove(mockedRemovePayload);
 
 			expect(result).toEqual(expectedResult);
 		});
@@ -234,7 +277,7 @@ describe('SectionsController', () => {
 				new SectionNotFoundException(mockedSection.id),
 			);
 
-			const promise = sectionsController.remove(mockedFindOneCommand);
+			const promise = sectionsController.remove(mockedRemovePayload);
 
 			await expect(promise).rejects.toMatchObject({
 				error: {
@@ -247,7 +290,7 @@ describe('SectionsController', () => {
 		it('should throw GrpcException with INTERNAL status', async () => {
 			removeUseCase.execute.mockRejectedValueOnce(new Error());
 
-			const promise = sectionsController.remove(mockedFindOneCommand);
+			const promise = sectionsController.remove(mockedRemovePayload);
 
 			await expect(promise).rejects.toMatchObject({
 				error: {
