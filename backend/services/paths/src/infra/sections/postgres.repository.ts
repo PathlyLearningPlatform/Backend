@@ -13,14 +13,7 @@ import type { ISectionsRepository } from '@/domain/sections/interfaces';
 import type { Db } from '@/infra/common/types';
 import { DbService } from '../db/db.service';
 import { sectionsTable } from '../db/schemas';
-import {
-	createSectionCommandToDb,
-	dbSectionToEntity,
-	findOneSectionCommandToDb,
-	findSectionsCommandToDb,
-	removeSectionCommandToDb,
-	updateSectionCommandToDb,
-} from './helpers';
+import { dbSectionToEntity } from './helpers';
 import { SectionsApiConstraints } from './enums';
 
 /**
@@ -42,10 +35,9 @@ export class PostgresSectionsRepository implements ISectionsRepository {
 	 * @description this function retrieves sections from database
 	 */
 	async find(command: FindSectionsCommand): Promise<Section[]> {
-		const options = findSectionsCommandToDb(command);
 		const limit =
-			options.options?.limit || SectionsApiConstraints.DEFAULT_LIMIT;
-		const page = options.options?.page || SectionsApiConstraints.DEFAULT_PAGE;
+			command.options?.limit || SectionsApiConstraints.DEFAULT_LIMIT;
+		const page = command.options?.page || SectionsApiConstraints.DEFAULT_PAGE;
 
 		try {
 			const result = await this.db
@@ -68,13 +60,11 @@ export class PostgresSectionsRepository implements ISectionsRepository {
 	 * @description this function retrieves one section from database
 	 */
 	async findOne(command: FindOneSectionCommand): Promise<Section | null> {
-		const options = findOneSectionCommandToDb(command);
-
 		try {
 			const result = await this.db
 				.select()
 				.from(sectionsTable)
-				.where(eq(sectionsTable.id, options.where.id));
+				.where(eq(sectionsTable.id, command.where.id));
 
 			return result.length <= 0 ? null : dbSectionToEntity(result[0]);
 		} catch (err) {
@@ -90,12 +80,10 @@ export class PostgresSectionsRepository implements ISectionsRepository {
 	 * @description this function creates section in a database
 	 */
 	async create(command: CreateSectionCommand): Promise<Section> {
-		const options = createSectionCommandToDb(command);
-
 		try {
 			const result = await this.db
 				.insert(sectionsTable)
-				.values(options)
+				.values(command)
 				.returning();
 
 			return dbSectionToEntity(result[0]);
@@ -112,13 +100,11 @@ export class PostgresSectionsRepository implements ISectionsRepository {
 	 * @description this function updates section in a database
 	 */
 	async update(command: UpdateSectionComand): Promise<Section | null> {
-		const options = updateSectionCommandToDb(command);
-
 		try {
 			const result = await this.db
 				.update(sectionsTable)
-				.set(options.fields || {})
-				.where(eq(sectionsTable.id, options.where.id))
+				.set(command.fields || {})
+				.where(eq(sectionsTable.id, command.where.id))
 				.returning();
 
 			return result.length <= 0 ? null : dbSectionToEntity(result[0]);
@@ -135,12 +121,10 @@ export class PostgresSectionsRepository implements ISectionsRepository {
 	 * @description this function removes section from a database
 	 */
 	async remove(command: RemoveSectionCommand): Promise<Section | null> {
-		const options = removeSectionCommandToDb(command);
-
 		try {
 			const result = await this.db
 				.delete(sectionsTable)
-				.where(eq(sectionsTable.id, options.where.id))
+				.where(eq(sectionsTable.id, command.where.id))
 				.returning();
 
 			return result.length <= 0 ? null : dbSectionToEntity(result[0]);
