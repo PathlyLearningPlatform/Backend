@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package paths.v1;
+
+import "common/types.proto";
+
+message Unit {
+  string id = 1;
+  string createdAt = 2;
+  string updatedAt = 3;
+  string name = 4;
+  string description = 5;
+  int32 order = 6;
+  string sectionId = 7;
+}
+
+service UnitsService {
+  rpc Find(FindUnitsRequest) returns (FindUnitsResponse) {};
+  rpc FindOne(FindOneUnitRequest) returns (FindOneUnitResponse) {};
+  rpc Create(CreateUnitRequest) returns (CreateUnitResponse) {};
+  rpc Update(UpdateUnitRequest) returns (UpdateUnitResponse) {};
+  rpc Remove(RemoveUnitRequest) returns (RemoveUnitResponse) {};
+}
+
+message FindUnitsOptions {
+  optional int32 limit = 1;
+  optional int32 page = 2;
+}
+message FindUnitsRequest {
+  optional FindUnitsOptions options = 1;
+}
+message FindUnitsResponse {
+  repeated Unit units = 1;
+}
+
+message FindOneUnitWhere {
+  string id = 1;
+}
+message FindOneUnitRequest {
+  FindOneUnitWhere where = 1;
+}
+message FindOneUnitResponse {
+  Unit unit = 1;
+}
+
+message CreateUnitRequest {
+  string name = 1;
+  optional string description = 2;
+  int32 order = 3;
+  string sectionId = 4;
+}
+message CreateUnitResponse {
+  Unit unit = 1;
+}
+
+message UpdateUnitFields {
+  optional string name = 1;
+  optional string description = 2;
+  optional int32 order = 3;
+}
+message UpdateUnitWhere {
+  string id = 1;
+}
+message UpdateUnitRequest {
+  UpdateUnitWhere where = 1;
+  optional UpdateUnitFields fields = 2;
+}
+message UpdateUnitResponse {
+  Unit unit = 1;
+}
+
+message RemoveUnitWhere {
+  string id = 1;
+}
+message RemoveUnitRequest {
+  RemoveUnitWhere where = 1;
+}
+message RemoveUnitResponse {
+  Unit unit = 1;
+}
