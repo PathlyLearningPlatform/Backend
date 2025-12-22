@@ -18,14 +18,7 @@ import type { IPathsRepository } from '@/domain/paths/interfaces';
 import type { Db } from '@/infra/common/types';
 import { DbService } from '../db/db.service';
 import { pathsTable } from '../db/schemas';
-import {
-	createPathCommandToDb,
-	dbPathToEntity,
-	findOnePathCommandToDb,
-	findPathsCommandToDb,
-	removePathCommandToDb,
-	updatePathCommandToDb,
-} from './helpers';
+import { dbPathToEntity } from './helpers';
 import { PathsApiConstraints } from './enums';
 import { DrizzleQueryError } from 'drizzle-orm';
 import { DatabaseError as PostgresError } from 'pg';
@@ -50,11 +43,10 @@ export class PostgresPathsRepository implements IPathsRepository {
 	 * @description this function retrieves paths from database
 	 */
 	async find(command: FindPathsCommand): Promise<Path[]> {
-		const options = findPathsCommandToDb(command);
-		const limit = options.options?.limit || PathsApiConstraints.DEFAULT_LIMIT;
-		const page = options.options?.page || PathsApiConstraints.DEFAULT_PAGE;
-		const orderBy = options.options?.orderBy || PathsOrderByFields.CREATED_AT;
-		const sortType = options.options?.sortType || SortType.DESC;
+		const limit = command.options?.limit || PathsApiConstraints.DEFAULT_LIMIT;
+		const page = command.options?.page || PathsApiConstraints.DEFAULT_PAGE;
+		const orderBy = command.options?.orderBy || PathsOrderByFields.CREATED_AT;
+		const sortType = command.options?.sortType || SortType.DESC;
 
 		try {
 			const result = await this.db
@@ -82,13 +74,11 @@ export class PostgresPathsRepository implements IPathsRepository {
 	 * @description this function retrieves one path from database
 	 */
 	async findOne(command: FindOnePathCommand): Promise<Path | null> {
-		const options = findOnePathCommandToDb(command);
-
 		try {
 			const result = await this.db
 				.select()
 				.from(pathsTable)
-				.where(eq(pathsTable.id, options.where.id));
+				.where(eq(pathsTable.id, command.where.id));
 
 			return result.length <= 0 ? null : dbPathToEntity(result[0]);
 		} catch (err) {
@@ -104,12 +94,10 @@ export class PostgresPathsRepository implements IPathsRepository {
 	 * @description this function creates path in a database
 	 */
 	async create(command: CreatePathCommand): Promise<Path> {
-		const options = createPathCommandToDb(command);
-
 		try {
 			const result = await this.db
 				.insert(pathsTable)
-				.values(options)
+				.values(command)
 				.returning();
 
 			return dbPathToEntity(result[0]);
@@ -126,13 +114,11 @@ export class PostgresPathsRepository implements IPathsRepository {
 	 * @description this function updates path in a database
 	 */
 	async update(command: UpdatePathComand): Promise<Path | null> {
-		const options = updatePathCommandToDb(command);
-
 		try {
 			const result = await this.db
 				.update(pathsTable)
-				.set(options.fields || {})
-				.where(eq(pathsTable.id, options.where.id))
+				.set(command.fields || {})
+				.where(eq(pathsTable.id, command.where.id))
 				.returning();
 
 			return result.length <= 0 ? null : dbPathToEntity(result[0]);
@@ -151,12 +137,10 @@ export class PostgresPathsRepository implements IPathsRepository {
 	 * @description this function removes path from a database
 	 */
 	async remove(command: RemovePathCommand): Promise<Path | null> {
-		const options = removePathCommandToDb(command);
-
 		try {
 			const result = await this.db
 				.delete(pathsTable)
-				.where(eq(pathsTable.id, options.where.id))
+				.where(eq(pathsTable.id, command.where.id))
 				.returning();
 
 			return result.length <= 0 ? null : dbPathToEntity(result[0]);
