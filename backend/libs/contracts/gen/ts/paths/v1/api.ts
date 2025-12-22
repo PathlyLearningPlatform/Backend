@@ -12,6 +12,9 @@ export enum PathsApiErrorCodes {
   PATH_CANNOT_BE_REMOVED = 0,
   PATH_NOT_FOUND = 1,
   SECTION_NOT_FOUND = 2,
+  SECTION_CANNOT_BE_REMOVED = 3,
+  UNIT_NOT_FOUND = 4,
+  UNIT_CANNOT_BE_REMOVED = 5,
 }
 
 export const PATHS_V1_PACKAGE_NAME = "paths.v1";
