@@ -7,9 +7,9 @@ import type {
 	FindSectionsCommand,
 	RemoveSectionCommand,
 	UpdateSectionCommand,
-} from '@/domain/sections/commands';
+} from '@/app/sections/commands';
 import type { Section } from '@/domain/sections/entities';
-import type { ISectionsRepository } from '@/domain/sections/interfaces';
+import type { ISectionsRepository } from '@/app/sections/interfaces';
 import type { Db } from '@/infra/common/types';
 import { DbService } from '../db/db.service';
 import { sectionsTable } from '../db/schemas';

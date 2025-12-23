@@ -8,7 +8,7 @@ import {
 } from '@/app/paths/use-cases';
 import { DiToken } from '../common/enums';
 import { PostgresPathsRepository } from './postgres.repository';
-import { IPathsRepository } from '@/domain/paths/interfaces';
+import { IPathsRepository } from '@/app/paths/interfaces';
 
 export const pathsUseCasesProvider: Provider[] = [
 	{

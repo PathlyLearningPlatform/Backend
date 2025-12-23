@@ -1,4 +1,4 @@
-import { Unit } from '../entities';
+import { Unit } from '@domain/units/entities';
 import { PartialType, OmitType } from '@nestjs/mapped-types';
 
 class UpdateFields extends PartialType(

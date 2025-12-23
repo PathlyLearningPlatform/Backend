@@ -7,9 +7,9 @@ import type {
 	FindUnitsCommand,
 	RemoveUnitCommand,
 	UpdateUnitCommand,
-} from '@/domain/units/commands';
+} from '@/app/units/commands';
 import type { Unit } from '@/domain/units/entities';
-import type { IUnitsRepository } from '@/domain/units/interfaces';
+import type { IUnitsRepository } from '@/app/units/interfaces';
 import type { Db } from '@/infra/common/types';
 import { DbService } from '../db/db.service';
 import { unitsTable } from '../db/schemas';

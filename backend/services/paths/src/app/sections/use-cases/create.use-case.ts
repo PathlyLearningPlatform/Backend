@@ -1,8 +1,8 @@
 import { PathNotFoundException } from '@/domain/paths/exceptions';
-import { IPathsRepository } from '@/domain/paths/interfaces';
-import type { CreateSectionCommand } from '@/domain/sections/commands';
+import { IPathsRepository } from '@/app/paths/interfaces';
+import type { CreateSectionCommand } from '@/app/sections/commands';
 import type { Section } from '@/domain/sections/entities';
-import type { ISectionsRepository } from '@/domain/sections/interfaces';
+import type { ISectionsRepository } from '@/app/sections/interfaces';
 
 /**
  * @description This class responsibility is to create a section. It uses sections repository for saving sections to a data source. sectionsRepository in injected to this class via dependency injection and dependency inversion techniques by using ISectionsRepository interface.

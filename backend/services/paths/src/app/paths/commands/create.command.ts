@@ -4,7 +4,7 @@ import {
 	PartialType,
 	PickType,
 } from '@nestjs/mapped-types';
-import { Path } from '../entities';
+import { Path } from '@domain/paths/entities';
 
 class RequiredFields extends PickType(Path, ['name']) {}
 class AllowedFields extends OmitType(Path, ['createdAt', 'updatedAt', 'id']) {}

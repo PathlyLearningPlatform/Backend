@@ -1,7 +1,7 @@
-import type { FindOneSectionCommand } from '@/domain/sections/commands';
+import type { FindOneSectionCommand } from '@/app/sections/commands';
 import type { Section } from '@/domain/sections/entities';
 import { SectionNotFoundException } from '@/domain/sections/exceptions';
-import type { ISectionsRepository } from '@/domain/sections/interfaces';
+import type { ISectionsRepository } from '@/app/sections/interfaces';
 
 /**
  * @description This class responsibility is to find one section. It uses sections repository for retrieving section from a data source. sectionsRepository in injected to this class via dependency injection and dependency inversion techniques by using ISectionsRepository interface.

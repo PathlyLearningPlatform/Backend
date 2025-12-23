@@ -1,5 +1,5 @@
 import type { SortType } from '@pathly-backend/common';
-import type { PathsOrderByFields } from '../enums';
+import type { PathsOrderByFields } from '@domain/paths/enums';
 
 /**
  * @description

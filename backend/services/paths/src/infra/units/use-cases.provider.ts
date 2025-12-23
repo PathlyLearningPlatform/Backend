@@ -9,8 +9,8 @@ import {
 import { DiToken } from '../common/enums';
 import { PostgresSectionsRepository } from '../sections/postgres.repository';
 import { PostgresUnitsRepository } from './postgres.repository';
-import { IUnitsRepository } from '@/domain/units/interfaces';
-import { ISectionsRepository } from '@/domain/sections/interfaces';
+import { IUnitsRepository } from '@/app/units/interfaces';
+import { ISectionsRepository } from '@/app/sections/interfaces';
 
 export const unitsUseCasesProvider: Provider[] = [
 	{

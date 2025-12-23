@@ -1,6 +1,6 @@
-import type { IPathsRepository } from '@/domain/paths/interfaces';
-import type { ISectionsRepository } from '@/domain/sections/interfaces';
-import type { IUnitsRepository } from '@/domain/units/interfaces';
+import type { IPathsRepository } from '@/app/paths/interfaces';
+import type { ISectionsRepository } from '@/app/sections/interfaces';
+import type { IUnitsRepository } from '@/app/units/interfaces';
 
 export const mockedPathsRepository: jest.Mocked<IPathsRepository> = {
 	find: jest.fn(),

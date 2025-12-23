@@ -4,7 +4,7 @@ import type {
 	FindPathsCommand,
 	RemovePathCommand,
 	UpdatePathCommand,
-} from '@/domain/paths/commands';
+} from '@/app/paths/commands';
 import type { Path } from '@/domain/paths/entities';
 
 /**

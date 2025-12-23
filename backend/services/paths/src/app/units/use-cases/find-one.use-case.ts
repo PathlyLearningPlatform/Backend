@@ -1,7 +1,7 @@
-import type { FindOneUnitCommand } from '@/domain/units/commands';
+import type { FindOneUnitCommand } from '@/app/units/commands';
 import type { Unit } from '@/domain/units/entities';
 import { UnitNotFoundException } from '@/domain/units/exceptions';
-import type { IUnitsRepository } from '@/domain/units/interfaces';
+import type { IUnitsRepository } from '@/app/units/interfaces';
 
 /**
  * @description This class responsibility is to find one unit. It uses units repository for retrieving unit from a data source. unitsRepository in injected to this class via dependency injection and dependency inversion techniques by using IUnitsRepository interface.

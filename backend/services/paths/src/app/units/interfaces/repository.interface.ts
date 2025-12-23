@@ -5,7 +5,7 @@ import {
 	RemoveUnitCommand,
 	UpdateUnitCommand,
 } from '../commands';
-import { Unit } from '../entities';
+import { Unit } from '@domain/units/entities';
 
 export interface IUnitsRepository {
 	find(command: FindUnitsCommand): Promise<Unit[]>;

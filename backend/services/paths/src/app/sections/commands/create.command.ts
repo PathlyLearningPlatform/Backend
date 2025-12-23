@@ -4,7 +4,7 @@ import {
 	PartialType,
 	PickType,
 } from '@nestjs/mapped-types';
-import { Section } from '../entities';
+import { Section } from '@domain/sections/entities';
 
 class RequiredFields extends PickType(Section, ['pathId', 'name', 'order']) {}
 class AllowedFields extends OmitType(Section, [

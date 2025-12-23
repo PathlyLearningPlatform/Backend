@@ -1,10 +1,10 @@
-import type { RemovePathCommand } from '@/domain/paths/commands';
+import type { RemovePathCommand } from '@/app/paths/commands';
 import type { Path } from '@/domain/paths/entities';
 import {
 	PathCannotBeRemovedException,
 	PathNotFoundException,
 } from '@/domain/paths/exceptions';
-import type { IPathsRepository } from '@/domain/paths/interfaces';
+import type { IPathsRepository } from '@/app/paths/interfaces';
 import { InvalidReferenceException } from '@pathly-backend/common/index.js';
 
 /**

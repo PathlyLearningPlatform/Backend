@@ -1,6 +1,6 @@
-import type { CreatePathCommand } from '@/domain/paths/commands';
+import type { CreatePathCommand } from '@/app/paths/commands';
 import type { Path } from '@/domain/paths/entities';
-import type { IPathsRepository } from '@/domain/paths/interfaces';
+import type { IPathsRepository } from '@/app/paths/interfaces';
 
 /**
  * @description This class responsibility is to create a path. It uses paths repository for saving paths to a data source. pathsRepository in injected to this class via dependency injection and dependency inversion techniques by using IPathsRepository interface.

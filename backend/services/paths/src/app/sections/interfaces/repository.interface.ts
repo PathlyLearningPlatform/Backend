@@ -4,7 +4,7 @@ import type {
 	FindSectionsCommand,
 	RemoveSectionCommand,
 	UpdateSectionCommand,
-} from '@/domain/sections/commands';
+} from '@/app/sections/commands';
 import type { Section } from '@/domain/sections/entities';
 
 /**

@@ -1,6 +1,6 @@
-import type { FindPathsCommand } from '@/domain/paths/commands';
+import type { FindPathsCommand } from '@/app/paths/commands';
 import type { Path } from '@/domain/paths/entities';
-import type { IPathsRepository } from '@/domain/paths/interfaces';
+import type { IPathsRepository } from '@/app/paths/interfaces';
 
 /**
  * @description This class responsibility is to find paths. It uses paths repository for retrieving paths from a data source. pathsRepository in injected to this class via dependency injection and dependency inversion techniques by using IPathsRepository interface.

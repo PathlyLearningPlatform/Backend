@@ -11,10 +11,10 @@ import type {
 	FindPathsCommand,
 	RemovePathCommand,
 	UpdatePathCommand,
-} from '@/domain/paths/commands';
+} from '@/app/paths/commands';
 import type { Path } from '@/domain/paths/entities';
 import { PathsOrderByFields } from '@/domain/paths/enums';
-import type { IPathsRepository } from '@/domain/paths/interfaces';
+import type { IPathsRepository } from '@/app/paths/interfaces';
 import type { Db } from '@/infra/common/types';
 import { DbService } from '../db/db.service';
 import { pathsTable } from '../db/schemas';

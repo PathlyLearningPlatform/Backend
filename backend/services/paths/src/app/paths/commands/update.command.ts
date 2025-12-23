@@ -1,5 +1,5 @@
 import { OmitType, PartialType } from '@nestjs/mapped-types';
-import { Path } from '../entities';
+import { Path } from '@domain/paths/entities';
 
 class UpdateFields extends PartialType(
 	OmitType(Path, ['createdAt', 'updatedAt', 'id']),

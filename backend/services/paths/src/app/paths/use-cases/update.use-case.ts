@@ -1,7 +1,7 @@
-import type { UpdatePathCommand } from '@/domain/paths/commands';
+import type { UpdatePathCommand } from '@/app/paths/commands';
 import type { Path } from '@/domain/paths/entities';
 import { PathNotFoundException } from '@/domain/paths/exceptions';
-import type { IPathsRepository } from '@/domain/paths/interfaces';
+import type { IPathsRepository } from '@/app/paths/interfaces';
 
 /**
  * @description This class responsibility is to update a path. It uses paths repository for updating paths in a data source. pathsRepository in injected to this class via dependency injection and dependency inversion techniques by using IPathsRepository interface.
