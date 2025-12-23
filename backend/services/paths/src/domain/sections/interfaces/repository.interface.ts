@@ -3,7 +3,7 @@ import type {
 	FindOneSectionCommand,
 	FindSectionsCommand,
 	RemoveSectionCommand,
-	UpdateSectionComand,
+	UpdateSectionCommand,
 } from '@/domain/sections/commands';
 import type { Section } from '@/domain/sections/entities';
 
@@ -14,6 +14,6 @@ export interface ISectionsRepository {
 	find(command: FindSectionsCommand): Promise<Section[]>;
 	findOne(command: FindOneSectionCommand): Promise<Section | null>;
 	create(command: CreateSectionCommand): Promise<Section>;
-	update(command: UpdateSectionComand): Promise<Section | null>;
+	update(command: UpdateSectionCommand): Promise<Section | null>;
 	remove(command: RemoveSectionCommand): Promise<Section | null>;
 }

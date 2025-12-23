@@ -1,8 +1,6 @@
 import { PathNotFoundException } from '@/domain/paths/exceptions';
-import { FindOnePathUseCase } from '../use-cases';
-import { mockedFindOneCommand } from './mocks/commands.mock';
-import { mockedPath } from './mocks/paths.mock';
-import { mockedPathsRepository } from './mocks/paths.repository.mock';
+import { FindOnePathUseCase } from '../find-one.use-case';
+import { mockedPath, mockedPathsRepository } from '@/app/common/mocks';
 
 describe('FindOnePathUseCase', () => {
 	let findOnePathUseCase: FindOnePathUseCase;
@@ -25,13 +23,13 @@ describe('FindOnePathUseCase', () => {
 		});
 
 		it('should return a path', async () => {
-			const expectedResult = mockedPath;
-
 			mockedPathsRepository.findOne.mockResolvedValueOnce(mockedPath);
 
-			const result = await findOnePathUseCase.execute(mockedFindOneCommand);
+			const result = await findOnePathUseCase.execute({
+				where: { id: mockedPath.id },
+			});
 
-			expect(result).toEqual(expectedResult);
+			expect(result).toEqual(mockedPath);
 		});
 	});
 });

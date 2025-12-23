@@ -1,8 +1,6 @@
 import { PathNotFoundException } from '@/domain/paths/exceptions';
-import { UpdatePathUseCase } from '../use-cases';
-import { mockedUpdateCommand } from './mocks/commands.mock';
-import { mockedPath, mockedUpdatedPath } from './mocks/paths.mock';
-import { mockedPathsRepository } from './mocks/paths.repository.mock';
+import { UpdatePathUseCase } from '../update.use-case';
+import { mockedPath, mockedPathsRepository } from '@/app/common/mocks';
 
 describe('UpdatePathUseCase', () => {
 	let updatePathUseCase: UpdatePathUseCase;
@@ -25,13 +23,13 @@ describe('UpdatePathUseCase', () => {
 		});
 
 		it('should return a path', async () => {
-			const expectedResult = mockedUpdatedPath;
+			mockedPathsRepository.update.mockResolvedValueOnce(mockedPath);
 
-			mockedPathsRepository.update.mockResolvedValueOnce(mockedUpdatedPath);
+			const result = await updatePathUseCase.execute({
+				where: { id: mockedPath.id },
+			});
 
-			const result = await updatePathUseCase.execute(mockedUpdateCommand);
-
-			expect(result).toEqual(expectedResult);
+			expect(result).toEqual(mockedPath);
 		});
 	});
 });

@@ -1,16 +1,10 @@
 import { Test } from '@nestjs/testing';
 import { DbException } from '@pathly-backend/common/index.js';
-import {
-	mockedCreateCommand,
-	mockedFindCommand,
-	mockedFindOneCommand,
-	mockedRemoveCommand,
-	mockedUpdateCommand,
-} from '@/app/sections/tests/mocks/commands.mock';
 import { PostgresSectionsRepository } from '../postgres.repository';
-import { mockedDb, mockedDbService } from './mocks/db.mock';
-import { mockedDbSection, mockedSection } from './mocks/sections.mock';
+import { mockedDrizzle, mockedDbService } from '@/infra/common/mocks';
+import { mockedDbSection } from './mocks/sections.mock';
 import { SectionsApiConstraints } from '../enums';
+import { mockedSection } from '@/app/common/mocks';
 
 describe('SectionsRepository', () => {
 	let sectionsRepository: PostgresSectionsRepository;
@@ -25,9 +19,9 @@ describe('SectionsRepository', () => {
 
 	describe('find', () => {
 		it('should return an array of sections', async () => {
-			mockedDb.offset.mockResolvedValueOnce([mockedDbSection]);
+			mockedDrizzle.offset.mockResolvedValueOnce([mockedDbSection]);
 
-			const result = await sectionsRepository.find(mockedFindCommand);
+			const result = await sectionsRepository.find({});
 
 			expect(result).toEqual([mockedSection]);
 			expect(result.length).toBeLessThanOrEqual(
@@ -36,9 +30,9 @@ describe('SectionsRepository', () => {
 		});
 
 		it('should throw DbException', async () => {
-			mockedDb.offset.mockRejectedValueOnce(new Error());
+			mockedDrizzle.offset.mockRejectedValueOnce(new Error());
 
-			const promise = sectionsRepository.find(mockedFindCommand);
+			const promise = sectionsRepository.find({});
 
 			await expect(promise).rejects.toThrow(DbException);
 		});
@@ -46,25 +40,31 @@ describe('SectionsRepository', () => {
 
 	describe('findOne', () => {
 		it('should return a section', async () => {
-			mockedDb.where.mockResolvedValueOnce([mockedDbSection]);
+			mockedDrizzle.where.mockResolvedValueOnce([mockedDbSection]);
 
-			const result = await sectionsRepository.findOne(mockedFindOneCommand);
+			const result = await sectionsRepository.findOne({
+				where: { id: mockedSection.id },
+			});
 
 			expect(result).toEqual(mockedSection);
 		});
 
 		it('should return null', async () => {
-			mockedDb.where.mockResolvedValueOnce([]);
+			mockedDrizzle.where.mockResolvedValueOnce([]);
 
-			const result = await sectionsRepository.findOne(mockedFindOneCommand);
+			const result = await sectionsRepository.findOne({
+				where: { id: 'non-existent-section-id' },
+			});
 
 			expect(result).toEqual(null);
 		});
 
 		it('should throw DbException', async () => {
-			mockedDb.where.mockResolvedValueOnce(new Error());
+			mockedDrizzle.where.mockResolvedValueOnce(new Error());
 
-			const promise = sectionsRepository.findOne(mockedFindOneCommand);
+			const promise = sectionsRepository.findOne({
+				where: { id: mockedSection.id },
+			});
 
 			await expect(promise).rejects.toThrow(DbException);
 		});
@@ -72,17 +72,27 @@ describe('SectionsRepository', () => {
 
 	describe('create', () => {
 		it('should return created section', async () => {
-			mockedDb.returning.mockResolvedValueOnce([mockedDbSection]);
+			mockedDrizzle.returning.mockResolvedValueOnce([mockedDbSection]);
 
-			const result = await sectionsRepository.create(mockedCreateCommand);
+			const result = await sectionsRepository.create({
+				name: mockedSection.name,
+				description: null,
+				order: mockedSection.order,
+				pathId: mockedSection.pathId,
+			});
 
 			expect(result).toEqual(mockedSection);
 		});
 
 		it('should throw DbException', async () => {
-			mockedDb.returning.mockResolvedValueOnce(new Error());
+			mockedDrizzle.returning.mockResolvedValueOnce(new Error());
 
-			const promise = sectionsRepository.create(mockedCreateCommand);
+			const promise = sectionsRepository.create({
+				name: mockedSection.name,
+				description: null,
+				order: mockedSection.order,
+				pathId: mockedSection.pathId,
+			});
 
 			await expect(promise).rejects.toThrow(DbException);
 		});
@@ -90,25 +100,31 @@ describe('SectionsRepository', () => {
 
 	describe('update', () => {
 		it('should return updated section', async () => {
-			mockedDb.returning.mockResolvedValueOnce([mockedDbSection]);
+			mockedDrizzle.returning.mockResolvedValueOnce([mockedDbSection]);
 
-			const result = await sectionsRepository.update(mockedUpdateCommand);
+			const result = await sectionsRepository.update({
+				where: { id: mockedSection.id },
+			});
 
 			expect(result).toEqual(mockedSection);
 		});
 
 		it('should return null', async () => {
-			mockedDb.returning.mockResolvedValueOnce([]);
+			mockedDrizzle.returning.mockResolvedValueOnce([]);
 
-			const result = await sectionsRepository.update(mockedUpdateCommand);
+			const result = await sectionsRepository.update({
+				where: { id: 'non-existent-path-id' },
+			});
 
 			expect(result).toEqual(null);
 		});
 
 		it('should throw DbException', async () => {
-			mockedDb.returning.mockResolvedValueOnce(new Error());
+			mockedDrizzle.returning.mockResolvedValueOnce(new Error());
 
-			const promise = sectionsRepository.update(mockedUpdateCommand);
+			const promise = sectionsRepository.update({
+				where: { id: mockedSection.id },
+			});
 
 			await expect(promise).rejects.toThrow(DbException);
 		});
@@ -116,25 +132,31 @@ describe('SectionsRepository', () => {
 
 	describe('remove', () => {
 		it('should return removed section', async () => {
-			mockedDb.returning.mockResolvedValueOnce([mockedDbSection]);
+			mockedDrizzle.returning.mockResolvedValueOnce([mockedDbSection]);
 
-			const result = await sectionsRepository.remove(mockedRemoveCommand);
+			const result = await sectionsRepository.remove({
+				where: { id: mockedSection.id },
+			});
 
 			expect(result).toEqual(mockedSection);
 		});
 
 		it('should return null', async () => {
-			mockedDb.returning.mockResolvedValueOnce([]);
+			mockedDrizzle.returning.mockResolvedValueOnce([]);
 
-			const result = await sectionsRepository.remove(mockedRemoveCommand);
+			const result = await sectionsRepository.remove({
+				where: { id: 'non-existent-section-id' },
+			});
 
 			expect(result).toEqual(null);
 		});
 
 		it('should throw DbException', async () => {
-			mockedDb.returning.mockResolvedValueOnce(new Error());
+			mockedDrizzle.returning.mockResolvedValueOnce(new Error());
 
-			const promise = sectionsRepository.remove(mockedRemoveCommand);
+			const promise = sectionsRepository.remove({
+				where: { id: mockedSection.id },
+			});
 
 			await expect(promise).rejects.toThrow(DbException);
 		});

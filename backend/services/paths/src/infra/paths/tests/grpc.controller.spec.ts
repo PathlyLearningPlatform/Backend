@@ -16,19 +16,14 @@ import type {
 	UpdatePathUseCase,
 } from '@/app/paths/use-cases';
 import {
-	mockedFindOneCommand,
-	mockedRemoveCommand,
-	mockedUpdateCommand,
-} from '@/app/paths/tests/mocks/commands.mock';
-import {
 	PathCannotBeRemovedException,
 	PathNotFoundException,
 } from '@/domain/paths/exceptions';
 import { DiToken } from '@/infra/common/enums';
 import { GrpcPathsController } from '../grpc.controller';
-import { mockedClientPath, mockedPath } from './mocks/paths.mock';
-import { mockedFindOnePayload, mockedFindPayload } from './mocks/payloads.mock';
-import { mockedFindUseCase } from './mocks/use-cases.mock';
+import { mockedClientPath } from './mocks/paths.mock';
+import { mockedFindUseCase, mockedUseCases } from './mocks/use-cases.mock';
+import { mockedPath } from '@/app/common/mocks';
 
 describe('GrpcPathsController', () => {
 	let pathsController: GrpcPathsController;
@@ -42,28 +37,7 @@ describe('GrpcPathsController', () => {
 		const moduleRef = await Test.createTestingModule({
 			imports: [AppLoggerModule],
 			controllers: [GrpcPathsController],
-			providers: [
-				{
-					provide: DiToken.FIND_PATHS_USE_CASE,
-					useValue: mockedFindUseCase,
-				},
-				{
-					provide: DiToken.FIND_ONE_PATH_USE_CASE,
-					useValue: mockedFindUseCase,
-				},
-				{
-					provide: DiToken.CREATE_PATH_USE_CASE,
-					useValue: mockedFindUseCase,
-				},
-				{
-					provide: DiToken.UPDATE_PATH_USE_CASE,
-					useValue: mockedFindUseCase,
-				},
-				{
-					provide: DiToken.REMOVE_PATH_USE_CASE,
-					useValue: mockedFindUseCase,
-				},
-			],
+			providers: [...mockedUseCases],
 		}).compile();
 
 		pathsController = moduleRef.get(GrpcPathsController);
@@ -83,7 +57,7 @@ describe('GrpcPathsController', () => {
 
 			findUseCase.execute.mockResolvedValueOnce([mockedPath]);
 
-			const result = await pathsController.find(mockedFindPayload);
+			const result = await pathsController.find({});
 
 			expect(result).toEqual(expectedResult);
 		});
@@ -91,7 +65,7 @@ describe('GrpcPathsController', () => {
 		it('should throw GrpcException with INTERNAL status', async () => {
 			findUseCase.execute.mockRejectedValueOnce(new Error());
 
-			const promise = pathsController.find(mockedFindPayload);
+			const promise = pathsController.find({});
 
 			await expect(promise).rejects.toMatchObject({
 				error: {
@@ -110,7 +84,9 @@ describe('GrpcPathsController', () => {
 
 			findOneUseCase.execute.mockResolvedValueOnce(mockedPath);
 
-			const result = await pathsController.findOne(mockedFindOnePayload);
+			const result = await pathsController.findOne({
+				where: { id: mockedPath.id },
+			});
 
 			expect(result).toEqual(expectedResult);
 		});
@@ -120,7 +96,9 @@ describe('GrpcPathsController', () => {
 				new PathNotFoundException(mockedPath.id),
 			);
 
-			const promise = pathsController.findOne(mockedFindOneCommand);
+			const promise = pathsController.findOne({
+				where: { id: mockedPath.id },
+			});
 
 			await expect(promise).rejects.toMatchObject({
 				error: {
@@ -133,7 +111,9 @@ describe('GrpcPathsController', () => {
 		it('should throw GrpcException with INTERNAL status', async () => {
 			findOneUseCase.execute.mockRejectedValueOnce(new Error());
 
-			const promise = pathsController.findOne(mockedFindOneCommand);
+			const promise = pathsController.findOne({
+				where: { id: mockedPath.id },
+			});
 
 			await expect(promise).rejects.toMatchObject({
 				error: {
@@ -153,8 +133,8 @@ describe('GrpcPathsController', () => {
 			createUseCase.execute.mockResolvedValueOnce(mockedPath);
 
 			const result = await pathsController.create({
-				description: mockedPath.description,
 				name: mockedPath.name,
+				description: null,
 			});
 
 			expect(result).toEqual(expectedResult);
@@ -164,8 +144,8 @@ describe('GrpcPathsController', () => {
 			createUseCase.execute.mockRejectedValueOnce(new Error());
 
 			const promise = pathsController.create({
-				description: mockedPath.description,
 				name: mockedPath.name,
+				description: null,
 			});
 
 			await expect(promise).rejects.toMatchObject({
@@ -185,17 +165,21 @@ describe('GrpcPathsController', () => {
 
 			updateUseCase.execute.mockResolvedValueOnce(mockedPath);
 
-			const result = await pathsController.update(mockedUpdateCommand);
+			const result = await pathsController.update({
+				where: { id: mockedPath.id },
+			});
 
 			expect(result).toEqual(expectedResult);
 		});
 
 		it('should throw GrpcException with NOT_FOUND status', async () => {
 			updateUseCase.execute.mockRejectedValueOnce(
-				new PathNotFoundException(mockedPath.id),
+				new PathNotFoundException('non-existent-path-id'),
 			);
 
-			const promise = pathsController.update(mockedUpdateCommand);
+			const promise = pathsController.update({
+				where: { id: 'non-existent-path-id' },
+			});
 
 			await expect(promise).rejects.toMatchObject({
 				error: {
@@ -208,7 +192,9 @@ describe('GrpcPathsController', () => {
 		it('should throw GrpcException with INTERNAL status', async () => {
 			updateUseCase.execute.mockRejectedValueOnce(new Error());
 
-			const promise = pathsController.update(mockedUpdateCommand);
+			const promise = pathsController.update({
+				where: { id: mockedPath.id },
+			});
 
 			await expect(promise).rejects.toMatchObject({
 				error: {
@@ -227,17 +213,21 @@ describe('GrpcPathsController', () => {
 
 			removeUseCase.execute.mockResolvedValueOnce(mockedPath);
 
-			const result = await pathsController.remove(mockedRemoveCommand);
+			const result = await pathsController.remove({
+				where: { id: mockedPath.id },
+			});
 
 			expect(result).toEqual(expectedResult);
 		});
 
 		it('should throw GrpcException with NOT_FOUND status', async () => {
 			removeUseCase.execute.mockRejectedValueOnce(
-				new PathNotFoundException(mockedPath.id),
+				new PathNotFoundException('non-existent-path-id'),
 			);
 
-			const promise = pathsController.remove(mockedFindOneCommand);
+			const promise = pathsController.remove({
+				where: { id: 'non-existent-path-id' },
+			});
 
 			await expect(promise).rejects.toMatchObject({
 				error: {
@@ -252,7 +242,9 @@ describe('GrpcPathsController', () => {
 				new PathCannotBeRemovedException(mockedPath.id),
 			);
 
-			const promise = pathsController.remove(mockedFindOneCommand);
+			const promise = pathsController.remove({
+				where: { id: mockedPath.id },
+			});
 
 			await expect(promise).rejects.toMatchObject({
 				error: {
@@ -265,7 +257,9 @@ describe('GrpcPathsController', () => {
 		it('should throw GrpcException with INTERNAL status', async () => {
 			removeUseCase.execute.mockRejectedValueOnce(new Error());
 
-			const promise = pathsController.remove(mockedFindOneCommand);
+			const promise = pathsController.remove({
+				where: { id: mockedPath.id },
+			});
 
 			await expect(promise).rejects.toMatchObject({
 				error: {

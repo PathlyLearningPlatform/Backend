@@ -1,8 +1,6 @@
 import { SectionNotFoundException } from '@/domain/sections/exceptions';
-import { FindOneSectionUseCase } from '../use-cases';
-import { mockedFindOneCommand } from './mocks/commands.mock';
-import { mockedSection } from './mocks/sections.mock';
-import { mockedSectionsRepository } from './mocks/sections.repository.mock';
+import { FindOneSectionUseCase } from '../find-one.use-case';
+import { mockedSection, mockedSectionsRepository } from '@/app/common/mocks';
 
 describe('FindOneSectionUseCase', () => {
 	let findOneSectionUseCase: FindOneSectionUseCase;
@@ -25,13 +23,13 @@ describe('FindOneSectionUseCase', () => {
 		});
 
 		it('should return a section', async () => {
-			const expectedResult = mockedSection;
-
 			mockedSectionsRepository.findOne.mockResolvedValueOnce(mockedSection);
 
-			const result = await findOneSectionUseCase.execute(mockedFindOneCommand);
+			const result = await findOneSectionUseCase.execute({
+				where: { id: mockedSection.id },
+			});
 
-			expect(result).toEqual(expectedResult);
+			expect(result).toEqual(mockedSection);
 		});
 	});
 });

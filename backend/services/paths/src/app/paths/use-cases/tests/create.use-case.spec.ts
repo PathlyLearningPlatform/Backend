@@ -1,7 +1,5 @@
-import { CreatePathUseCase } from '../use-cases';
-import { mockedCreateCommand } from './mocks/commands.mock';
-import { mockedPath } from './mocks/paths.mock';
-import { mockedPathsRepository } from './mocks/paths.repository.mock';
+import { CreatePathUseCase } from '../create.use-case';
+import { mockedPath, mockedPathsRepository } from '@/app/common/mocks';
 
 describe('CreatePathUseCase', () => {
 	let createPathUseCase: CreatePathUseCase;
@@ -12,13 +10,13 @@ describe('CreatePathUseCase', () => {
 
 	describe('execute', () => {
 		it('should return a path', async () => {
-			const path = mockedPath;
-
 			mockedPathsRepository.create.mockResolvedValueOnce(mockedPath);
 
-			const result = await createPathUseCase.execute(mockedCreateCommand);
+			const result = await createPathUseCase.execute({
+				name: mockedPath.name,
+			});
 
-			expect(result).toEqual(path);
+			expect(result).toEqual(mockedPath);
 		});
 	});
 });

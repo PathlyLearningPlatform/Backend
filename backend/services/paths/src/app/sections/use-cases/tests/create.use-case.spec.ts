@@ -1,10 +1,11 @@
-import { mockedPathsRepository } from '@/app/paths/tests/mocks/paths.repository.mock';
-import { CreateSectionUseCase } from '../use-cases';
-import { mockedCreateCommand } from './mocks/commands.mock';
-import { mockedSection } from './mocks/sections.mock';
-import { mockedSectionsRepository } from './mocks/sections.repository.mock';
+import { CreateSectionUseCase } from '../create.use-case';
 import { PathNotFoundException } from '@/domain/paths/exceptions';
-import { mockedPath } from '@/app/paths/tests/mocks/paths.mock';
+import {
+	mockedPath,
+	mockedSection,
+	mockedPathsRepository,
+	mockedSectionsRepository,
+} from '@/app/common/mocks';
 
 describe('CreateSectionUseCase', () => {
 	let createSectionUseCase: CreateSectionUseCase;
@@ -18,21 +19,27 @@ describe('CreateSectionUseCase', () => {
 
 	describe('execute', () => {
 		it('should return a section', async () => {
-			const section = mockedSection;
-
 			mockedPathsRepository.findOne.mockResolvedValueOnce(mockedPath);
 
 			mockedSectionsRepository.create.mockResolvedValueOnce(mockedSection);
 
-			const result = await createSectionUseCase.execute(mockedCreateCommand);
+			const result = await createSectionUseCase.execute({
+				name: mockedSection.name,
+				order: mockedSection.order,
+				pathId: mockedSection.pathId,
+			});
 
-			expect(result).toEqual(section);
+			expect(result).toEqual(mockedSection);
 		});
 
 		it('should throw PathNotFoundException', async () => {
 			mockedSectionsRepository.findOne.mockResolvedValueOnce(null);
 
-			const promise = createSectionUseCase.execute(mockedCreateCommand);
+			const promise = createSectionUseCase.execute({
+				name: mockedSection.name,
+				order: mockedSection.order,
+				pathId: 'non-existent-path-id',
+			});
 
 			await expect(promise).rejects.toThrow(PathNotFoundException);
 		});

@@ -9,7 +9,7 @@ class UpdateFields extends PartialType(
  * @description
  * This class represents data for updating section.
  */
-export class UpdateSectionComand {
+export class UpdateSectionCommand {
 	where: {
 		id: string;
 	};

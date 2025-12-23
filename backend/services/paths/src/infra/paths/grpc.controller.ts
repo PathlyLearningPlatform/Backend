@@ -1,10 +1,11 @@
 import { status as GrpcStatus } from '@grpc/grpc-js';
-import { Controller, Inject } from '@nestjs/common';
+import { Controller, Inject, UseFilters } from '@nestjs/common';
 import { GrpcMethod, Payload } from '@nestjs/microservices';
 import {
 	AppLogger,
 	GrpcErrorDto,
 	GrpcException,
+	GrpcExceptionFilter,
 	RpcValidationPipe,
 } from '@pathly-backend/common';
 import type {
@@ -37,6 +38,7 @@ import {
 	updatePathSchema,
 } from './schemas';
 
+@UseFilters(GrpcExceptionFilter)
 @Controller()
 export class GrpcPathsController {
 	constructor(
@@ -52,7 +54,7 @@ export class GrpcPathsController {
 		private readonly removePathUseCase: RemovePathUseCase,
 		@Inject(AppLogger)
 		private readonly appLogger: AppLogger,
-	) { }
+	) {}
 
 	@GrpcMethod('PathsService')
 	async find(

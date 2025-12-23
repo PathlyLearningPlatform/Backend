@@ -3,9 +3,10 @@ import {
 	dbPathToEntity,
 	pathEntityToClient,
 } from '../helpers';
-import { mockedClientPath, mockedDbPath, mockedPath } from './mocks/paths.mock';
+import { mockedClientPath, mockedDbPath } from './mocks/paths.mock';
 import { PathsOrderByFields as ClientPathsOrderByFields } from '@pathly-backend/contracts/paths/v1/paths.js';
 import { PathsOrderByFields } from '@/domain/paths/enums';
+import { mockedPath } from '@/app/common/mocks';
 
 describe('helpers', () => {
 	describe('dbPathToEntity', () => {

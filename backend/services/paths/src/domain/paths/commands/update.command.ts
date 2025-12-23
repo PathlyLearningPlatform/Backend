@@ -9,7 +9,7 @@ class UpdateFields extends PartialType(
  * @description
  * This class represents data needed (required and optional) to update path entity. It includes filtering and fields to update.
  */
-export class UpdatePathComand {
+export class UpdatePathCommand {
 	where: {
 		id: string;
 	};

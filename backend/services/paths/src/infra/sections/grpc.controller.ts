@@ -141,17 +141,6 @@ export class GrpcSectionsController {
 
 			return { section: sectionEntityToClient(section) };
 		} catch (err) {
-			if (err instanceof PathNotFoundException) {
-				throw new GrpcException(
-					new GrpcErrorDto(
-						'path not found',
-						GrpcStatus.NOT_FOUND,
-						PathsApiErrorCodes.PATH_NOT_FOUND,
-					),
-					err,
-				);
-			}
-
 			if (err instanceof SectionNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(

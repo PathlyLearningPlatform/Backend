@@ -1,7 +1,4 @@
-import type { Provider } from '@nestjs/common';
-import { DbService } from '@/infra/db/db.service';
-
-export const mockedDb = {
+export const mockedDrizzle = {
 	select: jest.fn().mockReturnThis(),
 	from: jest.fn().mockReturnThis(),
 	where: jest.fn().mockReturnThis(),
@@ -14,11 +11,4 @@ export const mockedDb = {
 	update: jest.fn().mockReturnThis(),
 	set: jest.fn().mockReturnThis(),
 	delete: jest.fn().mockReturnThis(),
-};
-
-export const mockedDbService: Provider = {
-	provide: DbService,
-	useValue: {
-		getDb: jest.fn().mockReturnValue(mockedDb),
-	},
 };

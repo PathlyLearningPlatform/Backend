@@ -10,7 +10,7 @@ import type {
 	FindOnePathCommand,
 	FindPathsCommand,
 	RemovePathCommand,
-	UpdatePathComand,
+	UpdatePathCommand,
 } from '@/domain/paths/commands';
 import type { Path } from '@/domain/paths/entities';
 import { PathsOrderByFields } from '@/domain/paths/enums';
@@ -113,7 +113,7 @@ export class PostgresPathsRepository implements IPathsRepository {
 	 * @throws DbException if there is db error
 	 * @description this function updates path in a database
 	 */
-	async update(command: UpdatePathComand): Promise<Path | null> {
+	async update(command: UpdatePathCommand): Promise<Path | null> {
 		try {
 			const result = await this.db
 				.update(pathsTable)

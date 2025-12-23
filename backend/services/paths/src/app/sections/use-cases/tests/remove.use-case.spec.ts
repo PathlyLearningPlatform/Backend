@@ -1,8 +1,6 @@
 import { SectionNotFoundException } from '@/domain/sections/exceptions';
-import { RemoveSectionUseCase } from '../use-cases';
-import { mockedRemoveCommand } from './mocks/commands.mock';
-import { mockedSection } from './mocks/sections.mock';
-import { mockedSectionsRepository } from './mocks/sections.repository.mock';
+import { RemoveSectionUseCase } from '../remove.use-case';
+import { mockedSection, mockedSectionsRepository } from '@/app/common/mocks';
 
 describe('RemoveSectionUseCase', () => {
 	let removeSectionUseCase: RemoveSectionUseCase;
@@ -25,13 +23,13 @@ describe('RemoveSectionUseCase', () => {
 		});
 
 		it('should return a section', async () => {
-			const expectedResult = mockedSection;
-
 			mockedSectionsRepository.remove.mockResolvedValueOnce(mockedSection);
 
-			const result = await removeSectionUseCase.execute(mockedRemoveCommand);
+			const result = await removeSectionUseCase.execute({
+				where: { id: mockedSection.id },
+			});
 
-			expect(result).toEqual(expectedResult);
+			expect(result).toEqual(mockedSection);
 		});
 	});
 });

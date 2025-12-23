@@ -1,6 +1,6 @@
 import { PathNotFoundException } from '@/domain/paths/exceptions';
 import { IPathsRepository } from '@/domain/paths/interfaces';
-import type { UpdateSectionComand } from '@/domain/sections/commands';
+import type { UpdateSectionCommand } from '@/domain/sections/commands';
 import type { Section } from '@/domain/sections/entities';
 import { SectionNotFoundException } from '@/domain/sections/exceptions';
 import type { ISectionsRepository } from '@/domain/sections/interfaces';
@@ -9,10 +9,7 @@ import type { ISectionsRepository } from '@/domain/sections/interfaces';
  * @description This class responsibility is to update a section. It uses sections repository for updating sections in a data source. sectionsRepository in injected to this class via dependency injection and dependency inversion techniques by using ISectionsRepository interface.
  */
 export class UpdateSectionUseCase {
-	constructor(
-		private readonly sectionsRepository: ISectionsRepository,
-		private readonly pathsRepository: IPathsRepository,
-	) {}
+	constructor(private readonly sectionsRepository: ISectionsRepository) {}
 
 	/**
 	 *
@@ -20,17 +17,8 @@ export class UpdateSectionUseCase {
 	 * @returns updated section
 	 * @throws
 	 * {SectionNotFoundException} if section was not found
-	 * {PathNotFoundException} if path was not found
 	 */
-	async execute(command: UpdateSectionComand): Promise<Section> {
-		const path = await this.pathsRepository.findOne({
-			where: { id: command.where.id },
-		});
-
-		if (!path) {
-			throw new PathNotFoundException(command.where.id);
-		}
-
+	async execute(command: UpdateSectionCommand): Promise<Section> {
 		const updatedSection = await this.sectionsRepository.update(command);
 
 		if (!updatedSection) {

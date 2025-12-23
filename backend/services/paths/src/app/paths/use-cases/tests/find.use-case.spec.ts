@@ -1,7 +1,6 @@
 import type { Path } from '@/domain/paths/entities';
-import { FindPathsUseCase } from '../use-cases';
-import { mockedPath } from './mocks/paths.mock';
-import { mockedPathsRepository } from './mocks/paths.repository.mock';
+import { FindPathsUseCase } from '../find.use-case';
+import { mockedPath, mockedPathsRepository } from '@/app/common/mocks';
 
 describe('FindPathsUseCase', () => {
 	let findPathsUseCase: FindPathsUseCase;

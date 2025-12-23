@@ -6,7 +6,7 @@ import type {
 	FindOneSectionCommand,
 	FindSectionsCommand,
 	RemoveSectionCommand,
-	UpdateSectionComand,
+	UpdateSectionCommand,
 } from '@/domain/sections/commands';
 import type { Section } from '@/domain/sections/entities';
 import type { ISectionsRepository } from '@/domain/sections/interfaces';
@@ -99,7 +99,7 @@ export class PostgresSectionsRepository implements ISectionsRepository {
 	 * @throws DbException if there is db error
 	 * @description this function updates section in a database
 	 */
-	async update(command: UpdateSectionComand): Promise<Section | null> {
+	async update(command: UpdateSectionCommand): Promise<Section | null> {
 		try {
 			const result = await this.db
 				.update(sectionsTable)

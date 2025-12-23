@@ -1,4 +1,4 @@
-import type { UpdatePathComand } from '@/domain/paths/commands';
+import type { UpdatePathCommand } from '@/domain/paths/commands';
 import type { Path } from '@/domain/paths/entities';
 import { PathNotFoundException } from '@/domain/paths/exceptions';
 import type { IPathsRepository } from '@/domain/paths/interfaces';
@@ -15,7 +15,7 @@ export class UpdatePathUseCase {
 	 * @returns updated path
 	 * @throws PathNotFoundException if path was not found
 	 */
-	async execute(command: UpdatePathComand): Promise<Path> {
+	async execute(command: UpdatePathCommand): Promise<Path> {
 		const path = await this.pathsRepository.update(command);
 
 		if (!path) {

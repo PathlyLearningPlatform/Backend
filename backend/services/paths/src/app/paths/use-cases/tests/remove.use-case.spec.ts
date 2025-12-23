@@ -2,11 +2,9 @@ import {
 	PathCannotBeRemovedException,
 	PathNotFoundException,
 } from '@/domain/paths/exceptions';
-import { RemovePathUseCase } from '../use-cases';
-import { mockedRemoveCommand } from './mocks/commands.mock';
-import { mockedPath } from './mocks/paths.mock';
-import { mockedPathsRepository } from './mocks/paths.repository.mock';
+import { RemovePathUseCase } from '../remove.use-case';
 import { InvalidReferenceException } from '@pathly-backend/common/index.js';
+import { mockedPath, mockedPathsRepository } from '@/app/common/mocks';
 
 describe('RemovePathUseCase', () => {
 	let removePathUseCase: RemovePathUseCase;
@@ -35,21 +33,21 @@ describe('RemovePathUseCase', () => {
 
 			const promise = removePathUseCase.execute({
 				where: {
-					id: mockedPath.id
-				}
-			})
+					id: mockedPath.id,
+				},
+			});
 
-			await expect(promise).rejects.toThrow(PathCannotBeRemovedException)
+			await expect(promise).rejects.toThrow(PathCannotBeRemovedException);
 		});
 
 		it('should return a path', async () => {
-			const expectedResult = mockedPath;
-
 			mockedPathsRepository.remove.mockResolvedValueOnce(mockedPath);
 
-			const result = await removePathUseCase.execute(mockedRemoveCommand);
+			const result = await removePathUseCase.execute({
+				where: { id: mockedPath.id },
+			});
 
-			expect(result).toEqual(expectedResult);
+			expect(result).toEqual(mockedPath);
 		});
 	});
 });

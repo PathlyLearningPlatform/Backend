@@ -3,20 +3,14 @@ import {
 	DbException,
 	InvalidReferenceException,
 } from '@pathly-backend/common/index.js';
-import {
-	mockedCreateCommand,
-	mockedFindCommand,
-	mockedFindOneCommand,
-	mockedRemoveCommand,
-	mockedUpdateCommand,
-} from '@/app/paths/tests/mocks/commands.mock';
 import { PostgresPathsRepository } from '../postgres.repository';
-import { mockedDb, mockedDbService } from './mocks/db.mock';
-import { mockedDbPath, mockedPath } from './mocks/paths.mock';
+import { mockedDrizzle, mockedDbService } from '@/infra/common/mocks';
+import { mockedDbPath } from './mocks/paths.mock';
 import { PathsApiConstraints } from '../enums';
 import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
 import { DatabaseError as PostgresError } from 'pg';
 import { DrizzleQueryError } from 'drizzle-orm';
+import { mockedPath } from '@/app/common/mocks';
 
 describe('PathsRepository', () => {
 	let pathsRepository: PostgresPathsRepository;
@@ -31,9 +25,9 @@ describe('PathsRepository', () => {
 
 	describe('find', () => {
 		it('should return an array of paths', async () => {
-			mockedDb.offset.mockResolvedValueOnce([mockedDbPath]);
+			mockedDrizzle.offset.mockResolvedValueOnce([mockedDbPath]);
 
-			const result = await pathsRepository.find(mockedFindCommand);
+			const result = await pathsRepository.find({});
 
 			expect(result).toEqual([mockedPath]);
 			expect(result.length).toBeLessThanOrEqual(
@@ -42,9 +36,9 @@ describe('PathsRepository', () => {
 		});
 
 		it('should throw DbException', async () => {
-			mockedDb.offset.mockRejectedValueOnce(new Error());
+			mockedDrizzle.offset.mockRejectedValueOnce(new Error());
 
-			const promise = pathsRepository.find(mockedFindCommand);
+			const promise = pathsRepository.find({});
 
 			await expect(promise).rejects.toThrow(DbException);
 		});
@@ -52,25 +46,31 @@ describe('PathsRepository', () => {
 
 	describe('findOne', () => {
 		it('should return a path', async () => {
-			mockedDb.where.mockResolvedValueOnce([mockedDbPath]);
+			mockedDrizzle.where.mockResolvedValueOnce([mockedDbPath]);
 
-			const result = await pathsRepository.findOne(mockedFindOneCommand);
+			const result = await pathsRepository.findOne({
+				where: { id: mockedPath.id },
+			});
 
 			expect(result).toEqual(mockedPath);
 		});
 
 		it('should return null', async () => {
-			mockedDb.where.mockResolvedValueOnce([]);
+			mockedDrizzle.where.mockResolvedValueOnce([]);
 
-			const result = await pathsRepository.findOne(mockedFindOneCommand);
+			const result = await pathsRepository.findOne({
+				where: { id: 'non-existent-path-id' },
+			});
 
 			expect(result).toEqual(null);
 		});
 
 		it('should throw DbException', async () => {
-			mockedDb.where.mockResolvedValueOnce(new Error());
+			mockedDrizzle.where.mockResolvedValueOnce(new Error());
 
-			const promise = pathsRepository.findOne(mockedFindOneCommand);
+			const promise = pathsRepository.findOne({
+				where: { id: mockedPath.id },
+			});
 
 			await expect(promise).rejects.toThrow(DbException);
 		});
@@ -78,17 +78,21 @@ describe('PathsRepository', () => {
 
 	describe('create', () => {
 		it('should return created path', async () => {
-			mockedDb.returning.mockResolvedValueOnce([mockedDbPath]);
+			mockedDrizzle.returning.mockResolvedValueOnce([mockedDbPath]);
 
-			const result = await pathsRepository.create(mockedCreateCommand);
+			const result = await pathsRepository.create({
+				name: mockedPath.name,
+			});
 
 			expect(result).toEqual(mockedPath);
 		});
 
 		it('should throw DbException', async () => {
-			mockedDb.returning.mockResolvedValueOnce(new Error());
+			mockedDrizzle.returning.mockResolvedValueOnce(new Error());
 
-			const promise = pathsRepository.create(mockedCreateCommand);
+			const promise = pathsRepository.create({
+				name: mockedPath.name,
+			});
 
 			await expect(promise).rejects.toThrow(DbException);
 		});
@@ -96,25 +100,31 @@ describe('PathsRepository', () => {
 
 	describe('update', () => {
 		it('should return updated path', async () => {
-			mockedDb.returning.mockResolvedValueOnce([mockedDbPath]);
+			mockedDrizzle.returning.mockResolvedValueOnce([mockedDbPath]);
 
-			const result = await pathsRepository.update(mockedUpdateCommand);
+			const result = await pathsRepository.update({
+				where: { id: mockedPath.id },
+			});
 
 			expect(result).toEqual(mockedPath);
 		});
 
 		it('should return null', async () => {
-			mockedDb.returning.mockResolvedValueOnce([]);
+			mockedDrizzle.returning.mockResolvedValueOnce([]);
 
-			const result = await pathsRepository.update(mockedUpdateCommand);
+			const result = await pathsRepository.update({
+				where: { id: 'non-existent-path-id' },
+			});
 
 			expect(result).toEqual(null);
 		});
 
 		it('should throw DbException', async () => {
-			mockedDb.returning.mockResolvedValueOnce(new Error());
+			mockedDrizzle.returning.mockResolvedValueOnce(new Error());
 
-			const promise = pathsRepository.update(mockedUpdateCommand);
+			const promise = pathsRepository.update({
+				where: { id: mockedPath.id },
+			});
 
 			await expect(promise).rejects.toThrow(DbException);
 		});
@@ -122,25 +132,31 @@ describe('PathsRepository', () => {
 
 	describe('remove', () => {
 		it('should return removed path', async () => {
-			mockedDb.returning.mockResolvedValueOnce([mockedDbPath]);
+			mockedDrizzle.returning.mockResolvedValueOnce([mockedDbPath]);
 
-			const result = await pathsRepository.remove(mockedRemoveCommand);
+			const result = await pathsRepository.remove({
+				where: { id: mockedPath.id },
+			});
 
 			expect(result).toEqual(mockedPath);
 		});
 
 		it('should return null', async () => {
-			mockedDb.returning.mockResolvedValueOnce([]);
+			mockedDrizzle.returning.mockResolvedValueOnce([]);
 
-			const result = await pathsRepository.remove(mockedRemoveCommand);
+			const result = await pathsRepository.remove({
+				where: { id: 'non-existent-path-id' },
+			});
 
 			expect(result).toEqual(null);
 		});
 
 		it('should throw DbException', async () => {
-			mockedDb.returning.mockResolvedValueOnce(new Error());
+			mockedDrizzle.returning.mockResolvedValueOnce(new Error());
 
-			const promise = pathsRepository.remove(mockedRemoveCommand);
+			const promise = pathsRepository.remove({
+				where: { id: mockedPath.id },
+			});
 
 			await expect(promise).rejects.toThrow(DbException);
 		});
@@ -151,9 +167,11 @@ describe('PathsRepository', () => {
 
 			const drizzleErr = new DrizzleQueryError('', [], pgErr);
 
-			mockedDb.returning.mockResolvedValueOnce(drizzleErr);
+			mockedDrizzle.returning.mockResolvedValueOnce(drizzleErr);
 
-			const promise = pathsRepository.remove(mockedRemoveCommand);
+			const promise = pathsRepository.remove({
+				where: { id: mockedPath.id },
+			});
 
 			await expect(promise).rejects.toThrow(InvalidReferenceException);
 		});

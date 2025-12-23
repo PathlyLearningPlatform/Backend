@@ -1,11 +1,11 @@
 import { SectionNotFoundException } from '@/domain/sections/exceptions';
-import { UpdateSectionUseCase } from '../use-cases';
-import { mockedUpdateCommand } from './mocks/commands.mock';
-import { mockedUpdatedSection } from './mocks/sections.mock';
-import { mockedSectionsRepository } from './mocks/sections.repository.mock';
-import { mockedPathsRepository } from '@/app/paths/tests/mocks/paths.repository.mock';
-import { PathNotFoundException } from '@/domain/paths/exceptions';
-import { mockedPath } from '@/app/paths/tests/mocks/paths.mock';
+import { UpdateSectionUseCase } from '../update.use-case';
+import {
+	mockedPath,
+	mockedSection,
+	mockedPathsRepository,
+	mockedSectionsRepository,
+} from '@/app/common/mocks';
 
 describe('UpdateSectionUseCase', () => {
 	let updateSectionUseCase: UpdateSectionUseCase;
@@ -32,24 +32,14 @@ describe('UpdateSectionUseCase', () => {
 		});
 
 		it('should return a section', async () => {
-			const expectedResult = mockedUpdatedSection;
-
 			mockedPathsRepository.findOne.mockResolvedValueOnce(mockedPath);
-			mockedSectionsRepository.update.mockResolvedValueOnce(
-				mockedUpdatedSection,
-			);
+			mockedSectionsRepository.update.mockResolvedValueOnce(mockedSection);
 
-			const result = await updateSectionUseCase.execute(mockedUpdateCommand);
+			const result = await updateSectionUseCase.execute({
+				where: { id: mockedSection.id },
+			});
 
-			expect(result).toEqual(expectedResult);
-		});
-
-		it('should throw PathNotFoundException', async () => {
-			mockedSectionsRepository.findOne.mockResolvedValueOnce(null);
-
-			const promise = updateSectionUseCase.execute(mockedUpdateCommand);
-
-			await expect(promise).rejects.toThrow(PathNotFoundException);
+			expect(result).toEqual(mockedSection);
 		});
 	});
 });

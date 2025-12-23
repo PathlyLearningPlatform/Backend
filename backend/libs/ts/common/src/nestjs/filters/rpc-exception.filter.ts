@@ -20,7 +20,7 @@ export class GrpcExceptionFilter
   catch(exception: GrpcException, host: ArgumentsHost): Observable<unknown> {
     const ctx = host.switchToRpc();
 
-    this.appLogger.error(exception.getGrpcError());
+    this.appLogger.error(exception);
 
     const errObj = exception.getError();
 
