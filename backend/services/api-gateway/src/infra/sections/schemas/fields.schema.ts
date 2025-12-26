@@ -1,5 +1,5 @@
-import { SectionConstraints } from '@/domain/sections/enums'
 import z from 'zod'
+import { SectionConstraints } from '@/domain/sections/enums'
 
 export const nameSchema = z.string().max(SectionConstraints.MAX_NAME_LENGTH)
 export const descriptionSchema = z

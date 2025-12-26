@@ -1,14 +1,14 @@
+import { HttpStatus } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
+import {
+	DocumentBuilder,
+	type SwaggerDocumentOptions,
+	SwaggerModule,
+} from '@nestjs/swagger'
 import { AppLogger, HttpErrorResponse } from '@pathly-backend/common'
 import { AppModule } from './app.module'
 import type { AppConfig } from './infra/common/types'
-import {
-	DocumentBuilder,
-	SwaggerDocumentOptions,
-	SwaggerModule,
-} from '@nestjs/swagger'
-import { HttpStatus } from '@nestjs/common'
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule, {

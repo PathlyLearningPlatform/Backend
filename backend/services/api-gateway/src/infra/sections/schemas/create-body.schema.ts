@@ -1,11 +1,11 @@
 import z from 'zod'
+import type { CreateSectionBodyDto } from '../dtos'
 import {
 	descriptionSchema,
 	nameSchema,
 	orderSchema,
 	pathIdSchema,
 } from './fields.schema'
-import { CreateSectionBodyDto } from '../dtos'
 
 export const createSectionBodySchema = z
 	.object({

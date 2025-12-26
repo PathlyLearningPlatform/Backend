@@ -1,6 +1,6 @@
-import { PathsOrderByFields } from '@/domain/paths/enums'
 import { SortType } from '@pathly-backend/common/index.js'
 import z from 'zod'
+import { PathsOrderByFields } from '@/domain/paths/enums'
 import { PathsApiConstraints } from '../enums'
 
 export const findPathsQuerySchema = z

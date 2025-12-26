@@ -1,5 +1,5 @@
-import { SectionConstraints } from '@/domain/sections/enums'
 import { ApiProperty } from '@nestjs/swagger'
+import { SectionConstraints } from '@/domain/sections/enums'
 
 export class SectionResponseDto {
 	@ApiProperty({

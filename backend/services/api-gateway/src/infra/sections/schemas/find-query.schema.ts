@@ -1,6 +1,6 @@
 import z from 'zod'
+import type { FindSectionsQueryDto } from '../dtos'
 import { SectionsApiConstraints } from '../enums'
-import { FindSectionsQueryDto } from '../dtos'
 
 export const findSectionsQuerySchema = z
 	.object({

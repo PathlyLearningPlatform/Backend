@@ -4,6 +4,7 @@ import {
 	Controller,
 	Delete,
 	Get,
+	Inject,
 	InternalServerErrorException,
 	NotFoundException,
 	Param,
@@ -12,47 +13,47 @@ import {
 	Post,
 	Query,
 } from '@nestjs/common'
-import { PathsService } from './paths.service'
-import {
-	HttpErrorDto,
-	nullToEmptyString,
-	HttpValidationPipe,
-	HttpErrorResponse,
-} from '@pathly-backend/common/index.js'
-import {
-	CreatePathBodyDto,
-	CreatePathResponseDto,
-	FindOnePathResponseDto,
-	FindPathsQueryDto,
-	FindPathsResponseDto,
-	RemovePathResponseDto,
-	UpdatePathBodyDto,
-	UpdatePathResponseDto,
-} from './dtos'
-import {
-	PathCannotBeRemovedException,
-	PathNotFoundException,
-} from './exceptions'
-import {
-	createPathBodySchema,
-	findPathsQuerySchema,
-	updatePathBodySchema,
-} from './schemas'
-import { clientPathToResponseDto } from './helpers'
-import { domainPathsOrderByFieldsToClient } from './helpers/domain-order-by-fields-to-client.helper'
-import { domainSortTypeToClient } from '../common/helpers'
 import {
 	ApiCreatedResponse,
 	ApiNotFoundResponse,
 	ApiOkResponse,
 } from '@nestjs/swagger'
+import {
+	HttpErrorDto,
+	HttpErrorResponse,
+	HttpValidationPipe,
+	nullToEmptyString,
+} from '@pathly-backend/common/index.js'
+import { domainSortTypeToClient } from '../common/helpers'
+import {
+	type CreatePathBodyDto,
+	CreatePathResponseDto,
+	FindOnePathResponseDto,
+	type FindPathsQueryDto,
+	FindPathsResponseDto,
+	RemovePathResponseDto,
+	type UpdatePathBodyDto,
+	UpdatePathResponseDto,
+} from './dtos'
+import { clientPathToResponseDto } from './helpers'
+import { domainPathsOrderByFieldsToClient } from './helpers/domain-order-by-fields-to-client.helper'
+import { PathsService } from './paths.service'
+import {
+	createPathBodySchema,
+	findPathsQuerySchema,
+	updatePathBodySchema,
+} from './schemas'
+import { GrpcException } from '@pathly-backend/common/index.js'
+import { PathsApiErrorCodes } from '@pathly-backend/contracts/paths/v1/api.js'
 
 @Controller({
 	path: 'paths',
 	version: '1',
 })
 export class PathsController {
-	constructor(private readonly pathsService: PathsService) {}
+	constructor(
+		@Inject(PathsService) private readonly pathsService: PathsService,
+	) {}
 
 	@ApiOkResponse({ type: FindPathsResponseDto })
 	@Get()
@@ -77,12 +78,18 @@ export class PathsController {
 				paths: Array.from(result.paths).map(clientPathToResponseDto),
 			}
 		} catch (err) {
-			throw new InternalServerErrorException(
-				new HttpErrorDto('failed to find paths'),
-				{
-					cause: err,
-				},
-			)
+			const grpcErr = err as GrpcException
+			const errRes = grpcErr.getGrpcError()
+
+			switch (errRes.apiCode) {
+				default:
+					throw new InternalServerErrorException(
+						new HttpErrorDto('failed to find paths'),
+						{
+							cause: err,
+						},
+					)
+			}
 		}
 	}
 
@@ -99,16 +106,20 @@ export class PathsController {
 				path: clientPathToResponseDto(result.path!),
 			}
 		} catch (err) {
-			if (err instanceof PathNotFoundException) {
-				throw new NotFoundException(new HttpErrorDto('path not found'))
-			}
+			const grpcErr = err as GrpcException
+			const errRes = grpcErr.getGrpcError()
 
-			throw new InternalServerErrorException(
-				new HttpErrorDto('failed to find one path'),
-				{
-					cause: err,
-				},
-			)
+			switch (errRes.apiCode) {
+				case PathsApiErrorCodes.PATH_NOT_FOUND:
+					throw new NotFoundException(new HttpErrorDto('path not found'))
+				default:
+					throw new InternalServerErrorException(
+						new HttpErrorDto('failed to find paths'),
+						{
+							cause: err,
+						},
+					)
+			}
 		}
 	}
 
@@ -128,12 +139,18 @@ export class PathsController {
 				path: clientPathToResponseDto(result.path!),
 			}
 		} catch (err) {
-			throw new InternalServerErrorException(
-				new HttpErrorDto('failed to create path'),
-				{
-					cause: err,
-				},
-			)
+			const grpcErr = err as GrpcException
+			const errRes = grpcErr.getGrpcError()
+
+			switch (errRes.apiCode) {
+				default:
+					throw new InternalServerErrorException(
+						new HttpErrorDto('failed to create path'),
+						{
+							cause: err,
+						},
+					)
+			}
 		}
 	}
 
@@ -158,16 +175,20 @@ export class PathsController {
 				path: clientPathToResponseDto(result.path!),
 			}
 		} catch (err) {
-			if (err instanceof PathNotFoundException) {
-				throw new NotFoundException(new HttpErrorDto('path not found'))
-			}
+			const grpcErr = err as GrpcException
+			const errRes = grpcErr.getGrpcError()
 
-			throw new InternalServerErrorException(
-				new HttpErrorDto('failed to update path'),
-				{
-					cause: err,
-				},
-			)
+			switch (errRes.apiCode) {
+				case PathsApiErrorCodes.PATH_NOT_FOUND:
+					throw new NotFoundException(new HttpErrorDto('path not found'))
+				default:
+					throw new InternalServerErrorException(
+						new HttpErrorDto('failed to find paths'),
+						{
+							cause: err,
+						},
+					)
+			}
 		}
 	}
 
@@ -186,22 +207,24 @@ export class PathsController {
 				path: clientPathToResponseDto(result.path!),
 			}
 		} catch (err) {
-			if (err instanceof PathCannotBeRemovedException) {
-				throw new ConflictException(
-					new HttpErrorDto('path cannot be removed because it has sections'),
-				)
-			}
+			const grpcErr = err as GrpcException
+			const errRes = grpcErr.getGrpcError()
 
-			if (err instanceof PathNotFoundException) {
-				throw new NotFoundException(new HttpErrorDto('path not found'))
+			switch (errRes.apiCode) {
+				case PathsApiErrorCodes.PATH_NOT_FOUND:
+					throw new NotFoundException(new HttpErrorDto('path not found'))
+				case PathsApiErrorCodes.PATH_CANNOT_BE_REMOVED:
+					throw new ConflictException(
+						new HttpErrorDto('path cannot be removed'),
+					)
+				default:
+					throw new InternalServerErrorException(
+						new HttpErrorDto('failed to find paths'),
+						{
+							cause: err,
+						},
+					)
 			}
-
-			throw new InternalServerErrorException(
-				new HttpErrorDto('failed to remove path'),
-				{
-					cause: err,
-				},
-			)
 		}
 	}
 }

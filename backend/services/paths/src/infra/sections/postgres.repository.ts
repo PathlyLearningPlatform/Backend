@@ -15,6 +15,10 @@ import { DbService } from '../db/db.service';
 import { sectionsTable } from '../db/schemas';
 import { dbSectionToEntity } from './helpers';
 import { SectionsApiConstraints } from './enums';
+import { DrizzleQueryError } from 'drizzle-orm';
+import { DatabaseError as PostgresError } from 'pg';
+import { InvalidReferenceException } from '@pathly-backend/common/index.js';
+import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
 
 /**
  * @description This class is a concrete implementation of ISectionsRepository interface. It's reponsibility is to perform CRUD operations on sections using postgres as data source.
@@ -129,6 +133,14 @@ export class PostgresSectionsRepository implements ISectionsRepository {
 
 			return result.length <= 0 ? null : dbSectionToEntity(result[0]);
 		} catch (err) {
+			if (err instanceof DrizzleQueryError) {
+				if (err.cause instanceof PostgresError) {
+					if (err.cause.code === PG_FOREIGN_KEY_VIOLATION) {
+						throw new InvalidReferenceException(err.message, err);
+					}
+				}
+			}
+
 			throw new DbException('db error', err, true);
 		}
 	}

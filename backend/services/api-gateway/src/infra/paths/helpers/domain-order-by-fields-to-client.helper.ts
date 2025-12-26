@@ -1,5 +1,5 @@
-import { PathsOrderByFields } from '@/domain/paths/enums'
 import { PathsOrderByFields as ClientPathsOrderByFields } from '@pathly-backend/contracts/paths/v1/paths.js'
+import { PathsOrderByFields } from '@/domain/paths/enums'
 
 export function domainPathsOrderByFieldsToClient(
 	domain: PathsOrderByFields,

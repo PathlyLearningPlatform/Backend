@@ -35,6 +35,7 @@ import {
 } from './schemas';
 import { PathNotFoundException } from '@/domain/paths/exceptions';
 import { PathsApiErrorCodes } from '@pathly-backend/contracts/paths/v1/api.js';
+import { SectionNotFoundException } from '@/domain/sections/exceptions';
 
 @UseFilters(GrpcExceptionFilter)
 @Controller()
@@ -112,12 +113,12 @@ export class GrpcUnitsController {
 
 			return { unit: unitEntityToClient(unit) };
 		} catch (err) {
-			if (err instanceof PathNotFoundException) {
+			if (err instanceof SectionNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
 						'path not found',
 						GrpcStatus.NOT_FOUND,
-						PathsApiErrorCodes.PATH_NOT_FOUND,
+						PathsApiErrorCodes.SECTION_NOT_FOUND,
 					),
 					err,
 				);

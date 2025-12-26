@@ -10,6 +10,7 @@ import { AppController } from './app.controller'
 import { validateConfig } from './infra/config'
 import { PathsModule } from './infra/paths/paths.module'
 import { SectionsModule } from './infra/sections/sections.module'
+import { UnitsModule } from './infra/units/units.module'
 
 @Module({
 	imports: [
@@ -23,6 +24,7 @@ import { SectionsModule } from './infra/sections/sections.module'
 		}),
 		PathsModule,
 		SectionsModule,
+		UnitsModule,
 	],
 	providers: [
 		{

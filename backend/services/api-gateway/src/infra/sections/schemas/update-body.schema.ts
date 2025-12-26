@@ -1,6 +1,6 @@
 import z from 'zod'
+import type { UpdateSectionBodyDto } from '../dtos'
 import { descriptionSchema, nameSchema, orderSchema } from './fields.schema'
-import { UpdateSectionBodyDto } from '../dtos'
 
 export const updateSectionBodySchema = z
 	.object({

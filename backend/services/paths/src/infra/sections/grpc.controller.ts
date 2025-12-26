@@ -23,7 +23,10 @@ import type {
 	RemoveSectionUseCase,
 	UpdateSectionUseCase,
 } from '@/app/sections/use-cases';
-import { SectionNotFoundException } from '@/domain/sections/exceptions';
+import {
+	SectionCannotBeRemovedException,
+	SectionNotFoundException,
+} from '@/domain/sections/exceptions';
 import { DiToken } from '../common/enums';
 import { sectionEntityToClient } from './helpers';
 import {
@@ -171,6 +174,16 @@ export class GrpcSectionsController {
 				section: sectionEntityToClient(section),
 			};
 		} catch (err) {
+			if (err instanceof SectionCannotBeRemovedException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						'section cannot be removed',
+						GrpcStatus.FAILED_PRECONDITION,
+						PathsApiErrorCodes.SECTION_CANNOT_BE_REMOVED,
+					),
+				);
+			}
+
 			if (err instanceof SectionNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(

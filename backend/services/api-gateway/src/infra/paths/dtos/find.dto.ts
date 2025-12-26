@@ -1,6 +1,6 @@
-import { SortType } from '@pathly-backend/common/index.js'
 import { PathsOrderByFields } from '@domain/paths/enums'
 import { ApiPropertyOptional } from '@nestjs/swagger'
+import { SortType } from '@pathly-backend/common/index.js'
 import { PathsApiConstraints } from '../enums'
 
 export class FindPathsQueryDto {

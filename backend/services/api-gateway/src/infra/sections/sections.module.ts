@@ -1,11 +1,11 @@
+import type { Options } from '@grpc/proto-loader'
 import { Module } from '@nestjs/common'
-import { SectionsController } from './sections.controller'
-import { SectionsService } from './sections.service'
 import { ClientsModule, Transport } from '@nestjs/microservices'
+import { COMMON_PACKAGE_NAME } from '@pathly-backend/contracts/common/types.js'
 import { PATHS_V1_PACKAGE_NAME } from '@pathly-backend/contracts/paths/v1/sections.js'
 import { DiToken } from '../common/enums'
-import { COMMON_PACKAGE_NAME } from '@pathly-backend/contracts/common/types.js'
-import { Options } from '@grpc/proto-loader'
+import { SectionsController } from './sections.controller'
+import { SectionsService } from './sections.service'
 
 @Module({
 	imports: [

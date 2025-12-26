@@ -1,5 +1,5 @@
-import { SortType as ClientSortType } from '@pathly-backend/contracts/common/types.js'
 import { SortType } from '@pathly-backend/common'
+import { SortType as ClientSortType } from '@pathly-backend/contracts/common/types.js'
 
 export function domainSortTypeToClient(domain: SortType): ClientSortType {
 	switch (domain) {

@@ -1,5 +1,5 @@
-import { PathConstraints } from '@/domain/paths/enums'
 import { ApiPropertyOptional } from '@nestjs/swagger'
+import { PathConstraints } from '@/domain/paths/enums'
 
 export class UpdatePathBodyDto {
 	@ApiPropertyOptional({

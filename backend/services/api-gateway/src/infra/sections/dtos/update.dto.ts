@@ -1,5 +1,5 @@
-import { SectionConstraints } from '@/domain/sections/enums'
 import { ApiPropertyOptional } from '@nestjs/swagger'
+import { SectionConstraints } from '@/domain/sections/enums'
 
 export class UpdateSectionBodyDto {
 	@ApiPropertyOptional({

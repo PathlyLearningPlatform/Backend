@@ -1,8 +1,10 @@
 import {
 	Body,
+	ConflictException,
 	Controller,
 	Delete,
 	Get,
+	Inject,
 	InternalServerErrorException,
 	NotFoundException,
 	Param,
@@ -11,44 +13,45 @@ import {
 	Post,
 	Query,
 } from '@nestjs/common'
-import { SectionsService } from './sections.service'
-import {
-	HttpErrorDto,
-	nullToEmptyString,
-	HttpValidationPipe,
-	HttpErrorResponse,
-} from '@pathly-backend/common/index.js'
-import {
-	CreateSectionBodyDto,
-	CreateSectionResponseDto,
-	FindOneSectionResponseDto,
-	FindSectionsQueryDto,
-	FindSectionsResponseDto,
-	RemoveSectionResponseDto,
-	UpdateSectionBodyDto,
-	UpdateSectionResponseDto,
-} from './dtos'
-import { SectionNotFoundException } from './exceptions'
-import {
-	createSectionBodySchema,
-	findSectionsQuerySchema,
-	updateSectionBodySchema,
-} from './schemas'
-import { clientSectionToResponseDto } from './helpers'
-import { domainSortTypeToClient } from '../common/helpers'
 import {
 	ApiCreatedResponse,
 	ApiNotFoundResponse,
 	ApiOkResponse,
 } from '@nestjs/swagger'
-import { PathNotFoundException } from '../paths/exceptions'
+import {
+	GrpcException,
+	HttpErrorDto,
+	HttpErrorResponse,
+	HttpValidationPipe,
+	nullToEmptyString,
+} from '@pathly-backend/common/index.js'
+import {
+	type CreateSectionBodyDto,
+	CreateSectionResponseDto,
+	FindOneSectionResponseDto,
+	type FindSectionsQueryDto,
+	FindSectionsResponseDto,
+	RemoveSectionResponseDto,
+	type UpdateSectionBodyDto,
+	UpdateSectionResponseDto,
+} from './dtos'
+import { clientSectionToResponseDto } from './helpers'
+import {
+	createSectionBodySchema,
+	findSectionsQuerySchema,
+	updateSectionBodySchema,
+} from './schemas'
+import { SectionsService } from './sections.service'
+import { PathsApiErrorCodes } from '@pathly-backend/contracts/paths/v1/api.js'
 
 @Controller({
 	path: 'sections',
 	version: '1',
 })
 export class SectionsController {
-	constructor(private readonly sectionsService: SectionsService) {}
+	constructor(
+		@Inject(SectionsService) private readonly sectionsService: SectionsService,
+	) {}
 
 	@ApiOkResponse({ type: FindSectionsResponseDto })
 	@Get()
@@ -65,12 +68,18 @@ export class SectionsController {
 				sections: Array.from(result.sections).map(clientSectionToResponseDto),
 			}
 		} catch (err) {
-			throw new InternalServerErrorException(
-				new HttpErrorDto('failed to find sections'),
-				{
-					cause: err,
-				},
-			)
+			const grpcErr = err as GrpcException
+			const errRes = grpcErr.getGrpcError()
+
+			switch (errRes.apiCode) {
+				default:
+					throw new InternalServerErrorException(
+						new HttpErrorDto('failed to find sections'),
+						{
+							cause: err,
+						},
+					)
+			}
 		}
 	}
 
@@ -87,16 +96,20 @@ export class SectionsController {
 				section: clientSectionToResponseDto(result.section!),
 			}
 		} catch (err) {
-			if (err instanceof SectionNotFoundException) {
-				throw new NotFoundException(new HttpErrorDto('section not found'))
-			}
+			const grpcErr = err as GrpcException
+			const errRes = grpcErr.getGrpcError()
 
-			throw new InternalServerErrorException(
-				new HttpErrorDto('failed to find one section'),
-				{
-					cause: err,
-				},
-			)
+			switch (errRes.apiCode) {
+				case PathsApiErrorCodes.SECTION_NOT_FOUND:
+					throw new NotFoundException(new HttpErrorDto('section not found'))
+				default:
+					throw new InternalServerErrorException(
+						new HttpErrorDto('failed to find one section'),
+						{
+							cause: err,
+						},
+					)
+			}
 		}
 	}
 
@@ -118,16 +131,20 @@ export class SectionsController {
 				section: clientSectionToResponseDto(result.section!),
 			}
 		} catch (err) {
-			if (err instanceof PathNotFoundException) {
-				throw new NotFoundException(new HttpErrorDto('path not found'))
-			}
+			const grpcErr = err as GrpcException
+			const errRes = grpcErr.getGrpcError()
 
-			throw new InternalServerErrorException(
-				new HttpErrorDto('failed to create section'),
-				{
-					cause: err,
-				},
-			)
+			switch (errRes.apiCode) {
+				case PathsApiErrorCodes.PATH_NOT_FOUND:
+					throw new NotFoundException(new HttpErrorDto('path not found'))
+				default:
+					throw new InternalServerErrorException(
+						new HttpErrorDto('failed to find sections'),
+						{
+							cause: err,
+						},
+					)
+			}
 		}
 	}
 
@@ -153,16 +170,20 @@ export class SectionsController {
 				section: clientSectionToResponseDto(result.section!),
 			}
 		} catch (err) {
-			if (err instanceof SectionNotFoundException) {
-				throw new NotFoundException(new HttpErrorDto('section not found'))
-			}
+			const grpcErr = err as GrpcException
+			const errRes = grpcErr.getGrpcError()
 
-			throw new InternalServerErrorException(
-				new HttpErrorDto('failed to update section'),
-				{
-					cause: err,
-				},
-			)
+			switch (errRes.apiCode) {
+				case PathsApiErrorCodes.SECTION_NOT_FOUND:
+					throw new NotFoundException(new HttpErrorDto('section not found'))
+				default:
+					throw new InternalServerErrorException(
+						new HttpErrorDto('failed to find sections'),
+						{
+							cause: err,
+						},
+					)
+			}
 		}
 	}
 
@@ -181,16 +202,22 @@ export class SectionsController {
 				section: clientSectionToResponseDto(result.section!),
 			}
 		} catch (err) {
-			if (err instanceof SectionNotFoundException) {
-				throw new NotFoundException(new HttpErrorDto('section not found'))
-			}
+			const grpcErr = err as GrpcException
+			const errRes = grpcErr.getGrpcError()
 
-			throw new InternalServerErrorException(
-				new HttpErrorDto('failed to remove section'),
-				{
-					cause: err,
-				},
-			)
+			switch (errRes.apiCode) {
+				case PathsApiErrorCodes.SECTION_NOT_FOUND:
+					throw new NotFoundException(new HttpErrorDto('section not found'))
+				case PathsApiErrorCodes.SECTION_CANNOT_BE_REMOVED:
+					throw new ConflictException(new HttpErrorDto('cannot remove section'))
+				default:
+					throw new InternalServerErrorException(
+						new HttpErrorDto('failed to find sections'),
+						{
+							cause: err,
+						},
+					)
+			}
 		}
 	}
 }
