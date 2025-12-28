@@ -10,7 +10,7 @@ Paths service exposes GRPC API, which allows for efficient and bidirectional com
 
 # Code
 
-Code is written using concepts from Domain Driven Design and Clean Architecture. Those patterns were chosen because of scalability, readability and closeness to actual business domain.
+Code is written using concepts from Domain Driven Design and Clean Architecture. Those patterns were chosen because of scalability, readability and closeness to business.
 
 **Note**: This is an architecture description, for code structure and convetions see [code.md](./code.md)
 
