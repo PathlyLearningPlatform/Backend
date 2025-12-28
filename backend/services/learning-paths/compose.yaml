@@ -1,0 +1,39 @@
+services:
+  learning-paths:
+    build:
+      context: ../../
+      target: dev
+      dockerfile: ./services/learning-paths/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - ./src:/usr/src/app/services/learning-paths/src
+      - ./test:/usr/src/app/services/learning-paths/test
+      - ../../libs/ts/common/src:/usr/src/app/libs/ts/common/src
+      - ../../libs/contracts/proto:/usr/src/app/libs/contracts/proto
+    depends_on:
+      learning-paths-db:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'grpc_health_probe -addr=paths:3000']
+      timeout: 10s
+      start_period: 15s
+    ports:
+      - 3001:3000
+      - 5001:5000
+
+  learning-paths-db:
+    build:
+      context: ./db
+    env_file:
+      - ./db/.env
+    volumes:
+      - learning-paths-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD', 'pg_isready']
+      timeout: 30s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  learning-paths-db-data:

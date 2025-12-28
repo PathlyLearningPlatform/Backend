@@ -2,34 +2,49 @@ import type { Options } from '@grpc/proto-loader'
 import { Module } from '@nestjs/common'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { COMMON_PACKAGE_NAME } from '@pathly-backend/contracts/common/types.js'
-import { PATHS_V1_PACKAGE_NAME } from '@pathly-backend/contracts/paths/v1/paths.js'
+import { LEARNING_PATHS_V1_PACKAGE_NAME } from '@pathly-backend/contracts/learning-paths/v1/learning-paths.js'
 import { DiToken } from '../common/enums'
 import { PathsController } from './paths.controller'
 import { PathsService } from './paths.service'
+import { join } from 'path'
+import { ConfigModule } from '@nestjs/config'
+import { ConfigService } from '@nestjs/config'
+import { AppConfig } from '../common/types'
 
 @Module({
 	imports: [
-		ClientsModule.register([
+		ClientsModule.registerAsync([
 			{
-				name: DiToken.PATHS_PACKAGE,
-				transport: Transport.GRPC,
-				options: {
-					package: [PATHS_V1_PACKAGE_NAME, COMMON_PACKAGE_NAME],
-					protoPath: [
-						'/usr/src/app/libs/contracts/proto/paths/v1/paths.proto',
-						'/usr/src/app/libs/contracts/proto/common/types.proto',
-					],
-					url: 'paths:3000',
-					loader: {
-						includeDirs: [
-							'/usr/src/app/libs/contracts/proto',
-							'/usr/src/app/libs/contracts/proto/paths/v1',
-							'/usr/src/app/libs/contracts/proto/common',
-						],
-						arrays: true,
-						defaults: true,
-					} as Options,
+				imports: [ConfigModule],
+				name: DiToken.LEARNING_PATHS_PACKAGE,
+				async useFactory(configService: ConfigService) {
+					const appConfig = configService.get<AppConfig>('app')!.app
+
+					return {
+						transport: Transport.GRPC,
+						options: {
+							package: [LEARNING_PATHS_V1_PACKAGE_NAME, COMMON_PACKAGE_NAME],
+							protoPath: [
+								join(
+									appConfig.protoDir,
+									'learning-paths/v1/learning-paths.proto',
+								),
+								join(appConfig.protoDir, 'common/types.proto'),
+							],
+							url: appConfig.learningPathsServiceUrl,
+							loader: {
+								includeDirs: [
+									join(appConfig.protoDir),
+									join(appConfig.protoDir, 'learning-paths/v1'),
+									join(appConfig.protoDir, 'common'),
+								],
+								arrays: true,
+								defaults: true,
+							} as Options,
+						},
+					}
 				},
+				inject: [ConfigService],
 			},
 		]),
 	],

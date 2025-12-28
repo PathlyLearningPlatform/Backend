@@ -1,0 +1,31 @@
+services:
+  learning-paths:
+    build:
+      context: ../../
+      target: prod
+      dockerfile: ./services/paths/Dockerfile
+    env_file:
+      - .env.prod
+    depends_on:
+      learning-paths-db:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'grpc_health_probe -addr=paths:3000']
+      timeout: 10s
+      start_period: 15s
+
+  learning-paths-db:
+    build:
+      context: ./db
+    env_file:
+      - ./db/.env.prod
+    volumes:
+      - learning-paths-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD', 'pg_isready']
+      timeout: 30s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  learning-paths-db-data:

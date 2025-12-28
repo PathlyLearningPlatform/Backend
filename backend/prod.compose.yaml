@@ -2,7 +2,7 @@ name: pathly-backend
 
 include:
   - ./infra/auth/prod.compose.yaml
-  - ./services/paths/prod.compose.yaml
+  - ./services/learning-paths/prod.compose.yaml
 
 services:
   reverse-proxy:
@@ -30,5 +30,5 @@ services:
       timeout: 10s
       start_period: 15s
     depends_on:
-      paths:
+      learning-paths:
         condition: service_healthy

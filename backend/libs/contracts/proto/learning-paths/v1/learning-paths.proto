@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+package learning_paths.v1;
+
+import "common/types.proto";
+
+message LearningPath {
+  string id = 1;
+  string createdAt = 2;
+  string updatedAt = 3;
+  string name = 4;
+  string description = 5;
+}
+
+service LearningPathsService {
+  rpc Find(FindLearningPathsRequest) returns (FindLearningPathsResponse) {};
+  rpc FindOne(FindOneLearningPathRequest) returns (FindOneLearningPathResponse) {};
+  rpc Create(CreateLearningPathRequest) returns (CreateLearningPathResponse) {};
+  rpc Update(UpdateLearningPathRequest) returns (UpdateLearningPathResponse) {};
+  rpc Remove(RemoveLearningPathRequest) returns (RemoveLearningPathResponse) {};
+}
+
+enum LearningPathsOrderByFields {
+  NAME = 0;
+  CREATED_AT = 1;
+  UPDATED_AT = 2;
+}
+message FindLearningPathsOptions {
+  optional int32 limit = 1;
+  optional int32 page = 2;
+  optional common.SortType sortType = 3;
+  optional LearningPathsOrderByFields orderBy = 4;
+}
+message FindLearningPathsRequest {
+  optional FindLearningPathsOptions options = 1;
+}
+message FindLearningPathsResponse {
+  repeated LearningPath learningPaths = 1;
+}
+
+message FindOneLearningPathWhere {
+  string id = 1;
+}
+message FindOneLearningPathRequest {
+  FindOneLearningPathWhere where = 1;
+}
+message FindOneLearningPathResponse {
+  LearningPath learningPath = 1;
+}
+
+message CreateLearningPathRequest {
+  string name = 1;
+  optional string description = 2;
+}
+message CreateLearningPathResponse {
+  LearningPath learningPath = 1;
+}
+
+message UpdateLearningPathFields {
+  optional string name = 1;
+  optional string description = 2;
+}
+message UpdateLearningPathWhere {
+  string id = 1;
+}
+message UpdateLearningPathRequest {
+  UpdateLearningPathWhere where = 1;
+  optional UpdateLearningPathFields fields = 2;
+}
+message UpdateLearningPathResponse {
+  LearningPath learningPath = 1;
+}
+
+message RemoveLearningPathWhere {
+  string id = 1;
+}
+message RemoveLearningPathRequest {
+  RemoveLearningPathWhere where = 1;
+}
+message RemoveLearningPathResponse {
+  LearningPath learningPath = 1;
+}

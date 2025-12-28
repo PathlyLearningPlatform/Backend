@@ -1,0 +1,27 @@
+import type { FindOneLearningPathCommand } from '@/app/learning-paths/commands';
+import type { LearningPath } from '@/domain/learning-paths/entities';
+import { LearningPathNotFoundException } from '@/domain/learning-paths/exceptions';
+import type { ILearningPathsRepository } from '@/app/learning-paths/interfaces';
+
+/**
+ * @description This class responsibility is to find one path. It uses paths repository for retrieving path from a data source. pathsRepository in injected to this class via dependency injection and dependency inversion techniques by using IPathsRepository interface.
+ */
+export class FindOneLearningPathUseCase {
+	constructor(private readonly learningPathsRepository: ILearningPathsRepository) {}
+
+	/**
+	 *
+	 * @param command object with data for finding one path
+	 * @returns found path
+	 * @throws PathNotFoundException if path was not found
+	 */
+	async execute(command: FindOneLearningPathCommand): Promise<LearningPath> {
+		const learningPath = await this.learningPathsRepository.findOne(command);
+
+		if (!learningPath) {
+			throw new LearningPathNotFoundException(command.where.id);
+		}
+
+		return learningPath;
+	}
+}

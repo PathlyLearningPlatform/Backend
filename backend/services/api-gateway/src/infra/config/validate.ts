@@ -5,6 +5,9 @@ export function validateConfig(config: Record<string, unknown>) {
 	const transformedConfig = {
 		app: {
 			port: parseIntOrReturn(config.PORT),
+			hostname: config.HOSTNAME,
+			learningPathsServiceUrl: config.LEARNING_PATHS_SERVICE_URL,
+			protoDir: config.PROTO_DIR,
 		},
 	}
 

@@ -14,7 +14,7 @@
     "stop": "docker compose down"
   },
   "workspaces": [
-    "services/paths",
+    "services/learning-paths",
     "services/api-gateway",
     "libs/contracts",
     "libs/ts/common"
