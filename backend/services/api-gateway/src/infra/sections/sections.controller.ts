@@ -14,9 +14,12 @@ import {
 	Query,
 } from '@nestjs/common'
 import {
+	ApiBody,
+	ApiConflictResponse,
 	ApiCreatedResponse,
 	ApiNotFoundResponse,
 	ApiOkResponse,
+	ApiQuery,
 } from '@nestjs/swagger'
 import {
 	GrpcException,
@@ -26,13 +29,13 @@ import {
 	nullToEmptyString,
 } from '@pathly-backend/common/index.js'
 import {
-	type CreateSectionBodyDto,
+	CreateSectionBodyDto,
 	CreateSectionResponseDto,
 	FindOneSectionResponseDto,
-	type FindSectionsQueryDto,
+	FindSectionsQueryDto,
 	FindSectionsResponseDto,
 	RemoveSectionResponseDto,
-	type UpdateSectionBodyDto,
+	UpdateSectionBodyDto,
 	UpdateSectionResponseDto,
 } from './dtos'
 import { clientSectionToResponseDto } from './helpers'
@@ -53,6 +56,7 @@ export class SectionsController {
 		@Inject(SectionsService) private readonly sectionsService: SectionsService,
 	) {}
 
+	@ApiQuery({ type: FindSectionsQueryDto })
 	@ApiOkResponse({ type: FindSectionsResponseDto })
 	@Get()
 	async find(
@@ -113,6 +117,8 @@ export class SectionsController {
 		}
 	}
 
+	@ApiBody({ type: CreateSectionBodyDto })
+	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@ApiCreatedResponse({ type: CreateSectionResponseDto })
 	@Post()
 	async create(
@@ -148,6 +154,7 @@ export class SectionsController {
 		}
 	}
 
+	@ApiBody({ type: UpdateSectionBodyDto })
 	@ApiOkResponse({ type: UpdateSectionResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@Patch(':id')
@@ -191,6 +198,7 @@ export class SectionsController {
 		type: RemoveSectionResponseDto,
 	})
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiConflictResponse({ type: HttpErrorResponse })
 	@Delete(':id')
 	async remove(
 		@Param('id', ParseUUIDPipe) id: string,

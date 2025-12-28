@@ -14,9 +14,11 @@ import {
 	Query,
 } from '@nestjs/common'
 import {
+	ApiBody,
 	ApiCreatedResponse,
 	ApiNotFoundResponse,
 	ApiOkResponse,
+	ApiQuery,
 } from '@nestjs/swagger'
 import {
 	HttpErrorDto,
@@ -26,13 +28,13 @@ import {
 } from '@pathly-backend/common/index.js'
 import { domainSortTypeToClient } from '../common/helpers'
 import {
-	type CreatePathBodyDto,
+	CreatePathBodyDto,
 	CreatePathResponseDto,
 	FindOnePathResponseDto,
-	type FindPathsQueryDto,
+	FindPathsQueryDto,
 	FindPathsResponseDto,
 	RemovePathResponseDto,
-	type UpdatePathBodyDto,
+	UpdatePathBodyDto,
 	UpdatePathResponseDto,
 } from './dtos'
 import { clientPathToResponseDto } from './helpers'
@@ -45,6 +47,7 @@ import {
 } from './schemas'
 import { GrpcException } from '@pathly-backend/common/index.js'
 import { PathsApiErrorCodes } from '@pathly-backend/contracts/paths/v1/api.js'
+import { ApiConflictResponse } from '@nestjs/swagger'
 
 @Controller({
 	path: 'paths',
@@ -55,6 +58,7 @@ export class PathsController {
 		@Inject(PathsService) private readonly pathsService: PathsService,
 	) {}
 
+	@ApiQuery({ type: FindPathsQueryDto })
 	@ApiOkResponse({ type: FindPathsResponseDto })
 	@Get()
 	async find(
@@ -123,6 +127,7 @@ export class PathsController {
 		}
 	}
 
+	@ApiBody({ type: CreatePathBodyDto })
 	@ApiCreatedResponse({ type: CreatePathResponseDto })
 	@Post()
 	async create(
@@ -154,6 +159,7 @@ export class PathsController {
 		}
 	}
 
+	@ApiBody({ type: UpdatePathBodyDto })
 	@ApiOkResponse({ type: UpdatePathResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@Patch(':id')
@@ -196,6 +202,7 @@ export class PathsController {
 		type: RemovePathResponseDto,
 	})
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiConflictResponse({ type: HttpErrorResponse })
 	@Delete(':id')
 	async remove(
 		@Param('id', ParseUUIDPipe) id: string,

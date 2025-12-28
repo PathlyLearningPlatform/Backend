@@ -13,9 +13,11 @@ import {
 	Query,
 } from '@nestjs/common'
 import {
+	ApiBody,
 	ApiCreatedResponse,
 	ApiNotFoundResponse,
 	ApiOkResponse,
+	ApiQuery,
 } from '@nestjs/swagger'
 import {
 	type GrpcException,
@@ -26,13 +28,13 @@ import {
 } from '@pathly-backend/common/index.js'
 import { PathsApiErrorCodes } from '@pathly-backend/contracts/paths/v1/api.js'
 import {
-	type CreateUnitBodyDto,
+	CreateUnitBodyDto,
 	CreateUnitResponseDto,
 	FindOneUnitResponseDto,
-	type FindUnitsQueryDto,
+	FindUnitsQueryDto,
 	FindUnitsResponseDto,
 	RemoveUnitResponseDto,
-	type UpdateUnitBodyDto,
+	UpdateUnitBodyDto,
 	UpdateUnitResponseDto,
 } from './dtos'
 import { UnitsService } from './units.service'
@@ -52,6 +54,7 @@ export class UnitsController {
 		@Inject(UnitsService) private readonly unitsService: UnitsService,
 	) {}
 
+	@ApiQuery({ type: FindUnitsQueryDto })
 	@ApiOkResponse({ type: FindUnitsResponseDto })
 	@Get()
 	async find(
@@ -112,6 +115,8 @@ export class UnitsController {
 		}
 	}
 
+	@ApiBody({ type: CreateUnitBodyDto })
+	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@ApiCreatedResponse({ type: CreateUnitResponseDto })
 	@Post()
 	async create(
@@ -147,6 +152,7 @@ export class UnitsController {
 		}
 	}
 
+	@ApiBody({ type: UpdateUnitBodyDto })
 	@ApiOkResponse({ type: UpdateUnitResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@Patch(':id')
