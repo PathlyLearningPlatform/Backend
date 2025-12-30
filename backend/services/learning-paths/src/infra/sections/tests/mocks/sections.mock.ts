@@ -1,7 +1,7 @@
-import type { Section as ClientSection } from '@pathly-backend/contracts/learning-paths/v1/sections.js';
-import type { DbSection } from '../../types';
 import { nullToEmptyString } from '@pathly-backend/common/index.js';
+import type { Section as ClientSection } from '@pathly-backend/contracts/learning-paths/v1/sections.js';
 import { mockedSection } from '@/app/common/mocks';
+import type { DbSection } from '../../types';
 
 export const mockedDbSection: DbSection = {
 	...mockedSection,

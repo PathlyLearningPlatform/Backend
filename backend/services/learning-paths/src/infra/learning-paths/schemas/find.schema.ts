@@ -2,8 +2,8 @@ import { SortType } from '@pathly-backend/contracts/common/types.js';
 import { LearningPathsOrderByFields } from '@pathly-backend/contracts/learning-paths/v1/learning-paths.js';
 import { z } from 'zod';
 import { clientSortTypeToDomain } from '@/infra/common/helpers';
-import { clientLearningPathsOrderByFieldsToDomain } from '../helpers';
 import { LearningPathsApiConstraints } from '../enums';
+import { clientLearningPathsOrderByFieldsToDomain } from '../helpers';
 
 export const findLearningPathsSchema = z
 	.object({

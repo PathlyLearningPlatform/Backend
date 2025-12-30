@@ -1,12 +1,15 @@
+import { LearningPathsOrderByFields as ClientLearningPathsOrderByFields } from '@pathly-backend/contracts/learning-paths/v1/learning-paths.js';
+import { mockedLearningPath } from '@/app/common/mocks';
+import { LearningPathsOrderByFields } from '@/domain/learning-paths/enums';
 import {
 	clientLearningPathsOrderByFieldsToDomain,
 	dbPathToEntity,
 	learningPathEntityToClient,
 } from '../helpers';
-import { mockedClientLearningPath, mockedDbLearningPath } from './mocks/learning-paths.mock';
-import { LearningPathsOrderByFields as ClientLearningPathsOrderByFields } from '@pathly-backend/contracts/learning-paths/v1/learning-paths.js';
-import { LearningPathsOrderByFields } from '@/domain/learning-paths/enums';
-import { mockedLearningPath } from '@/app/common/mocks';
+import {
+	mockedClientLearningPath,
+	mockedDbLearningPath,
+} from './mocks/learning-paths.mock';
 
 describe('helpers', () => {
 	describe('dbPathToEntity', () => {

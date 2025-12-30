@@ -1,16 +1,16 @@
+import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
 import { Test } from '@nestjs/testing';
 import {
 	DbException,
 	InvalidReferenceException,
 } from '@pathly-backend/common/index.js';
-import { PostgresLearningPathsRepository } from '../postgres.repository';
-import { mockedDrizzle, mockedDbService } from '@/infra/common/mocks';
-import { mockedDbLearningPath } from './mocks/learning-paths.mock';
-import { LearningPathsApiConstraints } from '../enums';
-import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
-import { DatabaseError as PostgresError } from 'pg';
 import { DrizzleQueryError } from 'drizzle-orm';
-import { mockedLearningPath } from '@/app/common/mocks'
+import { DatabaseError as PostgresError } from 'pg';
+import { mockedLearningPath } from '@/app/common/mocks';
+import { mockedDbService, mockedDrizzle } from '@/infra/common/mocks';
+import { LearningPathsApiConstraints } from '../enums';
+import { PostgresLearningPathsRepository } from '../postgres.repository';
+import { mockedDbLearningPath } from './mocks/learning-paths.mock';
 
 describe('LearningPathsRepository', () => {
 	let learningPathsRepository: PostgresLearningPathsRepository;

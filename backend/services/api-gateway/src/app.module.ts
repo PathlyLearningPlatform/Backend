@@ -8,7 +8,7 @@ import {
 } from '@pathly-backend/common'
 import { AppController } from './app.controller'
 import { validateConfig } from './infra/config'
-import { PathsModule } from './infra/paths/paths.module'
+import { LearningPathsModule } from './infra/learning-paths/learning-paths.module'
 import { SectionsModule } from './infra/sections/sections.module'
 import { UnitsModule } from './infra/units/units.module'
 
@@ -22,7 +22,7 @@ import { UnitsModule } from './infra/units/units.module'
 		AppLoggerModule.register({
 			isGlobal: true,
 		}),
-		PathsModule,
+		LearningPathsModule,
 		SectionsModule,
 		UnitsModule,
 	],

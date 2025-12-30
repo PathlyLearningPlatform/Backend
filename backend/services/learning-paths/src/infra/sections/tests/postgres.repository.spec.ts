@@ -1,10 +1,10 @@
 import { Test } from '@nestjs/testing';
 import { DbException } from '@pathly-backend/common/index.js';
-import { PostgresSectionsRepository } from '../postgres.repository';
-import { mockedDrizzle, mockedDbService } from '@/infra/common/mocks';
-import { mockedDbSection } from './mocks/sections.mock';
-import { SectionsApiConstraints } from '../enums';
 import { mockedSection } from '@/app/common/mocks';
+import { mockedDbService, mockedDrizzle } from '@/infra/common/mocks';
+import { SectionsApiConstraints } from '../enums';
+import { PostgresSectionsRepository } from '../postgres.repository';
+import { mockedDbSection } from './mocks/sections.mock';
 
 describe('SectionsRepository', () => {
 	let sectionsRepository: PostgresSectionsRepository;

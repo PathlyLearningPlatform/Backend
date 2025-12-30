@@ -1,4 +1,6 @@
-import { Provider } from '@nestjs/common';
+import type { Provider } from '@nestjs/common';
+import type { ISectionsRepository } from '@/app/sections/interfaces';
+import type { IUnitsRepository } from '@/app/units/interfaces';
 import {
 	CreateUnitUseCase,
 	FindOneUnitUseCase,
@@ -9,8 +11,6 @@ import {
 import { DiToken } from '../common/enums';
 import { PostgresSectionsRepository } from '../sections/postgres.repository';
 import { PostgresUnitsRepository } from './postgres.repository';
-import { IUnitsRepository } from '@/app/units/interfaces';
-import { ISectionsRepository } from '@/app/sections/interfaces';
 
 export const unitsUseCasesProvider: Provider[] = [
 	{

@@ -1,3 +1,4 @@
+import type { Provider } from '@nestjs/common';
 import type {
 	CreateSectionUseCase,
 	FindOneSectionUseCase,
@@ -6,7 +7,6 @@ import type {
 	UpdateSectionUseCase,
 } from '@/app/sections/use-cases';
 import { DiToken } from '@/infra/common/enums';
-import { Provider } from '@nestjs/common';
 
 export const mockedFindUseCase: jest.Mocked<Partial<FindSectionsUseCase>> = {
 	execute: jest.fn(),

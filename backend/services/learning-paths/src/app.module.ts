@@ -1,9 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import {
-	AppLoggerModule, RpcRequestInterceptor
-} from '@pathly-backend/common';
+import { AppLoggerModule, RpcRequestInterceptor } from '@pathly-backend/common';
 import { validateConfig } from './infra/config';
 import { DbModule } from './infra/db/db.module';
 import { LearningPathsModule } from './infra/learning-paths/learning-paths.module';

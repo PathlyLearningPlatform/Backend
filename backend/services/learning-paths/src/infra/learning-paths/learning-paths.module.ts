@@ -7,7 +7,10 @@ import { learningPathsUseCasesProvider } from './use-cases.provider';
 @Module({
 	imports: [DbModule],
 	controllers: [GrpcLearningPathsController],
-	providers: [PostgresLearningPathsRepository, ...learningPathsUseCasesProvider],
+	providers: [
+		PostgresLearningPathsRepository,
+		...learningPathsUseCasesProvider,
+	],
 	exports: [PostgresLearningPathsRepository, ...learningPathsUseCasesProvider],
 })
 export class LearningPathsModule {}

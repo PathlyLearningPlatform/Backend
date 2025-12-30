@@ -8,20 +8,20 @@ import {
 	GrpcExceptionFilter,
 	RpcValidationPipe,
 } from '@pathly-backend/common';
+import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js';
 import {
 	type CreateLearningPathResponse,
-	type FindOneLearningPathResponse,
 	type FindLearningPathsResponse,
+	type FindOneLearningPathResponse,
+	LEARNING_PATHS_SERVICE_NAME,
 	type RemoveLearningPathResponse,
 	type UpdateLearningPathResponse,
-	LEARNING_PATHS_SERVICE_NAME,
 } from '@pathly-backend/contracts/learning-paths/v1/learning-paths.js';
-import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js';
 import type z from 'zod';
 import type {
 	CreateLearningPathUseCase,
-	FindOneLearningPathUseCase,
 	FindLearningPathsUseCase,
+	FindOneLearningPathUseCase,
 	RemoveLearningPathUseCase,
 	UpdateLearningPathUseCase,
 } from '@/app/learning-paths/use-cases';
@@ -33,8 +33,8 @@ import { DiToken } from '../common/enums';
 import { learningPathEntityToClient } from './helpers';
 import {
 	createLearningPathSchema,
-	findOneLearningPathSchema,
 	findLearningPathsSchema,
+	findOneLearningPathSchema,
 	removeLearningPathSchema,
 	updateLearningPathSchema,
 } from './schemas';
@@ -64,7 +64,8 @@ export class GrpcLearningPathsController {
 		>,
 	): Promise<FindLearningPathsResponse> {
 		try {
-			const learningPaths = await this.findLearningPathsUseCase.execute(payload);
+			const learningPaths =
+				await this.findLearningPathsUseCase.execute(payload);
 
 			return {
 				learningPaths: learningPaths.map(learningPathEntityToClient),
@@ -83,7 +84,8 @@ export class GrpcLearningPathsController {
 		payload: z.infer<typeof findOneLearningPathSchema>,
 	): Promise<FindOneLearningPathResponse> {
 		try {
-			const learningPath = await this.findOneLearningPathUseCase.execute(payload);
+			const learningPath =
+				await this.findOneLearningPathUseCase.execute(payload);
 
 			return { learningPath: learningPathEntityToClient(learningPath) };
 		} catch (err) {
@@ -92,7 +94,7 @@ export class GrpcLearningPathsController {
 					new GrpcErrorDto(
 						'path not found',
 						GrpcStatus.NOT_FOUND,
-						LearningPathsApiErrorCodes.PATH_NOT_FOUND,
+						LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND,
 					),
 				);
 			}
@@ -111,7 +113,8 @@ export class GrpcLearningPathsController {
 		>,
 	): Promise<CreateLearningPathResponse> {
 		try {
-			const createdLearningpath = await this.createLearningPathUseCase.execute(payload);
+			const createdLearningpath =
+				await this.createLearningPathUseCase.execute(payload);
 
 			return { learningPath: learningPathEntityToClient(createdLearningpath) };
 		} catch (err) {
@@ -129,7 +132,8 @@ export class GrpcLearningPathsController {
 		>,
 	): Promise<UpdateLearningPathResponse> {
 		try {
-			const updatedLearningPath = await this.updateLearningPathUseCase.execute(payload);
+			const updatedLearningPath =
+				await this.updateLearningPathUseCase.execute(payload);
 
 			return { learningPath: learningPathEntityToClient(updatedLearningPath) };
 		} catch (err) {
@@ -138,7 +142,7 @@ export class GrpcLearningPathsController {
 					new GrpcErrorDto(
 						'path not found',
 						GrpcStatus.NOT_FOUND,
-						LearningPathsApiErrorCodes.PATH_NOT_FOUND,
+						LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND,
 					),
 				);
 			}
@@ -157,7 +161,8 @@ export class GrpcLearningPathsController {
 		>,
 	): Promise<RemoveLearningPathResponse> {
 		try {
-			const removedLearningPath = await this.removeLearningPathUseCase.execute(payload);
+			const removedLearningPath =
+				await this.removeLearningPathUseCase.execute(payload);
 
 			return {
 				learningPath: learningPathEntityToClient(removedLearningPath),
@@ -168,7 +173,7 @@ export class GrpcLearningPathsController {
 					new GrpcErrorDto(
 						'Path cannot be removed because it has sections',
 						GrpcStatus.FAILED_PRECONDITION,
-						LearningPathsApiErrorCodes.PATH_CANNOT_BE_REMOVED,
+						LearningPathsApiErrorCodes.LEARNING_PATH_CANNOT_BE_REMOVED,
 					),
 				);
 			}
@@ -178,7 +183,7 @@ export class GrpcLearningPathsController {
 					new GrpcErrorDto(
 						'path not found',
 						GrpcStatus.NOT_FOUND,
-						LearningPathsApiErrorCodes.PATH_NOT_FOUND,
+						LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND,
 					),
 				);
 			}

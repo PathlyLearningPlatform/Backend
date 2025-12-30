@@ -8,13 +8,13 @@ import type {
 	RemoveUnitCommand,
 	UpdateUnitCommand,
 } from '@/app/units/commands';
-import type { Unit } from '@/domain/units/entities';
 import type { IUnitsRepository } from '@/app/units/interfaces';
+import type { Unit } from '@/domain/units/entities';
 import type { Db } from '@/infra/common/types';
 import { DbService } from '../db/db.service';
 import { unitsTable } from '../db/schemas';
-import { dbUnitToEntity } from './helpers';
 import { UnitsApiConstraints } from './enums';
+import { dbUnitToEntity } from './helpers';
 
 /**
  * @description This class is a concrete implementation of IUnitsRepository interface. It's reponsibility is to perform CRUD operations on units using postgres as data source.

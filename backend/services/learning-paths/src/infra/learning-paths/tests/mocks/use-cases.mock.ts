@@ -1,31 +1,40 @@
+import type { Provider } from '@nestjs/common';
 import type {
 	CreateLearningPathUseCase,
-	FindOneLearningPathUseCase,
 	FindLearningPathsUseCase,
+	FindOneLearningPathUseCase,
 	RemoveLearningPathUseCase,
 	UpdateLearningPathUseCase,
 } from '@/app/learning-paths/use-cases';
-
 import { DiToken } from '@/infra/common/enums';
-import { Provider } from '@nestjs/common';
 
-export const mockedFindLearningPathsUseCase: jest.Mocked<Partial<FindLearningPathsUseCase>> = {
+export const mockedFindLearningPathsUseCase: jest.Mocked<
+	Partial<FindLearningPathsUseCase>
+> = {
 	execute: jest.fn(),
 };
 
-export const mockedFindOneLearningPathUseCase: jest.Mocked<Partial<FindOneLearningPathUseCase>> = {
+export const mockedFindOneLearningPathUseCase: jest.Mocked<
+	Partial<FindOneLearningPathUseCase>
+> = {
 	execute: jest.fn(),
 };
 
-export const mockedCreateLearningPathUseCase: jest.Mocked<Partial<CreateLearningPathUseCase>> = {
+export const mockedCreateLearningPathUseCase: jest.Mocked<
+	Partial<CreateLearningPathUseCase>
+> = {
 	execute: jest.fn(),
 };
 
-export const mockedUpdateLearningPathUseCase: jest.Mocked<Partial<UpdateLearningPathUseCase>> = {
+export const mockedUpdateLearningPathUseCase: jest.Mocked<
+	Partial<UpdateLearningPathUseCase>
+> = {
 	execute: jest.fn(),
 };
 
-export const mockedRemoveLearningPathUseCase: jest.Mocked<Partial<RemoveLearningPathUseCase>> = {
+export const mockedRemoveLearningPathUseCase: jest.Mocked<
+	Partial<RemoveLearningPathUseCase>
+> = {
 	execute: jest.fn(),
 };
 

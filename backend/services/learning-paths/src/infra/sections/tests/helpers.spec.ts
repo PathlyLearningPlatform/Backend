@@ -1,6 +1,6 @@
+import { mockedSection } from '@/app/common/mocks';
 import { dbSectionToEntity, sectionEntityToClient } from '../helpers';
 import { mockedClientSection, mockedDbSection } from './mocks/sections.mock';
-import { mockedSection } from '@/app/common/mocks';
 
 describe('helpers', () => {
 	describe('dbSectionToEntity', () => {

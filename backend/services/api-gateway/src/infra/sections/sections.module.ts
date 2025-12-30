@@ -1,14 +1,14 @@
 import type { Options } from '@grpc/proto-loader'
 import { Module } from '@nestjs/common'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { COMMON_PACKAGE_NAME } from '@pathly-backend/contracts/common/types.js'
 import { LEARNING_PATHS_V1_PACKAGE_NAME } from '@pathly-backend/contracts/learning-paths/v1/sections.js'
+import { join } from 'path'
 import { DiToken } from '../common/enums'
+import type { AppConfig } from '../common/types'
 import { SectionsController } from './sections.controller'
 import { SectionsService } from './sections.service'
-import { join } from 'path'
-import { ConfigModule, ConfigService } from '@nestjs/config'
-import { AppConfig } from '../common/types'
 
 @Module({
 	imports: [
@@ -17,7 +17,7 @@ import { AppConfig } from '../common/types'
 				imports: [ConfigModule],
 				name: DiToken.SECTIONS_PACKAGE,
 				async useFactory(configService: ConfigService) {
-					const appConfig = configService.get<AppConfig>('app')!.app
+					const appConfig = configService.get<AppConfig['app']>('app')!
 
 					return {
 						transport: Transport.GRPC,

@@ -1,4 +1,6 @@
-import { Provider } from '@nestjs/common';
+import type { Provider } from '@nestjs/common';
+import type { ILearningPathsRepository } from '@/app/learning-paths/interfaces';
+import type { ISectionsRepository } from '@/app/sections/interfaces';
 import {
 	CreateSectionUseCase,
 	FindOneSectionUseCase,
@@ -9,8 +11,6 @@ import {
 import { DiToken } from '../common/enums';
 import { PostgresLearningPathsRepository } from '../learning-paths/postgres.repository';
 import { PostgresSectionsRepository } from './postgres.repository';
-import { ISectionsRepository } from '@/app/sections/interfaces';
-import { ILearningPathsRepository } from '@/app/learning-paths/interfaces';
 
 export const sectionsUseCasesProvider: Provider[] = [
 	{

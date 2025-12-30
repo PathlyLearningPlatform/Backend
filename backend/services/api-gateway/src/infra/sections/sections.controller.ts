@@ -22,12 +22,13 @@ import {
 	ApiQuery,
 } from '@nestjs/swagger'
 import {
-	GrpcException,
+	type GrpcException,
 	HttpErrorDto,
 	HttpErrorResponse,
 	HttpValidationPipe,
 	nullToEmptyString,
 } from '@pathly-backend/common/index.js'
+import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js'
 import {
 	CreateSectionBodyDto,
 	CreateSectionResponseDto,
@@ -45,7 +46,6 @@ import {
 	updateSectionBodySchema,
 } from './schemas'
 import { SectionsService } from './sections.service'
-import { PathsApiErrorCodes } from '@pathly-backend/contracts/paths/v1/api.js'
 
 @Controller({
 	path: 'sections',
@@ -104,7 +104,7 @@ export class SectionsController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
-				case PathsApiErrorCodes.SECTION_NOT_FOUND:
+				case LearningPathsApiErrorCodes.SECTION_NOT_FOUND:
 					throw new NotFoundException(new HttpErrorDto('section not found'))
 				default:
 					throw new InternalServerErrorException(
@@ -130,7 +130,7 @@ export class SectionsController {
 				name: body.name,
 				description: nullToEmptyString(body.description),
 				order: body.order,
-				pathId: body.pathId,
+				learningPathId: body.learningPathId,
 			})
 
 			return {
@@ -141,7 +141,7 @@ export class SectionsController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
-				case PathsApiErrorCodes.PATH_NOT_FOUND:
+				case LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND:
 					throw new NotFoundException(new HttpErrorDto('path not found'))
 				default:
 					throw new InternalServerErrorException(
@@ -181,7 +181,7 @@ export class SectionsController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
-				case PathsApiErrorCodes.SECTION_NOT_FOUND:
+				case LearningPathsApiErrorCodes.SECTION_NOT_FOUND:
 					throw new NotFoundException(new HttpErrorDto('section not found'))
 				default:
 					throw new InternalServerErrorException(
@@ -214,9 +214,9 @@ export class SectionsController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
-				case PathsApiErrorCodes.SECTION_NOT_FOUND:
+				case LearningPathsApiErrorCodes.SECTION_NOT_FOUND:
 					throw new NotFoundException(new HttpErrorDto('section not found'))
-				case PathsApiErrorCodes.SECTION_CANNOT_BE_REMOVED:
+				case LearningPathsApiErrorCodes.SECTION_CANNOT_BE_REMOVED:
 					throw new ConflictException(new HttpErrorDto('cannot remove section'))
 				default:
 					throw new InternalServerErrorException(

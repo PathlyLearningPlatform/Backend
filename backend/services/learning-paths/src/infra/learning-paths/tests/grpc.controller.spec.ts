@@ -2,16 +2,17 @@ import { status as GrpcStatus } from '@grpc/grpc-js';
 import { Test } from '@nestjs/testing';
 import { AppLoggerModule } from '@pathly-backend/common/index.js';
 import type {
-	FindOneLearningPathResponse,
-	FindLearningPathsResponse,
 	CreateLearningPathResponse,
-	UpdateLearningPathResponse,
+	FindLearningPathsResponse,
+	FindOneLearningPathResponse,
 	RemoveLearningPathResponse,
+	UpdateLearningPathResponse,
 } from '@pathly-backend/contracts/learning-paths/v1/learning-paths.js';
+import { mockedLearningPath } from '@/app/common/mocks';
 import type {
 	CreateLearningPathUseCase,
-	FindOneLearningPathUseCase,
 	FindLearningPathsUseCase,
+	FindOneLearningPathUseCase,
 	RemoveLearningPathUseCase,
 	UpdateLearningPathUseCase,
 } from '@/app/learning-paths/use-cases';
@@ -22,8 +23,10 @@ import {
 import { DiToken } from '@/infra/common/enums';
 import { GrpcLearningPathsController } from '../grpc.controller';
 import { mockedClientLearningPath } from './mocks/learning-paths.mock';
-import { mockedFindLearningPathsUseCase, mockedUseCases } from './mocks/use-cases.mock';
-import { mockedLearningPath } from '@/app/common/mocks';
+import {
+	mockedFindLearningPathsUseCase,
+	mockedUseCases,
+} from './mocks/use-cases.mock';
 
 describe('GrpcLearningPathsController', () => {
 	let learningPathsController: GrpcLearningPathsController;
@@ -42,11 +45,21 @@ describe('GrpcLearningPathsController', () => {
 
 		learningPathsController = moduleRef.get(GrpcLearningPathsController);
 
-		findLearningPathsUseCase = moduleRef.get(DiToken.FIND_LEARNING_PATHS_USE_CASE);
-		findOneLearningPathUseCase = moduleRef.get(DiToken.FIND_ONE_LEARNING_PATH_USE_CASE);
-		createLearningPathUseCase = moduleRef.get(DiToken.CREATE_LEARNING_PATH_USE_CASE);
-		updateLearningPathUseCase = moduleRef.get(DiToken.UPDATE_LEARNING_PATH_USE_CASE);
-		removeLearningPathUseCase = moduleRef.get(DiToken.REMOVE_LEARNING_PATH_USE_CASE);
+		findLearningPathsUseCase = moduleRef.get(
+			DiToken.FIND_LEARNING_PATHS_USE_CASE,
+		);
+		findOneLearningPathUseCase = moduleRef.get(
+			DiToken.FIND_ONE_LEARNING_PATH_USE_CASE,
+		);
+		createLearningPathUseCase = moduleRef.get(
+			DiToken.CREATE_LEARNING_PATH_USE_CASE,
+		);
+		updateLearningPathUseCase = moduleRef.get(
+			DiToken.UPDATE_LEARNING_PATH_USE_CASE,
+		);
+		removeLearningPathUseCase = moduleRef.get(
+			DiToken.REMOVE_LEARNING_PATH_USE_CASE,
+		);
 	});
 
 	describe('find', () => {
@@ -55,7 +68,9 @@ describe('GrpcLearningPathsController', () => {
 				learningPaths: [mockedClientLearningPath],
 			};
 
-			findLearningPathsUseCase.execute.mockResolvedValueOnce([mockedLearningPath]);
+			findLearningPathsUseCase.execute.mockResolvedValueOnce([
+				mockedLearningPath,
+			]);
 
 			const result = await learningPathsController.find({});
 
@@ -82,7 +97,9 @@ describe('GrpcLearningPathsController', () => {
 				learningPath: mockedClientLearningPath,
 			};
 
-			findOneLearningPathUseCase.execute.mockResolvedValueOnce(mockedLearningPath);
+			findOneLearningPathUseCase.execute.mockResolvedValueOnce(
+				mockedLearningPath,
+			);
 
 			const result = await learningPathsController.findOne({
 				where: { id: mockedLearningPath.id },
@@ -130,7 +147,9 @@ describe('GrpcLearningPathsController', () => {
 				learningPath: mockedClientLearningPath,
 			};
 
-			createLearningPathUseCase.execute.mockResolvedValueOnce(mockedLearningPath);
+			createLearningPathUseCase.execute.mockResolvedValueOnce(
+				mockedLearningPath,
+			);
 
 			const result = await learningPathsController.create({
 				name: mockedLearningPath.name,
@@ -163,7 +182,9 @@ describe('GrpcLearningPathsController', () => {
 				learningPath: mockedClientLearningPath,
 			};
 
-			updateLearningPathUseCase.execute.mockResolvedValueOnce(mockedLearningPath);
+			updateLearningPathUseCase.execute.mockResolvedValueOnce(
+				mockedLearningPath,
+			);
 
 			const result = await learningPathsController.update({
 				where: { id: mockedLearningPath.id },
@@ -211,7 +232,9 @@ describe('GrpcLearningPathsController', () => {
 				learningPath: mockedClientLearningPath,
 			};
 
-			removeLearningPathUseCase.execute.mockResolvedValueOnce(mockedLearningPath);
+			removeLearningPathUseCase.execute.mockResolvedValueOnce(
+				mockedLearningPath,
+			);
 
 			const result = await learningPathsController.remove({
 				where: { id: mockedLearningPath.id },

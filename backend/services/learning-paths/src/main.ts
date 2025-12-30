@@ -9,8 +9,8 @@ import {
 	HealthImplementation,
 	protoPath as healthCheckProtoPath,
 } from 'grpc-health-check';
-import { AppModule } from './app.module';
 import { join } from 'path';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
 	const protoDir = process.env.PROTO_DIR!;

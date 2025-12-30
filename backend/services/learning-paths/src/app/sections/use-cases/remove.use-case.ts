@@ -1,11 +1,11 @@
+import { InvalidReferenceException } from '@pathly-backend/common/index.js';
 import type { RemoveSectionCommand } from '@/app/sections/commands';
+import type { ISectionsRepository } from '@/app/sections/interfaces';
 import type { Section } from '@/domain/sections/entities';
 import {
 	SectionCannotBeRemovedException,
 	SectionNotFoundException,
 } from '@/domain/sections/exceptions';
-import type { ISectionsRepository } from '@/app/sections/interfaces';
-import { InvalidReferenceException } from '@pathly-backend/common/index.js';
 
 /**
  * @description This class responsibility is to remove a section. It uses sections repository for removing section from a data source. sectionsRepository in injected to this class via dependency injection and dependency inversion techniques by using ISectionsRepository interface.

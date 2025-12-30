@@ -1,7 +1,7 @@
 import type {
 	CreateLearningPathCommand,
-	FindOneLearningPathCommand,
 	FindLearningPathsCommand,
+	FindOneLearningPathCommand,
 	RemoveLearningPathCommand,
 	UpdateLearningPathCommand,
 } from '@/app/learning-paths/commands';

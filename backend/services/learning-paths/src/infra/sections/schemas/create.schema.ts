@@ -2,9 +2,9 @@ import { emptyStringToNull } from '@pathly-backend/common/index.js';
 import { z } from 'zod';
 import {
 	descriptionSchema,
+	learningPathIdSchema,
 	nameSchema,
 	orderSchema,
-	learningPathIdSchema,
 } from './fields.schema';
 
 export const createSectionSchema = z

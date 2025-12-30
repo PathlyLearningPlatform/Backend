@@ -1,8 +1,8 @@
-import { SectionNotFoundException } from '@/domain/sections/exceptions';
-import { ISectionsRepository } from '@/app/sections/interfaces';
+import type { ISectionsRepository } from '@/app/sections/interfaces';
 import type { CreateUnitCommand } from '@/app/units/commands';
-import type { Unit } from '@/domain/units/entities';
 import type { IUnitsRepository } from '@/app/units/interfaces';
+import { SectionNotFoundException } from '@/domain/sections/exceptions';
+import type { Unit } from '@/domain/units/entities';
 
 /**
  * @description This class responsibility is to create a unit. It uses units repository for saving units to a data source. unitsRepository in injected to this class via dependency injection and dependency inversion techniques by using IUnitsRepository interface.

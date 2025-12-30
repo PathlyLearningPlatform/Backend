@@ -1,7 +1,7 @@
 import type { RemoveUnitCommand } from '@/app/units/commands';
+import type { IUnitsRepository } from '@/app/units/interfaces';
 import type { Unit } from '@/domain/units/entities';
 import { UnitNotFoundException } from '@/domain/units/exceptions';
-import type { IUnitsRepository } from '@/app/units/interfaces';
 
 /**
  * @description This class responsibility is to remove a unit. It uses units repository for removing unit from a data source. unitsRepository in injected to this class via dependency injection and dependency inversion techniques by using IUnitsRepository interface.

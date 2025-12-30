@@ -9,8 +9,8 @@
 export const protobufPackage = "learning_paths.v1";
 
 export enum LearningPathsApiErrorCodes {
-  PATH_CANNOT_BE_REMOVED = 0,
-  PATH_NOT_FOUND = 1,
+  LEARNING_PATH_CANNOT_BE_REMOVED = 0,
+  LEARNING_PATH_NOT_FOUND = 1,
   SECTION_NOT_FOUND = 2,
   SECTION_CANNOT_BE_REMOVED = 3,
   UNIT_NOT_FOUND = 4,

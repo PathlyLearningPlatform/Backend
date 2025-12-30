@@ -1,8 +1,8 @@
-import { OmitType, PartialType } from '@nestjs/mapped-types';
 import { Section } from '@domain/sections/entities';
+import { OmitType, PartialType } from '@nestjs/mapped-types';
 
 class UpdateFields extends PartialType(
-	OmitType(Section, ['createdAt', 'updatedAt', 'id', 'pathId']),
+	OmitType(Section, ['createdAt', 'updatedAt', 'id', 'learningPathId']),
 ) {}
 
 /**

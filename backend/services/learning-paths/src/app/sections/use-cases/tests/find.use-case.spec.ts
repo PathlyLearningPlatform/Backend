@@ -1,5 +1,5 @@
-import { FindSectionsUseCase } from '../find.use-case';
 import { mockedSection, mockedSectionsRepository } from '@/app/common/mocks';
+import { FindSectionsUseCase } from '../find.use-case';
 
 describe('FindSectionsUseCase', () => {
 	let findSectionsUseCase: FindSectionsUseCase;

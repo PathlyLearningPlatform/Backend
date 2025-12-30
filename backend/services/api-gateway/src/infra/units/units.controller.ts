@@ -26,7 +26,7 @@ import {
 	HttpValidationPipe,
 	nullToEmptyString,
 } from '@pathly-backend/common/index.js'
-import { PathsApiErrorCodes } from '@pathly-backend/contracts/paths/v1/api.js'
+import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js'
 import {
 	CreateUnitBodyDto,
 	CreateUnitResponseDto,
@@ -37,13 +37,13 @@ import {
 	UpdateUnitBodyDto,
 	UpdateUnitResponseDto,
 } from './dtos'
-import { UnitsService } from './units.service'
 import { clientUnitToResponseDto } from './helpers'
 import {
 	createUnitBodySchema,
 	findUnitsQuerySchema,
 	updateUnitBodySchema,
 } from './schemas'
+import { UnitsService } from './units.service'
 
 @Controller({
 	path: 'units',
@@ -102,7 +102,7 @@ export class UnitsController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
-				case PathsApiErrorCodes.UNIT_NOT_FOUND:
+				case LearningPathsApiErrorCodes.UNIT_NOT_FOUND:
 					throw new NotFoundException(new HttpErrorDto('unit not found'))
 				default:
 					throw new InternalServerErrorException(
@@ -139,7 +139,7 @@ export class UnitsController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
-				case PathsApiErrorCodes.SECTION_NOT_FOUND:
+				case LearningPathsApiErrorCodes.SECTION_NOT_FOUND:
 					throw new NotFoundException(new HttpErrorDto('section not found'))
 				default:
 					throw new InternalServerErrorException(
@@ -179,7 +179,7 @@ export class UnitsController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
-				case PathsApiErrorCodes.UNIT_NOT_FOUND:
+				case LearningPathsApiErrorCodes.UNIT_NOT_FOUND:
 					throw new NotFoundException(new HttpErrorDto('unit not found'))
 				default:
 					throw new InternalServerErrorException(
@@ -211,7 +211,7 @@ export class UnitsController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
-				case PathsApiErrorCodes.UNIT_NOT_FOUND:
+				case LearningPathsApiErrorCodes.UNIT_NOT_FOUND:
 					throw new NotFoundException(new HttpErrorDto('unit not found'))
 				default:
 					throw new InternalServerErrorException(

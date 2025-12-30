@@ -8,13 +8,14 @@ import {
 	GrpcExceptionFilter,
 	RpcValidationPipe,
 } from '@pathly-backend/common';
+import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js';
 import type {
 	CreateUnitResponse,
 	FindOneUnitResponse,
 	FindUnitsResponse,
 	RemoveUnitResponse,
 	UpdateUnitResponse,
-} from '@pathly-backend/contracts/paths/v1/units.js';
+} from '@pathly-backend/contracts/learning-paths/v1/units.js';
 import type z from 'zod';
 import type {
 	CreateUnitUseCase,
@@ -23,6 +24,7 @@ import type {
 	RemoveUnitUseCase,
 	UpdateUnitUseCase,
 } from '@/app/units/use-cases';
+import { SectionNotFoundException } from '@/domain/sections/exceptions';
 import { UnitNotFoundException } from '@/domain/units/exceptions';
 import { DiToken } from '../common/enums';
 import { unitEntityToClient } from './helpers';
@@ -33,9 +35,6 @@ import {
 	removeUnitSchema,
 	updateUnitSchema,
 } from './schemas';
-import { PathNotFoundException } from '@/domain/learning-paths/exceptions';
-import { PathsApiErrorCodes } from '@pathly-backend/contracts/paths/v1/api.js';
-import { SectionNotFoundException } from '@/domain/sections/exceptions';
 
 @UseFilters(GrpcExceptionFilter)
 @Controller()
@@ -90,7 +89,7 @@ export class GrpcUnitsController {
 					new GrpcErrorDto(
 						'unit not found',
 						GrpcStatus.NOT_FOUND,
-						PathsApiErrorCodes.UNIT_NOT_FOUND,
+						LearningPathsApiErrorCodes.UNIT_NOT_FOUND,
 					),
 				);
 			}
@@ -118,7 +117,7 @@ export class GrpcUnitsController {
 					new GrpcErrorDto(
 						'path not found',
 						GrpcStatus.NOT_FOUND,
-						PathsApiErrorCodes.SECTION_NOT_FOUND,
+						LearningPathsApiErrorCodes.SECTION_NOT_FOUND,
 					),
 					err,
 				);
@@ -147,7 +146,7 @@ export class GrpcUnitsController {
 					new GrpcErrorDto(
 						'unit not found',
 						GrpcStatus.NOT_FOUND,
-						PathsApiErrorCodes.UNIT_NOT_FOUND,
+						LearningPathsApiErrorCodes.UNIT_NOT_FOUND,
 					),
 				);
 			}
@@ -177,7 +176,7 @@ export class GrpcUnitsController {
 					new GrpcErrorDto(
 						'unit not found',
 						GrpcStatus.NOT_FOUND,
-						PathsApiErrorCodes.UNIT_NOT_FOUND,
+						LearningPathsApiErrorCodes.UNIT_NOT_FOUND,
 					),
 				);
 			}

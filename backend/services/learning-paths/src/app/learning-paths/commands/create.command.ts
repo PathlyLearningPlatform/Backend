@@ -7,7 +7,11 @@ import {
 import { LearningPath } from '@/domain/learning-paths/entities';
 
 class RequiredFields extends PickType(LearningPath, ['name']) {}
-class AllowedFields extends OmitType(LearningPath, ['createdAt', 'updatedAt', 'id']) {}
+class AllowedFields extends OmitType(LearningPath, [
+	'createdAt',
+	'updatedAt',
+	'id',
+]) {}
 
 /**
  * @description

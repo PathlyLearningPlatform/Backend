@@ -7,4 +7,4 @@ export const descriptionSchema = z
 	.max(SectionConstraints.MAX_DESCRIPTION_LENGTH)
 	.nullable()
 export const orderSchema = z.coerce.number().nonnegative()
-export const pathIdSchema = z.uuid()
+export const learningPathIdSchema = z.uuid()

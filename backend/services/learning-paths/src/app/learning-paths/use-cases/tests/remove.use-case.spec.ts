@@ -1,16 +1,21 @@
+import { InvalidReferenceException } from '@pathly-backend/common/index.js';
+import {
+	mockedLearningPath,
+	mockedLearningPathsRepository,
+} from '@/app/common/mocks';
 import {
 	LearningPathCannotBeRemovedException,
 	LearningPathNotFoundException,
 } from '@/domain/learning-paths/exceptions';
 import { RemoveLearningPathUseCase } from '../remove.use-case';
-import { InvalidReferenceException } from '@pathly-backend/common/index.js';
-import { mockedLearningPath, mockedLearningPathsRepository } from '@/app/common/mocks';
 
 describe('RemoveLearningPathUseCase', () => {
 	let removeLearningPathUseCase: RemoveLearningPathUseCase;
 
 	beforeEach(() => {
-		removeLearningPathUseCase = new RemoveLearningPathUseCase(mockedLearningPathsRepository);
+		removeLearningPathUseCase = new RemoveLearningPathUseCase(
+			mockedLearningPathsRepository,
+		);
 	});
 
 	describe('execute', () => {
@@ -37,11 +42,15 @@ describe('RemoveLearningPathUseCase', () => {
 				},
 			});
 
-			await expect(promise).rejects.toThrow(LearningPathCannotBeRemovedException);
+			await expect(promise).rejects.toThrow(
+				LearningPathCannotBeRemovedException,
+			);
 		});
 
 		it('should return a learning path', async () => {
-			mockedLearningPathsRepository.remove.mockResolvedValueOnce(mockedLearningPath);
+			mockedLearningPathsRepository.remove.mockResolvedValueOnce(
+				mockedLearningPath,
+			);
 
 			const result = await removeLearningPathUseCase.execute({
 				where: { id: mockedLearningPath.id },

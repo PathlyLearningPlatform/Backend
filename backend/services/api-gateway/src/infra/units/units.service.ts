@@ -15,7 +15,7 @@ import {
 	type UnitsServiceClient,
 	type UpdateUnitRequest,
 	type UpdateUnitResponse,
-} from '@pathly-backend/contracts/paths/v1/units.js'
+} from '@pathly-backend/contracts/learning-paths/v1/units.js'
 import { catchError, firstValueFrom } from 'rxjs'
 import { DiToken } from '../common/enums'
 

@@ -1,14 +1,14 @@
-import { Provider } from '@nestjs/common';
+import type { Provider } from '@nestjs/common';
+import type { ILearningPathsRepository } from '@/app/learning-paths/interfaces';
 import {
 	CreateLearningPathUseCase,
-	FindOneLearningPathUseCase,
 	FindLearningPathsUseCase,
+	FindOneLearningPathUseCase,
 	RemoveLearningPathUseCase,
 	UpdateLearningPathUseCase,
 } from '@/app/learning-paths/use-cases';
 import { DiToken } from '../common/enums';
 import { PostgresLearningPathsRepository } from './postgres.repository';
-import { ILearningPathsRepository } from '@/app/learning-paths/interfaces';
 
 export const learningPathsUseCasesProvider: Provider[] = [
 	{

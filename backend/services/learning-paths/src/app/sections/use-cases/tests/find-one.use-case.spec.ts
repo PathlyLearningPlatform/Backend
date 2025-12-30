@@ -1,6 +1,6 @@
+import { mockedSection, mockedSectionsRepository } from '@/app/common/mocks';
 import { SectionNotFoundException } from '@/domain/sections/exceptions';
 import { FindOneSectionUseCase } from '../find-one.use-case';
-import { mockedSection, mockedSectionsRepository } from '@/app/common/mocks';
 
 describe('FindOneSectionUseCase', () => {
 	let findOneSectionUseCase: FindOneSectionUseCase;

@@ -1,6 +1,6 @@
+import { mockedSection, mockedSectionsRepository } from '@/app/common/mocks';
 import { SectionNotFoundException } from '@/domain/sections/exceptions';
 import { RemoveSectionUseCase } from '../remove.use-case';
-import { mockedSection, mockedSectionsRepository } from '@/app/common/mocks';
 
 describe('RemoveSectionUseCase', () => {
 	let removeSectionUseCase: RemoveSectionUseCase;

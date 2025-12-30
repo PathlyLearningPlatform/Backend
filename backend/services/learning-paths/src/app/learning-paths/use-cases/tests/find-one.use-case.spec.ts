@@ -1,12 +1,17 @@
+import {
+	mockedLearningPath,
+	mockedLearningPathsRepository,
+} from '@/app/common/mocks';
 import { LearningPathNotFoundException } from '@/domain/learning-paths/exceptions';
 import { FindOneLearningPathUseCase } from '../find-one.use-case';
-import { mockedLearningPath, mockedLearningPathsRepository } from '@/app/common/mocks';
 
 describe('FindOneLearningPathUseCase', () => {
 	let findOneLearningPathUseCase: FindOneLearningPathUseCase;
 
 	beforeEach(() => {
-		findOneLearningPathUseCase = new FindOneLearningPathUseCase(mockedLearningPathsRepository);
+		findOneLearningPathUseCase = new FindOneLearningPathUseCase(
+			mockedLearningPathsRepository,
+		);
 	});
 
 	describe('execute', () => {
@@ -23,7 +28,9 @@ describe('FindOneLearningPathUseCase', () => {
 		});
 
 		it('should return a learning path', async () => {
-			mockedLearningPathsRepository.findOne.mockResolvedValueOnce(mockedLearningPath);
+			mockedLearningPathsRepository.findOne.mockResolvedValueOnce(
+				mockedLearningPath,
+			);
 
 			const result = await findOneLearningPathUseCase.execute({
 				where: { id: mockedLearningPath.id },

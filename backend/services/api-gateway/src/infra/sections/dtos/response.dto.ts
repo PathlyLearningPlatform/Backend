@@ -12,7 +12,7 @@ export class SectionResponseDto {
 		type: 'string',
 		format: 'uuid',
 	})
-	pathId: string
+	learningPathId: string
 
 	@ApiProperty({
 		type: 'string',

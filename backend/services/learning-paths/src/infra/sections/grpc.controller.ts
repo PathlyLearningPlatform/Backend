@@ -8,6 +8,7 @@ import {
 	GrpcExceptionFilter,
 	RpcValidationPipe,
 } from '@pathly-backend/common';
+import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js';
 import type {
 	CreateSectionResponse,
 	FindOneSectionResponse,
@@ -23,6 +24,7 @@ import type {
 	RemoveSectionUseCase,
 	UpdateSectionUseCase,
 } from '@/app/sections/use-cases';
+import { LearningPathNotFoundException } from '@/domain/learning-paths/exceptions';
 import {
 	SectionCannotBeRemovedException,
 	SectionNotFoundException,
@@ -36,8 +38,6 @@ import {
 	removeSectionSchema,
 	updateSectionSchema,
 } from './schemas';
-import { LearningPathNotFoundException } from '@/domain/learning-paths/exceptions';
-import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js';
 
 @UseFilters(GrpcExceptionFilter)
 @Controller()
@@ -120,7 +120,7 @@ export class GrpcSectionsController {
 					new GrpcErrorDto(
 						'path not found',
 						GrpcStatus.NOT_FOUND,
-						LearningPathsApiErrorCodes.PATH_NOT_FOUND,
+						LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND,
 					),
 					err,
 				);

@@ -1,6 +1,6 @@
-import { LearningPath } from '@/domain/learning-paths/entities';
-import { Section } from '@/domain/sections/entities';
-import { Unit } from '@/domain/units/entities';
+import type { LearningPath } from '@/domain/learning-paths/entities';
+import type { Section } from '@/domain/sections/entities';
+import type { Unit } from '@/domain/units/entities';
 
 export const mockedLearningPath: LearningPath = {
 	id: '4692163a-3f1e-46f1-abd2-8c47f05a469c',
@@ -16,7 +16,7 @@ export const mockedSection: Section = {
 	updatedAt: '2025-12-10T20:00:00.000Z',
 	description: null,
 	name: 'Building blocks',
-	pathId: mockedLearningPath.id,
+	learningPathId: mockedLearningPath.id,
 	order: 0,
 };
 

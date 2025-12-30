@@ -1,12 +1,17 @@
+import {
+	mockedLearningPath,
+	mockedLearningPathsRepository,
+} from '@/app/common/mocks';
 import { LearningPathNotFoundException } from '@/domain/learning-paths/exceptions';
 import { UpdateLearningPathUseCase } from '../update.use-case';
-import { mockedLearningPath, mockedLearningPathsRepository } from '@/app/common/mocks';
 
 describe('UpdateLearningPathUseCase', () => {
 	let updateLearningPathUseCase: UpdateLearningPathUseCase;
 
 	beforeEach(() => {
-		updateLearningPathUseCase = new UpdateLearningPathUseCase(mockedLearningPathsRepository);
+		updateLearningPathUseCase = new UpdateLearningPathUseCase(
+			mockedLearningPathsRepository,
+		);
 	});
 
 	describe('execute', () => {
@@ -23,7 +28,9 @@ describe('UpdateLearningPathUseCase', () => {
 		});
 
 		it('should return a learning path', async () => {
-			mockedLearningPathsRepository.update.mockResolvedValueOnce(mockedLearningPath);
+			mockedLearningPathsRepository.update.mockResolvedValueOnce(
+				mockedLearningPath,
+			);
 
 			const result = await updateLearningPathUseCase.execute({
 				where: { id: mockedLearningPath.id },

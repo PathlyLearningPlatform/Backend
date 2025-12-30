@@ -1,4 +1,4 @@
-import { Provider } from '@nestjs/common';
+import type { Provider } from '@nestjs/common';
 import { DbService } from '@/infra/db/db.service';
 import { mockedDrizzle } from './drizzle.mock';
 

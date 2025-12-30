@@ -1,7 +1,7 @@
-import type { LearningPath as ClientLearningPath } from '@pathly-backend/contracts/learning-paths/v1/learning-paths.js';
-import type { DbLearningPath } from '../../types';
 import { nullToEmptyString } from '@pathly-backend/common/index.js';
+import type { LearningPath as ClientLearningPath } from '@pathly-backend/contracts/learning-paths/v1/learning-paths.js';
 import { mockedLearningPath } from '@/app/common/mocks';
+import type { DbLearningPath } from '../../types';
 
 export const mockedDbLearningPath: DbLearningPath = {
 	...mockedLearningPath,

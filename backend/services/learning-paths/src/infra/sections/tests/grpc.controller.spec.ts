@@ -1,13 +1,15 @@
 import { status as GrpcStatus } from '@grpc/grpc-js';
 import { Test } from '@nestjs/testing';
 import { AppLoggerModule } from '@pathly-backend/common/index.js';
+import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js';
 import type {
+	CreateSectionResponse,
 	FindOneSectionResponse,
 	FindSectionsResponse,
-	CreateSectionResponse,
-	UpdateSectionResponse,
 	RemoveSectionResponse,
+	UpdateSectionResponse,
 } from '@pathly-backend/contracts/learning-paths/v1/sections.js';
+import { mockedLearningPath, mockedSection } from '@/app/common/mocks';
 import type {
 	CreateSectionUseCase,
 	FindOneSectionUseCase,
@@ -15,14 +17,12 @@ import type {
 	RemoveSectionUseCase,
 	UpdateSectionUseCase,
 } from '@/app/sections/use-cases';
+import { LearningPathNotFoundException } from '@/domain/learning-paths/exceptions';
 import { SectionNotFoundException } from '@/domain/sections/exceptions';
 import { DiToken } from '@/infra/common/enums';
 import { GrpcSectionsController } from '../grpc.controller';
 import { mockedClientSection } from './mocks/sections.mock';
 import { mockedFindUseCase, mockedUseCases } from './mocks/use-cases.mock';
-import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js';
-import { LearningPathNotFoundException } from '@/domain/learning-paths/exceptions';
-import { mockedLearningPath, mockedSection } from '@/app/common/mocks';
 
 describe('GrpcSectionsController', () => {
 	let sectionsController: GrpcSectionsController;

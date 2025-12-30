@@ -1,9 +1,9 @@
-import { SectionNotFoundException } from '@/domain/sections/exceptions';
 import { ISectionsRepository } from '@/app/sections/interfaces';
 import type { UpdateUnitCommand } from '@/app/units/commands';
+import type { IUnitsRepository } from '@/app/units/interfaces';
+import { SectionNotFoundException } from '@/domain/sections/exceptions';
 import type { Unit } from '@/domain/units/entities';
 import { UnitNotFoundException } from '@/domain/units/exceptions';
-import type { IUnitsRepository } from '@/app/units/interfaces';
 
 /**
  * @description This class responsibility is to update a unit. It uses units repository for updating units in a data source. unitsRepository in injected to this class via dependency injection and dependency inversion techniques by using IUnitsRepository interface.

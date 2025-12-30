@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { DbModule } from '../db/db.module';
-import { PathsModule } from '../learning-paths/learning-paths.module';
+import { LearningPathsModule } from '../learning-paths/learning-paths.module';
 import { GrpcSectionsController } from './grpc.controller';
 import { PostgresSectionsRepository } from './postgres.repository';
 import { sectionsUseCasesProvider } from './use-cases.provider';
 
 @Module({
-	imports: [DbModule, PathsModule],
+	imports: [DbModule, LearningPathsModule],
 	controllers: [GrpcSectionsController],
 	providers: [PostgresSectionsRepository, ...sectionsUseCasesProvider],
 	exports: [PostgresSectionsRepository, ...sectionsUseCasesProvider],

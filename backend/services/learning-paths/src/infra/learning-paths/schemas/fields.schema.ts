@@ -5,4 +5,6 @@ export const descriptionSchema = z
 	.string()
 	.max(LearningPathConstraints.MAX_DESCRIPTION_LENGTH)
 	.nullable();
-export const nameSchema = z.string().max(LearningPathConstraints.MAX_NAME_LENGTH);
+export const nameSchema = z
+	.string()
+	.max(LearningPathConstraints.MAX_NAME_LENGTH);

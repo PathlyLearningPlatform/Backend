@@ -15,7 +15,7 @@ import {
 	type SectionsServiceClient,
 	type UpdateSectionRequest,
 	type UpdateSectionResponse,
-} from '@pathly-backend/contracts/paths/v1/sections.js'
+} from '@pathly-backend/contracts/learning-paths/v1/sections.js'
 import { catchError, firstValueFrom } from 'rxjs'
 import { DiToken } from '../common/enums'
 

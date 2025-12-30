@@ -2,9 +2,9 @@ import z from 'zod'
 import type { CreateSectionBodyDto } from '../dtos'
 import {
 	descriptionSchema,
+	learningPathIdSchema,
 	nameSchema,
 	orderSchema,
-	pathIdSchema,
 } from './fields.schema'
 
 export const createSectionBodySchema = z
@@ -12,6 +12,6 @@ export const createSectionBodySchema = z
 		name: nameSchema,
 		description: descriptionSchema.optional(),
 		order: orderSchema,
-		pathId: pathIdSchema,
+		learningPathId: learningPathIdSchema,
 	})
 	.strict() satisfies z.ZodType<CreateSectionBodyDto>

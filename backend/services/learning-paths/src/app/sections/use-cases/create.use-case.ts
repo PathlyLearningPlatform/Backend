@@ -1,8 +1,8 @@
-import { LearningPathNotFoundException } from '@/domain/learning-paths/exceptions';
-import { ILearningPathsRepository } from '@/app/learning-paths/interfaces';
+import type { ILearningPathsRepository } from '@/app/learning-paths/interfaces';
 import type { CreateSectionCommand } from '@/app/sections/commands';
-import type { Section } from '@/domain/sections/entities';
 import type { ISectionsRepository } from '@/app/sections/interfaces';
+import { LearningPathNotFoundException } from '@/domain/learning-paths/exceptions';
+import type { Section } from '@/domain/sections/entities';
 
 /**
  * @description This class responsibility is to create a section. It uses sections repository for saving sections to a data source. sectionsRepository in injected to this class via dependency injection and dependency inversion techniques by using ISectionsRepository interface.

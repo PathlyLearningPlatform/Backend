@@ -24,5 +24,5 @@ export class CreateSectionBodyDto {
 		type: 'string',
 		format: 'uuid',
 	})
-	pathId: string
+	learningPathId: string
 }

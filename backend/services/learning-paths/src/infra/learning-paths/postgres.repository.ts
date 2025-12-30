@@ -1,34 +1,35 @@
+import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
 import { Inject, Injectable } from '@nestjs/common';
 import {
 	DbException,
 	InvalidReferenceException,
 	SortType,
 } from '@pathly-backend/common/index.js';
-import { asc, desc, eq } from 'drizzle-orm';
+import { asc, DrizzleQueryError, desc, eq } from 'drizzle-orm';
+import { DatabaseError as PostgresError } from 'pg';
 import type {
 	CreateLearningPathCommand,
-	FindOneLearningPathCommand,
 	FindLearningPathsCommand,
+	FindOneLearningPathCommand,
 	RemoveLearningPathCommand,
 	UpdateLearningPathCommand,
 } from '@/app/learning-paths/commands';
+import type { ILearningPathsRepository } from '@/app/learning-paths/interfaces';
 import type { LearningPath } from '@/domain/learning-paths/entities';
 import { LearningPathsOrderByFields } from '@/domain/learning-paths/enums';
-import type { ILearningPathsRepository } from '@/app/learning-paths/interfaces';
 import type { Db } from '@/infra/common/types';
 import { DbService } from '../db/db.service';
 import { learningPathsTable } from '../db/schemas';
-import { dbPathToEntity } from './helpers';
 import { LearningPathsApiConstraints } from './enums';
-import { DrizzleQueryError } from 'drizzle-orm';
-import { DatabaseError as PostgresError } from 'pg';
-import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
+import { dbPathToEntity } from './helpers';
 
 /**
  * @description This class is a concrete implementation of IPathsRepository interface. It's reponsibility is to perform CRUD operations on paths using postgres as data source.
  */
 @Injectable()
-export class PostgresLearningPathsRepository implements ILearningPathsRepository {
+export class PostgresLearningPathsRepository
+	implements ILearningPathsRepository
+{
 	private db: Db;
 
 	constructor(@Inject(DbService) private readonly dbService: DbService) {
@@ -43,9 +44,12 @@ export class PostgresLearningPathsRepository implements ILearningPathsRepository
 	 * @description this function retrieves paths from database
 	 */
 	async find(command: FindLearningPathsCommand): Promise<LearningPath[]> {
-		const limit = command.options?.limit || LearningPathsApiConstraints.DEFAULT_LIMIT;
-		const page = command.options?.page || LearningPathsApiConstraints.DEFAULT_PAGE;
-		const orderBy = command.options?.orderBy || LearningPathsOrderByFields.CREATED_AT;
+		const limit =
+			command.options?.limit || LearningPathsApiConstraints.DEFAULT_LIMIT;
+		const page =
+			command.options?.page || LearningPathsApiConstraints.DEFAULT_PAGE;
+		const orderBy =
+			command.options?.orderBy || LearningPathsOrderByFields.CREATED_AT;
 		const sortType = command.options?.sortType || SortType.DESC;
 
 		try {
@@ -73,7 +77,9 @@ export class PostgresLearningPathsRepository implements ILearningPathsRepository
 	 * @throws DbException if there is db error
 	 * @description this function retrieves one path from database
 	 */
-	async findOne(command: FindOneLearningPathCommand): Promise<LearningPath | null> {
+	async findOne(
+		command: FindOneLearningPathCommand,
+	): Promise<LearningPath | null> {
 		try {
 			const result = await this.db
 				.select()
@@ -113,7 +119,9 @@ export class PostgresLearningPathsRepository implements ILearningPathsRepository
 	 * @throws DbException if there is db error
 	 * @description this function updates path in a database
 	 */
-	async update(command: UpdateLearningPathCommand): Promise<LearningPath | null> {
+	async update(
+		command: UpdateLearningPathCommand,
+	): Promise<LearningPath | null> {
 		try {
 			const result = await this.db
 				.update(learningPathsTable)
@@ -136,7 +144,9 @@ export class PostgresLearningPathsRepository implements ILearningPathsRepository
 	 * {InvalidReferenceException} if there is foreign key violation
 	 * @description this function removes path from a database
 	 */
-	async remove(command: RemoveLearningPathCommand): Promise<LearningPath | null> {
+	async remove(
+		command: RemoveLearningPathCommand,
+	): Promise<LearningPath | null> {
 		try {
 			const result = await this.db
 				.delete(learningPathsTable)

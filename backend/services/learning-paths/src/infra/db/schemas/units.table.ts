@@ -6,9 +6,9 @@ import {
 	uuid,
 	varchar,
 } from 'drizzle-orm/pg-core';
+import { UnitConstraints } from '@/domain/units/enums';
 import { createdAt, updatedAt } from './helpers';
 import { sectionsTable } from './sections.table';
-import { UnitConstraints } from '@/domain/units/enums';
 
 export const unitsTable = pgTable(
 	'units',

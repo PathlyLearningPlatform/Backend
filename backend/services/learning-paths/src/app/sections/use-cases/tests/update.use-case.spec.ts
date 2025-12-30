@@ -1,17 +1,12 @@
+import { mockedSection, mockedSectionsRepository } from '@/app/common/mocks';
 import { SectionNotFoundException } from '@/domain/sections/exceptions';
 import { UpdateSectionUseCase } from '../update.use-case';
-import {
-	mockedSection,
-	mockedSectionsRepository,
-} from '@/app/common/mocks';
 
 describe('UpdateSectionUseCase', () => {
 	let updateSectionUseCase: UpdateSectionUseCase;
 
 	beforeEach(() => {
-		updateSectionUseCase = new UpdateSectionUseCase(
-			mockedSectionsRepository,
-		);
+		updateSectionUseCase = new UpdateSectionUseCase(mockedSectionsRepository);
 	});
 
 	describe('execute', () => {

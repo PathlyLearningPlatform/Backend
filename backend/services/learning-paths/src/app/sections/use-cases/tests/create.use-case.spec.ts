@@ -1,11 +1,11 @@
-import { CreateSectionUseCase } from '../create.use-case';
-import { LearningPathNotFoundException } from '@/domain/learning-paths/exceptions';
 import {
 	mockedLearningPath,
-	mockedSection,
 	mockedLearningPathsRepository,
+	mockedSection,
 	mockedSectionsRepository,
 } from '@/app/common/mocks';
+import { LearningPathNotFoundException } from '@/domain/learning-paths/exceptions';
+import { CreateSectionUseCase } from '../create.use-case';
 
 describe('CreateSectionUseCase', () => {
 	let createSectionUseCase: CreateSectionUseCase;
@@ -19,7 +19,9 @@ describe('CreateSectionUseCase', () => {
 
 	describe('execute', () => {
 		it('should return a section', async () => {
-			mockedLearningPathsRepository.findOne.mockResolvedValueOnce(mockedLearningPath);
+			mockedLearningPathsRepository.findOne.mockResolvedValueOnce(
+				mockedLearningPath,
+			);
 
 			mockedSectionsRepository.create.mockResolvedValueOnce(mockedSection);
 

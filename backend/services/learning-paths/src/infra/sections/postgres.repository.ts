@@ -1,6 +1,11 @@
+import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
 import { Inject, Injectable } from '@nestjs/common';
-import { DbException } from '@pathly-backend/common/index.js';
-import { eq } from 'drizzle-orm';
+import {
+	DbException,
+	InvalidReferenceException,
+} from '@pathly-backend/common/index.js';
+import { DrizzleQueryError, eq } from 'drizzle-orm';
+import { DatabaseError as PostgresError } from 'pg';
 import type {
 	CreateSectionCommand,
 	FindOneSectionCommand,
@@ -8,17 +13,13 @@ import type {
 	RemoveSectionCommand,
 	UpdateSectionCommand,
 } from '@/app/sections/commands';
-import type { Section } from '@/domain/sections/entities';
 import type { ISectionsRepository } from '@/app/sections/interfaces';
+import type { Section } from '@/domain/sections/entities';
 import type { Db } from '@/infra/common/types';
 import { DbService } from '../db/db.service';
 import { sectionsTable } from '../db/schemas';
-import { dbSectionToEntity } from './helpers';
 import { SectionsApiConstraints } from './enums';
-import { DrizzleQueryError } from 'drizzle-orm';
-import { DatabaseError as PostgresError } from 'pg';
-import { InvalidReferenceException } from '@pathly-backend/common/index.js';
-import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
+import { dbSectionToEntity } from './helpers';
 
 /**
  * @description This class is a concrete implementation of ISectionsRepository interface. It's reponsibility is to perform CRUD operations on sections using postgres as data source.
