@@ -1,14 +1,14 @@
 import { defineRelations } from 'drizzle-orm';
 import { answersTable } from './answers.table';
 import { exercisesTable } from './exercises.table';
-import { itemsTable } from './items.table';
+import { activitiesTable } from './activities.table';
 import { learningPathsTable } from './learning-paths.table';
 import { lessonsTable } from './lessons.table';
 import { projectsTable } from './projects.table';
 import { questionsTable } from './questions.table';
 import { quizzesTable } from './quizzes.table';
 import { sectionsTable } from './sections.table';
-import { theoryBlocksTable } from './theory-blocks.table';
+import { articlesTable } from './articles.table';
 import { unitsTable } from './units.table';
 
 export const relations = defineRelations(
@@ -18,8 +18,8 @@ export const relations = defineRelations(
 		learningPathsTable,
 		unitsTable,
 		lessonsTable,
-		itemsTable,
-		theoryBlocksTable,
+		activitiesTable,
+		articlesTable,
 		quizzesTable,
 		exercisesTable,
 		questionsTable,
@@ -60,49 +60,49 @@ export const relations = defineRelations(
 				from: r.lessonsTable.unitId,
 				to: r.unitsTable.id,
 			}),
-			items: r.many.itemsTable(),
+			items: r.many.activitiesTable(),
 		},
 		itemsTable: {
 			lesson: r.one.lessonsTable({
-				from: r.itemsTable.lessonId,
+				from: r.activitiesTable.lessonId,
 				to: r.lessonsTable.id,
 			}),
 			exercise: r.one.exercisesTable({
-				from: r.itemsTable.id,
-				to: r.exercisesTable.itemId,
+				from: r.activitiesTable.id,
+				to: r.exercisesTable.activityId,
 			}),
-			theoryBlock: r.one.theoryBlocksTable({
-				from: r.itemsTable.id,
-				to: r.theoryBlocksTable.itemId,
+			theoryBlock: r.one.articlesTable({
+				from: r.activitiesTable.id,
+				to: r.articlesTable.activityId,
 			}),
 			quiz: r.one.quizzesTable({
-				from: r.itemsTable.id,
-				to: r.quizzesTable.itemId,
+				from: r.activitiesTable.id,
+				to: r.quizzesTable.activityId,
 			}),
 		},
 		theoryBlocksTable: {
-			item: r.one.itemsTable({
-				from: r.theoryBlocksTable.itemId,
-				to: r.itemsTable.id,
+			item: r.one.activitiesTable({
+				from: r.articlesTable.activityId,
+				to: r.activitiesTable.id,
 			}),
 		},
 		exercisesTable: {
-			item: r.one.itemsTable({
-				from: r.exercisesTable.itemId,
-				to: r.itemsTable.id,
+			item: r.one.activitiesTable({
+				from: r.exercisesTable.activityId,
+				to: r.activitiesTable.id,
 			}),
 		},
 		quizzesTable: {
-			item: r.one.itemsTable({
-				from: r.quizzesTable.itemId,
-				to: r.itemsTable.id,
+			item: r.one.activitiesTable({
+				from: r.quizzesTable.activityId,
+				to: r.activitiesTable.id,
 			}),
 			questions: r.many.questionsTable(),
 		},
 		questionsTable: {
 			quiz: r.one.quizzesTable({
 				from: r.questionsTable.quizId,
-				to: r.quizzesTable.itemId,
+				to: r.quizzesTable.activityId,
 			}),
 			answers: r.many.answersTable(),
 		},

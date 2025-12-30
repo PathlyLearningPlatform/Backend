@@ -1,6 +1,6 @@
 import { pgEnum, pgTable, text, uuid, varchar } from 'drizzle-orm/pg-core';
 import { ExerciseDifficulty } from '@/domain/exercises/enums';
-import { itemsTable } from './items.table';
+import { activitiesTable } from './activities.table';
 
 export const exerciseDifficultyEnum = pgEnum(
 	'exercise_difficulty',
@@ -8,9 +8,9 @@ export const exerciseDifficultyEnum = pgEnum(
 );
 
 export const exercisesTable = pgTable('exercises', {
-	itemId: uuid()
+	activityId: uuid()
 		.primaryKey()
-		.references(() => itemsTable.id),
+		.references(() => activitiesTable.id),
 	name: varchar({ length: 255 }).notNull(),
 	description: text(),
 	difficulty: exerciseDifficultyEnum().notNull(),

@@ -1,8 +1,8 @@
 /**
  * @description This enum represents different types of items that a lesson can have.
  */
-export enum ItemType {
+export enum ActivityType {
 	EXERCISE = 'EXERCISE',
-	THEORY_BLOCK = 'THEORY_BLOCK',
+	ARTICLE = 'ARTICLE',
 	QUIZ = 'QUIZ',
 }

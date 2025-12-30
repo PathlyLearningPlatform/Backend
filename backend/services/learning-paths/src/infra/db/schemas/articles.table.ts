@@ -1,10 +1,10 @@
 import { pgTable, text, uuid, varchar } from 'drizzle-orm/pg-core';
-import { itemsTable } from './items.table';
+import { activitiesTable } from './activities.table';
 
-export const theoryBlocksTable = pgTable('theory_blocks', {
-	itemId: uuid()
+export const articlesTable = pgTable('articles', {
+	activityId: uuid()
 		.primaryKey()
-		.references(() => itemsTable.id),
+		.references(() => activitiesTable.id),
 	name: varchar({ length: 255 }).notNull(),
 	description: text(),
 	content: text().notNull(),

@@ -1,6 +1,6 @@
 export * from './answers.table';
 export * from './exercises.table';
-export * from './items.table';
+export * from './activities.table';
 export * from './learning-paths.table';
 export * from './lessons.table';
 export * from './projects.table';
@@ -8,5 +8,5 @@ export * from './questions.table';
 export * from './quizzes.table';
 export * from './relations';
 export * from './sections.table';
-export * from './theory-blocks.table';
+export * from './articles.table';
 export * from './units.table';

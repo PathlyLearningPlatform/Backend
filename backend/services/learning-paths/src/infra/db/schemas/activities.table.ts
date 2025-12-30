@@ -1,12 +1,12 @@
 import { integer, pgEnum, pgTable, unique, uuid } from 'drizzle-orm/pg-core';
-import { ItemType } from '@/domain/items/enums';
+import { ActivityType } from '@/domain/activities/enums';
 import { createdAt, updatedAt } from './helpers';
 import { lessonsTable } from './lessons.table';
 
-export const itemTypeEnum = pgEnum('item_type', ItemType);
+export const activityTypeEnum = pgEnum('activity_type', ActivityType);
 
-export const itemsTable = pgTable(
-	'items',
+export const activitiesTable = pgTable(
+	'activities',
 	{
 		id: uuid().primaryKey().defaultRandom(),
 		lessonId: uuid()
@@ -15,7 +15,7 @@ export const itemsTable = pgTable(
 		createdAt,
 		updatedAt,
 		order: integer(),
-		type: itemTypeEnum().notNull(),
+		type: activityTypeEnum().notNull(),
 	},
 	(t) => [unique().on(t.lessonId, t.order)],
 );
