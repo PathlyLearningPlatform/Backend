@@ -31,19 +31,19 @@ export const relations = defineRelations(
 				from: r.projectsTable.sectionId,
 				to: r.sectionsTable.id,
 			}),
-			path: r.one.learningPathsTable({
+			learningPath: r.one.learningPathsTable({
 				from: r.projectsTable.learningPathId,
 				to: r.learningPathsTable.id,
 			}),
 		},
-		pathsTable: {
+		learningPathsTable: {
 			projects: r.many.projectsTable(),
 			sections: r.many.sectionsTable(),
 		},
 		sectionsTable: {
 			projects: r.many.projectsTable(),
 			units: r.many.unitsTable(),
-			path: r.one.learningPathsTable({
+			learningPath: r.one.learningPathsTable({
 				from: r.sectionsTable.learningPathId,
 				to: r.learningPathsTable.id,
 			}),
@@ -62,7 +62,7 @@ export const relations = defineRelations(
 			}),
 			items: r.many.activitiesTable(),
 		},
-		itemsTable: {
+		activitiesTable: {
 			lesson: r.one.lessonsTable({
 				from: r.activitiesTable.lessonId,
 				to: r.lessonsTable.id,
@@ -71,7 +71,7 @@ export const relations = defineRelations(
 				from: r.activitiesTable.id,
 				to: r.exercisesTable.activityId,
 			}),
-			theoryBlock: r.one.articlesTable({
+			articlesTable: r.one.articlesTable({
 				from: r.activitiesTable.id,
 				to: r.articlesTable.activityId,
 			}),
@@ -80,20 +80,20 @@ export const relations = defineRelations(
 				to: r.quizzesTable.activityId,
 			}),
 		},
-		theoryBlocksTable: {
-			item: r.one.activitiesTable({
+		articlesTable: {
+			activity: r.one.activitiesTable({
 				from: r.articlesTable.activityId,
 				to: r.activitiesTable.id,
 			}),
 		},
 		exercisesTable: {
-			item: r.one.activitiesTable({
+			activity: r.one.activitiesTable({
 				from: r.exercisesTable.activityId,
 				to: r.activitiesTable.id,
 			}),
 		},
 		quizzesTable: {
-			item: r.one.activitiesTable({
+			activity: r.one.activitiesTable({
 				from: r.quizzesTable.activityId,
 				to: r.activitiesTable.id,
 			}),

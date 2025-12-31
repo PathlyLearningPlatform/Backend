@@ -5,6 +5,6 @@ export const questionsTable = pgTable('questions', {
 	id: uuid().primaryKey().defaultRandom(),
 	quizId: uuid()
 		.notNull()
-		.references(() => quizzesTable.itemId),
+		.references(() => quizzesTable.activityId),
 	content: varchar({ length: 512 }).notNull(),
 });
