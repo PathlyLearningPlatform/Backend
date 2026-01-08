@@ -11,4 +11,7 @@ enum LearningPathsApiErrorCodes {
 
   UNIT_NOT_FOUND = 4;
   UNIT_CANNOT_BE_REMOVED = 5;
+
+  LESSON_NOT_FOUND = 6;
+  LESSON_CANNOT_BE_REMOVED = 7;
 }

@@ -19,8 +19,8 @@ export const lessonsTable = pgTable(
 		createdAt,
 		updatedAt,
 		name: varchar({ length: 255 }).notNull(),
-		description: text().notNull(),
-		order: integer(),
+		description: text(),
+		order: integer().notNull(),
 	},
 	(t) => [unique().on(t.unitId, t.order)],
 );
