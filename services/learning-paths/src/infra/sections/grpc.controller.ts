@@ -9,12 +9,13 @@ import {
 	RpcValidationPipe,
 } from '@pathly-backend/common';
 import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js';
-import type {
-	CreateSectionResponse,
-	FindOneSectionResponse,
-	FindSectionsResponse,
-	RemoveSectionResponse,
-	UpdateSectionResponse,
+import {
+	type CreateSectionResponse,
+	type FindOneSectionResponse,
+	type FindSectionsResponse,
+	type RemoveSectionResponse,
+	SECTIONS_SERVICE_NAME,
+	type UpdateSectionResponse,
 } from '@pathly-backend/contracts/learning-paths/v1/sections.js';
 import type z from 'zod';
 import type {
@@ -38,6 +39,7 @@ import {
 	removeSectionSchema,
 	updateSectionSchema,
 } from './schemas';
+import { errorCodeToMessage } from '../common/helpers/error-code-to-message.helper';
 
 @UseFilters(GrpcExceptionFilter)
 @Controller()
@@ -57,7 +59,7 @@ export class GrpcSectionsController {
 		private readonly appLogger: AppLogger,
 	) {}
 
-	@GrpcMethod('SectionsService')
+	@GrpcMethod(SECTIONS_SERVICE_NAME)
 	async find(
 		@Payload(new RpcValidationPipe(findSectionsSchema)) payload: z.infer<
 			typeof findSectionsSchema
@@ -71,13 +73,17 @@ export class GrpcSectionsController {
 			};
 		} catch (err) {
 			throw new GrpcException(
-				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
 				err,
 			);
 		}
 	}
 
-	@GrpcMethod('SectionsService')
+	@GrpcMethod(SECTIONS_SERVICE_NAME)
 	async findOne(
 		@Payload(new RpcValidationPipe(findOneSectionSchema))
 		payload: z.infer<typeof findOneSectionSchema>,
@@ -90,7 +96,7 @@ export class GrpcSectionsController {
 			if (err instanceof SectionNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						'section not found',
+						errorCodeToMessage[LearningPathsApiErrorCodes.SECTION_NOT_FOUND],
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.SECTION_NOT_FOUND,
 					),
@@ -98,13 +104,17 @@ export class GrpcSectionsController {
 			}
 
 			throw new GrpcException(
-				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
 				err,
 			);
 		}
 	}
 
-	@GrpcMethod('SectionsService')
+	@GrpcMethod(SECTIONS_SERVICE_NAME)
 	async create(
 		@Payload(new RpcValidationPipe(createSectionSchema)) payload: z.infer<
 			typeof createSectionSchema
@@ -118,7 +128,9 @@ export class GrpcSectionsController {
 			if (err instanceof LearningPathNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						'path not found',
+						errorCodeToMessage[
+							LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND
+						],
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND,
 					),
@@ -127,13 +139,17 @@ export class GrpcSectionsController {
 			}
 
 			throw new GrpcException(
-				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
 				err,
 			);
 		}
 	}
 
-	@GrpcMethod('SectionsService')
+	@GrpcMethod(SECTIONS_SERVICE_NAME)
 	async update(
 		@Payload(new RpcValidationPipe(updateSectionSchema)) payload: z.infer<
 			typeof updateSectionSchema
@@ -147,7 +163,7 @@ export class GrpcSectionsController {
 			if (err instanceof SectionNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						'section not found',
+						errorCodeToMessage[LearningPathsApiErrorCodes.SECTION_NOT_FOUND],
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.SECTION_NOT_FOUND,
 					),
@@ -155,13 +171,17 @@ export class GrpcSectionsController {
 			}
 
 			throw new GrpcException(
-				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
 				err,
 			);
 		}
 	}
 
-	@GrpcMethod('SectionsService')
+	@GrpcMethod(SECTIONS_SERVICE_NAME)
 	async remove(
 		@Payload(new RpcValidationPipe(removeSectionSchema)) payload: z.infer<
 			typeof removeSectionSchema
@@ -177,7 +197,9 @@ export class GrpcSectionsController {
 			if (err instanceof SectionCannotBeRemovedException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						'section cannot be removed',
+						errorCodeToMessage[
+							LearningPathsApiErrorCodes.SECTION_CANNOT_BE_REMOVED
+						],
 						GrpcStatus.FAILED_PRECONDITION,
 						LearningPathsApiErrorCodes.SECTION_CANNOT_BE_REMOVED,
 					),
@@ -187,7 +209,7 @@ export class GrpcSectionsController {
 			if (err instanceof SectionNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						'section not found',
+						errorCodeToMessage[LearningPathsApiErrorCodes.SECTION_NOT_FOUND],
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.SECTION_NOT_FOUND,
 					),
@@ -195,7 +217,11 @@ export class GrpcSectionsController {
 			}
 
 			throw new GrpcException(
-				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
 				err,
 			);
 		}

@@ -14,4 +14,6 @@ enum LearningPathsApiErrorCodes {
 
   LESSON_NOT_FOUND = 6;
   LESSON_CANNOT_BE_REMOVED = 7;
+
+  INTERNAL_ERROR = 8;
 }

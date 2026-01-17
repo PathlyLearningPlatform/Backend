@@ -17,6 +17,7 @@ export enum LearningPathsApiErrorCodes {
   UNIT_CANNOT_BE_REMOVED = 5,
   LESSON_NOT_FOUND = 6,
   LESSON_CANNOT_BE_REMOVED = 7,
+  INTERNAL_ERROR = 8,
 }
 
 export const LEARNING_PATHS_V1_PACKAGE_NAME = "learning_paths.v1";

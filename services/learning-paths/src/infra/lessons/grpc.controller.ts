@@ -36,6 +36,7 @@ import {
 	removeLessonSchema,
 	updateLessonSchema,
 } from './schemas';
+import { errorCodeToMessage } from '../common/helpers/error-code-to-message.helper';
 
 @UseFilters(GrpcExceptionFilter)
 @Controller()
@@ -69,7 +70,11 @@ export class GrpcLessonsController {
 			};
 		} catch (err) {
 			throw new GrpcException(
-				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
 				err,
 			);
 		}
@@ -88,7 +93,7 @@ export class GrpcLessonsController {
 			if (err instanceof LessonNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						'lesson not found',
+						errorCodeToMessage[LearningPathsApiErrorCodes.LESSON_NOT_FOUND],
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.LESSON_NOT_FOUND,
 					),
@@ -96,7 +101,11 @@ export class GrpcLessonsController {
 			}
 
 			throw new GrpcException(
-				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
 				err,
 			);
 		}
@@ -116,7 +125,7 @@ export class GrpcLessonsController {
 			if (err instanceof SectionNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						'path not found',
+						errorCodeToMessage[LearningPathsApiErrorCodes.SECTION_NOT_FOUND],
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.SECTION_NOT_FOUND,
 					),
@@ -125,7 +134,11 @@ export class GrpcLessonsController {
 			}
 
 			throw new GrpcException(
-				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
 				err,
 			);
 		}
@@ -145,7 +158,7 @@ export class GrpcLessonsController {
 			if (err instanceof LessonNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						'lesson not found',
+						errorCodeToMessage[LearningPathsApiErrorCodes.LESSON_NOT_FOUND],
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.LESSON_NOT_FOUND,
 					),
@@ -153,7 +166,11 @@ export class GrpcLessonsController {
 			}
 
 			throw new GrpcException(
-				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
 				err,
 			);
 		}
@@ -175,7 +192,7 @@ export class GrpcLessonsController {
 			if (err instanceof LessonNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						'lesson not found',
+						errorCodeToMessage[LearningPathsApiErrorCodes.LESSON_NOT_FOUND],
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.LESSON_NOT_FOUND,
 					),
@@ -183,7 +200,11 @@ export class GrpcLessonsController {
 			}
 
 			throw new GrpcException(
-				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
 				err,
 			);
 		}

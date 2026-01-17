@@ -38,6 +38,7 @@ import {
 	removeLearningPathSchema,
 	updateLearningPathSchema,
 } from './schemas';
+import { errorCodeToMessage } from '../common/helpers/error-code-to-message.helper';
 
 @UseFilters(GrpcExceptionFilter)
 @Controller()
@@ -72,7 +73,11 @@ export class GrpcLearningPathsController {
 			};
 		} catch (err) {
 			throw new GrpcException(
-				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
 				err,
 			);
 		}
@@ -92,7 +97,9 @@ export class GrpcLearningPathsController {
 			if (err instanceof LearningPathNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						'path not found',
+						errorCodeToMessage[
+							LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND
+						],
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND,
 					),
@@ -100,7 +107,11 @@ export class GrpcLearningPathsController {
 			}
 
 			throw new GrpcException(
-				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
 				err,
 			);
 		}
@@ -119,7 +130,11 @@ export class GrpcLearningPathsController {
 			return { learningPath: learningPathEntityToClient(createdLearningpath) };
 		} catch (err) {
 			throw new GrpcException(
-				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
 				err,
 			);
 		}
@@ -140,7 +155,9 @@ export class GrpcLearningPathsController {
 			if (err instanceof LearningPathNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						'path not found',
+						errorCodeToMessage[
+							LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND
+						],
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND,
 					),
@@ -148,7 +165,11 @@ export class GrpcLearningPathsController {
 			}
 
 			throw new GrpcException(
-				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
 				err,
 			);
 		}
@@ -171,7 +192,9 @@ export class GrpcLearningPathsController {
 			if (err instanceof LearningPathCannotBeRemovedException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						'Path cannot be removed because it has sections',
+						errorCodeToMessage[
+							LearningPathsApiErrorCodes.LEARNING_PATH_CANNOT_BE_REMOVED
+						],
 						GrpcStatus.FAILED_PRECONDITION,
 						LearningPathsApiErrorCodes.LEARNING_PATH_CANNOT_BE_REMOVED,
 					),
@@ -181,7 +204,9 @@ export class GrpcLearningPathsController {
 			if (err instanceof LearningPathNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						'path not found',
+						errorCodeToMessage[
+							LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND
+						],
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND,
 					),
@@ -189,7 +214,11 @@ export class GrpcLearningPathsController {
 			}
 
 			throw new GrpcException(
-				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
 				err,
 			);
 		}

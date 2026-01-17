@@ -9,12 +9,13 @@ import {
 	RpcValidationPipe,
 } from '@pathly-backend/common';
 import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js';
-import type {
-	CreateUnitResponse,
-	FindOneUnitResponse,
-	FindUnitsResponse,
-	RemoveUnitResponse,
-	UpdateUnitResponse,
+import {
+	type CreateUnitResponse,
+	type FindOneUnitResponse,
+	type FindUnitsResponse,
+	type RemoveUnitResponse,
+	UNITS_SERVICE_NAME,
+	type UpdateUnitResponse,
 } from '@pathly-backend/contracts/learning-paths/v1/units.js';
 import type z from 'zod';
 import type {
@@ -35,6 +36,7 @@ import {
 	removeUnitSchema,
 	updateUnitSchema,
 } from './schemas';
+import { errorCodeToMessage } from '../common/helpers/error-code-to-message.helper';
 
 @UseFilters(GrpcExceptionFilter)
 @Controller()
@@ -54,7 +56,7 @@ export class GrpcUnitsController {
 		private readonly appLogger: AppLogger,
 	) {}
 
-	@GrpcMethod('UnitsService')
+	@GrpcMethod(UNITS_SERVICE_NAME)
 	async find(
 		@Payload(new RpcValidationPipe(findUnitsSchema)) payload: z.infer<
 			typeof findUnitsSchema
@@ -68,13 +70,17 @@ export class GrpcUnitsController {
 			};
 		} catch (err) {
 			throw new GrpcException(
-				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
 				err,
 			);
 		}
 	}
 
-	@GrpcMethod('UnitsService')
+	@GrpcMethod(UNITS_SERVICE_NAME)
 	async findOne(
 		@Payload(new RpcValidationPipe(findOneUnitSchema))
 		payload: z.infer<typeof findOneUnitSchema>,
@@ -87,7 +93,7 @@ export class GrpcUnitsController {
 			if (err instanceof UnitNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						'unit not found',
+						errorCodeToMessage[LearningPathsApiErrorCodes.UNIT_NOT_FOUND],
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.UNIT_NOT_FOUND,
 					),
@@ -95,13 +101,17 @@ export class GrpcUnitsController {
 			}
 
 			throw new GrpcException(
-				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
 				err,
 			);
 		}
 	}
 
-	@GrpcMethod('UnitsService')
+	@GrpcMethod(UNITS_SERVICE_NAME)
 	async create(
 		@Payload(new RpcValidationPipe(createUnitSchema)) payload: z.infer<
 			typeof createUnitSchema
@@ -115,7 +125,7 @@ export class GrpcUnitsController {
 			if (err instanceof SectionNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						'path not found',
+						errorCodeToMessage[LearningPathsApiErrorCodes.SECTION_NOT_FOUND],
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.SECTION_NOT_FOUND,
 					),
@@ -124,13 +134,17 @@ export class GrpcUnitsController {
 			}
 
 			throw new GrpcException(
-				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
 				err,
 			);
 		}
 	}
 
-	@GrpcMethod('UnitsService')
+	@GrpcMethod(UNITS_SERVICE_NAME)
 	async update(
 		@Payload(new RpcValidationPipe(updateUnitSchema)) payload: z.infer<
 			typeof updateUnitSchema
@@ -144,7 +158,7 @@ export class GrpcUnitsController {
 			if (err instanceof UnitNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						'unit not found',
+						errorCodeToMessage[LearningPathsApiErrorCodes.UNIT_NOT_FOUND],
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.UNIT_NOT_FOUND,
 					),
@@ -152,13 +166,17 @@ export class GrpcUnitsController {
 			}
 
 			throw new GrpcException(
-				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
 				err,
 			);
 		}
 	}
 
-	@GrpcMethod('UnitsService')
+	@GrpcMethod(UNITS_SERVICE_NAME)
 	async remove(
 		@Payload(new RpcValidationPipe(removeUnitSchema)) payload: z.infer<
 			typeof removeUnitSchema
@@ -174,7 +192,7 @@ export class GrpcUnitsController {
 			if (err instanceof UnitNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						'unit not found',
+						errorCodeToMessage[LearningPathsApiErrorCodes.UNIT_NOT_FOUND],
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.UNIT_NOT_FOUND,
 					),
@@ -182,7 +200,11 @@ export class GrpcUnitsController {
 			}
 
 			throw new GrpcException(
-				new GrpcErrorDto('internal server error', GrpcStatus.INTERNAL),
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
 				err,
 			);
 		}
