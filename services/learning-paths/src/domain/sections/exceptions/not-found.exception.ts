@@ -1,4 +1,4 @@
-import { SectionException } from './section.exception';
+import { SectionException } from './base.exception';
 
 /**
  * @description This exception is domain exception and should be thrown to when section is not found.

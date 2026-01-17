@@ -1,2 +1,3 @@
 export * from './not-found.exception';
-export * from './unit.exception';
+export * from './base.exception';
+export * from './cannot-be-removed.exception';

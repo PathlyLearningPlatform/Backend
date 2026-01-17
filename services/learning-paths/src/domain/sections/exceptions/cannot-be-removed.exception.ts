@@ -1,4 +1,4 @@
-import { SectionException } from './section.exception';
+import { SectionException } from './base.exception';
 
 export class SectionCannotBeRemovedException extends SectionException {
 	constructor(sectionId: string) {

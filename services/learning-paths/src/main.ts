@@ -49,6 +49,7 @@ async function bootstrap() {
 					],
 					arrays: true,
 					defaults: true,
+					enums: String,
 				} as Options,
 			},
 			bufferLogs: true,

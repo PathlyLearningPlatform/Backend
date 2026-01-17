@@ -1,4 +1,4 @@
-import { LearningPathException } from './learning-path.exception';
+import { LearningPathException } from './base.exception';
 
 /**
  * @description This exception is domain exception and should be thrown to when path is not found.

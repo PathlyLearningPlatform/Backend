@@ -1,4 +1,4 @@
-import { UnitException } from './unit.exception';
+import { UnitException } from './base.exception';
 
 export class UnitNotFoundException extends UnitException {
 	constructor(unitId: string) {

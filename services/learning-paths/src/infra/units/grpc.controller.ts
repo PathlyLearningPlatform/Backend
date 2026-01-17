@@ -26,7 +26,10 @@ import type {
 	UpdateUnitUseCase,
 } from '@/app/units/use-cases';
 import { SectionNotFoundException } from '@/domain/sections/exceptions';
-import { UnitNotFoundException } from '@/domain/units/exceptions';
+import {
+	UnitCannotBeRemovedException,
+	UnitNotFoundException,
+} from '@/domain/units/exceptions';
 import { DiToken } from '../common/enums';
 import { unitEntityToClient } from './helpers';
 import {
@@ -195,6 +198,18 @@ export class GrpcUnitsController {
 						errorCodeToMessage[LearningPathsApiErrorCodes.UNIT_NOT_FOUND],
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.UNIT_NOT_FOUND,
+					),
+				);
+			}
+
+			if (err instanceof UnitCannotBeRemovedException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						errorCodeToMessage[
+							LearningPathsApiErrorCodes.UNIT_CANNOT_BE_REMOVED
+						],
+						GrpcStatus.FAILED_PRECONDITION,
+						LearningPathsApiErrorCodes.UNIT_CANNOT_BE_REMOVED,
 					),
 				);
 			}

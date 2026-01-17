@@ -1,4 +1,4 @@
-import { LearningPathException } from './learning-path.exception';
+import { LearningPathException } from './base.exception';
 
 export class LearningPathCannotBeRemovedException extends LearningPathException {
 	constructor(pathId: string) {
