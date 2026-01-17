@@ -32,10 +32,10 @@ export class RpcValidationPipe implements PipeTransform {
           }),
         ];
 
-        throw new RpcException(new GrpcErrorDto(err.message, GrpcStatus.INVALID_ARGUMENT, null, validationErrors))
+        throw new RpcException(new GrpcErrorDto(err.message, GrpcStatus.INVALID_ARGUMENT, 'VALIDATION_ERROR', validationErrors))
       }
 
-      throw new RpcException(new GrpcErrorDto('validation failed', GrpcStatus.INVALID_ARGUMENT));
+      throw new RpcException(new GrpcErrorDto('Internal error. Please try again later.', GrpcStatus.INTERNAL, 'INTERNAL_ERROR'));
     }
   }
 }

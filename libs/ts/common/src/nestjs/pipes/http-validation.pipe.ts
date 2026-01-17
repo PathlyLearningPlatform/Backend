@@ -34,7 +34,7 @@ export class HttpValidationPipe implements PipeTransform {
         throw new BadRequestException(new HttpErrorDto(err.message, validationErrors));
       }
 
-      throw new BadRequestException(new HttpErrorDto('validation failed', null));
+      throw new BadRequestException(new HttpErrorDto('Internal error. Please try again later.', null));
     }
   }
 }
