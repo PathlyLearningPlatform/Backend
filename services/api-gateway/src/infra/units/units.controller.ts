@@ -15,6 +15,7 @@ import {
 } from '@nestjs/common'
 import {
 	ApiBody,
+	ApiConflictResponse,
 	ApiCreatedResponse,
 	ApiNotFoundResponse,
 	ApiOkResponse,
@@ -220,6 +221,7 @@ export class UnitsController {
 		type: RemoveUnitResponseDto,
 	})
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiConflictResponse({ type: HttpErrorResponse })
 	@Delete(':id')
 	async remove(
 		@Param('id', ParseUUIDPipe) id: string,

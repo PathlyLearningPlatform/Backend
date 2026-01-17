@@ -254,7 +254,7 @@ export class LearningPathsController {
 						),
 					)
 				case LearningPathsApiErrorCodes.LEARNING_PATH_CANNOT_BE_REMOVED:
-					throw new NotFoundException(
+					throw new ConflictException(
 						new HttpErrorDto(
 							exceptionCodeToMessage[
 								LearningPathsApiErrorCodes.LEARNING_PATH_CANNOT_BE_REMOVED
