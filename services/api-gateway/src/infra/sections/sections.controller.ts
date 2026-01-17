@@ -46,6 +46,7 @@ import {
 	updateSectionBodySchema,
 } from './schemas'
 import { SectionsService } from './sections.service'
+import { exceptionCodeToMessage } from '../common/helpers'
 
 @Controller({
 	path: 'sections',
@@ -78,7 +79,9 @@ export class SectionsController {
 			switch (errRes.apiCode) {
 				default:
 					throw new InternalServerErrorException(
-						new HttpErrorDto('failed to find sections'),
+						new HttpErrorDto(
+							exceptionCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+						),
 						{
 							cause: err,
 						},
@@ -105,10 +108,18 @@ export class SectionsController {
 
 			switch (errRes.apiCode) {
 				case LearningPathsApiErrorCodes.SECTION_NOT_FOUND:
-					throw new NotFoundException(new HttpErrorDto('section not found'))
+					throw new NotFoundException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.SECTION_NOT_FOUND
+							],
+						),
+					)
 				default:
 					throw new InternalServerErrorException(
-						new HttpErrorDto('failed to find one section'),
+						new HttpErrorDto(
+							exceptionCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+						),
 						{
 							cause: err,
 						},
@@ -142,10 +153,18 @@ export class SectionsController {
 
 			switch (errRes.apiCode) {
 				case LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND:
-					throw new NotFoundException(new HttpErrorDto('path not found'))
+					throw new NotFoundException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND
+							],
+						),
+					)
 				default:
 					throw new InternalServerErrorException(
-						new HttpErrorDto('failed to find sections'),
+						new HttpErrorDto(
+							exceptionCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+						),
 						{
 							cause: err,
 						},
@@ -182,10 +201,18 @@ export class SectionsController {
 
 			switch (errRes.apiCode) {
 				case LearningPathsApiErrorCodes.SECTION_NOT_FOUND:
-					throw new NotFoundException(new HttpErrorDto('section not found'))
+					throw new NotFoundException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.SECTION_NOT_FOUND
+							],
+						),
+					)
 				default:
 					throw new InternalServerErrorException(
-						new HttpErrorDto('failed to find sections'),
+						new HttpErrorDto(
+							exceptionCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+						),
 						{
 							cause: err,
 						},
@@ -215,12 +242,26 @@ export class SectionsController {
 
 			switch (errRes.apiCode) {
 				case LearningPathsApiErrorCodes.SECTION_NOT_FOUND:
-					throw new NotFoundException(new HttpErrorDto('section not found'))
+					throw new NotFoundException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.SECTION_NOT_FOUND
+							],
+						),
+					)
 				case LearningPathsApiErrorCodes.SECTION_CANNOT_BE_REMOVED:
-					throw new ConflictException(new HttpErrorDto('cannot remove section'))
+					throw new ConflictException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.SECTION_CANNOT_BE_REMOVED
+							],
+						),
+					)
 				default:
 					throw new InternalServerErrorException(
-						new HttpErrorDto('failed to find sections'),
+						new HttpErrorDto(
+							exceptionCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+						),
 						{
 							cause: err,
 						},

@@ -29,7 +29,10 @@ import {
 	nullToEmptyString,
 } from '@pathly-backend/common/index.js'
 import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js'
-import { domainSortTypeToClient } from '../common/helpers'
+import {
+	domainSortTypeToClient,
+	exceptionCodeToMessage,
+} from '../common/helpers'
 import {
 	CreateLearningPathBodyDto,
 	CreateLearningPathResponseDto,
@@ -48,6 +51,7 @@ import {
 	findLearningPathsQuerySchema,
 	updateLearningPathBodySchema,
 } from './schemas'
+import { ExceptionMessage } from '../common/enums'
 
 @Controller({
 	path: 'learning-paths',
@@ -91,7 +95,9 @@ export class LearningPathsController {
 			switch (errRes.apiCode) {
 				default:
 					throw new InternalServerErrorException(
-						new HttpErrorDto('failed to find paths'),
+						new HttpErrorDto(
+							exceptionCodeToMessage[ExceptionMessage.INTERNAL_ERROR],
+						),
 						{
 							cause: err,
 						},
@@ -118,10 +124,18 @@ export class LearningPathsController {
 
 			switch (errRes.apiCode) {
 				case LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND:
-					throw new NotFoundException(new HttpErrorDto('path not found'))
+					throw new NotFoundException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND
+							],
+						),
+					)
 				default:
 					throw new InternalServerErrorException(
-						new HttpErrorDto('failed to find paths'),
+						new HttpErrorDto(
+							exceptionCodeToMessage[ExceptionMessage.INTERNAL_ERROR],
+						),
 						{
 							cause: err,
 						},
@@ -153,7 +167,9 @@ export class LearningPathsController {
 			switch (errRes.apiCode) {
 				default:
 					throw new InternalServerErrorException(
-						new HttpErrorDto('failed to create path'),
+						new HttpErrorDto(
+							exceptionCodeToMessage[ExceptionMessage.INTERNAL_ERROR],
+						),
 						{
 							cause: err,
 						},
@@ -189,10 +205,18 @@ export class LearningPathsController {
 
 			switch (errRes.apiCode) {
 				case LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND:
-					throw new NotFoundException(new HttpErrorDto('path not found'))
+					throw new NotFoundException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND
+							],
+						),
+					)
 				default:
 					throw new InternalServerErrorException(
-						new HttpErrorDto('failed to find paths'),
+						new HttpErrorDto(
+							exceptionCodeToMessage[ExceptionMessage.INTERNAL_ERROR],
+						),
 						{
 							cause: err,
 						},
@@ -222,14 +246,26 @@ export class LearningPathsController {
 
 			switch (errRes.apiCode) {
 				case LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND:
-					throw new NotFoundException(new HttpErrorDto('path not found'))
+					throw new NotFoundException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND
+							],
+						),
+					)
 				case LearningPathsApiErrorCodes.LEARNING_PATH_CANNOT_BE_REMOVED:
-					throw new ConflictException(
-						new HttpErrorDto('path cannot be removed'),
+					throw new NotFoundException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.LEARNING_PATH_CANNOT_BE_REMOVED
+							],
+						),
 					)
 				default:
 					throw new InternalServerErrorException(
-						new HttpErrorDto('failed to find paths'),
+						new HttpErrorDto(
+							exceptionCodeToMessage[ExceptionMessage.INTERNAL_ERROR],
+						),
 						{
 							cause: err,
 						},

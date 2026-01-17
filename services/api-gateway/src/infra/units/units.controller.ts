@@ -1,5 +1,6 @@
 import {
 	Body,
+	ConflictException,
 	Controller,
 	Delete,
 	Get,
@@ -44,6 +45,7 @@ import {
 	updateUnitBodySchema,
 } from './schemas'
 import { UnitsService } from './units.service'
+import { exceptionCodeToMessage } from '../common/helpers'
 
 @Controller({
 	path: 'units',
@@ -76,7 +78,9 @@ export class UnitsController {
 			switch (errRes.apiCode) {
 				default:
 					throw new InternalServerErrorException(
-						new HttpErrorDto('failed to find one unit'),
+						new HttpErrorDto(
+							exceptionCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+						),
 						{
 							cause: err,
 						},
@@ -103,10 +107,16 @@ export class UnitsController {
 
 			switch (errRes.apiCode) {
 				case LearningPathsApiErrorCodes.UNIT_NOT_FOUND:
-					throw new NotFoundException(new HttpErrorDto('unit not found'))
+					throw new NotFoundException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[LearningPathsApiErrorCodes.UNIT_NOT_FOUND],
+						),
+					)
 				default:
 					throw new InternalServerErrorException(
-						new HttpErrorDto('failed to find one unit'),
+						new HttpErrorDto(
+							exceptionCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+						),
 						{
 							cause: err,
 						},
@@ -140,10 +150,18 @@ export class UnitsController {
 
 			switch (errRes.apiCode) {
 				case LearningPathsApiErrorCodes.SECTION_NOT_FOUND:
-					throw new NotFoundException(new HttpErrorDto('section not found'))
+					throw new NotFoundException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.SECTION_NOT_FOUND
+							],
+						),
+					)
 				default:
 					throw new InternalServerErrorException(
-						new HttpErrorDto('failed to find one unit'),
+						new HttpErrorDto(
+							exceptionCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+						),
 						{
 							cause: err,
 						},
@@ -180,10 +198,16 @@ export class UnitsController {
 
 			switch (errRes.apiCode) {
 				case LearningPathsApiErrorCodes.UNIT_NOT_FOUND:
-					throw new NotFoundException(new HttpErrorDto('unit not found'))
+					throw new NotFoundException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[LearningPathsApiErrorCodes.UNIT_NOT_FOUND],
+						),
+					)
 				default:
 					throw new InternalServerErrorException(
-						new HttpErrorDto('failed to find one unit'),
+						new HttpErrorDto(
+							exceptionCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+						),
 						{
 							cause: err,
 						},
@@ -212,10 +236,24 @@ export class UnitsController {
 
 			switch (errRes.apiCode) {
 				case LearningPathsApiErrorCodes.UNIT_NOT_FOUND:
-					throw new NotFoundException(new HttpErrorDto('unit not found'))
+					throw new NotFoundException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[LearningPathsApiErrorCodes.UNIT_NOT_FOUND],
+						),
+					)
+				case LearningPathsApiErrorCodes.UNIT_CANNOT_BE_REMOVED:
+					throw new ConflictException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.UNIT_CANNOT_BE_REMOVED
+							],
+						),
+					)
 				default:
 					throw new InternalServerErrorException(
-						new HttpErrorDto('failed to find one unit'),
+						new HttpErrorDto(
+							exceptionCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+						),
 						{
 							cause: err,
 						},
