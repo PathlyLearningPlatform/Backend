@@ -10,3 +10,4 @@ plugins:
       - removeEnumPrefix=true
       - returnObservable=true
       - importSuffix=.js
+      - stringEnums=true

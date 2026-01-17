@@ -12,9 +12,9 @@ import { SortType } from "../../common/types.js";
 export const protobufPackage = "learning_paths.v1";
 
 export enum LearningPathsOrderByFields {
-  NAME = 0,
-  CREATED_AT = 1,
-  UPDATED_AT = 2,
+  NAME = "NAME",
+  CREATED_AT = "CREATED_AT",
+  UPDATED_AT = "UPDATED_AT",
 }
 
 export interface LearningPath {

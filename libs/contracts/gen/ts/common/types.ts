@@ -9,8 +9,8 @@
 export const protobufPackage = "common";
 
 export enum SortType {
-  ASC = 0,
-  DESC = 1,
+  ASC = "ASC",
+  DESC = "DESC",
 }
 
 export const COMMON_PACKAGE_NAME = "common";

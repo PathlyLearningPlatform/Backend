@@ -16,4 +16,5 @@ enum LearningPathsApiErrorCodes {
   LESSON_CANNOT_BE_REMOVED = 7;
 
   INTERNAL_ERROR = 8;
+  VALIDATION_ERROR = 9;
 }
