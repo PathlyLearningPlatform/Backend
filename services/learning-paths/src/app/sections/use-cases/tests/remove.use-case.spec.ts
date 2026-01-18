@@ -1,6 +1,10 @@
 import { mockedSection, mockedSectionsRepository } from '@/app/common/mocks';
-import { SectionNotFoundException } from '@/domain/sections/exceptions';
+import {
+	SectionCannotBeRemovedException,
+	SectionNotFoundException,
+} from '@/domain/sections/exceptions';
 import { RemoveSectionUseCase } from '../remove.use-case';
+import { InvalidReferenceException } from '@pathly-backend/common/index.js';
 
 describe('RemoveSectionUseCase', () => {
 	let removeSectionUseCase: RemoveSectionUseCase;
@@ -20,6 +24,20 @@ describe('RemoveSectionUseCase', () => {
 			});
 
 			await expect(promise).rejects.toThrow(SectionNotFoundException);
+		});
+
+		it('should throw a SectionCannotBeRemovedException', async () => {
+			mockedSectionsRepository.remove.mockRejectedValueOnce(
+				new InvalidReferenceException(''),
+			);
+
+			const promise = removeSectionUseCase.execute({
+				where: {
+					id: mockedSection.id,
+				},
+			});
+
+			await expect(promise).rejects.toThrow(SectionCannotBeRemovedException);
 		});
 
 		it('should return a section', async () => {

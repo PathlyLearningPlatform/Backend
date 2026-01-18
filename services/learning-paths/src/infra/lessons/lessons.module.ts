@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { DbModule } from '../db/db.module';
-import { SectionsModule } from '../sections/sections.module';
 import { GrpcLessonsController } from './grpc.controller';
 import { PostgresLessonsRepository } from './postgres.repository';
 import { lessonsUseCasesProvider } from './use-cases.provider';
+import { UnitsModule } from '../units/units.module';
 
 @Module({
-	imports: [DbModule, SectionsModule],
+	imports: [DbModule, UnitsModule],
 	controllers: [GrpcLessonsController],
 	providers: [PostgresLessonsRepository, ...lessonsUseCasesProvider],
 	exports: [PostgresLessonsRepository, ...lessonsUseCasesProvider],

@@ -1,5 +1,11 @@
+import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
 import { Test } from '@nestjs/testing';
-import { DbException } from '@pathly-backend/common/index.js';
+import {
+	DbException,
+	InvalidReferenceException,
+} from '@pathly-backend/common/index.js';
+import { DrizzleQueryError } from 'drizzle-orm';
+import { DatabaseError as PostgresError } from 'pg';
 import { mockedSection } from '@/app/common/mocks';
 import { mockedDbService, mockedDrizzle } from '@/infra/common/mocks';
 import { SectionsApiConstraints } from '../enums';
@@ -159,6 +165,21 @@ describe('SectionsRepository', () => {
 			});
 
 			await expect(promise).rejects.toThrow(DbException);
+		});
+
+		it('should throw InvalidReferenceException', async () => {
+			const pgErr = new PostgresError('', 0, 'error');
+			pgErr.code = PG_FOREIGN_KEY_VIOLATION;
+
+			const drizzleErr = new DrizzleQueryError('', [], pgErr);
+
+			mockedDrizzle.returning.mockRejectedValueOnce(drizzleErr);
+
+			const promise = sectionsRepository.remove({
+				where: { id: mockedSection.id },
+			});
+
+			await expect(promise).rejects.toThrow(InvalidReferenceException);
 		});
 	});
 });

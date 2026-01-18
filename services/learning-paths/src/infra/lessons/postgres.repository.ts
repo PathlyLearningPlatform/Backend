@@ -15,6 +15,10 @@ import { DbService } from '../db/db.service';
 import { lessonsTable } from '../db/schemas';
 import { LessonsApiConstraints } from './enums';
 import { dbLessonToEntity } from './helpers';
+import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
+import { DrizzleQueryError } from 'drizzle-orm';
+import { DatabaseError as PostgresError } from 'pg';
+import { InvalidReferenceException } from '@pathly-backend/common/index.js';
 
 /**
  * @description This class is a concrete implementation of ILessonsRepository interface. It's reponsibility is to perform CRUD operations on lessons using postgres as data source.
@@ -128,6 +132,14 @@ export class PostgresLessonsRepository implements ILessonsRepository {
 
 			return result.length <= 0 ? null : dbLessonToEntity(result[0]);
 		} catch (err) {
+			if (err instanceof DrizzleQueryError) {
+				if (err.cause instanceof PostgresError) {
+					if (err.cause.code === PG_FOREIGN_KEY_VIOLATION) {
+						throw new InvalidReferenceException(err.message, err);
+					}
+				}
+			}
+
 			throw new DbException('db error', err, true);
 		}
 	}

@@ -6,7 +6,7 @@ export function throwGrpcException(err: ServiceError): never {
   const apiCodeField = err.metadata.get('api-code')
 
   const apiCode =
-    apiCodeField[0]!.toString()
+    apiCodeField[0]?.toString() || ''
 
   throw new GrpcException(
     new GrpcErrorDto(

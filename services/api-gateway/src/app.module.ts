@@ -11,6 +11,7 @@ import { validateConfig } from './infra/config'
 import { LearningPathsModule } from './infra/learning-paths/learning-paths.module'
 import { SectionsModule } from './infra/sections/sections.module'
 import { UnitsModule } from './infra/units/units.module'
+import { LessonsModule } from './infra/lessons/lessons.module'
 
 @Module({
 	imports: [
@@ -25,6 +26,7 @@ import { UnitsModule } from './infra/units/units.module'
 		LearningPathsModule,
 		SectionsModule,
 		UnitsModule,
+		LessonsModule,
 	],
 	providers: [
 		{

@@ -141,7 +141,7 @@ describe('GrpcSectionsController', () => {
 			expect(result).toEqual(expectedResult);
 		});
 
-		it('should throw GrpcException with NOT_FOUND status and apiCode PATH_NOT_FOUND', async () => {
+		it('should throw GrpcException with NOT_FOUND status and apiCode LEARNING_PATH_NOT_FOUND', async () => {
 			createUseCase.execute.mockRejectedValueOnce(
 				new LearningPathNotFoundException(mockedLearningPath.id),
 			);
@@ -159,7 +159,7 @@ describe('GrpcSectionsController', () => {
 					code: GrpcStatus.NOT_FOUND,
 				},
 				grpcError: {
-					apiCode: LearningPathsApiErrorCodes.PATH_NOT_FOUND,
+					apiCode: LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND,
 				},
 			});
 		});

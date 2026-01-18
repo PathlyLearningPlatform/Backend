@@ -25,7 +25,6 @@ import type {
 	RemoveLessonUseCase,
 	UpdateLessonUseCase,
 } from '@/app/lessons/use-cases';
-import { SectionNotFoundException } from '@/domain/sections/exceptions';
 import { LessonNotFoundException } from '@/domain/lessons/exceptions';
 import { DiToken } from '../common/enums';
 import { lessonEntityToClient } from './helpers';
@@ -37,6 +36,7 @@ import {
 	updateLessonSchema,
 } from './schemas';
 import { errorCodeToMessage } from '../common/helpers/error-code-to-message.helper';
+import { UnitNotFoundException } from '@/domain/units/exceptions';
 
 @UseFilters(GrpcExceptionFilter)
 @Controller()
@@ -122,12 +122,12 @@ export class GrpcLessonsController {
 
 			return { lesson: lessonEntityToClient(lesson) };
 		} catch (err) {
-			if (err instanceof SectionNotFoundException) {
+			if (err instanceof UnitNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						errorCodeToMessage[LearningPathsApiErrorCodes.SECTION_NOT_FOUND],
+						errorCodeToMessage[LearningPathsApiErrorCodes.UNIT_NOT_FOUND],
 						GrpcStatus.NOT_FOUND,
-						LearningPathsApiErrorCodes.SECTION_NOT_FOUND,
+						LearningPathsApiErrorCodes.UNIT_NOT_FOUND,
 					),
 					err,
 				);
