@@ -1,5 +1,4 @@
 import { defineRelations } from 'drizzle-orm';
-import { answersTable } from './answers.table';
 import { exercisesTable } from './exercises.table';
 import { activitiesTable } from './activities.table';
 import { learningPathsTable } from './learning-paths.table';
@@ -23,7 +22,6 @@ export const relations = defineRelations(
 		quizzesTable,
 		exercisesTable,
 		questionsTable,
-		answersTable,
 	},
 	(r) => ({
 		projectsTable: {
@@ -103,13 +101,6 @@ export const relations = defineRelations(
 			quiz: r.one.quizzesTable({
 				from: r.questionsTable.quizId,
 				to: r.quizzesTable.activityId,
-			}),
-			answers: r.many.answersTable(),
-		},
-		answersTable: {
-			question: r.one.questionsTable({
-				from: r.answersTable.questionId,
-				to: r.questionsTable.id,
 			}),
 		},
 	}),

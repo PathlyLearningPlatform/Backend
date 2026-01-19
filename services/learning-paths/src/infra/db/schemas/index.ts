@@ -1,4 +1,3 @@
-export * from './answers.table';
 export * from './exercises.table';
 export * from './activities.table';
 export * from './learning-paths.table';
