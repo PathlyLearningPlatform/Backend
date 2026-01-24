@@ -5,5 +5,5 @@ export const articlesTable = pgTable('articles', {
 	activityId: uuid()
 		.primaryKey()
 		.references(() => activitiesTable.id),
-	content: text().notNull(),
+	ref: text(),
 });
