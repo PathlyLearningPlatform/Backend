@@ -4,25 +4,20 @@ import {
 	Exercise,
 	Quiz,
 } from '@/domain/activities/entities';
+import { FindActivitiesCommand } from '../commands/find.command';
 
 export interface IActivitiesRepository {
-	find(): Promise<Activity[]>;
-	findArticles(): Promise<Article[]>;
-	findExercises(): Promise<Exercise[]>;
-	findQuizzes(): Promise<Quiz[]>;
+	find(command: FindActivitiesCommand): Promise<Activity[]>;
 
 	findOne(id: string): Promise<Activity | null>;
-	findOneArticle(id: string): Promise<Article | null>;
-	findOneExercise(id: string): Promise<Exercise | null>;
-	findOneQuiz(id: string): Promise<Quiz | null>;
+	findOneArticle(activityId: string): Promise<Article | null>;
+	findOneExercise(activityId: string): Promise<Exercise | null>;
+	findOneQuiz(activityId: string): Promise<Quiz | null>;
 
-	createArticle(): Promise<Article>;
-	createExercise(): Promise<Exercise>;
-	createQuiz(): Promise<Quiz>;
+	save(entity: Activity): Promise<void>;
+	saveArticle(entity: Article): Promise<void>;
+	saveExercise(entity: Exercise): Promise<void>;
+	saveQuiz(entity: Quiz): Promise<void>;
 
-	updateArticle(): Promise<Article | null>;
-	updateExercise(): Promise<Exercise | null>;
-	updateQuiz(): Promise<Quiz | null>;
-
-	remove(id: string): Promise<Activity | null>;
+	remove(id: string): Promise<boolean>;
 }
