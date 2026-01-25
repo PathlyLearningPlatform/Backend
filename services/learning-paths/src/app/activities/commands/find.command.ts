@@ -1,6 +1,3 @@
-export type FindActivitiesCommand = {
-	options?: {
-		limit?: number;
-		page?: number;
-	};
-};
+import { ActivityQuery } from '@/domain/activities/entities';
+
+export type FindActivitiesCommand = ActivityQuery;

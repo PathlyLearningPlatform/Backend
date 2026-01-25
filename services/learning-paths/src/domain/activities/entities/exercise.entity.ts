@@ -1,32 +1,38 @@
 import { ExerciseDifficulty } from '../enums';
+import {
+	Activity,
+	ActivityAllowedCreateProps,
+	ActivityProps,
+	ActivityRequiredCreateProps,
+	ActivityUpdateProps,
+} from './activity.entity';
 
-export interface IExercise {
+export interface ExerciseProps extends ActivityProps {
 	difficulty: ExerciseDifficulty;
-	activityId: string;
 }
 
-export type ExerciseRequiredCreateFields = Pick<
-	IExercise,
-	'difficulty' | 'activityId'
->;
-// export type ExerciseAllowedCreateFields = {};
-export type ExerciseCreateFields =
-	ExerciseRequiredCreateFields /* & ExerciseAllowedCreateFields */;
+export type ExerciseRequiredCreateProps = Pick<ExerciseProps, 'difficulty'> &
+	ActivityRequiredCreateProps;
+export type ExerciseAllowedCreateProps = ActivityAllowedCreateProps;
+export type ExerciseCreateProps = ExerciseRequiredCreateProps &
+	ExerciseAllowedCreateProps;
+export type ExerciseUpdateProps = ActivityUpdateProps &
+	Partial<Pick<ExerciseProps, 'difficulty'>>;
 
-export type ExerciseUpdateFields = Partial<Omit<IExercise, 'activityId'>>;
+export class Exercise extends Activity implements ExerciseProps {
+	constructor(props: ExerciseProps) {
+		super(props);
 
-export class Exercise implements IExercise {
-	constructor(fields: IExercise) {
-		this.activityId = fields.activityId;
-		this.difficulty = fields.difficulty;
+		this.difficulty = props.difficulty;
 	}
 
-	update(fields: ExerciseUpdateFields) {
-		if (fields.difficulty) {
-			this.difficulty = fields.difficulty;
+	update(props: ExerciseUpdateProps) {
+		super.update(props);
+
+		if (props.difficulty) {
+			this.difficulty = props.difficulty;
 		}
 	}
 
 	difficulty: ExerciseDifficulty;
-	activityId: string;
 }

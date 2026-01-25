@@ -1,6 +1,6 @@
 import { ActivityType } from '../enums';
 
-export interface IActivity {
+export interface ActivityProps {
 	id: string;
 	lessonId: string;
 	createdAt: string;
@@ -11,47 +11,56 @@ export interface IActivity {
 	type: ActivityType;
 }
 
-export type ActivityRequiredCreateFields = Pick<
-	IActivity,
+export type ActivityRequiredCreateProps = Pick<
+	ActivityProps,
 	'lessonId' | 'name' | 'order' | 'type'
 >;
-export type ActivityAllowedCreateFields = Partial<
-	Omit<IActivity, 'id' | 'createdAt' | 'updatedAt'>
+export type ActivityAllowedCreateProps = Partial<
+	Omit<ActivityProps, 'id' | 'createdAt' | 'updatedAt'>
 >;
-export type ActivityCreateFields = ActivityRequiredCreateFields &
-	ActivityAllowedCreateFields;
+export type ActivityCreateProps = ActivityRequiredCreateProps &
+	ActivityAllowedCreateProps;
 
-export type ActivityUpdateFields = Partial<
-	Omit<IActivity, 'id' | 'createdAt' | 'updatedAt' | 'type'>
+export type ActivityUpdateProps = Partial<
+	Omit<ActivityProps, 'id' | 'createdAt' | 'updatedAt' | 'type'>
 >;
+export type ActivityQuery = {
+	options?: {
+		limit?: number;
+		page?: number;
+	};
+	where?: {
+		lessonId?: string;
+	};
+};
 
-export class Activity implements IActivity {
-	constructor(fields: IActivity) {
-		this.id = fields.id;
-		this.createdAt = fields.createdAt;
-		this.updatedAt = fields.updatedAt;
-		this.lessonId = fields.lessonId;
-		this.name = fields.name;
-		this.description = fields.description || null;
-		this.order = fields.order;
-		this.type = fields.type;
+export class Activity implements ActivityProps {
+	constructor(props: ActivityProps) {
+		this.id = props.id;
+		this.createdAt = props.createdAt;
+		this.updatedAt = props.updatedAt;
+		this.lessonId = props.lessonId;
+		this.name = props.name;
+		this.description = props.description || null;
+		this.order = props.order;
+		this.type = props.type;
 	}
 
-	update(fields: ActivityUpdateFields) {
-		if (fields.description !== undefined) {
-			this.description = fields.description;
+	update(props: ActivityUpdateProps) {
+		if (props.description !== undefined) {
+			this.description = props.description;
 		}
 
-		if (fields.lessonId) {
-			this.lessonId = fields.lessonId;
+		if (props.lessonId) {
+			this.lessonId = props.lessonId;
 		}
 
-		if (fields.name) {
-			this.name = fields.name;
+		if (props.name) {
+			this.name = props.name;
 		}
 
-		if (fields.order) {
-			this.order = fields.order;
+		if (props.order) {
+			this.order = props.order;
 		}
 	}
 

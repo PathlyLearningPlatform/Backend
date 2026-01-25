@@ -1,9 +1,3 @@
-import {
-	ActivityCreateFields,
-	ArticleCreateFields,
-} from '@/domain/activities/entities';
+import { ArticleCreateProps } from '@/domain/activities/entities';
 
-export type CreateArticleCommand = Omit<
-	ArticleCreateFields & ActivityCreateFields,
-	'type' | 'activityId'
->;
+export type CreateArticleCommand = Omit<ArticleCreateProps, 'type' | 'id'>;

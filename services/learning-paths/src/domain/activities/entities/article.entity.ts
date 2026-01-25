@@ -1,27 +1,37 @@
-export interface IArticle {
+import {
+	Activity,
+	ActivityAllowedCreateProps,
+	ActivityProps,
+	ActivityRequiredCreateProps,
+	ActivityUpdateProps,
+} from './activity.entity';
+
+export interface ArticleProps extends ActivityProps {
 	ref: string;
-	activityId: string;
 }
 
-export type ArticleRequiredCreateFields = Pick<IArticle, 'ref' | 'activityId'>;
-// export type ArticleAllowedCreateFields = {};
-export type ArticleCreateFields =
-	ArticleRequiredCreateFields /* & ArticleAllowedCreateFields */;
+export type ArticleRequiredCreateProps = Pick<ArticleProps, 'ref'> &
+	ActivityRequiredCreateProps;
+export type ArticleAllowedCreateProps = ActivityAllowedCreateProps;
+export type ArticleCreateProps = ArticleRequiredCreateProps &
+	ArticleAllowedCreateProps;
+export type ArticleUpdateProps = ActivityUpdateProps &
+	Partial<Pick<ArticleProps, 'ref'>>;
 
-export type ArticleUpdateFields = Partial<Omit<IArticle, 'activityId'>>;
+export class Article extends Activity implements ArticleProps {
+	constructor(props: ArticleProps) {
+		super(props);
 
-export class Article implements IArticle {
-	constructor(fields: IArticle) {
-		this.activityId = fields.activityId;
-		this.ref = fields.ref;
+		this.ref = props.ref;
 	}
 
-	update(fields: ArticleUpdateFields) {
-		if (fields.ref) {
-			this.ref = fields.ref;
+	update(props: ArticleUpdateProps) {
+		super.update(props);
+
+		if (props.ref) {
+			this.ref = props.ref;
 		}
 	}
 
 	ref: string;
-	activityId: string;
 }
