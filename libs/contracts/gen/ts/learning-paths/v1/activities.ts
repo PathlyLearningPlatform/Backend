@@ -11,14 +11,12 @@ import { Observable } from "rxjs";
 export const protobufPackage = "learning_paths.v1";
 
 export enum ActivityType {
-  UNSPECIFIED = "ACTIVITY_TYPE_UNSPECIFIED",
   EXERCISE = "ACTIVITY_TYPE_EXERCISE",
   ARTICLE = "ACTIVITY_TYPE_ARTICLE",
   QUIZ = "ACTIVITY_TYPE_QUIZ",
 }
 
 export enum ExerciseDifficulty {
-  UNSPECIFIED = "EXERCISE_DIFFICULTY_UNSPECIFIED",
   EASY = "EXERCISE_DIFFICULTY_EASY",
   MEDIUM = "EXERCISE_DIFFICULTY_MEDIUM",
   HARD = "EXERCISE_DIFFICULTY_HARD",
