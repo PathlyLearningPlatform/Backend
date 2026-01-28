@@ -1,8 +1,8 @@
 import type { Provider } from '@nestjs/common';
 import type {
 	CreateLessonUseCase,
-	FindOneLessonUseCase,
 	FindLessonsUseCase,
+	FindOneLessonUseCase,
 	RemoveLessonUseCase,
 	UpdateLessonUseCase,
 } from '@/app/lessons/use-cases';

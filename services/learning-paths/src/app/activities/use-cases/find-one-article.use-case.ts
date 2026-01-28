@@ -1,6 +1,6 @@
-import { Article } from '@/domain/activities/entities';
-import { IActivitiesRepository } from '../interfaces';
+import type { Article } from '@/domain/activities/entities';
 import { ActivityNotFoundException } from '@/domain/activities/exceptions';
+import type { IActivitiesRepository } from '../interfaces';
 
 export class FindOneArticleUseCase {
 	constructor(private readonly activitiesRepository: IActivitiesRepository) {}

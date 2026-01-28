@@ -1,8 +1,8 @@
-import { ActivityType } from '@/domain/activities/enums';
-import { CreateExerciseCommand } from '../commands/create-exercise.command';
-import { IActivitiesRepository } from '../interfaces';
-import { Exercise } from '@/domain/activities/entities';
 import { randomUUID } from 'crypto';
+import { Exercise } from '@/domain/activities/entities';
+import { ActivityType } from '@/domain/activities/enums';
+import type { CreateExerciseCommand } from '../commands/create-exercise.command';
+import type { IActivitiesRepository } from '../interfaces';
 
 export class CreateExerciseUseCase {
 	constructor(private readonly activitiesRepository: IActivitiesRepository) {}

@@ -1,5 +1,5 @@
 import { ActivityNotFoundException } from '@/domain/activities/exceptions';
-import { IActivitiesRepository } from '../interfaces';
+import type { IActivitiesRepository } from '../interfaces';
 
 export class RemoveActivityUseCase {
 	constructor(private readonly activitiesRepository: IActivitiesRepository) {}

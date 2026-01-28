@@ -1,8 +1,8 @@
 import type { Lesson } from '@domain/lessons/entities';
 import type {
 	CreateLessonCommand,
-	FindOneLessonCommand,
 	FindLessonsCommand,
+	FindOneLessonCommand,
 	RemoveLessonCommand,
 	UpdateLessonCommand,
 } from '../commands';

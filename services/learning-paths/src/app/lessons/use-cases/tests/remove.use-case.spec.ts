@@ -1,9 +1,9 @@
+import { InvalidReferenceException } from '@pathly-backend/common/index.js';
 import { mockedLesson, mockedLessonsRepository } from '@/app/common/mocks';
 import {
 	LessonCannotBeRemovedException,
 	LessonNotFoundException,
 } from '@/domain/lessons/exceptions';
-import { InvalidReferenceException } from '@pathly-backend/common/index.js';
 import { RemoveLessonUseCase } from '../remove.use-case';
 
 describe('RemoveLessonUseCase', () => {

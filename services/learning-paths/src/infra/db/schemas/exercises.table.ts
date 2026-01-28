@@ -10,6 +10,6 @@ export const exerciseDifficultyEnum = pgEnum(
 export const exercisesTable = pgTable('exercises', {
 	activityId: uuid()
 		.primaryKey()
-		.references(() => activitiesTable.id),
+		.references(() => activitiesTable.id, { onDelete: 'cascade' }),
 	difficulty: exerciseDifficultyEnum().notNull(),
 });

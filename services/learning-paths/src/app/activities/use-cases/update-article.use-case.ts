@@ -1,7 +1,7 @@
+import type { Article } from '@/domain/activities/entities';
 import { ActivityNotFoundException } from '@/domain/activities/exceptions';
-import { UpdateArticleCommand } from '../commands/update-article.command';
-import { IActivitiesRepository } from '../interfaces';
-import { Article } from '@/domain/activities/entities';
+import type { UpdateArticleCommand } from '../commands/update-article.command';
+import type { IActivitiesRepository } from '../interfaces';
 
 export class UpdateArticleUseCase {
 	constructor(private readonly activitiesRepository: IActivitiesRepository) {}

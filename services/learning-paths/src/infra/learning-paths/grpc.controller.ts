@@ -30,6 +30,7 @@ import {
 	LearningPathNotFoundException,
 } from '@/domain/learning-paths/exceptions';
 import { DiToken } from '../common/enums';
+import { errorCodeToMessage } from '../common/helpers/error-code-to-message.helper';
 import { learningPathEntityToClient } from './helpers';
 import {
 	createLearningPathSchema,
@@ -38,7 +39,6 @@ import {
 	removeLearningPathSchema,
 	updateLearningPathSchema,
 } from './schemas';
-import { errorCodeToMessage } from '../common/helpers/error-code-to-message.helper';
 
 @UseFilters(GrpcExceptionFilter)
 @Controller()

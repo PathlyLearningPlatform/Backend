@@ -1,10 +1,15 @@
+import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
 import { Inject, Injectable } from '@nestjs/common';
-import { DbException } from '@pathly-backend/common/index.js';
-import { eq } from 'drizzle-orm';
+import {
+	DbException,
+	InvalidReferenceException,
+} from '@pathly-backend/common/index.js';
+import { DrizzleQueryError, eq } from 'drizzle-orm';
+import { DatabaseError as PostgresError } from 'pg';
 import type {
 	CreateLessonCommand,
-	FindOneLessonCommand,
 	FindLessonsCommand,
+	FindOneLessonCommand,
 	RemoveLessonCommand,
 	UpdateLessonCommand,
 } from '@/app/lessons/commands';
@@ -15,10 +20,6 @@ import { DbService } from '../db/db.service';
 import { lessonsTable } from '../db/schemas';
 import { LessonsApiConstraints } from './enums';
 import { dbLessonToEntity } from './helpers';
-import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
-import { DrizzleQueryError } from 'drizzle-orm';
-import { DatabaseError as PostgresError } from 'pg';
-import { InvalidReferenceException } from '@pathly-backend/common/index.js';
 
 /**
  * @description This class is a concrete implementation of ILessonsRepository interface. It's reponsibility is to perform CRUD operations on lessons using postgres as data source.
@@ -39,8 +40,8 @@ export class PostgresLessonsRepository implements ILessonsRepository {
 	 * @description this function retrieves lessons from database
 	 */
 	async find(command: FindLessonsCommand): Promise<Lesson[]> {
-		const limit = command.options?.limit || LessonsApiConstraints.DEFAULT_LIMIT;
-		const page = command.options?.page || LessonsApiConstraints.DEFAULT_PAGE;
+		const limit = command.options?.limit ?? LessonsApiConstraints.DEFAULT_LIMIT;
+		const page = command.options?.page ?? LessonsApiConstraints.DEFAULT_PAGE;
 
 		try {
 			const result = await this.db

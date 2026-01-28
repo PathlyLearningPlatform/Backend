@@ -1,10 +1,10 @@
-import { ExerciseDifficulty } from '../enums';
+import type { ExerciseDifficulty } from '../enums';
 import {
 	Activity,
-	ActivityAllowedCreateProps,
-	ActivityProps,
-	ActivityRequiredCreateProps,
-	ActivityUpdateProps,
+	type ActivityAllowedCreateProps,
+	type ActivityProps,
+	type ActivityRequiredCreateProps,
+	type ActivityUpdateProps,
 } from './activity.entity';
 
 export interface ExerciseProps extends ActivityProps {

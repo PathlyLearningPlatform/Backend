@@ -1,9 +1,9 @@
 import {
 	Activity,
-	ActivityAllowedCreateProps,
-	ActivityProps,
-	ActivityRequiredCreateProps,
-	ActivityUpdateProps,
+	type ActivityAllowedCreateProps,
+	type ActivityProps,
+	type ActivityRequiredCreateProps,
+	type ActivityUpdateProps,
 } from './activity.entity';
 
 export interface ArticleProps extends ActivityProps {

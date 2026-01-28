@@ -1,4 +1,4 @@
-import {
+import type {
 	Activity,
 	ActivityQuery,
 	Article,
@@ -7,7 +7,7 @@ import {
 } from '@/domain/activities/entities';
 
 export interface IActivitiesRepository {
-	find(query: ActivityQuery): Promise<Activity[]>;
+	find(query?: ActivityQuery): Promise<Activity[]>;
 
 	findOne(id: string): Promise<Activity | null>;
 	findOneArticle(activityId: string): Promise<Article | null>;

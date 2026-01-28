@@ -2,12 +2,13 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AppLoggerModule, RpcRequestInterceptor } from '@pathly-backend/common';
+import { ActivitiesModule } from './infra/activities/activities.module';
 import { validateConfig } from './infra/config';
 import { DbModule } from './infra/db/db.module';
 import { LearningPathsModule } from './infra/learning-paths/learning-paths.module';
+import { LessonsModule } from './infra/lessons/lessons.module';
 import { SectionsModule } from './infra/sections/sections.module';
 import { UnitsModule } from './infra/units/units.module';
-import { LessonsModule } from './infra/lessons/lessons.module';
 
 @Module({
 	imports: [
@@ -24,6 +25,7 @@ import { LessonsModule } from './infra/lessons/lessons.module';
 		SectionsModule,
 		UnitsModule,
 		LessonsModule,
+		ActivitiesModule,
 	],
 	providers: [
 		{

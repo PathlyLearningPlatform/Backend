@@ -1,8 +1,8 @@
-import { ActivityType } from '@/domain/activities/enums';
-import { CreateQuizCommand } from '../commands/create-quiz.command';
-import { IActivitiesRepository } from '../interfaces';
-import { Quiz } from '@/domain/activities/entities';
 import { randomUUID } from 'crypto';
+import { Quiz } from '@/domain/activities/entities';
+import { ActivityType } from '@/domain/activities/enums';
+import type { CreateQuizCommand } from '../commands/create-quiz.command';
+import type { IActivitiesRepository } from '../interfaces';
 
 export class CreateQuizUseCase {
 	constructor(private readonly activitiesRepository: IActivitiesRepository) {}

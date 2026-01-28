@@ -1,8 +1,15 @@
-import { integer, pgEnum, pgTable, unique, uuid } from 'drizzle-orm/pg-core';
+import {
+	integer,
+	pgEnum,
+	pgTable,
+	text,
+	unique,
+	uuid,
+	varchar,
+} from 'drizzle-orm/pg-core';
 import { ActivityType } from '@/domain/activities/enums';
 import { createdAt, updatedAt } from './helpers';
 import { lessonsTable } from './lessons.table';
-import { varchar, text } from 'drizzle-orm/pg-core';
 
 export const activityTypeEnum = pgEnum('activity_type', ActivityType);
 
@@ -17,7 +24,7 @@ export const activitiesTable = pgTable(
 		updatedAt,
 		name: varchar({ length: 255 }).notNull(),
 		description: text(),
-		order: integer(),
+		order: integer().notNull(),
 		type: activityTypeEnum().notNull(),
 	},
 	(t) => [unique().on(t.lessonId, t.order)],

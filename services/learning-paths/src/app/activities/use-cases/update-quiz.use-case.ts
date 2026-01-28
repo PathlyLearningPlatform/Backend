@@ -1,7 +1,7 @@
+import type { Quiz } from '@/domain/activities/entities';
 import { ActivityNotFoundException } from '@/domain/activities/exceptions';
-import { UpdateQuizCommand } from '../commands/update-quiz.command';
-import { IActivitiesRepository } from '../interfaces';
-import { Quiz } from '@/domain/activities/entities';
+import type { UpdateQuizCommand } from '../commands/update-quiz.command';
+import type { IActivitiesRepository } from '../interfaces';
 
 export class UpdateQuizUseCase {
 	constructor(private readonly activitiesRepository: IActivitiesRepository) {}

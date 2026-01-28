@@ -1,7 +1,7 @@
+import type { Exercise } from '@/domain/activities/entities';
 import { ActivityNotFoundException } from '@/domain/activities/exceptions';
-import { UpdateExerciseCommand } from '../commands/update-exercise.command';
-import { IActivitiesRepository } from '../interfaces';
-import { Exercise } from '@/domain/activities/entities';
+import type { UpdateExerciseCommand } from '../commands/update-exercise.command';
+import type { IActivitiesRepository } from '../interfaces';
 
 export class UpdateExerciseUseCase {
 	constructor(private readonly activitiesRepository: IActivitiesRepository) {}

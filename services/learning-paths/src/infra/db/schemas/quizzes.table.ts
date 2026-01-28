@@ -4,5 +4,5 @@ import { activitiesTable } from './activities.table';
 export const quizzesTable = pgTable('quizzes', {
 	activityId: uuid()
 		.primaryKey()
-		.references(() => activitiesTable.id),
+		.references(() => activitiesTable.id, { onDelete: 'cascade' }),
 });

@@ -3,7 +3,6 @@ import type { Lesson } from '@/domain/lessons/entities';
 import type { Section } from '@/domain/sections/entities';
 import type { Unit } from '@/domain/units/entities';
 
-
 export const mockedLearningPath: LearningPath = {
 	id: '4692163a-3f1e-46f1-abd2-8c47f05a469c',
 	createdAt: '2025-12-10T20:00:00.000Z',

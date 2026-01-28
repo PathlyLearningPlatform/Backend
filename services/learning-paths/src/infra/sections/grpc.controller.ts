@@ -31,6 +31,7 @@ import {
 	SectionNotFoundException,
 } from '@/domain/sections/exceptions';
 import { DiToken } from '../common/enums';
+import { errorCodeToMessage } from '../common/helpers/error-code-to-message.helper';
 import { sectionEntityToClient } from './helpers';
 import {
 	createSectionSchema,
@@ -39,7 +40,6 @@ import {
 	removeSectionSchema,
 	updateSectionSchema,
 } from './schemas';
-import { errorCodeToMessage } from '../common/helpers/error-code-to-message.helper';
 
 @UseFilters(GrpcExceptionFilter)
 @Controller()

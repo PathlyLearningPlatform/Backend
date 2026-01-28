@@ -29,6 +29,7 @@ async function bootstrap() {
 					join(protoDir, 'learning-paths/v1/sections.proto'),
 					join(protoDir, 'learning-paths/v1/units.proto'),
 					join(protoDir, 'learning-paths/v1/lessons.proto'),
+					join(protoDir, 'learning-paths/v1/activities.proto'),
 					join(protoDir, 'common/types.proto'),
 				],
 				url: `${hostname}:${port}`,

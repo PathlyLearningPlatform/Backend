@@ -1,8 +1,8 @@
-import type { IUnitsRepository } from '@/app/units/interfaces';
 import type { CreateLessonCommand } from '@/app/lessons/commands';
 import type { ILessonsRepository } from '@/app/lessons/interfaces';
-import { UnitNotFoundException } from '@/domain/units/exceptions';
+import type { IUnitsRepository } from '@/app/units/interfaces';
 import type { Lesson } from '@/domain/lessons/entities';
+import { UnitNotFoundException } from '@/domain/units/exceptions';
 
 /**
  * @description This class responsibility is to create a lesson. It uses lessons repository for saving lessons to a data source. lessonsRepository in injected to this class via dependency injection and dependency inversion techniques by using ILessonsRepository interface.

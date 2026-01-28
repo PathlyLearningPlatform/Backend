@@ -1,9 +1,9 @@
+import { InvalidReferenceException } from '@pathly-backend/common/index.js';
 import { mockedUnit, mockedUnitsRepository } from '@/app/common/mocks';
 import {
 	UnitCannotBeRemovedException,
 	UnitNotFoundException,
 } from '@/domain/units/exceptions';
-import { InvalidReferenceException } from '@pathly-backend/common/index.js';
 import { RemoveUnitUseCase } from '../remove.use-case';
 
 describe('RemoveUnitUseCase', () => {

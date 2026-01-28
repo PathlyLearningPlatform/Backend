@@ -1,4 +1,4 @@
-import { ArticleUpdateProps } from '@/domain/activities/entities';
+import type { ArticleUpdateProps } from '@/domain/activities/entities';
 
 export type UpdateArticleCommand = {
 	where: {

@@ -11,32 +11,32 @@ import {
 import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js';
 import {
 	type CreateLessonResponse,
-	type FindOneLessonResponse,
 	type FindLessonsResponse,
+	type FindOneLessonResponse,
+	LESSONS_SERVICE_NAME,
 	type RemoveLessonResponse,
 	type UpdateLessonResponse,
-	LESSONS_SERVICE_NAME,
 } from '@pathly-backend/contracts/learning-paths/v1/lessons.js';
 import type z from 'zod';
 import type {
 	CreateLessonUseCase,
-	FindOneLessonUseCase,
 	FindLessonsUseCase,
+	FindOneLessonUseCase,
 	RemoveLessonUseCase,
 	UpdateLessonUseCase,
 } from '@/app/lessons/use-cases';
 import { LessonNotFoundException } from '@/domain/lessons/exceptions';
+import { UnitNotFoundException } from '@/domain/units/exceptions';
 import { DiToken } from '../common/enums';
+import { errorCodeToMessage } from '../common/helpers/error-code-to-message.helper';
 import { lessonEntityToClient } from './helpers';
 import {
 	createLessonSchema,
-	findOneLessonSchema,
 	findLessonsSchema,
+	findOneLessonSchema,
 	removeLessonSchema,
 	updateLessonSchema,
 } from './schemas';
-import { errorCodeToMessage } from '../common/helpers/error-code-to-message.helper';
-import { UnitNotFoundException } from '@/domain/units/exceptions';
 
 @UseFilters(GrpcExceptionFilter)
 @Controller()

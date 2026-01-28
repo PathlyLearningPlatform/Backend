@@ -1,2 +1,2 @@
-export * from './type.enum';
 export * from './exercise-difficulty.enum';
+export * from './type.enum';

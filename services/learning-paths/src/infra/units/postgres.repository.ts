@@ -1,6 +1,11 @@
+import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
 import { Inject, Injectable } from '@nestjs/common';
-import { DbException } from '@pathly-backend/common/index.js';
-import { eq, DrizzleQueryError } from 'drizzle-orm';
+import {
+	DbException,
+	InvalidReferenceException,
+} from '@pathly-backend/common/index.js';
+import { DrizzleQueryError, eq } from 'drizzle-orm';
+import { DatabaseError as PostgresError } from 'pg';
 import type {
 	CreateUnitCommand,
 	FindOneUnitCommand,
@@ -15,9 +20,6 @@ import { DbService } from '../db/db.service';
 import { unitsTable } from '../db/schemas';
 import { UnitsApiConstraints } from './enums';
 import { dbUnitToEntity } from './helpers';
-import { DatabaseError as PostgresError } from 'pg';
-import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
-import { InvalidReferenceException } from '@pathly-backend/common/index.js';
 
 /**
  * @description This class is a concrete implementation of IUnitsRepository interface. It's reponsibility is to perform CRUD operations on units using postgres as data source.

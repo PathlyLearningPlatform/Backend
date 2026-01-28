@@ -31,6 +31,7 @@ import {
 	UnitNotFoundException,
 } from '@/domain/units/exceptions';
 import { DiToken } from '../common/enums';
+import { errorCodeToMessage } from '../common/helpers/error-code-to-message.helper';
 import { unitEntityToClient } from './helpers';
 import {
 	createUnitSchema,
@@ -39,7 +40,6 @@ import {
 	removeUnitSchema,
 	updateUnitSchema,
 } from './schemas';
-import { errorCodeToMessage } from '../common/helpers/error-code-to-message.helper';
 
 @UseFilters(GrpcExceptionFilter)
 @Controller()

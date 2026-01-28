@@ -1,4 +1,4 @@
-import { ExerciseUpdateProps } from '@/domain/activities/entities';
+import type { ExerciseUpdateProps } from '@/domain/activities/entities';
 
 export type UpdateExerciseCommand = {
 	where: {

@@ -1,10 +1,10 @@
+import { InvalidReferenceException } from '@pathly-backend/common/index.js';
 import { mockedSection, mockedSectionsRepository } from '@/app/common/mocks';
 import {
 	SectionCannotBeRemovedException,
 	SectionNotFoundException,
 } from '@/domain/sections/exceptions';
 import { RemoveSectionUseCase } from '../remove.use-case';
-import { InvalidReferenceException } from '@pathly-backend/common/index.js';
 
 describe('RemoveSectionUseCase', () => {
 	let removeSectionUseCase: RemoveSectionUseCase;

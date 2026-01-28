@@ -3,7 +3,6 @@ import type { ILessonsRepository } from '@/app/lessons/interfaces';
 import type { ISectionsRepository } from '@/app/sections/interfaces';
 import type { IUnitsRepository } from '@/app/units/interfaces';
 
-
 export const mockedLearningPathsRepository: jest.Mocked<ILearningPathsRepository> =
 	{
 		find: jest.fn(),

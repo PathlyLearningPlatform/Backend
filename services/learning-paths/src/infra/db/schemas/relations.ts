@@ -1,13 +1,13 @@
 import { defineRelations } from 'drizzle-orm';
-import { exercisesTable } from './exercises.table';
 import { activitiesTable } from './activities.table';
+import { articlesTable } from './articles.table';
+import { exercisesTable } from './exercises.table';
 import { learningPathsTable } from './learning-paths.table';
 import { lessonsTable } from './lessons.table';
 import { projectsTable } from './projects.table';
 import { questionsTable } from './questions.table';
 import { quizzesTable } from './quizzes.table';
 import { sectionsTable } from './sections.table';
-import { articlesTable } from './articles.table';
 import { unitsTable } from './units.table';
 
 export const relations = defineRelations(

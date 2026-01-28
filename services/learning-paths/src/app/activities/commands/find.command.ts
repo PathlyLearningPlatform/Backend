@@ -1,3 +1,3 @@
-import { ActivityQuery } from '@/domain/activities/entities';
+import type { ActivityQuery } from '@/domain/activities/entities';
 
 export type FindActivitiesCommand = ActivityQuery;
