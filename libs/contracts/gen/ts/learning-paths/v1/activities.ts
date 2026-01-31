@@ -69,6 +69,10 @@ export interface Quiz {
 }
 
 export interface FindActivitiesRequest {
+  options?: FindActivitiesRequest_Options | undefined;
+}
+
+export interface FindActivitiesRequest_Options {
   limit?: number | undefined;
   page?: number | undefined;
 }

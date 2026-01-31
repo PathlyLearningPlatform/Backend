@@ -86,8 +86,12 @@ message Quiz {
 // Request/Response
 
 message FindActivitiesRequest {
-  optional int32 limit = 1;
-  optional int32 page = 2;
+  message Options {
+    optional int32 limit = 1;
+    optional int32 page = 2;
+  }
+
+  optional Options options = 1;
 }
 
 message FindActivitiesResponse {
