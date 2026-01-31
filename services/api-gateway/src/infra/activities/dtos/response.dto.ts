@@ -1,0 +1,63 @@
+import { ApiProperty } from '@nestjs/swagger'
+import { ActivitiesApiConstraints } from '../enums'
+import { ExerciseDifficulty } from '@pathly-backend/contracts/learning-paths/v1/activities.js'
+
+export class ActivityResponseDto {
+	@ApiProperty({
+		type: 'string',
+		format: 'uuid',
+	})
+	id: string
+
+	@ApiProperty({
+		type: 'string',
+		format: 'uuid',
+	})
+	lessonId: string
+
+	@ApiProperty({
+		type: 'string',
+		format: 'date-time',
+	})
+	createdAt: string
+
+	@ApiProperty({
+		type: 'string',
+		format: 'date-time',
+	})
+	updatedAt: string
+
+	@ApiProperty({
+		type: 'string',
+		maxLength: ActivitiesApiConstraints.MAX_NAME_LENGTH,
+	})
+	name: string
+
+	@ApiProperty({
+		type: 'string',
+		maxLength: ActivitiesApiConstraints.MAX_DESCRIPTION_LENGTH,
+		nullable: true,
+	})
+	description: string | null
+
+	@ApiProperty({
+		type: 'number',
+	})
+	order: number
+}
+
+export class ArticleResponseDto extends ActivityResponseDto {
+	@ApiProperty({
+		type: 'string',
+	})
+	ref: string
+}
+
+export class QuizResponseDto extends ActivityResponseDto {}
+
+export class ExerciseResponseDto extends ActivityResponseDto {
+	@ApiProperty({
+		enum: ExerciseDifficulty,
+	})
+	difficulty: ExerciseDifficulty
+}

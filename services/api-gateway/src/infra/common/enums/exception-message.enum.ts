@@ -12,7 +12,6 @@ export enum ExceptionMessage {
 	LESSON_CANNOT_BE_REMOVED = 'Lesson cannot be removed.',
 
 	ACTIVITY_NOT_FOUND = 'Activity was not found.',
-	ACTIVITY_CANNOT_BE_REMOVED = 'Activity cannot be removed.',
 
 	INTERNAL_ERROR = 'Internal error. Please try again later.',
 }

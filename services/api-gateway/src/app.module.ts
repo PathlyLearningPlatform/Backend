@@ -12,6 +12,7 @@ import { LearningPathsModule } from './infra/learning-paths/learning-paths.modul
 import { SectionsModule } from './infra/sections/sections.module'
 import { UnitsModule } from './infra/units/units.module'
 import { LessonsModule } from './infra/lessons/lessons.module'
+import { ActivitiesModule } from './infra/activities/activities.module'
 
 @Module({
 	imports: [
@@ -27,6 +28,7 @@ import { LessonsModule } from './infra/lessons/lessons.module'
 		SectionsModule,
 		UnitsModule,
 		LessonsModule,
+		ActivitiesModule,
 	],
 	providers: [
 		{
