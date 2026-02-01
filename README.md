@@ -12,9 +12,13 @@ Backend consists of several components:
 Libraries are shared code used by many services. Backend can be written in many programming languages so libs folder contains subfolder for every language that is used. Example structure would look like this:
 
 backend
+
 -libs
+
 -- ts
+
 -- rust
+
 -- go
 
 Contracts library is the exception as it is located directly in libs folder, because contracts are written in language agnostic format.
