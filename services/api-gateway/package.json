@@ -5,7 +5,6 @@
 	"description": "<p align=\"center\">   <a href=\"http://nestjs.com/\" target=\"blank\"><img src=\"https://nestjs.com/img/logo-small.svg\" width=\"120\" alt=\"Nest Logo\" /></a> </p>",
 	"license": "UNLICENSED",
 	"author": "",
-	"type": "commonjs",
 	"main": "index.js",
 	"directories": {
 		"test": "test"
@@ -22,7 +21,7 @@
 		"test:watch": "jest --watch",
 		"test:cov": "jest --coverage",
 		"test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-		"test:e2e": "jest --config ./test/jest-e2e.json"
+		"test:e2e": "jest --config ./test/jest-e2e.config.ts"
 	},
 	"dependencies": {
 		"@grpc/grpc-js": "^1.14.3",
