@@ -21,10 +21,7 @@
 		"strictBindCallApply": false,
 		"noFallthroughCasesInSwitch": false,
 		"paths": {
-			"@/*": ["./src/*"],
-			"@domain/*": ["./src/domain/*"],
-			"@app/*": ["./src/app/*"],
-			"@infra/*": ["./src/infra/*"]
+			"@/*": ["./src/*"]
 		}
 	}
 }
