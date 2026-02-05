@@ -8,7 +8,7 @@ import {
 } from '@nestjs/swagger'
 import { AppLogger, HttpErrorResponse } from '@pathly-backend/common'
 import { AppModule } from './app.module'
-import type { AppConfig } from './infra/common/types'
+import type { AppConfig } from './common/types'
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule, {

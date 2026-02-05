@@ -7,12 +7,12 @@ import {
 	HttpRequestInterceptor,
 } from '@pathly-backend/common'
 import { AppController } from './app.controller'
-import { validateConfig } from './infra/config'
-import { LearningPathsModule } from './infra/learning-paths/learning-paths.module'
-import { SectionsModule } from './infra/sections/sections.module'
-import { UnitsModule } from './infra/units/units.module'
-import { LessonsModule } from './infra/lessons/lessons.module'
-import { ActivitiesModule } from './infra/activities/activities.module'
+import { validateConfig } from './config'
+import { LearningPathsModule } from './learning-paths/learning-paths.module'
+import { SectionsModule } from './sections/sections.module'
+import { UnitsModule } from './units/units.module'
+import { LessonsModule } from './lessons/lessons.module'
+import { ActivitiesModule } from './activities/activities.module'
 
 @Module({
 	imports: [
