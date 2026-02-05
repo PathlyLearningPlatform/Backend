@@ -1,7 +1,7 @@
-import { DbException } from "../db/db.exception";
+import { RepositoryException } from "./repository.exception";
 
-export class InvalidReferenceException extends DbException {
+export class InvalidReferenceException extends RepositoryException {
   constructor(message: string, cause: unknown | null = null) {
-    super(message, cause, true)
+    super(message, cause)
   }
 }
