@@ -3,6 +3,8 @@ import { Test, type TestingModule } from '@nestjs/testing'
 import request from 'supertest'
 import type { App } from 'supertest/types'
 import { AppModule } from './../src/app.module'
+import { ConfigModule } from '@nestjs/config'
+import { mockedConfigService } from './helpers'
 
 describe('AppController (e2e)', () => {
 	let app: INestApplication<App>
@@ -10,13 +12,16 @@ describe('AppController (e2e)', () => {
 	beforeEach(async () => {
 		const moduleFixture: TestingModule = await Test.createTestingModule({
 			imports: [AppModule],
-		}).compile()
+		})
+			.overrideProvider(ConfigModule)
+			.useValue(mockedConfigService)
+			.compile()
 
 		app = moduleFixture.createNestApplication()
 		await app.init()
 	})
 
-	it('/healthcheck (GET)', () => {
+	it('GET /healthcheck', () => {
 		return request(app.getHttpServer()).get('/healthcheck').expect(204)
 	})
 })
