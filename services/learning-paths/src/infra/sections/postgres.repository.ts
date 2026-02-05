@@ -1,7 +1,7 @@
 import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
 import { Inject, Injectable } from '@nestjs/common';
 import {
-	DbException,
+	RepositoryException,
 	InvalidReferenceException,
 } from '@pathly-backend/common/index.js';
 import { DrizzleQueryError, eq } from 'drizzle-orm';
@@ -36,13 +36,13 @@ export class PostgresSectionsRepository implements ISectionsRepository {
 	 *
 	 * @param command
 	 * @returns sections array
-	 * @throws DbException if there is db error
+	 * @throws RepositoryException if there is db error
 	 * @description this function retrieves sections from database
 	 */
 	async find(command: FindSectionsCommand): Promise<Section[]> {
 		const limit =
-			command.options?.limit || SectionsApiConstraints.DEFAULT_LIMIT;
-		const page = command.options?.page || SectionsApiConstraints.DEFAULT_PAGE;
+			command.options?.limit ?? SectionsApiConstraints.DEFAULT_LIMIT;
+		const page = command.options?.page ?? SectionsApiConstraints.DEFAULT_PAGE;
 
 		try {
 			const result = await this.db
@@ -53,7 +53,7 @@ export class PostgresSectionsRepository implements ISectionsRepository {
 
 			return result.map(dbSectionToEntity);
 		} catch (err) {
-			throw new DbException('db error', err, true);
+			throw new RepositoryException('db error', err);
 		}
 	}
 
@@ -61,7 +61,7 @@ export class PostgresSectionsRepository implements ISectionsRepository {
 	 *
 	 * @param command
 	 * @returns section or null if section is not found
-	 * @throws DbException if there is db error
+	 * @throws RepositoryException if there is db error
 	 * @description this function retrieves one section from database
 	 */
 	async findOne(command: FindOneSectionCommand): Promise<Section | null> {
@@ -73,7 +73,7 @@ export class PostgresSectionsRepository implements ISectionsRepository {
 
 			return result.length <= 0 ? null : dbSectionToEntity(result[0]);
 		} catch (err) {
-			throw new DbException('db error', err, true);
+			throw new RepositoryException('db error', err);
 		}
 	}
 
@@ -81,7 +81,7 @@ export class PostgresSectionsRepository implements ISectionsRepository {
 	 *
 	 * @param command
 	 * @returns created section
-	 * @throws DbException if there is db error
+	 * @throws RepositoryException if there is db error
 	 * @description this function creates section in a database
 	 */
 	async create(command: CreateSectionCommand): Promise<Section> {
@@ -93,7 +93,7 @@ export class PostgresSectionsRepository implements ISectionsRepository {
 
 			return dbSectionToEntity(result[0]);
 		} catch (err) {
-			throw new DbException('db error', err, true);
+			throw new RepositoryException('db error', err);
 		}
 	}
 
@@ -101,7 +101,7 @@ export class PostgresSectionsRepository implements ISectionsRepository {
 	 *
 	 * @param command
 	 * @returns updated section or null if section is not found
-	 * @throws DbException if there is db error
+	 * @throws RepositoryException if there is db error
 	 * @description this function updates section in a database
 	 */
 	async update(command: UpdateSectionCommand): Promise<Section | null> {
@@ -114,7 +114,7 @@ export class PostgresSectionsRepository implements ISectionsRepository {
 
 			return result.length <= 0 ? null : dbSectionToEntity(result[0]);
 		} catch (err) {
-			throw new DbException('db error', err, true);
+			throw new RepositoryException('db error', err);
 		}
 	}
 
@@ -122,7 +122,7 @@ export class PostgresSectionsRepository implements ISectionsRepository {
 	 *
 	 * @param command
 	 * @returns removed section or null if section is not found
-	 * @throws DbException if there is db error
+	 * @throws RepositoryException if there is db error
 	 * @description this function removes section from a database
 	 */
 	async remove(command: RemoveSectionCommand): Promise<Section | null> {
@@ -142,7 +142,7 @@ export class PostgresSectionsRepository implements ISectionsRepository {
 				}
 			}
 
-			throw new DbException('db error', err, true);
+			throw new RepositoryException('db error', err);
 		}
 	}
 }

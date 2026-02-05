@@ -1,7 +1,7 @@
 import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
 import { Inject, Injectable } from '@nestjs/common';
 import {
-	DbException,
+	RepositoryException,
 	InvalidReferenceException,
 } from '@pathly-backend/common/index.js';
 import { DrizzleQueryError, eq } from 'drizzle-orm';
@@ -36,7 +36,7 @@ export class PostgresLessonsRepository implements ILessonsRepository {
 	 *
 	 * @param command
 	 * @returns lessons array
-	 * @throws DbException if there is db error
+	 * @throws RepositoryException if there is db error
 	 * @description this function retrieves lessons from database
 	 */
 	async find(command: FindLessonsCommand): Promise<Lesson[]> {
@@ -52,7 +52,7 @@ export class PostgresLessonsRepository implements ILessonsRepository {
 
 			return result.map(dbLessonToEntity);
 		} catch (err) {
-			throw new DbException('db error', err, true);
+			throw new RepositoryException('db error', err);
 		}
 	}
 
@@ -60,7 +60,7 @@ export class PostgresLessonsRepository implements ILessonsRepository {
 	 *
 	 * @param command
 	 * @returns lesson or null if lesson is not found
-	 * @throws DbException if there is db error
+	 * @throws RepositoryException if there is db error
 	 * @description this function retrieves one lesson from database
 	 */
 	async findOne(command: FindOneLessonCommand): Promise<Lesson | null> {
@@ -72,7 +72,7 @@ export class PostgresLessonsRepository implements ILessonsRepository {
 
 			return result.length <= 0 ? null : dbLessonToEntity(result[0]);
 		} catch (err) {
-			throw new DbException('db error', err, true);
+			throw new RepositoryException('db error', err);
 		}
 	}
 
@@ -80,7 +80,7 @@ export class PostgresLessonsRepository implements ILessonsRepository {
 	 *
 	 * @param command
 	 * @returns created lesson
-	 * @throws DbException if there is db error
+	 * @throws RepositoryException if there is db error
 	 * @description this function creates lesson in a database
 	 */
 	async create(command: CreateLessonCommand): Promise<Lesson> {
@@ -92,7 +92,7 @@ export class PostgresLessonsRepository implements ILessonsRepository {
 
 			return dbLessonToEntity(result[0]);
 		} catch (err) {
-			throw new DbException('db error', err, true);
+			throw new RepositoryException('db error', err);
 		}
 	}
 
@@ -100,7 +100,7 @@ export class PostgresLessonsRepository implements ILessonsRepository {
 	 *
 	 * @param command
 	 * @returns updated lesson or null if lesson is not found
-	 * @throws DbException if there is db error
+	 * @throws RepositoryException if there is db error
 	 * @description this function updates lesson in a database
 	 */
 	async update(command: UpdateLessonCommand): Promise<Lesson | null> {
@@ -113,7 +113,7 @@ export class PostgresLessonsRepository implements ILessonsRepository {
 
 			return result.length <= 0 ? null : dbLessonToEntity(result[0]);
 		} catch (err) {
-			throw new DbException('db error', err, true);
+			throw new RepositoryException('db error', err);
 		}
 	}
 
@@ -121,7 +121,7 @@ export class PostgresLessonsRepository implements ILessonsRepository {
 	 *
 	 * @param command
 	 * @returns removed lesson or null if lesson is not found
-	 * @throws DbException if there is db error
+	 * @throws RepositoryException if there is db error
 	 * @description this function removes lesson from a database
 	 */
 	async remove(command: RemoveLessonCommand): Promise<Lesson | null> {
@@ -141,7 +141,7 @@ export class PostgresLessonsRepository implements ILessonsRepository {
 				}
 			}
 
-			throw new DbException('db error', err, true);
+			throw new RepositoryException('db error', err);
 		}
 	}
 }

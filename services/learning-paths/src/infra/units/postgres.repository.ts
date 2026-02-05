@@ -1,7 +1,7 @@
 import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
 import { Inject, Injectable } from '@nestjs/common';
 import {
-	DbException,
+	RepositoryException,
 	InvalidReferenceException,
 } from '@pathly-backend/common/index.js';
 import { DrizzleQueryError, eq } from 'drizzle-orm';
@@ -36,12 +36,12 @@ export class PostgresUnitsRepository implements IUnitsRepository {
 	 *
 	 * @param command
 	 * @returns units array
-	 * @throws DbException if there is db error
+	 * @throws RepositoryException if there is db error
 	 * @description this function retrieves units from database
 	 */
 	async find(command: FindUnitsCommand): Promise<Unit[]> {
-		const limit = command.options?.limit || UnitsApiConstraints.DEFAULT_LIMIT;
-		const page = command.options?.page || UnitsApiConstraints.DEFAULT_PAGE;
+		const limit = command.options?.limit ?? UnitsApiConstraints.DEFAULT_LIMIT;
+		const page = command.options?.page ?? UnitsApiConstraints.DEFAULT_PAGE;
 
 		try {
 			const result = await this.db
@@ -52,7 +52,7 @@ export class PostgresUnitsRepository implements IUnitsRepository {
 
 			return result.map(dbUnitToEntity);
 		} catch (err) {
-			throw new DbException('db error', err, true);
+			throw new RepositoryException('db error', err);
 		}
 	}
 
@@ -60,7 +60,7 @@ export class PostgresUnitsRepository implements IUnitsRepository {
 	 *
 	 * @param command
 	 * @returns unit or null if unit is not found
-	 * @throws DbException if there is db error
+	 * @throws RepositoryException if there is db error
 	 * @description this function retrieves one unit from database
 	 */
 	async findOne(command: FindOneUnitCommand): Promise<Unit | null> {
@@ -72,7 +72,7 @@ export class PostgresUnitsRepository implements IUnitsRepository {
 
 			return result.length <= 0 ? null : dbUnitToEntity(result[0]);
 		} catch (err) {
-			throw new DbException('db error', err, true);
+			throw new RepositoryException('db error', err);
 		}
 	}
 
@@ -80,7 +80,7 @@ export class PostgresUnitsRepository implements IUnitsRepository {
 	 *
 	 * @param command
 	 * @returns created unit
-	 * @throws DbException if there is db error
+	 * @throws RepositoryException if there is db error
 	 * @description this function creates unit in a database
 	 */
 	async create(command: CreateUnitCommand): Promise<Unit> {
@@ -92,7 +92,7 @@ export class PostgresUnitsRepository implements IUnitsRepository {
 
 			return dbUnitToEntity(result[0]);
 		} catch (err) {
-			throw new DbException('db error', err, true);
+			throw new RepositoryException('db error', err);
 		}
 	}
 
@@ -100,7 +100,7 @@ export class PostgresUnitsRepository implements IUnitsRepository {
 	 *
 	 * @param command
 	 * @returns updated unit or null if unit is not found
-	 * @throws DbException if there is db error
+	 * @throws RepositoryException if there is db error
 	 * @description this function updates unit in a database
 	 */
 	async update(command: UpdateUnitCommand): Promise<Unit | null> {
@@ -113,7 +113,7 @@ export class PostgresUnitsRepository implements IUnitsRepository {
 
 			return result.length <= 0 ? null : dbUnitToEntity(result[0]);
 		} catch (err) {
-			throw new DbException('db error', err, true);
+			throw new RepositoryException('db error', err);
 		}
 	}
 
@@ -121,7 +121,7 @@ export class PostgresUnitsRepository implements IUnitsRepository {
 	 *
 	 * @param command
 	 * @returns removed unit or null if unit is not found
-	 * @throws DbException if there is db error
+	 * @throws RepositoryException if there is db error
 	 * @description this function removes unit from a database
 	 */
 	async remove(command: RemoveUnitCommand): Promise<Unit | null> {
@@ -141,7 +141,7 @@ export class PostgresUnitsRepository implements IUnitsRepository {
 				}
 			}
 
-			throw new DbException('db error', err, true);
+			throw new RepositoryException('db error', err);
 		}
 	}
 }

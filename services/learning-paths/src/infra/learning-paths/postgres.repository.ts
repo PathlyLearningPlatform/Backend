@@ -1,7 +1,7 @@
 import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
 import { Inject, Injectable } from '@nestjs/common';
 import {
-	DbException,
+	RepositoryException,
 	InvalidReferenceException,
 	SortType,
 } from '@pathly-backend/common/index.js';
@@ -40,16 +40,16 @@ export class PostgresLearningPathsRepository
 	 *
 	 * @param command
 	 * @returns paths array
-	 * @throws DbException if there is db error
+	 * @throws RepositoryException if there is db error
 	 * @description this function retrieves paths from database
 	 */
 	async find(command: FindLearningPathsCommand): Promise<LearningPath[]> {
 		const limit =
-			command.options?.limit || LearningPathsApiConstraints.DEFAULT_LIMIT;
+			command.options?.limit ?? LearningPathsApiConstraints.DEFAULT_LIMIT;
 		const page =
-			command.options?.page || LearningPathsApiConstraints.DEFAULT_PAGE;
+			command.options?.page ?? LearningPathsApiConstraints.DEFAULT_PAGE;
 		const orderBy =
-			command.options?.orderBy || LearningPathsOrderByFields.CREATED_AT;
+			command.options?.orderBy ?? LearningPathsOrderByFields.CREATED_AT;
 		const sortType = command.options?.sortType || SortType.DESC;
 
 		try {
@@ -66,7 +66,7 @@ export class PostgresLearningPathsRepository
 
 			return result.map(dbPathToEntity);
 		} catch (err) {
-			throw new DbException('db error', err, true);
+			throw new RepositoryException('db error', err);
 		}
 	}
 
@@ -74,7 +74,7 @@ export class PostgresLearningPathsRepository
 	 *
 	 * @param command
 	 * @returns path or null if path is not found
-	 * @throws DbException if there is db error
+	 * @throws RepositoryException if there is db error
 	 * @description this function retrieves one path from database
 	 */
 	async findOne(
@@ -88,7 +88,7 @@ export class PostgresLearningPathsRepository
 
 			return result.length <= 0 ? null : dbPathToEntity(result[0]);
 		} catch (err) {
-			throw new DbException('db error', err, true);
+			throw new RepositoryException('db error', err);
 		}
 	}
 
@@ -96,7 +96,7 @@ export class PostgresLearningPathsRepository
 	 *
 	 * @param command
 	 * @returns created path
-	 * @throws DbException if there is db error
+	 * @throws RepositoryException if there is db error
 	 * @description this function creates path in a database
 	 */
 	async create(command: CreateLearningPathCommand): Promise<LearningPath> {
@@ -108,7 +108,7 @@ export class PostgresLearningPathsRepository
 
 			return dbPathToEntity(result[0]);
 		} catch (err) {
-			throw new DbException('db error', err, true);
+			throw new RepositoryException('db error', err);
 		}
 	}
 
@@ -116,7 +116,7 @@ export class PostgresLearningPathsRepository
 	 *
 	 * @param command
 	 * @returns updated path or null if path is not found
-	 * @throws DbException if there is db error
+	 * @throws RepositoryException if there is db error
 	 * @description this function updates path in a database
 	 */
 	async update(
@@ -131,7 +131,7 @@ export class PostgresLearningPathsRepository
 
 			return result.length <= 0 ? null : dbPathToEntity(result[0]);
 		} catch (err) {
-			throw new DbException('db error', err, true);
+			throw new RepositoryException('db error', err);
 		}
 	}
 
@@ -140,7 +140,7 @@ export class PostgresLearningPathsRepository
 	 * @param command
 	 * @returns removed path or null if path is not found
 	 * @throws
-	 * {DbException} if there is db error
+	 * {RepositoryException} if there is db error
 	 * {InvalidReferenceException} if there is foreign key violation
 	 * @description this function removes path from a database
 	 */
@@ -163,7 +163,7 @@ export class PostgresLearningPathsRepository
 				}
 			}
 
-			throw new DbException('db error', err, true);
+			throw new RepositoryException('db error', err);
 		}
 	}
 }

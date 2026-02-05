@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DbException } from '@pathly-backend/common/index.js';
+import { RepositoryException } from '@pathly-backend/common/index.js';
 import { and, eq } from 'drizzle-orm';
 import type { IActivitiesRepository } from '@/app/activities/interfaces';
 import type {
@@ -52,7 +52,7 @@ export class PostgresActivitiesRepository implements IActivitiesRepository {
 
 			return result.map(dbActivityToEntity);
 		} catch (err) {
-			throw new DbException('db query failed', err, true);
+			throw new RepositoryException('db query failed', err);
 		}
 	}
 
@@ -65,7 +65,7 @@ export class PostgresActivitiesRepository implements IActivitiesRepository {
 
 			return result.length <= 0 ? null : dbActivityToEntity(result[0]);
 		} catch (err) {
-			throw new DbException('db query failed', err, true);
+			throw new RepositoryException('db query failed', err);
 		}
 	}
 	async findOneArticle(activityId: string): Promise<Article | null> {
@@ -86,7 +86,7 @@ export class PostgresActivitiesRepository implements IActivitiesRepository {
 
 			return result.length <= 0 ? null : dbArticleToEntity(result[0]);
 		} catch (err) {
-			throw new DbException('db query failed', err, true);
+			throw new RepositoryException('db query failed', err);
 		}
 	}
 	async findOneExercise(activityId: string): Promise<Exercise | null> {
@@ -107,7 +107,7 @@ export class PostgresActivitiesRepository implements IActivitiesRepository {
 
 			return result.length <= 0 ? null : dbExerciseToEntity(result[0]);
 		} catch (err) {
-			throw new DbException('db query failed', err, true);
+			throw new RepositoryException('db query failed', err);
 		}
 	}
 	async findOneQuiz(activityId: string): Promise<Quiz | null> {
@@ -128,7 +128,7 @@ export class PostgresActivitiesRepository implements IActivitiesRepository {
 
 			return result.length <= 0 ? null : dbQuizToEntity(result[0]);
 		} catch (err) {
-			throw new DbException('db query failed', err, true);
+			throw new RepositoryException('db query failed', err);
 		}
 	}
 
@@ -147,7 +147,7 @@ export class PostgresActivitiesRepository implements IActivitiesRepository {
 				});
 			});
 		} catch (err) {
-			throw new DbException('db query failed', err, true);
+			throw new RepositoryException('db query failed', err);
 		}
 	}
 	async saveExercise(entity: Exercise): Promise<void> {
@@ -165,7 +165,7 @@ export class PostgresActivitiesRepository implements IActivitiesRepository {
 				});
 			});
 		} catch (err) {
-			throw new DbException('db query failed', err, true);
+			throw new RepositoryException('db query failed', err);
 		}
 	}
 	async saveQuiz(entity: Quiz): Promise<void> {
@@ -182,7 +182,7 @@ export class PostgresActivitiesRepository implements IActivitiesRepository {
 				});
 			});
 		} catch (err) {
-			throw new DbException('db query failed', err, true);
+			throw new RepositoryException('db query failed', err);
 		}
 	}
 
@@ -194,7 +194,7 @@ export class PostgresActivitiesRepository implements IActivitiesRepository {
 
 			return result.rowCount !== null && result.rowCount !== 0;
 		} catch (err) {
-			throw new DbException('db query failed', err, true);
+			throw new RepositoryException('db query failed', err);
 		}
 	}
 }
