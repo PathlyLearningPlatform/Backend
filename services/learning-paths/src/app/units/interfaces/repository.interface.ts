@@ -1,20 +1,11 @@
-import type { Unit } from '@domain/units/entities';
-import type {
-	CreateUnitCommand,
-	FindOneUnitCommand,
-	FindUnitsCommand,
-	RemoveUnitCommand,
-	UpdateUnitCommand,
-} from '../commands';
+import type { Unit, UnitQuery } from '@/domain/units/entities';
 
 export interface IUnitsRepository {
-	find(command: FindUnitsCommand): Promise<Unit[]>;
+	find(query?: UnitQuery): Promise<Unit[]>;
 
-	findOne(command: FindOneUnitCommand): Promise<Unit | null>;
+	findOne(id: string): Promise<Unit | null>;
 
-	create(command: CreateUnitCommand): Promise<Unit>;
+	save(entity: Unit): Promise<void>;
 
-	update(command: UpdateUnitCommand): Promise<Unit | null>;
-
-	remove(command: RemoveUnitCommand): Promise<Unit | null>;
+	remove(id: string): Promise<boolean>;
 }

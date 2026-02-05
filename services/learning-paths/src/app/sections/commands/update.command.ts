@@ -1,17 +1,8 @@
-import { Section } from '@domain/sections/entities';
-import { OmitType, PartialType } from '@nestjs/mapped-types';
+import type { SectionUpdateProps } from '@/domain/sections/entities';
 
-class UpdateFields extends PartialType(
-	OmitType(Section, ['createdAt', 'updatedAt', 'id', 'learningPathId']),
-) {}
-
-/**
- * @description
- * This class represents data for updating section.
- */
-export class UpdateSectionCommand {
+export type UpdateSectionCommand = {
 	where: {
 		id: string;
 	};
-	fields?: UpdateFields;
-}
+	fields?: SectionUpdateProps;
+};

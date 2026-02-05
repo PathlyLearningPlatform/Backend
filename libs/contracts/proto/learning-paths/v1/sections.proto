@@ -75,6 +75,4 @@ message RemoveSectionWhere {
 message RemoveSectionRequest {
   RemoveSectionWhere where = 1;
 }
-message RemoveSectionResponse {
-  Section section = 1;
-}
+message RemoveSectionResponse {}

@@ -1,29 +1,19 @@
 import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
 import { Inject, Injectable } from '@nestjs/common';
 import {
-	RepositoryException,
 	InvalidReferenceException,
+	RepositoryException,
 } from '@pathly-backend/common/index.js';
 import { DrizzleQueryError, eq } from 'drizzle-orm';
 import { DatabaseError as PostgresError } from 'pg';
-import type {
-	CreateSectionCommand,
-	FindOneSectionCommand,
-	FindSectionsCommand,
-	RemoveSectionCommand,
-	UpdateSectionCommand,
-} from '@/app/sections/commands';
 import type { ISectionsRepository } from '@/app/sections/interfaces';
-import type { Section } from '@/domain/sections/entities';
+import type { Section, SectionQuery } from '@/domain/sections/entities';
 import type { Db } from '@/infra/common/types';
 import { DbService } from '../db/db.service';
 import { sectionsTable } from '../db/schemas';
 import { SectionsApiConstraints } from './enums';
 import { dbSectionToEntity } from './helpers';
 
-/**
- * @description This class is a concrete implementation of ISectionsRepository interface. It's reponsibility is to perform CRUD operations on sections using postgres as data source.
- */
 @Injectable()
 export class PostgresSectionsRepository implements ISectionsRepository {
 	private db: Db;
@@ -32,17 +22,9 @@ export class PostgresSectionsRepository implements ISectionsRepository {
 		this.db = this.dbService.getDb();
 	}
 
-	/**
-	 *
-	 * @param command
-	 * @returns sections array
-	 * @throws RepositoryException if there is db error
-	 * @description this function retrieves sections from database
-	 */
-	async find(command: FindSectionsCommand): Promise<Section[]> {
-		const limit =
-			command.options?.limit ?? SectionsApiConstraints.DEFAULT_LIMIT;
-		const page = command.options?.page ?? SectionsApiConstraints.DEFAULT_PAGE;
+	async find(query?: SectionQuery): Promise<Section[]> {
+		const limit = query?.options?.limit ?? SectionsApiConstraints.DEFAULT_LIMIT;
+		const page = query?.options?.page ?? SectionsApiConstraints.DEFAULT_PAGE;
 
 		try {
 			const result = await this.db
@@ -57,19 +39,12 @@ export class PostgresSectionsRepository implements ISectionsRepository {
 		}
 	}
 
-	/**
-	 *
-	 * @param command
-	 * @returns section or null if section is not found
-	 * @throws RepositoryException if there is db error
-	 * @description this function retrieves one section from database
-	 */
-	async findOne(command: FindOneSectionCommand): Promise<Section | null> {
+	async findOne(id: string): Promise<Section | null> {
 		try {
 			const result = await this.db
 				.select()
 				.from(sectionsTable)
-				.where(eq(sectionsTable.id, command.where.id));
+				.where(eq(sectionsTable.id, id));
 
 			return result.length <= 0 ? null : dbSectionToEntity(result[0]);
 		} catch (err) {
@@ -77,62 +52,24 @@ export class PostgresSectionsRepository implements ISectionsRepository {
 		}
 	}
 
-	/**
-	 *
-	 * @param command
-	 * @returns created section
-	 * @throws RepositoryException if there is db error
-	 * @description this function creates section in a database
-	 */
-	async create(command: CreateSectionCommand): Promise<Section> {
+	async save(entity: Section): Promise<void> {
 		try {
-			const result = await this.db
-				.insert(sectionsTable)
-				.values(command)
-				.returning();
-
-			return dbSectionToEntity(result[0]);
+			await this.db.insert(sectionsTable).values(entity).onConflictDoUpdate({
+				target: sectionsTable.id,
+				set: entity,
+			});
 		} catch (err) {
 			throw new RepositoryException('db error', err);
 		}
 	}
 
-	/**
-	 *
-	 * @param command
-	 * @returns updated section or null if section is not found
-	 * @throws RepositoryException if there is db error
-	 * @description this function updates section in a database
-	 */
-	async update(command: UpdateSectionCommand): Promise<Section | null> {
-		try {
-			const result = await this.db
-				.update(sectionsTable)
-				.set(command.fields || {})
-				.where(eq(sectionsTable.id, command.where.id))
-				.returning();
-
-			return result.length <= 0 ? null : dbSectionToEntity(result[0]);
-		} catch (err) {
-			throw new RepositoryException('db error', err);
-		}
-	}
-
-	/**
-	 *
-	 * @param command
-	 * @returns removed section or null if section is not found
-	 * @throws RepositoryException if there is db error
-	 * @description this function removes section from a database
-	 */
-	async remove(command: RemoveSectionCommand): Promise<Section | null> {
+	async remove(id: string): Promise<boolean> {
 		try {
 			const result = await this.db
 				.delete(sectionsTable)
-				.where(eq(sectionsTable.id, command.where.id))
-				.returning();
+				.where(eq(sectionsTable.id, id));
 
-			return result.length <= 0 ? null : dbSectionToEntity(result[0]);
+			return result.rowCount !== null;
 		} catch (err) {
 			if (err instanceof DrizzleQueryError) {
 				if (err.cause instanceof PostgresError) {

@@ -1,16 +1,16 @@
-import { Test } from '@nestjs/testing'
-import { LearningPathsModule } from '../src/learning-paths/learning-paths.module'
-import { INestApplication } from '@nestjs/common'
-import { learningPaths, mockedConfigService, sections } from './helpers'
+import { randomUUID } from 'node:crypto'
+import type { Server } from 'node:http'
+import type { INestApplication } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { Server } from 'node:http'
-import {
+import { Test } from '@nestjs/testing'
+import type {
 	CreateLearningPathBodyDto,
 	CreateLearningPathResponseDto,
 	UpdateLearningPathResponseDto,
 } from '@/learning-paths/dtos'
-import { randomUUID } from 'node:crypto'
-import { CreateSectionResponseDto } from '@/sections/dtos'
+import type { CreateSectionResponseDto } from '@/sections/dtos'
+import { LearningPathsModule } from '../src/learning-paths/learning-paths.module'
+import { learningPaths, mockedConfigService, sections } from './helpers'
 
 describe('LearningPaths', () => {
 	let app: INestApplication

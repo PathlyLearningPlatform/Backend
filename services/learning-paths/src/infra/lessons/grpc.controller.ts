@@ -86,7 +86,7 @@ export class GrpcLessonsController {
 		payload: z.infer<typeof findOneLessonSchema>,
 	): Promise<FindOneLessonResponse> {
 		try {
-			const lesson = await this.findOneLessonUseCase.execute(payload);
+			const lesson = await this.findOneLessonUseCase.execute(payload.where.id);
 
 			return { lesson: lessonEntityToClient(lesson) };
 		} catch (err) {
@@ -181,13 +181,9 @@ export class GrpcLessonsController {
 		@Payload(new RpcValidationPipe(removeLessonSchema)) payload: z.infer<
 			typeof removeLessonSchema
 		>,
-	): Promise<RemoveLessonResponse> {
+	): Promise<void> {
 		try {
-			const lesson = await this.removeLessonUseCase.execute(payload);
-
-			return {
-				lesson: lessonEntityToClient(lesson),
-			};
+			await this.removeLessonUseCase.execute(payload.where.id);
 		} catch (err) {
 			if (err instanceof LessonNotFoundException) {
 				throw new GrpcException(

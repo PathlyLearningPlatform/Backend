@@ -3,5 +3,10 @@ import type { Unit as ClientUnit } from '@pathly-backend/contracts/learning-path
 import type { Unit } from '@/domain/units/entities';
 
 export function unitEntityToClient(entity: Unit): ClientUnit {
-	return { ...entity, description: nullToEmptyString(entity.description) };
+	return {
+		...entity,
+		description: nullToEmptyString(entity.description),
+		updatedAt: entity.updatedAt === null ? '' : entity.updatedAt.toISOString(),
+		createdAt: entity.createdAt.toISOString(),
+	};
 }

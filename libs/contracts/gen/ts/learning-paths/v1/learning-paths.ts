@@ -88,7 +88,6 @@ export interface RemoveLearningPathRequest {
 }
 
 export interface RemoveLearningPathResponse {
-  learningPath: LearningPath | undefined;
 }
 
 export const LEARNING_PATHS_V1_PACKAGE_NAME = "learning_paths.v1";

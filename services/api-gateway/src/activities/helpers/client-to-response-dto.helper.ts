@@ -1,4 +1,7 @@
-import { emptyStringToNull } from '@pathly-backend/common/index.js'
+import {
+	emptyStringToNull,
+	nullToEmptyString,
+} from '@pathly-backend/common/index.js'
 import type {
 	Activity as ClientActivity,
 	Article as ClientArticle,
@@ -18,6 +21,7 @@ export function clientActivityToResponseDto(
 	return {
 		...client,
 		description: emptyStringToNull(client.description),
+		updatedAt: emptyStringToNull(client.updatedAt),
 	}
 }
 
@@ -27,6 +31,7 @@ export function clientArticleToResponseDto(
 	return {
 		...client,
 		description: emptyStringToNull(client.description),
+		updatedAt: emptyStringToNull(client.updatedAt),
 	}
 }
 
@@ -36,6 +41,7 @@ export function clientExerciseToResponseDto(
 	return {
 		...client,
 		description: emptyStringToNull(client.description),
+		updatedAt: emptyStringToNull(client.updatedAt),
 	}
 }
 
@@ -43,5 +49,6 @@ export function clientQuizToResponseDto(client: ClientQuiz): QuizResponseDto {
 	return {
 		...client,
 		description: emptyStringToNull(client.description),
+		updatedAt: emptyStringToNull(client.updatedAt),
 	}
 }

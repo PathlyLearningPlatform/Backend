@@ -1,10 +1,3 @@
-/**
- * @description
- * This class represents data for finding multiple lessons
- */
-export class FindLessonsCommand {
-	options?: {
-		limit?: number;
-		page?: number;
-	};
-}
+import type { LessonQuery } from '@/domain/lessons/entities';
+
+export type FindLessonsCommand = LessonQuery;

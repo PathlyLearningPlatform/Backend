@@ -1,4 +1,3 @@
-import type { FindOneLearningPathCommand } from '@/app/learning-paths/commands';
 import type { ILearningPathsRepository } from '@/app/learning-paths/interfaces';
 import type { LearningPath } from '@/domain/learning-paths/entities';
 import { LearningPathNotFoundException } from '@/domain/learning-paths/exceptions';
@@ -17,11 +16,11 @@ export class FindOneLearningPathUseCase {
 	 * @returns found path
 	 * @throws PathNotFoundException if path was not found
 	 */
-	async execute(command: FindOneLearningPathCommand): Promise<LearningPath> {
-		const learningPath = await this.learningPathsRepository.findOne(command);
+	async execute(id: string): Promise<LearningPath> {
+		const learningPath = await this.learningPathsRepository.findOne(id);
 
 		if (!learningPath) {
-			throw new LearningPathNotFoundException(command.where.id);
+			throw new LearningPathNotFoundException(id);
 		}
 
 		return learningPath;

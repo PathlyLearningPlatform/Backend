@@ -4,7 +4,7 @@ import { learningPathsTable } from './learning-paths.table';
 import { sectionsTable } from './sections.table';
 
 export const projectsTable = pgTable('projects', {
-	id: uuid().primaryKey().defaultRandom(),
+	id: uuid().primaryKey(),
 	learningPathId: uuid().references(() => learningPathsTable.id),
 	sectionId: uuid().references(() => sectionsTable.id),
 	createdAt,

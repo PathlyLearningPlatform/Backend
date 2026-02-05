@@ -1,7 +1,7 @@
 import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
 import { Test } from '@nestjs/testing';
 import {
-	DbException,
+	RepositoryException,
 	InvalidReferenceException,
 } from '@pathly-backend/common/index.js';
 import { DrizzleQueryError } from 'drizzle-orm';
@@ -35,12 +35,12 @@ describe('LearningPathsRepository', () => {
 			);
 		});
 
-		it('should throw DbException', async () => {
+		it('should throw RepositoryException', async () => {
 			mockedDrizzle.offset.mockRejectedValueOnce(new Error());
 
 			const promise = learningPathsRepository.find({});
 
-			await expect(promise).rejects.toThrow(DbException);
+			await expect(promise).rejects.toThrow(RepositoryException);
 		});
 	});
 
@@ -48,9 +48,9 @@ describe('LearningPathsRepository', () => {
 		it('should return a learning path', async () => {
 			mockedDrizzle.where.mockResolvedValueOnce([mockedDbLearningPath]);
 
-			const result = await learningPathsRepository.findOne({
-				where: { id: mockedLearningPath.id },
-			});
+			const result = await learningPathsRepository.findOne(
+				mockedDbLearningPath.id,
+			);
 
 			expect(result).toEqual(mockedLearningPath);
 		});
@@ -58,107 +58,67 @@ describe('LearningPathsRepository', () => {
 		it('should return null', async () => {
 			mockedDrizzle.where.mockResolvedValueOnce([]);
 
-			const result = await learningPathsRepository.findOne({
-				where: { id: 'non-existent-learning-path-id' },
-			});
+			const result = await learningPathsRepository.findOne(
+				'non-existent-learning-path-id',
+			);
 
 			expect(result).toEqual(null);
 		});
 
-		it('should throw DbException', async () => {
+		it('should throw RepositoryException', async () => {
 			mockedDrizzle.where.mockResolvedValueOnce(new Error());
 
-			const promise = learningPathsRepository.findOne({
-				where: { id: mockedLearningPath.id },
-			});
+			const promise = learningPathsRepository.findOne(mockedDbLearningPath.id);
 
-			await expect(promise).rejects.toThrow(DbException);
+			await expect(promise).rejects.toThrow(RepositoryException);
 		});
 	});
 
-	describe('create', () => {
-		it('should return created learning path', async () => {
+	describe('save', () => {
+		it('should return undefined', async () => {
 			mockedDrizzle.returning.mockResolvedValueOnce([mockedDbLearningPath]);
 
-			const result = await learningPathsRepository.create({
-				name: mockedLearningPath.name,
-			});
+			const result = await learningPathsRepository.save(mockedLearningPath);
 
-			expect(result).toEqual(mockedLearningPath);
+			expect(result).toBeUndefined();
 		});
 
-		it('should throw DbException', async () => {
+		it('should throw RepositoryException', async () => {
 			mockedDrizzle.returning.mockResolvedValueOnce(new Error());
 
-			const promise = learningPathsRepository.create({
-				name: mockedLearningPath.name,
-			});
+			const promise = learningPathsRepository.save(mockedLearningPath);
 
-			await expect(promise).rejects.toThrow(DbException);
-		});
-	});
-
-	describe('update', () => {
-		it('should return updated learning path', async () => {
-			mockedDrizzle.returning.mockResolvedValueOnce([mockedDbLearningPath]);
-
-			const result = await learningPathsRepository.update({
-				where: { id: mockedLearningPath.id },
-			});
-
-			expect(result).toEqual(mockedLearningPath);
-		});
-
-		it('should return null', async () => {
-			mockedDrizzle.returning.mockResolvedValueOnce([]);
-
-			const result = await learningPathsRepository.update({
-				where: { id: 'non-existent-learning-path-id' },
-			});
-
-			expect(result).toEqual(null);
-		});
-
-		it('should throw DbException', async () => {
-			mockedDrizzle.returning.mockResolvedValueOnce(new Error());
-
-			const promise = learningPathsRepository.update({
-				where: { id: mockedLearningPath.id },
-			});
-
-			await expect(promise).rejects.toThrow(DbException);
+			await expect(promise).rejects.toThrow(RepositoryException);
 		});
 	});
 
 	describe('remove', () => {
-		it('should return removed learning path', async () => {
+		it('should return true', async () => {
 			mockedDrizzle.returning.mockResolvedValueOnce([mockedDbLearningPath]);
 
-			const result = await learningPathsRepository.remove({
-				where: { id: mockedLearningPath.id },
-			});
+			const result = await learningPathsRepository.remove(
+				mockedLearningPath.id,
+			);
 
-			expect(result).toEqual(mockedLearningPath);
+			expect(result).toBe(true);
 		});
 
-		it('should return null', async () => {
+		it('should return false', async () => {
 			mockedDrizzle.returning.mockResolvedValueOnce([]);
 
-			const result = await learningPathsRepository.remove({
-				where: { id: 'non-existent-learning-path-id' },
-			});
+			const result = await learningPathsRepository.remove(
+				'non-existent-learning-path-id',
+			);
 
-			expect(result).toEqual(null);
+			expect(result).toBe(false);
 		});
 
-		it('should throw DbException', async () => {
+		it('should throw RepositoryException', async () => {
 			mockedDrizzle.returning.mockResolvedValueOnce(new Error());
 
-			const promise = learningPathsRepository.remove({
-				where: { id: mockedLearningPath.id },
-			});
+			const promise = learningPathsRepository.remove(mockedLearningPath.id);
 
-			await expect(promise).rejects.toThrow(DbException);
+			await expect(promise).rejects.toThrow(RepositoryException);
 		});
 
 		it('should throw InvalidReferenceException', async () => {
@@ -169,9 +129,7 @@ describe('LearningPathsRepository', () => {
 
 			mockedDrizzle.returning.mockRejectedValueOnce(drizzleErr);
 
-			const promise = learningPathsRepository.remove({
-				where: { id: mockedLearningPath.id },
-			});
+			const promise = learningPathsRepository.remove(mockedLearningPath.id);
 
 			await expect(promise).rejects.toThrow(InvalidReferenceException);
 		});

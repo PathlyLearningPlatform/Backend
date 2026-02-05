@@ -23,10 +23,7 @@ import {
 import { DiToken } from '@/infra/common/enums';
 import { GrpcLearningPathsController } from '../grpc.controller';
 import { mockedClientLearningPath } from './mocks/learning-paths.mock';
-import {
-	mockedFindLearningPathsUseCase,
-	mockedUseCases,
-} from './mocks/use-cases.mock';
+import { mockedUseCases } from './mocks/use-cases.mock';
 
 describe('GrpcLearningPathsController', () => {
 	let learningPathsController: GrpcLearningPathsController;
@@ -232,9 +229,7 @@ describe('GrpcLearningPathsController', () => {
 				learningPath: mockedClientLearningPath,
 			};
 
-			removeLearningPathUseCase.execute.mockResolvedValueOnce(
-				mockedLearningPath,
-			);
+			removeLearningPathUseCase.execute.mockResolvedValueOnce();
 
 			const result = await learningPathsController.remove({
 				where: { id: mockedLearningPath.id },

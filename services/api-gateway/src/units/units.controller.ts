@@ -29,13 +29,13 @@ import {
 	nullToEmptyString,
 } from '@pathly-backend/common/index.js'
 import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js'
+import { exceptionCodeToMessage } from '../common/helpers'
 import {
 	CreateUnitBodyDto,
 	CreateUnitResponseDto,
 	FindOneUnitResponseDto,
 	FindUnitsQueryDto,
 	FindUnitsResponseDto,
-	RemoveUnitResponseDto,
 	UpdateUnitBodyDto,
 	UpdateUnitResponseDto,
 } from './dtos'
@@ -46,7 +46,6 @@ import {
 	updateUnitBodySchema,
 } from './schemas'
 import { UnitsService } from './units.service'
-import { exceptionCodeToMessage } from '../common/helpers'
 
 @Controller({
 	path: 'units',
@@ -217,21 +216,13 @@ export class UnitsController {
 		}
 	}
 
-	@ApiOkResponse({
-		type: RemoveUnitResponseDto,
-	})
+	@ApiOkResponse()
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@ApiConflictResponse({ type: HttpErrorResponse })
 	@Delete(':id')
-	async remove(
-		@Param('id', ParseUUIDPipe) id: string,
-	): Promise<RemoveUnitResponseDto> {
+	async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
 		try {
-			const result = await this.unitsService.remove({ where: { id } })
-
-			return {
-				unit: clientUnitToResponseDto(result.unit!),
-			}
+			await this.unitsService.remove({ where: { id } })
 		} catch (err) {
 			const grpcErr = err as GrpcException
 			const errRes = grpcErr.getGrpcError()

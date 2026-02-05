@@ -75,6 +75,4 @@ message RemoveUnitWhere {
 message RemoveUnitRequest {
   RemoveUnitWhere where = 1;
 }
-message RemoveUnitResponse {
-  Unit unit = 1;
-}
+message RemoveUnitResponse {}

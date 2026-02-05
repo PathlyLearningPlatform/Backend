@@ -1,20 +1,11 @@
-import type { Lesson } from '@domain/lessons/entities';
-import type {
-	CreateLessonCommand,
-	FindLessonsCommand,
-	FindOneLessonCommand,
-	RemoveLessonCommand,
-	UpdateLessonCommand,
-} from '../commands';
+import type { Lesson, LessonQuery } from '@/domain/lessons/entities';
 
 export interface ILessonsRepository {
-	find(command: FindLessonsCommand): Promise<Lesson[]>;
+	find(query?: LessonQuery): Promise<Lesson[]>;
 
-	findOne(command: FindOneLessonCommand): Promise<Lesson | null>;
+	findOne(id: string): Promise<Lesson | null>;
 
-	create(command: CreateLessonCommand): Promise<Lesson>;
+	save(entity: Lesson): Promise<void>;
 
-	update(command: UpdateLessonCommand): Promise<Lesson | null>;
-
-	remove(command: RemoveLessonCommand): Promise<Lesson | null>;
+	remove(id: string): Promise<boolean>;
 }

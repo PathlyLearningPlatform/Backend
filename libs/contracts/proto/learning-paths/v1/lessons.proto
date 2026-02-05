@@ -75,6 +75,4 @@ message RemoveLessonWhere {
 message RemoveLessonRequest {
   RemoveLessonWhere where = 1;
 }
-message RemoveLessonResponse {
-  Lesson lesson = 1;
-}
+message RemoveLessonResponse {}

@@ -1,9 +1,9 @@
-import * as request from 'supertest'
-import { Test } from '@nestjs/testing'
-import { SectionsModule } from '@/sections/sections.module'
-import { INestApplication } from '@nestjs/common'
-import { mockedConfigService } from './helpers'
+import type { INestApplication } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
+import { Test } from '@nestjs/testing'
+import * as request from 'supertest'
+import { SectionsModule } from '@/sections/sections.module'
+import { mockedConfigService } from './helpers'
 
 describe('Sections', () => {
 	let app: INestApplication

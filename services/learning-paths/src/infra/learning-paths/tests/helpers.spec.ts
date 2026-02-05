@@ -3,7 +3,7 @@ import { mockedLearningPath } from '@/app/common/mocks';
 import { LearningPathsOrderByFields } from '@/domain/learning-paths/enums';
 import {
 	clientLearningPathsOrderByFieldsToDomain,
-	dbPathToEntity,
+	dbLearningPathToEntity,
 	learningPathEntityToClient,
 } from '../helpers';
 import {
@@ -14,7 +14,7 @@ import {
 describe('helpers', () => {
 	describe('dbPathToEntity', () => {
 		it('should return domain path entity', () => {
-			const result = dbPathToEntity(mockedDbLearningPath);
+			const result = dbLearningPathToEntity(mockedDbLearningPath);
 
 			expect(result).toEqual(mockedLearningPath);
 		});

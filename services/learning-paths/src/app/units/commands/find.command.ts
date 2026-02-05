@@ -1,10 +1,3 @@
-/**
- * @description
- * This class represents data for finding multiple units
- */
-export class FindUnitsCommand {
-	options?: {
-		limit?: number;
-		page?: number;
-	};
-}
+import type { UnitQuery } from '@/domain/units/entities';
+
+export type FindUnitsCommand = UnitQuery;

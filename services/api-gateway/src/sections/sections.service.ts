@@ -10,7 +10,6 @@ import {
 	type FindSectionsRequest,
 	type FindSectionsResponse,
 	type RemoveSectionRequest,
-	type RemoveSectionResponse,
 	SECTIONS_SERVICE_NAME,
 	type SectionsServiceClient,
 	type UpdateSectionRequest,
@@ -73,13 +72,11 @@ export class SectionsService implements OnModuleInit {
 		return result
 	}
 
-	async remove(request: RemoveSectionRequest): Promise<RemoveSectionResponse> {
-		const result = await firstValueFrom(
+	async remove(request: RemoveSectionRequest): Promise<void> {
+		await firstValueFrom(
 			this.sectionsServiceClient
 				.remove(request)
 				.pipe(catchError((err: ServiceError) => throwGrpcException(err))),
 		)
-
-		return result
 	}
 }

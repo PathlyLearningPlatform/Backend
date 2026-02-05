@@ -18,11 +18,18 @@ export class UpdateLearningPathUseCase {
 	 * @throws PathNotFoundException if path was not found
 	 */
 	async execute(command: UpdateLearningPathCommand): Promise<LearningPath> {
-		const learningPath = await this.learningPathsRepository.update(command);
+		const learningPath = await this.learningPathsRepository.findOne(
+			command.where.id,
+		);
 
 		if (!learningPath) {
 			throw new LearningPathNotFoundException(command.where.id);
 		}
+
+		learningPath.update({
+			description: command.fields?.description,
+			name: command.fields?.name,
+		});
 
 		return learningPath;
 	}

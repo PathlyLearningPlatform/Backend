@@ -12,7 +12,7 @@ import { learningPathsTable } from './learning-paths.table';
 export const sectionsTable = pgTable(
 	'sections',
 	{
-		id: uuid().primaryKey().defaultRandom(),
+		id: uuid().primaryKey(),
 		learningPathId: uuid()
 			.notNull()
 			.references(() => learningPathsTable.id),

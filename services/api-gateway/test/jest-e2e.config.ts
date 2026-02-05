@@ -1,5 +1,6 @@
-import { Config } from 'jest'
+import type { Config } from 'jest'
 import { pathsToModuleNameMapper } from 'ts-jest'
+
 const { compilerOptions } = require('../tsconfig.json')
 
 export const config: Config = {

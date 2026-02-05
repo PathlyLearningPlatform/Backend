@@ -6,5 +6,6 @@ export function clientUnitToResponseDto(client: ClientUnit): UnitResponseDto {
 	return {
 		...client,
 		description: emptyStringToNull(client.description),
+		updatedAt: emptyStringToNull(client.description),
 	}
 }

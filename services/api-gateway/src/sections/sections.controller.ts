@@ -29,13 +29,13 @@ import {
 	nullToEmptyString,
 } from '@pathly-backend/common/index.js'
 import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js'
+import { exceptionCodeToMessage } from '../common/helpers'
 import {
 	CreateSectionBodyDto,
 	CreateSectionResponseDto,
 	FindOneSectionResponseDto,
 	FindSectionsQueryDto,
 	FindSectionsResponseDto,
-	RemoveSectionResponseDto,
 	UpdateSectionBodyDto,
 	UpdateSectionResponseDto,
 } from './dtos'
@@ -46,7 +46,6 @@ import {
 	updateSectionBodySchema,
 } from './schemas'
 import { SectionsService } from './sections.service'
-import { exceptionCodeToMessage } from '../common/helpers'
 
 @Controller({
 	path: 'sections',
@@ -221,21 +220,13 @@ export class SectionsController {
 		}
 	}
 
-	@ApiOkResponse({
-		type: RemoveSectionResponseDto,
-	})
+	@ApiOkResponse()
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@ApiConflictResponse({ type: HttpErrorResponse })
 	@Delete(':id')
-	async remove(
-		@Param('id', ParseUUIDPipe) id: string,
-	): Promise<RemoveSectionResponseDto> {
+	async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
 		try {
-			const result = await this.sectionsService.remove({ where: { id } })
-
-			return {
-				section: clientSectionToResponseDto(result.section!),
-			}
+			await this.sectionsService.remove({ where: { id } })
 		} catch (err) {
 			const grpcErr = err as GrpcException
 			const errRes = grpcErr.getGrpcError()

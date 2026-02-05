@@ -1,13 +1,8 @@
-import { Lesson } from '@domain/lessons/entities';
-import { OmitType, PartialType } from '@nestjs/mapped-types';
+import type { LessonUpdateProps } from '@/domain/lessons/entities';
 
-class UpdateFields extends PartialType(
-	OmitType(Lesson, ['createdAt', 'updatedAt', 'id', 'unitId']),
-) {}
-
-export class UpdateLessonCommand {
+export type UpdateLessonCommand = {
 	where: {
 		id: string;
 	};
-	fields?: UpdateFields;
-}
+	fields?: LessonUpdateProps;
+};

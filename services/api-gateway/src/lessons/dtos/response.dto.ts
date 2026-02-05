@@ -23,8 +23,9 @@ export class LessonResponseDto {
 	@ApiProperty({
 		type: 'string',
 		format: 'date-time',
+		nullable: true,
 	})
-	updatedAt: string
+	updatedAt: string | null
 
 	@ApiProperty({
 		type: 'string',

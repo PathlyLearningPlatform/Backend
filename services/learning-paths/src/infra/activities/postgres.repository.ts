@@ -135,16 +135,24 @@ export class PostgresActivitiesRepository implements IActivitiesRepository {
 	async saveArticle(entity: Article): Promise<void> {
 		try {
 			await this.db.transaction(async (tx) => {
-				await tx.insert(activitiesTable).values({
-					...entity,
-					createdAt: new Date(entity.createdAt),
-					updatedAt: new Date(entity.updatedAt),
+				await tx.insert(activitiesTable).values(entity).onConflictDoUpdate({
+					target: activitiesTable.id,
+					set: entity,
 				});
 
-				await tx.insert(articlesTable).values({
-					ref: entity.ref,
-					activityId: entity.id,
-				});
+				await tx
+					.insert(articlesTable)
+					.values({
+						ref: entity.ref,
+						activityId: entity.id,
+					})
+					.onConflictDoUpdate({
+						target: articlesTable.activityId,
+						set: {
+							activityId: entity.id,
+							ref: entity.ref,
+						},
+					});
 			});
 		} catch (err) {
 			throw new RepositoryException('db query failed', err);
@@ -153,16 +161,24 @@ export class PostgresActivitiesRepository implements IActivitiesRepository {
 	async saveExercise(entity: Exercise): Promise<void> {
 		try {
 			await this.db.transaction(async (tx) => {
-				await tx.insert(activitiesTable).values({
-					...entity,
-					createdAt: new Date(entity.createdAt),
-					updatedAt: new Date(entity.updatedAt),
+				await tx.insert(activitiesTable).values(entity).onConflictDoUpdate({
+					target: activitiesTable.id,
+					set: entity,
 				});
 
-				await tx.insert(exercisesTable).values({
-					difficulty: entity.difficulty,
-					activityId: entity.id,
-				});
+				await tx
+					.insert(exercisesTable)
+					.values({
+						difficulty: entity.difficulty,
+						activityId: entity.id,
+					})
+					.onConflictDoUpdate({
+						target: exercisesTable.activityId,
+						set: {
+							activityId: entity.id,
+							difficulty: entity.difficulty,
+						},
+					});
 			});
 		} catch (err) {
 			throw new RepositoryException('db query failed', err);
@@ -171,15 +187,22 @@ export class PostgresActivitiesRepository implements IActivitiesRepository {
 	async saveQuiz(entity: Quiz): Promise<void> {
 		try {
 			await this.db.transaction(async (tx) => {
-				await tx.insert(activitiesTable).values({
-					...entity,
-					createdAt: new Date(entity.createdAt),
-					updatedAt: new Date(entity.updatedAt),
+				await tx.insert(activitiesTable).values(entity).onConflictDoUpdate({
+					target: activitiesTable.id,
+					set: entity,
 				});
 
-				await tx.insert(quizzesTable).values({
-					activityId: entity.id,
-				});
+				await tx
+					.insert(quizzesTable)
+					.values({
+						activityId: entity.id,
+					})
+					.onConflictDoUpdate({
+						target: quizzesTable.activityId,
+						set: {
+							activityId: entity.id,
+						},
+					});
 			});
 		} catch (err) {
 			throw new RepositoryException('db query failed', err);

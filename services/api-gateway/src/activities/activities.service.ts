@@ -1,33 +1,32 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common'
-import { DiToken } from '../common/enums'
+import { Inject, Injectable, type OnModuleInit } from '@nestjs/common'
 import type { ClientGrpc } from '@nestjs/microservices'
+import { throwGrpcException } from '@pathly-backend/common/index.js'
 import {
 	ACTIVITIES_SERVICE_NAME,
-	ActivitiesServiceClient,
-	CreateArticleRequest,
-	CreateArticleResponse,
-	CreateExerciseRequest,
-	CreateExerciseResponse,
-	CreateQuizRequest,
-	CreateQuizResponse,
-	FindActivitiesRequest,
-	FindActivitiesResponse,
-	FindOneActivityRequest,
-	FindOneActivityResponse,
-	FindOneArticleResponse,
-	FindOneExerciseResponse,
-	FindOneQuizResponse,
-	RemoveActivityRequest,
-	RemoveActivityResponse,
-	UpdateArticleRequest,
-	UpdateArticleResponse,
-	UpdateExerciseRequest,
-	UpdateExerciseResponse,
-	UpdateQuizRequest,
-	UpdateQuizResponse,
+	type ActivitiesServiceClient,
+	type CreateArticleRequest,
+	type CreateArticleResponse,
+	type CreateExerciseRequest,
+	type CreateExerciseResponse,
+	type CreateQuizRequest,
+	type CreateQuizResponse,
+	type FindActivitiesRequest,
+	type FindActivitiesResponse,
+	type FindOneActivityRequest,
+	type FindOneActivityResponse,
+	type FindOneArticleResponse,
+	type FindOneExerciseResponse,
+	type FindOneQuizResponse,
+	type RemoveActivityRequest,
+	type UpdateArticleRequest,
+	type UpdateArticleResponse,
+	type UpdateExerciseRequest,
+	type UpdateExerciseResponse,
+	type UpdateQuizRequest,
+	type UpdateQuizResponse,
 } from '@pathly-backend/contracts/learning-paths/v1/activities.js'
 import { catchError, firstValueFrom } from 'rxjs'
-import { throwGrpcException } from '@pathly-backend/common/index.js'
+import { DiToken } from '../common/enums'
 
 @Injectable()
 export class ActivitiesService implements OnModuleInit {
@@ -159,15 +158,11 @@ export class ActivitiesService implements OnModuleInit {
 		return result
 	}
 
-	async remove(
-		request: RemoveActivityRequest,
-	): Promise<RemoveActivityResponse> {
-		const result = await firstValueFrom(
+	async remove(request: RemoveActivityRequest): Promise<void> {
+		await firstValueFrom(
 			this.activitiesServiceClient
 				.remove(request)
 				.pipe(catchError(throwGrpcException)),
 		)
-
-		return result
 	}
 }

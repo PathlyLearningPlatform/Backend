@@ -28,7 +28,7 @@ export class Article extends Activity implements ArticleProps {
 	update(props: ArticleUpdateProps) {
 		super.update(props);
 
-		if (props.ref) {
+		if (props.ref !== undefined) {
 			this.ref = props.ref;
 		}
 	}

@@ -27,15 +27,24 @@ import {
 	nullToEmptyString,
 } from '@pathly-backend/common/index.js'
 import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js'
+import { exceptionCodeToMessage } from '../common/helpers'
+import { ActivitiesService } from './activities.service'
 import {
-	FindActivitiesQueryDto,
 	CreateArticleDto,
-	UpdateArticleDto,
 	CreateExerciseDto,
 	CreateQuizDto,
+	FindActivitiesQueryDto,
+	UpdateArticleDto,
 	UpdateExerciseDto,
 	UpdateQuizDto,
 } from './dtos'
+import {
+	ActivitiesResponse,
+	ActivityResponse,
+	ArticleResponse,
+	ExerciseResponse,
+	QuizResponse,
+} from './dtos/responses'
 import {
 	clientActivityToResponseDto,
 	clientArticleToResponseDto,
@@ -51,15 +60,6 @@ import {
 	updateExercisePropsSchema,
 	updateQuizPropsSchema,
 } from './schemas'
-import { ActivitiesService } from './activities.service'
-import { exceptionCodeToMessage } from '../common/helpers'
-import {
-	ActivitiesResponse,
-	ActivityResponse,
-	ArticleResponse,
-	ExerciseResponse,
-	QuizResponse,
-} from './dtos/responses'
 
 @Controller({
 	path: 'activities',

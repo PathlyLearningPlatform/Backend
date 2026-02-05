@@ -29,6 +29,7 @@ import {
 	nullToEmptyString,
 } from '@pathly-backend/common/index.js'
 import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js'
+import { ExceptionMessage } from '../common/enums'
 import {
 	domainSortTypeToClient,
 	exceptionCodeToMessage,
@@ -39,7 +40,6 @@ import {
 	FindLearningPathsQueryDto,
 	FindLearningPathsResponseDto,
 	FindOneLearningPathResponseDto,
-	RemoveLearningPathResponseDto,
 	UpdateLearningPathBodyDto,
 	UpdateLearningPathResponseDto,
 } from './dtos'
@@ -51,7 +51,6 @@ import {
 	findLearningPathsQuerySchema,
 	updateLearningPathBodySchema,
 } from './schemas'
-import { ExceptionMessage } from '../common/enums'
 
 @Controller({
 	path: 'learning-paths',
@@ -225,21 +224,13 @@ export class LearningPathsController {
 		}
 	}
 
-	@ApiOkResponse({
-		type: RemoveLearningPathResponseDto,
-	})
+	@ApiOkResponse()
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@ApiConflictResponse({ type: HttpErrorResponse })
 	@Delete(':id')
-	async remove(
-		@Param('id', ParseUUIDPipe) id: string,
-	): Promise<RemoveLearningPathResponseDto> {
+	async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
 		try {
-			const result = await this.learningPathsService.remove({ where: { id } })
-
-			return {
-				path: clientLearningPathToResponseDto(result.learningPath!),
-			}
+			await this.learningPathsService.remove({ where: { id } })
 		} catch (err) {
 			const grpcErr = err as GrpcException
 			const errRes = grpcErr.getGrpcError()

@@ -12,7 +12,7 @@ import { unitsTable } from './units.table';
 export const lessonsTable = pgTable(
 	'lessons',
 	{
-		id: uuid().primaryKey().defaultRandom(),
+		id: uuid().primaryKey(),
 		unitId: uuid()
 			.notNull()
 			.references(() => unitsTable.id),

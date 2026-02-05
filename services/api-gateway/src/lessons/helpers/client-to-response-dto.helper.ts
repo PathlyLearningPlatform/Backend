@@ -8,5 +8,6 @@ export function clientLessonToResponseDto(
 	return {
 		...client,
 		description: emptyStringToNull(client.description),
+		updatedAt: emptyStringToNull(client.description),
 	}
 }

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { ActivitiesApiConstraints } from '../enums'
 import { ExerciseDifficulty } from '@pathly-backend/contracts/learning-paths/v1/activities.js'
+import { ActivitiesApiConstraints } from '../enums'
 
 export class ActivityResponseDto {
 	@ApiProperty({
@@ -24,8 +24,9 @@ export class ActivityResponseDto {
 	@ApiProperty({
 		type: 'string',
 		format: 'date-time',
+		nullable: true,
 	})
-	updatedAt: string
+	updatedAt: string | null
 
 	@ApiProperty({
 		type: 'string',

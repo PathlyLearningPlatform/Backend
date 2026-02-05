@@ -3,10 +3,11 @@ import type { LearningPath as ClientLearningPath } from '@pathly-backend/contrac
 import type { LearningPathResponseDto } from '../dtos'
 
 export function clientLearningPathToResponseDto(
-	entity: ClientLearningPath,
+	client: ClientLearningPath,
 ): LearningPathResponseDto {
 	return {
-		...entity,
-		description: emptyStringToNull(entity.description),
+		...client,
+		description: emptyStringToNull(client.description),
+		updatedAt: emptyStringToNull(client.updatedAt),
 	}
 }

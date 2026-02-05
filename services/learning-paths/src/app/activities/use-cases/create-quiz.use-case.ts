@@ -11,8 +11,8 @@ export class CreateQuizUseCase {
 		const quiz = new Quiz({
 			id: randomUUID(),
 			lessonId: command.lessonId,
-			createdAt: new Date().toISOString(),
-			updatedAt: new Date().toISOString(),
+			createdAt: new Date(),
+			updatedAt: new Date(),
 			name: command.name,
 			order: command.order,
 			type: ActivityType.QUIZ,

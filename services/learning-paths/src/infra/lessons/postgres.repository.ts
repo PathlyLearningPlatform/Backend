@@ -1,29 +1,19 @@
 import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
 import { Inject, Injectable } from '@nestjs/common';
 import {
-	RepositoryException,
 	InvalidReferenceException,
+	RepositoryException,
 } from '@pathly-backend/common/index.js';
 import { DrizzleQueryError, eq } from 'drizzle-orm';
 import { DatabaseError as PostgresError } from 'pg';
-import type {
-	CreateLessonCommand,
-	FindLessonsCommand,
-	FindOneLessonCommand,
-	RemoveLessonCommand,
-	UpdateLessonCommand,
-} from '@/app/lessons/commands';
 import type { ILessonsRepository } from '@/app/lessons/interfaces';
-import type { Lesson } from '@/domain/lessons/entities';
+import type { Lesson, LessonQuery } from '@/domain/lessons/entities';
 import type { Db } from '@/infra/common/types';
 import { DbService } from '../db/db.service';
 import { lessonsTable } from '../db/schemas';
 import { LessonsApiConstraints } from './enums';
 import { dbLessonToEntity } from './helpers';
 
-/**
- * @description This class is a concrete implementation of ILessonsRepository interface. It's reponsibility is to perform CRUD operations on lessons using postgres as data source.
- */
 @Injectable()
 export class PostgresLessonsRepository implements ILessonsRepository {
 	private db: Db;
@@ -32,16 +22,9 @@ export class PostgresLessonsRepository implements ILessonsRepository {
 		this.db = this.dbService.getDb();
 	}
 
-	/**
-	 *
-	 * @param command
-	 * @returns lessons array
-	 * @throws RepositoryException if there is db error
-	 * @description this function retrieves lessons from database
-	 */
-	async find(command: FindLessonsCommand): Promise<Lesson[]> {
-		const limit = command.options?.limit ?? LessonsApiConstraints.DEFAULT_LIMIT;
-		const page = command.options?.page ?? LessonsApiConstraints.DEFAULT_PAGE;
+	async find(query?: LessonQuery): Promise<Lesson[]> {
+		const limit = query?.options?.limit ?? LessonsApiConstraints.DEFAULT_LIMIT;
+		const page = query?.options?.page ?? LessonsApiConstraints.DEFAULT_PAGE;
 
 		try {
 			const result = await this.db
@@ -56,19 +39,12 @@ export class PostgresLessonsRepository implements ILessonsRepository {
 		}
 	}
 
-	/**
-	 *
-	 * @param command
-	 * @returns lesson or null if lesson is not found
-	 * @throws RepositoryException if there is db error
-	 * @description this function retrieves one lesson from database
-	 */
-	async findOne(command: FindOneLessonCommand): Promise<Lesson | null> {
+	async findOne(id: string): Promise<Lesson | null> {
 		try {
 			const result = await this.db
 				.select()
 				.from(lessonsTable)
-				.where(eq(lessonsTable.id, command.where.id));
+				.where(eq(lessonsTable.id, id));
 
 			return result.length <= 0 ? null : dbLessonToEntity(result[0]);
 		} catch (err) {
@@ -76,62 +52,24 @@ export class PostgresLessonsRepository implements ILessonsRepository {
 		}
 	}
 
-	/**
-	 *
-	 * @param command
-	 * @returns created lesson
-	 * @throws RepositoryException if there is db error
-	 * @description this function creates lesson in a database
-	 */
-	async create(command: CreateLessonCommand): Promise<Lesson> {
+	async save(entity: Lesson): Promise<void> {
 		try {
-			const result = await this.db
-				.insert(lessonsTable)
-				.values(command)
-				.returning();
-
-			return dbLessonToEntity(result[0]);
+			await this.db.insert(lessonsTable).values(entity).onConflictDoUpdate({
+				target: lessonsTable.id,
+				set: entity,
+			});
 		} catch (err) {
 			throw new RepositoryException('db error', err);
 		}
 	}
 
-	/**
-	 *
-	 * @param command
-	 * @returns updated lesson or null if lesson is not found
-	 * @throws RepositoryException if there is db error
-	 * @description this function updates lesson in a database
-	 */
-	async update(command: UpdateLessonCommand): Promise<Lesson | null> {
-		try {
-			const result = await this.db
-				.update(lessonsTable)
-				.set(command.fields || {})
-				.where(eq(lessonsTable.id, command.where.id))
-				.returning();
-
-			return result.length <= 0 ? null : dbLessonToEntity(result[0]);
-		} catch (err) {
-			throw new RepositoryException('db error', err);
-		}
-	}
-
-	/**
-	 *
-	 * @param command
-	 * @returns removed lesson or null if lesson is not found
-	 * @throws RepositoryException if there is db error
-	 * @description this function removes lesson from a database
-	 */
-	async remove(command: RemoveLessonCommand): Promise<Lesson | null> {
+	async remove(id: string): Promise<boolean> {
 		try {
 			const result = await this.db
 				.delete(lessonsTable)
-				.where(eq(lessonsTable.id, command.where.id))
-				.returning();
+				.where(eq(lessonsTable.id, id));
 
-			return result.length <= 0 ? null : dbLessonToEntity(result[0]);
+			return result.rowCount !== null;
 		} catch (err) {
 			if (err instanceof DrizzleQueryError) {
 				if (err.cause instanceof PostgresError) {

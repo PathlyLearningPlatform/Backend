@@ -7,31 +7,27 @@ export const mockedLearningPathsRepository: jest.Mocked<ILearningPathsRepository
 	{
 		find: jest.fn(),
 		findOne: jest.fn(),
-		create: jest.fn(),
-		update: jest.fn(),
+		save: jest.fn(),
 		remove: jest.fn(),
 	};
 
 export const mockedSectionsRepository: jest.Mocked<ISectionsRepository> = {
 	find: jest.fn(),
 	findOne: jest.fn(),
-	create: jest.fn(),
-	update: jest.fn(),
+	save: jest.fn(),
 	remove: jest.fn(),
 };
 
 export const mockedUnitsRepository: jest.Mocked<IUnitsRepository> = {
 	find: jest.fn(),
 	findOne: jest.fn(),
-	create: jest.fn(),
-	update: jest.fn(),
+	save: jest.fn(),
 	remove: jest.fn(),
 };
 
 export const mockedLessonsRepository: jest.Mocked<ILessonsRepository> = {
 	find: jest.fn(),
 	findOne: jest.fn(),
-	create: jest.fn(),
-	update: jest.fn(),
+	save: jest.fn(),
 	remove: jest.fn(),
 };

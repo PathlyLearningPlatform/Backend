@@ -11,41 +11,32 @@ import type {
 	Exercise,
 	Quiz,
 } from '@/domain/activities/entities';
-import { ActivityType } from '@/domain/activities/enums';
 import {
 	activityTypeToClient,
 	exerciseDifficultyToClient,
 } from './enums.helper';
-
-export function articleEntityToClient(entity: Article): ClientArticle {
-	return {
-		...entity,
-		description: nullToEmptyString(entity.description),
-		type: activityTypeToClient(ActivityType.ARTICLE),
-	};
-}
-
-export function exerciseEntityToClient(entity: Exercise): ClientExercise {
-	return {
-		...entity,
-		description: nullToEmptyString(entity.description),
-		type: activityTypeToClient(ActivityType.EXERCISE),
-		difficulty: exerciseDifficultyToClient(entity.difficulty),
-	};
-}
-
-export function quizEntityToClient(entity: Quiz): ClientQuiz {
-	return {
-		...entity,
-		description: nullToEmptyString(entity.description),
-		type: activityTypeToClient(ActivityType.QUIZ),
-	};
-}
 
 export function activityEntityToClient(entity: Activity): ClientActivity {
 	return {
 		...entity,
 		description: nullToEmptyString(entity.description),
 		type: activityTypeToClient(entity.type),
+		updatedAt: entity.updatedAt === null ? '' : entity.updatedAt.toISOString(),
+		createdAt: entity.createdAt.toISOString(),
 	};
+}
+
+export function articleEntityToClient(entity: Article): ClientArticle {
+	return { ...activityEntityToClient(entity), ref: entity.ref };
+}
+
+export function exerciseEntityToClient(entity: Exercise): ClientExercise {
+	return {
+		...activityEntityToClient(entity),
+		difficulty: exerciseDifficultyToClient(entity.difficulty),
+	};
+}
+
+export function quizEntityToClient(entity: Quiz): ClientQuiz {
+	return { ...activityEntityToClient(entity) };
 }

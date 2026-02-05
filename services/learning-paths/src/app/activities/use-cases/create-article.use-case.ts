@@ -11,8 +11,8 @@ export class CreateArticleUseCase {
 		const article = new Article({
 			id: randomUUID(),
 			lessonId: command.lessonId,
-			createdAt: new Date().toISOString(),
-			updatedAt: new Date().toISOString(),
+			createdAt: new Date(),
+			updatedAt: new Date(),
 			name: command.name,
 			order: command.order,
 			type: ActivityType.ARTICLE,

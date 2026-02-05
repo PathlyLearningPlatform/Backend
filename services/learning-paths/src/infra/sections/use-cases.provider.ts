@@ -31,9 +31,12 @@ export const sectionsUseCasesProvider: Provider[] = [
 		provide: DiToken.CREATE_SECTION_USE_CASE,
 		useFactory(
 			sectionsRepository: ISectionsRepository,
-			pathsRepository: ILearningPathsRepository,
+			learningPathsRepository: ILearningPathsRepository,
 		) {
-			return new CreateSectionUseCase(sectionsRepository, pathsRepository);
+			return new CreateSectionUseCase(
+				sectionsRepository,
+				learningPathsRepository,
+			);
 		},
 		inject: [PostgresSectionsRepository, PostgresLearningPathsRepository],
 	},

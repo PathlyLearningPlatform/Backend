@@ -1,5 +1,5 @@
-import { ExceptionMessage } from '../enums/exception-message.enum'
 import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js'
+import { ExceptionMessage } from '../enums/exception-message.enum'
 
 export const exceptionCodeToMessage = {
 	[LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND]:

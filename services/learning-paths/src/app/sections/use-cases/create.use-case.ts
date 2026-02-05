@@ -1,35 +1,37 @@
+import { randomUUID } from 'crypto';
 import type { ILearningPathsRepository } from '@/app/learning-paths/interfaces';
 import type { CreateSectionCommand } from '@/app/sections/commands';
 import type { ISectionsRepository } from '@/app/sections/interfaces';
 import { LearningPathNotFoundException } from '@/domain/learning-paths/exceptions';
-import type { Section } from '@/domain/sections/entities';
+import { Section } from '@/domain/sections/entities';
 
-/**
- * @description This class responsibility is to create a section. It uses sections repository for saving sections to a data source. sectionsRepository in injected to this class via dependency injection and dependency inversion techniques by using ISectionsRepository interface.
- */
 export class CreateSectionUseCase {
 	constructor(
 		private readonly sectionsRepository: ISectionsRepository,
 		private readonly learningPathsRepository: ILearningPathsRepository,
 	) {}
 
-	/**
-	 * @param command object with data for section creation
-	 * @returns created section
-	 * @description this function saves section to a data source and returns it
-	 * @throws {PathNotFoundException}
-	 */
 	async execute(command: CreateSectionCommand): Promise<Section> {
-		const learningPath = await this.learningPathsRepository.findOne({
-			where: { id: command.learningPathId },
-		});
+		const learningPath = await this.learningPathsRepository.findOne(
+			command.learningPathId,
+		);
 
 		if (!learningPath) {
 			throw new LearningPathNotFoundException(command.learningPathId);
 		}
 
-		const createdSection = await this.sectionsRepository.create(command);
+		const section = new Section({
+			id: randomUUID(),
+			learningPathId: command.learningPathId,
+			createdAt: new Date(),
+			updatedAt: new Date(),
+			name: command.name,
+			order: command.order,
+			description: command.description ?? null,
+		});
 
-		return createdSection;
+		await this.sectionsRepository.save(section);
+
+		return section;
 	}
 }

@@ -3,5 +3,10 @@ import type { Section as ClientSection } from '@pathly-backend/contracts/learnin
 import type { Section } from '@/domain/sections/entities';
 
 export function sectionEntityToClient(entity: Section): ClientSection {
-	return { ...entity, description: nullToEmptyString(entity.description) };
+	return {
+		...entity,
+		description: nullToEmptyString(entity.description),
+		updatedAt: entity.updatedAt === null ? '' : entity.updatedAt.toISOString(),
+		createdAt: entity.createdAt.toISOString(),
+	};
 }

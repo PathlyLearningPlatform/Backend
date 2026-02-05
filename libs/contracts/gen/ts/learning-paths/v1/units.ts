@@ -84,7 +84,6 @@ export interface RemoveUnitRequest {
 }
 
 export interface RemoveUnitResponse {
-  unit: Unit | undefined;
 }
 
 export const LEARNING_PATHS_V1_PACKAGE_NAME = "learning_paths.v1";

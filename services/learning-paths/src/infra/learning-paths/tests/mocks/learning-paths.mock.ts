@@ -3,13 +3,14 @@ import type { LearningPath as ClientLearningPath } from '@pathly-backend/contrac
 import { mockedLearningPath } from '@/app/common/mocks';
 import type { DbLearningPath } from '../../types';
 
-export const mockedDbLearningPath: DbLearningPath = {
-	...mockedLearningPath,
-	createdAt: new Date(mockedLearningPath.createdAt),
-	updatedAt: new Date(mockedLearningPath.updatedAt),
-};
+export const mockedDbLearningPath: DbLearningPath = mockedLearningPath;
 
 export const mockedClientLearningPath: ClientLearningPath = {
 	...mockedLearningPath,
 	description: nullToEmptyString(mockedLearningPath.description),
+	updatedAt:
+		mockedLearningPath.updatedAt === null
+			? ''
+			: mockedLearningPath.updatedAt.toISOString(),
+	createdAt: mockedLearningPath.createdAt.toISOString(),
 };

@@ -5,14 +5,13 @@ import { throwGrpcException } from '@pathly-backend/common/nestjs/helpers/throw-
 import {
 	type CreateLessonRequest,
 	type CreateLessonResponse,
-	type FindOneLessonRequest,
-	type FindOneLessonResponse,
 	type FindLessonsRequest,
 	type FindLessonsResponse,
-	type RemoveLessonRequest,
-	type RemoveLessonResponse,
+	type FindOneLessonRequest,
+	type FindOneLessonResponse,
 	LESSONS_SERVICE_NAME,
 	type LessonsServiceClient,
+	type RemoveLessonRequest,
 	type UpdateLessonRequest,
 	type UpdateLessonResponse,
 } from '@pathly-backend/contracts/learning-paths/v1/lessons.js'
@@ -70,13 +69,11 @@ export class LessonsService implements OnModuleInit {
 		return result
 	}
 
-	async remove(request: RemoveLessonRequest): Promise<RemoveLessonResponse> {
-		const result = await firstValueFrom(
+	async remove(request: RemoveLessonRequest): Promise<void> {
+		await firstValueFrom(
 			this.lessonsServiceClient
 				.remove(request)
 				.pipe(catchError((err: ServiceError) => throwGrpcException(err))),
 		)
-
-		return result
 	}
 }

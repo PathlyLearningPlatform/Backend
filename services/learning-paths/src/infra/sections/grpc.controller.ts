@@ -89,7 +89,9 @@ export class GrpcSectionsController {
 		payload: z.infer<typeof findOneSectionSchema>,
 	): Promise<FindOneSectionResponse> {
 		try {
-			const section = await this.findOneSectionUseCase.execute(payload);
+			const section = await this.findOneSectionUseCase.execute(
+				payload.where.id,
+			);
 
 			return { section: sectionEntityToClient(section) };
 		} catch (err) {
@@ -186,13 +188,9 @@ export class GrpcSectionsController {
 		@Payload(new RpcValidationPipe(removeSectionSchema)) payload: z.infer<
 			typeof removeSectionSchema
 		>,
-	): Promise<RemoveSectionResponse> {
+	): Promise<void> {
 		try {
-			const section = await this.removeSectionUseCase.execute(payload);
-
-			return {
-				section: sectionEntityToClient(section),
-			};
+			await this.removeSectionUseCase.execute(payload.where.id);
 		} catch (err) {
 			if (err instanceof SectionCannotBeRemovedException) {
 				throw new GrpcException(

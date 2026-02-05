@@ -10,7 +10,6 @@ import {
 	type FindUnitsRequest,
 	type FindUnitsResponse,
 	type RemoveUnitRequest,
-	type RemoveUnitResponse,
 	UNITS_SERVICE_NAME,
 	type UnitsServiceClient,
 	type UpdateUnitRequest,
@@ -70,13 +69,11 @@ export class UnitsService implements OnModuleInit {
 		return result
 	}
 
-	async remove(request: RemoveUnitRequest): Promise<RemoveUnitResponse> {
-		const result = await firstValueFrom(
+	async remove(request: RemoveUnitRequest): Promise<void> {
+		await firstValueFrom(
 			this.unitsServiceClient
 				.remove(request)
 				.pipe(catchError((err: ServiceError) => throwGrpcException(err))),
 		)
-
-		return result
 	}
 }

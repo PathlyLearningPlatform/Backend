@@ -2,7 +2,7 @@ import { pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
 import { quizzesTable } from './quizzes.table';
 
 export const questionsTable = pgTable('questions', {
-	id: uuid().primaryKey().defaultRandom(),
+	id: uuid().primaryKey(),
 	quizId: uuid()
 		.notNull()
 		.references(() => quizzesTable.activityId),

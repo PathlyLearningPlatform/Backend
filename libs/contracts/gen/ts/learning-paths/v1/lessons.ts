@@ -84,7 +84,6 @@ export interface RemoveLessonRequest {
 }
 
 export interface RemoveLessonResponse {
-  lesson: Lesson | undefined;
 }
 
 export const LEARNING_PATHS_V1_PACKAGE_NAME = "learning_paths.v1";

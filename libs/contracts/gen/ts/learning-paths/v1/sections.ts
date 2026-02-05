@@ -84,7 +84,6 @@ export interface RemoveSectionRequest {
 }
 
 export interface RemoveSectionResponse {
-  section: Section | undefined;
 }
 
 export const LEARNING_PATHS_V1_PACKAGE_NAME = "learning_paths.v1";

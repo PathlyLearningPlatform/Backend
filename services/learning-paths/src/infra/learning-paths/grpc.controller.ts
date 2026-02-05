@@ -89,8 +89,9 @@ export class GrpcLearningPathsController {
 		payload: z.infer<typeof findOneLearningPathSchema>,
 	): Promise<FindOneLearningPathResponse> {
 		try {
-			const learningPath =
-				await this.findOneLearningPathUseCase.execute(payload);
+			const learningPath = await this.findOneLearningPathUseCase.execute(
+				payload.where.id,
+			);
 
 			return { learningPath: learningPathEntityToClient(learningPath) };
 		} catch (err) {
@@ -180,14 +181,9 @@ export class GrpcLearningPathsController {
 		@Payload(new RpcValidationPipe(removeLearningPathSchema)) payload: z.infer<
 			typeof removeLearningPathSchema
 		>,
-	): Promise<RemoveLearningPathResponse> {
+	): Promise<void> {
 		try {
-			const removedLearningPath =
-				await this.removeLearningPathUseCase.execute(payload);
-
-			return {
-				learningPath: learningPathEntityToClient(removedLearningPath),
-			};
+			await this.removeLearningPathUseCase.execute(payload.where.id);
 		} catch (err) {
 			if (err instanceof LearningPathCannotBeRemovedException) {
 				throw new GrpcException(

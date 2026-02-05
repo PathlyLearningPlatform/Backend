@@ -1,7 +1,5 @@
 import { InvalidReferenceException } from '@pathly-backend/common/index.js';
-import type { RemoveLearningPathCommand } from '@/app/learning-paths/commands';
 import type { ILearningPathsRepository } from '@/app/learning-paths/interfaces';
-import type { LearningPath } from '@/domain/learning-paths/entities';
 import {
 	LearningPathCannotBeRemovedException,
 	LearningPathNotFoundException,
@@ -23,18 +21,16 @@ export class RemoveLearningPathUseCase {
 	 * {PathNotFoundException} if path was not found
 	 * {PathCannotBeRemovedException} if path has sections
 	 */
-	async execute(command: RemoveLearningPathCommand): Promise<LearningPath> {
+	async execute(id: string): Promise<void> {
 		try {
-			const learningPath = await this.learningPathsRepository.remove(command);
+			const wasRemoved = await this.learningPathsRepository.remove(id);
 
-			if (!learningPath) {
-				throw new LearningPathNotFoundException(command.where.id);
+			if (!wasRemoved) {
+				throw new LearningPathNotFoundException(id);
 			}
-
-			return learningPath;
 		} catch (err) {
 			if (err instanceof InvalidReferenceException) {
-				throw new LearningPathCannotBeRemovedException(command.where.id);
+				throw new LearningPathCannotBeRemovedException(id);
 			}
 
 			throw err;

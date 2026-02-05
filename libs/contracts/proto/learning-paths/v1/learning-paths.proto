@@ -77,6 +77,4 @@ message RemoveLearningPathWhere {
 message RemoveLearningPathRequest {
   RemoveLearningPathWhere where = 1;
 }
-message RemoveLearningPathResponse {
-  LearningPath learningPath = 1;
-}
+message RemoveLearningPathResponse {}

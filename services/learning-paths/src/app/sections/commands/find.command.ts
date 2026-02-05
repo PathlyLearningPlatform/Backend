@@ -1,10 +1,3 @@
-/**
- * @description
- * This class represents data for finding multiple paths
- */
-export class FindSectionsCommand {
-	options?: {
-		limit?: number;
-		page?: number;
-	};
-}
+import type { SectionQuery } from '@/domain/sections/entities';
+
+export type FindSectionsCommand = SectionQuery;

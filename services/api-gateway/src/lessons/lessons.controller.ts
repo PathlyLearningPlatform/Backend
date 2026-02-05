@@ -29,24 +29,23 @@ import {
 	nullToEmptyString,
 } from '@pathly-backend/common/index.js'
 import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js'
+import { exceptionCodeToMessage } from '../common/helpers'
 import {
 	CreateLessonBodyDto,
 	CreateLessonResponseDto,
-	FindOneLessonResponseDto,
 	FindLessonsQueryDto,
 	FindLessonsResponseDto,
-	RemoveLessonResponseDto,
+	FindOneLessonResponseDto,
 	UpdateLessonBodyDto,
 	UpdateLessonResponseDto,
 } from './dtos'
 import { clientLessonToResponseDto } from './helpers'
+import { LessonsService } from './lessons.service'
 import {
 	createLessonBodySchema,
 	findLessonsQuerySchema,
 	updateLessonBodySchema,
 } from './schemas'
-import { LessonsService } from './lessons.service'
-import { exceptionCodeToMessage } from '../common/helpers'
 
 @Controller({
 	path: 'lessons',
@@ -221,21 +220,13 @@ export class LessonsController {
 		}
 	}
 
-	@ApiOkResponse({
-		type: RemoveLessonResponseDto,
-	})
+	@ApiOkResponse()
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@ApiConflictResponse({ type: HttpErrorResponse })
 	@Delete(':id')
-	async remove(
-		@Param('id', ParseUUIDPipe) id: string,
-	): Promise<RemoveLessonResponseDto> {
+	async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
 		try {
-			const result = await this.lessonsService.remove({ where: { id } })
-
-			return {
-				lesson: clientLessonToResponseDto(result.lesson!),
-			}
+			await this.lessonsService.remove({ where: { id } })
 		} catch (err) {
 			const grpcErr = err as GrpcException
 			const errRes = grpcErr.getGrpcError()

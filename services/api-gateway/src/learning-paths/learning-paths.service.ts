@@ -10,10 +10,8 @@ import {
 	type FindOneLearningPathRequest,
 	type FindOneLearningPathResponse,
 	LEARNING_PATHS_SERVICE_NAME,
-	LEARNING_PATHS_V1_PACKAGE_NAME,
 	type LearningPathsServiceClient,
 	type RemoveLearningPathRequest,
-	type RemoveLearningPathResponse,
 	type UpdateLearningPathRequest,
 	type UpdateLearningPathResponse,
 } from '@pathly-backend/contracts/learning-paths/v1/learning-paths.js'
@@ -22,14 +20,14 @@ import { DiToken } from '../common/enums'
 
 @Injectable()
 export class LearningPathsService implements OnModuleInit {
-	private pathsServiceClient: LearningPathsServiceClient
+	private learningPathsServiceClient: LearningPathsServiceClient
 
 	constructor(
 		@Inject(DiToken.LEARNING_PATHS_PACKAGE) private client: ClientGrpc,
 	) {}
 
 	onModuleInit() {
-		this.pathsServiceClient =
+		this.learningPathsServiceClient =
 			this.client.getService<LearningPathsServiceClient>(
 				LEARNING_PATHS_SERVICE_NAME,
 			)
@@ -39,7 +37,7 @@ export class LearningPathsService implements OnModuleInit {
 		request: FindLearningPathsRequest,
 	): Promise<FindLearningPathsResponse> {
 		const result = await firstValueFrom(
-			this.pathsServiceClient
+			this.learningPathsServiceClient
 				.find(request)
 				.pipe(catchError((err: ServiceError) => throwGrpcException(err))),
 		)
@@ -51,7 +49,7 @@ export class LearningPathsService implements OnModuleInit {
 		request: FindOneLearningPathRequest,
 	): Promise<FindOneLearningPathResponse> {
 		const result = await firstValueFrom(
-			this.pathsServiceClient
+			this.learningPathsServiceClient
 				.findOne(request)
 				.pipe(catchError((err: ServiceError) => throwGrpcException(err))),
 		)
@@ -63,7 +61,7 @@ export class LearningPathsService implements OnModuleInit {
 		request: CreateLearningPathRequest,
 	): Promise<CreateLearningPathResponse> {
 		const result = await firstValueFrom(
-			this.pathsServiceClient
+			this.learningPathsServiceClient
 				.create(request)
 				.pipe(catchError((err: ServiceError) => throwGrpcException(err))),
 		)
@@ -75,7 +73,7 @@ export class LearningPathsService implements OnModuleInit {
 		request: UpdateLearningPathRequest,
 	): Promise<UpdateLearningPathResponse> {
 		const result = await firstValueFrom(
-			this.pathsServiceClient
+			this.learningPathsServiceClient
 				.update(request)
 				.pipe(catchError((err: ServiceError) => throwGrpcException(err))),
 		)
@@ -83,15 +81,11 @@ export class LearningPathsService implements OnModuleInit {
 		return result
 	}
 
-	async remove(
-		request: RemoveLearningPathRequest,
-	): Promise<RemoveLearningPathResponse> {
-		const result = await firstValueFrom(
-			this.pathsServiceClient
+	async remove(request: RemoveLearningPathRequest): Promise<void> {
+		await firstValueFrom(
+			this.learningPathsServiceClient
 				.remove(request)
 				.pipe(catchError((err: ServiceError) => throwGrpcException(err))),
 		)
-
-		return result
 	}
 }

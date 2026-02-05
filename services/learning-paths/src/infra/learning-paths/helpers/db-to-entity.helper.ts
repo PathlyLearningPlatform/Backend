@@ -1,10 +1,12 @@
-import type { LearningPath } from '@/domain/learning-paths/entities';
+import { LearningPath } from '@/domain/learning-paths/entities';
 import type { DbLearningPath } from '../types';
 
-export function dbPathToEntity(db: DbLearningPath): LearningPath {
-	return {
-		...db,
-		createdAt: db.createdAt.toISOString(),
-		updatedAt: db.updatedAt.toISOString(),
-	};
+export function dbLearningPathToEntity(db: DbLearningPath): LearningPath {
+	return new LearningPath({
+		id: db.id,
+		createdAt: db.createdAt,
+		updatedAt: db.updatedAt,
+		description: db.description,
+		name: db.name,
+	});
 }

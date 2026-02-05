@@ -13,7 +13,7 @@ import { sectionsTable } from './sections.table';
 export const unitsTable = pgTable(
 	'units',
 	{
-		id: uuid().primaryKey().defaultRandom(),
+		id: uuid().primaryKey(),
 		sectionId: uuid()
 			.notNull()
 			.references(() => sectionsTable.id),

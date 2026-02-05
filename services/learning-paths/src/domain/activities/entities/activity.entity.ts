@@ -3,8 +3,8 @@ import type { ActivityType } from '../enums';
 export interface ActivityProps {
 	id: string;
 	lessonId: string;
-	createdAt: string;
-	updatedAt: string;
+	createdAt: Date;
+	updatedAt: Date | null;
 	name: string;
 	description: string | null;
 	order: number;
@@ -41,7 +41,7 @@ export class Activity implements ActivityProps {
 		this.updatedAt = props.updatedAt;
 		this.lessonId = props.lessonId;
 		this.name = props.name;
-		this.description = props.description || null;
+		this.description = props.description;
 		this.order = props.order;
 		this.type = props.type;
 	}
@@ -51,22 +51,22 @@ export class Activity implements ActivityProps {
 			this.description = props.description;
 		}
 
-		if (props.lessonId) {
+		if (props.lessonId !== undefined) {
 			this.lessonId = props.lessonId;
 		}
 
-		if (props.name) {
+		if (props.name !== undefined) {
 			this.name = props.name;
 		}
 
-		if (props.order) {
+		if (props.order !== undefined) {
 			this.order = props.order;
 		}
 	}
 
 	id: string;
-	createdAt: string;
-	updatedAt: string;
+	createdAt: Date;
+	updatedAt: Date | null;
 	lessonId: string;
 	name: string;
 	order: number;

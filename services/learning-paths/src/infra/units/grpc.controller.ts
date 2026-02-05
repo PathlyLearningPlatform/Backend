@@ -89,7 +89,7 @@ export class GrpcUnitsController {
 		payload: z.infer<typeof findOneUnitSchema>,
 	): Promise<FindOneUnitResponse> {
 		try {
-			const unit = await this.findOneUnitUseCase.execute(payload);
+			const unit = await this.findOneUnitUseCase.execute(payload.where.id);
 
 			return { unit: unitEntityToClient(unit) };
 		} catch (err) {
@@ -184,13 +184,9 @@ export class GrpcUnitsController {
 		@Payload(new RpcValidationPipe(removeUnitSchema)) payload: z.infer<
 			typeof removeUnitSchema
 		>,
-	): Promise<RemoveUnitResponse> {
+	): Promise<void> {
 		try {
-			const unit = await this.removeUnitUseCase.execute(payload);
-
-			return {
-				unit: unitEntityToClient(unit),
-			};
+			await this.removeUnitUseCase.execute(payload.where.id);
 		} catch (err) {
 			if (err instanceof UnitNotFoundException) {
 				throw new GrpcException(

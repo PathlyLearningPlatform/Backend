@@ -23,8 +23,8 @@ export type DbExerciseActivity = {
 
 export function dbActivityToEntity(db: DbActivity): Activity {
 	return new Activity({
-		createdAt: db.createdAt.toISOString(),
-		updatedAt: db.updatedAt.toISOString(),
+		createdAt: db.createdAt,
+		updatedAt: db.updatedAt,
 		description: db.description,
 		id: db.id,
 		lessonId: db.lessonId,
@@ -36,8 +36,8 @@ export function dbActivityToEntity(db: DbActivity): Activity {
 
 export function dbQuizToEntity(db: DbQuizActivity): Quiz {
 	return new Quiz({
-		createdAt: db.activities.createdAt.toISOString(),
-		updatedAt: db.activities.updatedAt.toISOString(),
+		createdAt: db.activities.createdAt,
+		updatedAt: db.activities.updatedAt,
 		description: db.activities.description,
 		id: db.quizzes.activityId,
 		lessonId: db.activities.lessonId,
@@ -49,8 +49,8 @@ export function dbQuizToEntity(db: DbQuizActivity): Quiz {
 
 export function dbArticleToEntity(db: DbArticleActivity): Article {
 	return new Article({
-		createdAt: db.activities.createdAt.toISOString(),
-		updatedAt: db.activities.updatedAt.toISOString(),
+		createdAt: db.activities.createdAt,
+		updatedAt: db.activities.updatedAt,
 		description: db.activities.description,
 		id: db.articles.activityId,
 		lessonId: db.activities.lessonId,
@@ -63,8 +63,8 @@ export function dbArticleToEntity(db: DbArticleActivity): Article {
 
 export function dbExerciseToEntity(db: DbExerciseActivity): Exercise {
 	return new Exercise({
-		createdAt: db.activities.createdAt.toISOString(),
-		updatedAt: db.activities.updatedAt.toISOString(),
+		createdAt: db.activities.createdAt,
+		updatedAt: db.activities.updatedAt,
 		description: db.activities.description,
 		id: db.exercises.activityId,
 		lessonId: db.activities.lessonId,

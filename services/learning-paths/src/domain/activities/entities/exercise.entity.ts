@@ -29,7 +29,7 @@ export class Exercise extends Activity implements ExerciseProps {
 	update(props: ExerciseUpdateProps) {
 		super.update(props);
 
-		if (props.difficulty) {
+		if (props.difficulty !== undefined) {
 			this.difficulty = props.difficulty;
 		}
 	}

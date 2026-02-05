@@ -16,7 +16,7 @@ export const activityTypeEnum = pgEnum('activity_type', ActivityType);
 export const activitiesTable = pgTable(
 	'activities',
 	{
-		id: uuid().primaryKey().defaultRandom(),
+		id: uuid().primaryKey(),
 		lessonId: uuid()
 			.notNull()
 			.references(() => lessonsTable.id),

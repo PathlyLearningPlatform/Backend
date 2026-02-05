@@ -1,29 +1,19 @@
 import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
 import { Inject, Injectable } from '@nestjs/common';
 import {
-	RepositoryException,
 	InvalidReferenceException,
+	RepositoryException,
 } from '@pathly-backend/common/index.js';
 import { DrizzleQueryError, eq } from 'drizzle-orm';
 import { DatabaseError as PostgresError } from 'pg';
-import type {
-	CreateUnitCommand,
-	FindOneUnitCommand,
-	FindUnitsCommand,
-	RemoveUnitCommand,
-	UpdateUnitCommand,
-} from '@/app/units/commands';
 import type { IUnitsRepository } from '@/app/units/interfaces';
-import type { Unit } from '@/domain/units/entities';
+import type { Unit, UnitQuery } from '@/domain/units/entities';
 import type { Db } from '@/infra/common/types';
 import { DbService } from '../db/db.service';
 import { unitsTable } from '../db/schemas';
 import { UnitsApiConstraints } from './enums';
 import { dbUnitToEntity } from './helpers';
 
-/**
- * @description This class is a concrete implementation of IUnitsRepository interface. It's reponsibility is to perform CRUD operations on units using postgres as data source.
- */
 @Injectable()
 export class PostgresUnitsRepository implements IUnitsRepository {
 	private db: Db;
@@ -32,16 +22,9 @@ export class PostgresUnitsRepository implements IUnitsRepository {
 		this.db = this.dbService.getDb();
 	}
 
-	/**
-	 *
-	 * @param command
-	 * @returns units array
-	 * @throws RepositoryException if there is db error
-	 * @description this function retrieves units from database
-	 */
-	async find(command: FindUnitsCommand): Promise<Unit[]> {
-		const limit = command.options?.limit ?? UnitsApiConstraints.DEFAULT_LIMIT;
-		const page = command.options?.page ?? UnitsApiConstraints.DEFAULT_PAGE;
+	async find(query?: UnitQuery): Promise<Unit[]> {
+		const limit = query?.options?.limit ?? UnitsApiConstraints.DEFAULT_LIMIT;
+		const page = query?.options?.page ?? UnitsApiConstraints.DEFAULT_PAGE;
 
 		try {
 			const result = await this.db
@@ -56,19 +39,12 @@ export class PostgresUnitsRepository implements IUnitsRepository {
 		}
 	}
 
-	/**
-	 *
-	 * @param command
-	 * @returns unit or null if unit is not found
-	 * @throws RepositoryException if there is db error
-	 * @description this function retrieves one unit from database
-	 */
-	async findOne(command: FindOneUnitCommand): Promise<Unit | null> {
+	async findOne(id: string): Promise<Unit | null> {
 		try {
 			const result = await this.db
 				.select()
 				.from(unitsTable)
-				.where(eq(unitsTable.id, command.where.id));
+				.where(eq(unitsTable.id, id));
 
 			return result.length <= 0 ? null : dbUnitToEntity(result[0]);
 		} catch (err) {
@@ -76,62 +52,24 @@ export class PostgresUnitsRepository implements IUnitsRepository {
 		}
 	}
 
-	/**
-	 *
-	 * @param command
-	 * @returns created unit
-	 * @throws RepositoryException if there is db error
-	 * @description this function creates unit in a database
-	 */
-	async create(command: CreateUnitCommand): Promise<Unit> {
+	async save(entity: Unit): Promise<void> {
 		try {
-			const result = await this.db
-				.insert(unitsTable)
-				.values(command)
-				.returning();
-
-			return dbUnitToEntity(result[0]);
+			await this.db.insert(unitsTable).values(entity).onConflictDoUpdate({
+				target: unitsTable.id,
+				set: entity,
+			});
 		} catch (err) {
 			throw new RepositoryException('db error', err);
 		}
 	}
 
-	/**
-	 *
-	 * @param command
-	 * @returns updated unit or null if unit is not found
-	 * @throws RepositoryException if there is db error
-	 * @description this function updates unit in a database
-	 */
-	async update(command: UpdateUnitCommand): Promise<Unit | null> {
-		try {
-			const result = await this.db
-				.update(unitsTable)
-				.set(command.fields || {})
-				.where(eq(unitsTable.id, command.where.id))
-				.returning();
-
-			return result.length <= 0 ? null : dbUnitToEntity(result[0]);
-		} catch (err) {
-			throw new RepositoryException('db error', err);
-		}
-	}
-
-	/**
-	 *
-	 * @param command
-	 * @returns removed unit or null if unit is not found
-	 * @throws RepositoryException if there is db error
-	 * @description this function removes unit from a database
-	 */
-	async remove(command: RemoveUnitCommand): Promise<Unit | null> {
+	async remove(id: string): Promise<boolean> {
 		try {
 			const result = await this.db
 				.delete(unitsTable)
-				.where(eq(unitsTable.id, command.where.id))
-				.returning();
+				.where(eq(unitsTable.id, id));
 
-			return result.length <= 0 ? null : dbUnitToEntity(result[0]);
+			return result.rowCount !== null;
 		} catch (err) {
 			if (err instanceof DrizzleQueryError) {
 				if (err.cause instanceof PostgresError) {

@@ -5,5 +5,10 @@ import type { LearningPath } from '@/domain/learning-paths/entities';
 export function learningPathEntityToClient(
 	entity: LearningPath,
 ): ClientLearningPath {
-	return { ...entity, description: nullToEmptyString(entity.description) };
+	return {
+		...entity,
+		description: nullToEmptyString(entity.description),
+		updatedAt: entity.updatedAt === null ? '' : entity.updatedAt.toISOString(),
+		createdAt: entity.createdAt.toISOString(),
+	};
 }

@@ -1,15 +1,18 @@
 import { ConfigService } from '@nestjs/config'
-import request from 'supertest'
-import { App } from 'supertest/types'
 import { parseIntOrReturn } from '@pathly-backend/common/index.js'
-import {
+import request from 'supertest'
+import type { App } from 'supertest/types'
+import type {
 	CreateLearningPathBodyDto,
 	FindLearningPathsQueryDto,
 	UpdateLearningPathBodyDto,
 } from '@/learning-paths/dtos'
-import { CreateSectionBodyDto, UpdateSectionBodyDto } from '@/sections/dtos'
-import { CreateUnitBodyDto, UpdateUnitBodyDto } from '@/units/dtos'
-import { CreateLessonBodyDto, UpdateLessonBodyDto } from '@/lessons/dtos'
+import type { CreateLessonBodyDto, UpdateLessonBodyDto } from '@/lessons/dtos'
+import type {
+	CreateSectionBodyDto,
+	UpdateSectionBodyDto,
+} from '@/sections/dtos'
+import type { CreateUnitBodyDto, UpdateUnitBodyDto } from '@/units/dtos'
 
 export const mockedConfigService = new ConfigService({
 	app: {

@@ -1,8 +1,8 @@
 import { ApiPropertyOptional } from '@nestjs/swagger'
 import { SortType } from '@pathly-backend/common/index.js'
 import {
-	LearningPathsOrderByFields,
 	LearningPathsApiConstraints,
+	LearningPathsOrderByFields,
 } from '@/learning-paths/enums'
 
 export class FindLearningPathsQueryDto {

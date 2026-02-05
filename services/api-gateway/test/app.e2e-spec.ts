@@ -1,9 +1,9 @@
 import type { INestApplication } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
 import { Test, type TestingModule } from '@nestjs/testing'
 import request from 'supertest'
 import type { App } from 'supertest/types'
 import { AppModule } from './../src/app.module'
-import { ConfigModule } from '@nestjs/config'
 import { mockedConfigService } from './helpers'
 
 describe('AppController (e2e)', () => {
