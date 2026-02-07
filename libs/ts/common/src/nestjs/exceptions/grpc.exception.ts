@@ -1,5 +1,5 @@
 import { RpcException } from '@nestjs/microservices'
-import { GrpcErrorDto } from '../../../dtos'
+import { GrpcErrorDto } from '../../dtos'
 import { Metadata, ServiceError } from '@grpc/grpc-js'
 
 export class GrpcException extends RpcException {

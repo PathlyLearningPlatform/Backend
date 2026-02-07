@@ -1,1 +1,1 @@
-export * from './grpc/index.js'
+export * from './grpc.exception.js'
