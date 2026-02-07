@@ -1,3 +1,3 @@
-import type { SectionCreateProps } from '@/domain/sections/entities';
+import type { SectionCreateFields } from '@/domain/sections/entities';
 
-export type CreateSectionCommand = SectionCreateProps;
+export type CreateSectionCommand = SectionCreateFields;

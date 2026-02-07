@@ -1,3 +1,3 @@
-import type { UnitCreateProps } from '@/domain/units/entities';
+import type { UnitCreateFields } from '@/domain/units/entities';
 
-export type CreateUnitCommand = UnitCreateProps;
+export type CreateUnitCommand = UnitCreateFields;

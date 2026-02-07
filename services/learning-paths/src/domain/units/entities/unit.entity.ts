@@ -1,4 +1,4 @@
-export type UnitProps = {
+export type UnitFields = {
 	id: string;
 	sectionId: string;
 	createdAt: Date;
@@ -8,16 +8,17 @@ export type UnitProps = {
 	order: number;
 };
 
-export type UnitRequiredCreateProps = Pick<
-	UnitProps,
+export type UnitRequiredCreateFields = Pick<
+	UnitFields,
 	'name' | 'order' | 'sectionId'
 >;
-export type UnitAllowedCreateProps = Partial<
-	Omit<UnitProps, 'id' | 'createdAt' | 'updatedAt'>
+export type UnitAllowedCreateFields = Partial<
+	Omit<UnitFields, 'id' | 'createdAt' | 'updatedAt'>
 >;
-export type UnitCreateProps = UnitRequiredCreateProps & UnitAllowedCreateProps;
-export type UnitUpdateProps = Partial<
-	Omit<UnitProps, 'id' | 'createdAt' | 'updatedAt' | 'sectionId'>
+export type UnitCreateFields = UnitRequiredCreateFields &
+	UnitAllowedCreateFields;
+export type UnitUpdateFields = Partial<
+	Omit<UnitFields, 'id' | 'createdAt' | 'updatedAt' | 'sectionId'>
 >;
 export type UnitQuery = {
 	options?: {
@@ -30,28 +31,28 @@ export type UnitQuery = {
 	};
 };
 
-export class Unit implements UnitProps {
-	constructor(props: UnitProps) {
-		this.id = props.id;
-		this.sectionId = props.sectionId;
-		this.createdAt = props.createdAt;
-		this.updatedAt = props.updatedAt;
-		this.name = props.name;
-		this.description = props.description;
-		this.order = props.order;
+export class Unit implements UnitFields {
+	constructor(fields: UnitFields) {
+		this.id = fields.id;
+		this.sectionId = fields.sectionId;
+		this.createdAt = fields.createdAt;
+		this.updatedAt = fields.updatedAt;
+		this.name = fields.name;
+		this.description = fields.description;
+		this.order = fields.order;
 	}
 
-	update(props: UnitUpdateProps) {
-		if (props.description !== undefined) {
-			this.description = props.description;
+	update(fields: UnitUpdateFields) {
+		if (fields.description !== undefined) {
+			this.description = fields.description;
 		}
 
-		if (props.name !== undefined) {
-			this.name = props.name;
+		if (fields.name !== undefined) {
+			this.name = fields.name;
 		}
 
-		if (props.order !== undefined) {
-			this.order = props.order;
+		if (fields.order !== undefined) {
+			this.order = fields.order;
 		}
 	}
 

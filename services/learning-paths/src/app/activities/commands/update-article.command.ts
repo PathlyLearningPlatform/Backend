@@ -1,8 +1,8 @@
-import type { ArticleUpdateProps } from '@/domain/activities/entities';
+import type { ArticleUpdateFields } from '@/domain/activities/entities';
 
 export type UpdateArticleCommand = {
 	where: {
 		activityId: string;
 	};
-	fields?: ArticleUpdateProps;
+	fields?: ArticleUpdateFields;
 };

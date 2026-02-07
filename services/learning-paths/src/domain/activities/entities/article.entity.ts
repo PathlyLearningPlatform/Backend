@@ -1,35 +1,35 @@
 import {
 	Activity,
-	type ActivityAllowedCreateProps,
-	type ActivityProps,
-	type ActivityRequiredCreateProps,
-	type ActivityUpdateProps,
+	type ActivityAllowedCreateFields,
+	type ActivityFields,
+	type ActivityRequiredCreateFields,
+	type ActivityUpdateFields,
 } from './activity.entity';
 
-export interface ArticleProps extends ActivityProps {
+export interface ArticleFields extends ActivityFields {
 	ref: string;
 }
 
-export type ArticleRequiredCreateProps = Pick<ArticleProps, 'ref'> &
-	ActivityRequiredCreateProps;
-export type ArticleAllowedCreateProps = ActivityAllowedCreateProps;
-export type ArticleCreateProps = ArticleRequiredCreateProps &
-	ArticleAllowedCreateProps;
-export type ArticleUpdateProps = ActivityUpdateProps &
-	Partial<Pick<ArticleProps, 'ref'>>;
+export type ArticleRequiredCreateFields = Pick<ArticleFields, 'ref'> &
+	ActivityRequiredCreateFields;
+export type ArticleAllowedCreateFields = ActivityAllowedCreateFields;
+export type ArticleCreateFields = ArticleRequiredCreateFields &
+	ArticleAllowedCreateFields;
+export type ArticleUpdateFields = ActivityUpdateFields &
+	Partial<Pick<ArticleFields, 'ref'>>;
 
-export class Article extends Activity implements ArticleProps {
-	constructor(props: ArticleProps) {
-		super(props);
+export class Article extends Activity implements ArticleFields {
+	constructor(fields: ArticleFields) {
+		super(fields);
 
-		this.ref = props.ref;
+		this.ref = fields.ref;
 	}
 
-	update(props: ArticleUpdateProps) {
-		super.update(props);
+	update(fields: ArticleUpdateFields) {
+		super.update(fields);
 
-		if (props.ref !== undefined) {
-			this.ref = props.ref;
+		if (fields.ref !== undefined) {
+			this.ref = fields.ref;
 		}
 	}
 

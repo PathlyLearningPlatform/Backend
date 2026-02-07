@@ -1,7 +1,7 @@
 import type { SortType } from '@pathly-backend/common/index.js';
 import type { LearningPathsOrderByFields } from '../enums';
 
-export type LearningPathProps = {
+export type LearningPathFields = {
 	id: string;
 	createdAt: Date;
 	updatedAt: Date | null;
@@ -9,14 +9,14 @@ export type LearningPathProps = {
 	description: string | null;
 };
 
-export type LearningPathRequiredCreateProps = Pick<LearningPathProps, 'name'>;
-export type LearningPathAllowedCreateProps = Partial<
-	Omit<LearningPathProps, 'id' | 'createdAt' | 'updatedAt'>
+export type LearningPathRequiredCreateFields = Pick<LearningPathFields, 'name'>;
+export type LearningPathAllowedCreateFields = Partial<
+	Omit<LearningPathFields, 'id' | 'createdAt' | 'updatedAt'>
 >;
-export type LearningPathCreateProps = LearningPathRequiredCreateProps &
-	LearningPathAllowedCreateProps;
-export type LearningPathUpdateProps = Partial<
-	Omit<LearningPathProps, 'id' | 'createdAt' | 'updatedAt'>
+export type LearningPathCreateFields = LearningPathRequiredCreateFields &
+	LearningPathAllowedCreateFields;
+export type LearningPathUpdateFields = Partial<
+	Omit<LearningPathFields, 'id' | 'createdAt' | 'updatedAt'>
 >;
 export type LearningPathQuery = {
 	options?: {
@@ -30,22 +30,22 @@ export type LearningPathQuery = {
 	};
 };
 
-export class LearningPath implements LearningPathProps {
-	constructor(props: LearningPathProps) {
-		this.id = props.id;
-		this.createdAt = props.createdAt;
-		this.updatedAt = props.updatedAt;
-		this.name = props.name;
-		this.description = props.description;
+export class LearningPath implements LearningPathFields {
+	constructor(fields: LearningPathFields) {
+		this.id = fields.id;
+		this.createdAt = fields.createdAt;
+		this.updatedAt = fields.updatedAt;
+		this.name = fields.name;
+		this.description = fields.description;
 	}
 
-	update(props: LearningPathUpdateProps) {
-		if (props.description !== undefined) {
-			this.description = props.description;
+	update(fields: LearningPathUpdateFields) {
+		if (fields.description !== undefined) {
+			this.description = fields.description;
 		}
 
-		if (props.name !== undefined) {
-			this.name = props.name;
+		if (fields.name !== undefined) {
+			this.name = fields.name;
 		}
 	}
 

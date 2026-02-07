@@ -1,3 +1,3 @@
-import type { ExerciseCreateProps } from '@/domain/activities/entities';
+import type { ExerciseCreateFields } from '@/domain/activities/entities';
 
-export type CreateExerciseCommand = Omit<ExerciseCreateProps, 'type' | 'id'>;
+export type CreateExerciseCommand = Omit<ExerciseCreateFields, 'type' | 'id'>;

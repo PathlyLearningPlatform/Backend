@@ -1,8 +1,8 @@
-import type { SectionUpdateProps } from '@/domain/sections/entities';
+import type { SectionUpdateFields } from '@/domain/sections/entities';
 
 export type UpdateSectionCommand = {
 	where: {
 		id: string;
 	};
-	fields?: SectionUpdateProps;
+	fields?: SectionUpdateFields;
 };

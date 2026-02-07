@@ -1,6 +1,6 @@
 import type { ActivityType } from '../enums';
 
-export interface ActivityProps {
+export interface ActivityFields {
 	id: string;
 	lessonId: string;
 	createdAt: Date;
@@ -11,18 +11,18 @@ export interface ActivityProps {
 	type: ActivityType;
 }
 
-export type ActivityRequiredCreateProps = Pick<
-	ActivityProps,
+export type ActivityRequiredCreateFields = Pick<
+	ActivityFields,
 	'lessonId' | 'name' | 'order' | 'type'
 >;
-export type ActivityAllowedCreateProps = Partial<
-	Omit<ActivityProps, 'id' | 'createdAt' | 'updatedAt'>
+export type ActivityAllowedCreateFields = Partial<
+	Omit<ActivityFields, 'id' | 'createdAt' | 'updatedAt'>
 >;
-export type ActivityCreateProps = ActivityRequiredCreateProps &
-	ActivityAllowedCreateProps;
+export type ActivityCreateFields = ActivityRequiredCreateFields &
+	ActivityAllowedCreateFields;
 
-export type ActivityUpdateProps = Partial<
-	Omit<ActivityProps, 'id' | 'createdAt' | 'updatedAt' | 'type'>
+export type ActivityUpdateFields = Partial<
+	Omit<ActivityFields, 'id' | 'createdAt' | 'updatedAt' | 'type'>
 >;
 export type ActivityQuery = {
 	options?: {
@@ -34,33 +34,33 @@ export type ActivityQuery = {
 	};
 };
 
-export class Activity implements ActivityProps {
-	constructor(props: ActivityProps) {
-		this.id = props.id;
-		this.createdAt = props.createdAt;
-		this.updatedAt = props.updatedAt;
-		this.lessonId = props.lessonId;
-		this.name = props.name;
-		this.description = props.description;
-		this.order = props.order;
-		this.type = props.type;
+export class Activity implements ActivityFields {
+	constructor(fields: ActivityFields) {
+		this.id = fields.id;
+		this.createdAt = fields.createdAt;
+		this.updatedAt = fields.updatedAt;
+		this.lessonId = fields.lessonId;
+		this.name = fields.name;
+		this.description = fields.description;
+		this.order = fields.order;
+		this.type = fields.type;
 	}
 
-	update(props: ActivityUpdateProps) {
-		if (props.description !== undefined) {
-			this.description = props.description;
+	update(fields: ActivityUpdateFields) {
+		if (fields.description !== undefined) {
+			this.description = fields.description;
 		}
 
-		if (props.lessonId !== undefined) {
-			this.lessonId = props.lessonId;
+		if (fields.lessonId !== undefined) {
+			this.lessonId = fields.lessonId;
 		}
 
-		if (props.name !== undefined) {
-			this.name = props.name;
+		if (fields.name !== undefined) {
+			this.name = fields.name;
 		}
 
-		if (props.order !== undefined) {
-			this.order = props.order;
+		if (fields.order !== undefined) {
+			this.order = fields.order;
 		}
 	}
 

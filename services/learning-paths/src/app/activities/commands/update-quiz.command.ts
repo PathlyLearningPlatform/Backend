@@ -1,8 +1,8 @@
-import type { ActivityUpdateProps } from '@/domain/activities/entities';
+import type { ActivityUpdateFields } from '@/domain/activities/entities';
 
 export type UpdateQuizCommand = {
 	where: {
 		activityId: string;
 	};
-	fields?: ActivityUpdateProps;
+	fields?: ActivityUpdateFields;
 };

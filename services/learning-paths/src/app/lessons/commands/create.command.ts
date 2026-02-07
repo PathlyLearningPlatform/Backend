@@ -1,3 +1,3 @@
-import type { LessonCreateProps } from '@/domain/lessons/entities';
+import type { LessonCreateFields } from '@/domain/lessons/entities';
 
-export type CreateLessonCommand = LessonCreateProps;
+export type CreateLessonCommand = LessonCreateFields;
