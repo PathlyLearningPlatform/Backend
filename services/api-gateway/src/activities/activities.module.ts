@@ -9,6 +9,9 @@ import { DiToken } from '../common/enums'
 import type { AppConfig } from '../common/types'
 import { ActivitiesController } from './activities.controller'
 import { ActivitiesService } from './activities.service'
+import { ArticlesController } from './articles.controller'
+import { ExercisesController } from './exercises.controller'
+import { QuizzesController } from './quizzes.controller'
 
 @Module({
 	imports: [
@@ -44,7 +47,12 @@ import { ActivitiesService } from './activities.service'
 			},
 		]),
 	],
-	controllers: [ActivitiesController],
+	controllers: [
+		ActivitiesController,
+		ArticlesController,
+		ExercisesController,
+		QuizzesController,
+	],
 	providers: [ActivitiesService],
 })
 export class ActivitiesModule {}
