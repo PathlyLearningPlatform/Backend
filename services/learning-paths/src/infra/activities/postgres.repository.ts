@@ -213,9 +213,10 @@ export class PostgresActivitiesRepository implements IActivitiesRepository {
 		try {
 			const result = await this.db
 				.delete(activitiesTable)
-				.where(eq(activitiesTable.id, id));
+				.where(eq(activitiesTable.id, id))
+				.returning();
 
-			return result.rowCount !== null && result.rowCount !== 0;
+			return result.length > 0;
 		} catch (err) {
 			throw new RepositoryException('db query failed', err);
 		}

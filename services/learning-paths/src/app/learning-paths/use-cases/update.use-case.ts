@@ -31,6 +31,8 @@ export class UpdateLearningPathUseCase {
 			name: command.fields?.name,
 		});
 
+		await this.learningPathsRepository.save(learningPath);
+
 		return learningPath;
 	}
 }

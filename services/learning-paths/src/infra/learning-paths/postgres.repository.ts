@@ -88,9 +88,10 @@ export class PostgresLearningPathsRepository
 		try {
 			const result = await this.db
 				.delete(learningPathsTable)
-				.where(eq(learningPathsTable.id, id));
+				.where(eq(learningPathsTable.id, id))
+				.returning();
 
-			return result.rowCount !== null;
+			return result.length > 0;
 		} catch (err) {
 			if (err instanceof DrizzleQueryError) {
 				if (err.cause instanceof PostgresError) {

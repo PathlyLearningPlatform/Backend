@@ -19,6 +19,8 @@ export class UpdateSectionUseCase {
 			order: command.fields?.order,
 		});
 
+		await this.sectionsRepository.save(section);
+
 		return section;
 	}
 }

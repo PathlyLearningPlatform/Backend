@@ -67,9 +67,10 @@ export class PostgresSectionsRepository implements ISectionsRepository {
 		try {
 			const result = await this.db
 				.delete(sectionsTable)
-				.where(eq(sectionsTable.id, id));
+				.where(eq(sectionsTable.id, id))
+				.returning();
 
-			return result.rowCount !== null;
+			return result.length > 0;
 		} catch (err) {
 			if (err instanceof DrizzleQueryError) {
 				if (err.cause instanceof PostgresError) {

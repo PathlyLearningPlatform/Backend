@@ -19,7 +19,7 @@ export class UpdateLessonUseCase {
 			order: command.fields?.order,
 		});
 
-		this.lessonsRepository.save(lesson);
+		await this.lessonsRepository.save(lesson);
 
 		return lesson;
 	}

@@ -67,9 +67,10 @@ export class PostgresUnitsRepository implements IUnitsRepository {
 		try {
 			const result = await this.db
 				.delete(unitsTable)
-				.where(eq(unitsTable.id, id));
+				.where(eq(unitsTable.id, id))
+				.returning();
 
-			return result.rowCount !== null;
+			return result.length > 0;
 		} catch (err) {
 			if (err instanceof DrizzleQueryError) {
 				if (err.cause instanceof PostgresError) {

@@ -19,7 +19,7 @@ export class UpdateUnitUseCase {
 			order: command.fields?.order,
 		});
 
-		this.unitsRepository.save(unit);
+		await this.unitsRepository.save(unit);
 
 		return unit;
 	}

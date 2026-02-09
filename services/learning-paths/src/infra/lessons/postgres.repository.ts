@@ -67,9 +67,10 @@ export class PostgresLessonsRepository implements ILessonsRepository {
 		try {
 			const result = await this.db
 				.delete(lessonsTable)
-				.where(eq(lessonsTable.id, id));
+				.where(eq(lessonsTable.id, id))
+				.returning();
 
-			return result.rowCount !== null;
+			return result.length > 0;
 		} catch (err) {
 			if (err instanceof DrizzleQueryError) {
 				if (err.cause instanceof PostgresError) {
