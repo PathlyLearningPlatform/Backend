@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import type { Server } from 'node:http'
-import type { INestApplication } from '@nestjs/common'
+import { VersioningType, type INestApplication } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Test } from '@nestjs/testing'
 import type {
@@ -26,6 +26,9 @@ describe('LearningPaths', () => {
 
 		app = moduleRef.createNestApplication()
 		httpServer = app.getHttpServer()
+		app.enableVersioning({
+			type: VersioningType.URI,
+		})
 		await app.init()
 	})
 
