@@ -30,7 +30,7 @@ export const learningPaths = {
 		version: string = 'v1',
 	) {
 		const response = await request(app)
-			.get(`/learning-paths`)
+			.get(`/${version}/learning-paths`)
 			.query(query ?? {})
 			.set('Content-Type', 'application/json')
 
@@ -39,7 +39,7 @@ export const learningPaths = {
 
 	async findOne(app: App, id: string, version: string = 'v1') {
 		const response = await request(app)
-			.get(`/learning-paths/${id}`)
+			.get(`/${version}/learning-paths/${id}`)
 			.set('Content-Type', 'application/json')
 		return response
 	},
@@ -50,7 +50,7 @@ export const learningPaths = {
 		version: string = 'v1',
 	) {
 		const response = await request(app)
-			.post(`/learning-paths`)
+			.post(`/${version}/learning-paths`)
 			.set('Content-Type', 'application/json')
 			.send(body)
 		return response
@@ -63,7 +63,7 @@ export const learningPaths = {
 		version: string = 'v1',
 	) {
 		const response = await request(app)
-			.patch(`/learning-paths/${id}`)
+			.patch(`/${version}/learning-paths/${id}`)
 			.set('Content-Type', 'application/json')
 			.send(body)
 		return response
@@ -71,7 +71,7 @@ export const learningPaths = {
 
 	async remove(app: App, id: string, version: string = 'v1') {
 		const response = await request(app)
-			.delete(`/learning-paths/${id}`)
+			.delete(`/${version}/learning-paths/${id}`)
 			.set('Content-Type', 'application/json')
 		return response
 	},
@@ -84,7 +84,7 @@ export const sections = {
 		version: string = 'v1',
 	) {
 		const response = await request(app)
-			.get(`/sections`)
+			.get(`/${version}/sections`)
 			.set('Content-Type', 'application/json')
 			.query(query ?? {})
 
@@ -93,7 +93,7 @@ export const sections = {
 
 	async findOne(app: App, id: string, version: string = 'v1') {
 		const response = await request(app)
-			.get(`/sections/${id}`)
+			.get(`/${version}/sections/${id}`)
 			.set('Content-Type', 'application/json')
 
 		return response
@@ -101,7 +101,7 @@ export const sections = {
 
 	async create(app: App, body: CreateSectionBodyDto, version: string = 'v1') {
 		const response = await request(app)
-			.post(`/sections`)
+			.post(`/${version}/sections`)
 			.set('Content-Type', 'application/json')
 			.send(body)
 
@@ -115,7 +115,7 @@ export const sections = {
 		version: string = 'v1',
 	) {
 		const response = await request(app)
-			.patch(`/sections/${id}`)
+			.patch(`/${version}/sections/${id}`)
 			.set('Content-Type', 'application/json')
 			.send(body)
 
@@ -124,7 +124,7 @@ export const sections = {
 
 	async remove(app: App, id: string, version: string = 'v1') {
 		const response = await request(app)
-			.delete(`/sections/${id}`)
+			.delete(`/${version}/sections/${id}`)
 			.set('Content-Type', 'application/json')
 
 		return response
@@ -138,7 +138,7 @@ export const units = {
 		version: string = 'v1',
 	) {
 		const response = await request(app)
-			.get('/units')
+			.get('/${version}/units')
 			.set('Content-Type', 'application/json')
 			.query(query ?? {})
 
@@ -147,7 +147,7 @@ export const units = {
 
 	async findOne(app: App, id: string, version: string = 'v1') {
 		const response = await request(app)
-			.get(`/units/${id}`)
+			.get(`/${version}/units/${id}`)
 			.set('Content-Type', 'application/json')
 
 		return response
@@ -155,7 +155,7 @@ export const units = {
 
 	async create(app: App, body: CreateUnitBodyDto, version: string = 'v1') {
 		const response = await request(app)
-			.post('/units')
+			.post('/${version}/units')
 			.set('Content-Type', 'application/json')
 			.send(body)
 
@@ -169,7 +169,7 @@ export const units = {
 		version: string = 'v1',
 	) {
 		const response = await request(app)
-			.patch(`/units/${id}`)
+			.patch(`/${version}/units/${id}`)
 			.set('Content-Type', 'application/json')
 			.send(body)
 
@@ -178,7 +178,7 @@ export const units = {
 
 	async remove(app: App, id: string, version: string = 'v1') {
 		const response = await request(app)
-			.delete(`/units/${id}`)
+			.delete(`/${version}/units/${id}`)
 			.set('Content-Type', 'application/json')
 
 		return response
@@ -192,7 +192,7 @@ export const lessons = {
 		version: string = 'v1',
 	) {
 		const response = await request(app)
-			.get('/lessons')
+			.get('/${version}/lessons')
 			.set('Content-Type', 'application/json')
 			.query(query ?? {})
 
@@ -201,7 +201,7 @@ export const lessons = {
 
 	async findOne(app: App, id: string, version: string = 'v1') {
 		const response = await request(app)
-			.get(`/lessons/${id}`)
+			.get(`/${version}/lessons/${id}`)
 			.set('Content-Type', 'application/json')
 
 		return response
@@ -209,7 +209,7 @@ export const lessons = {
 
 	async create(app: App, body: CreateLessonBodyDto, version: string = 'v1') {
 		const response = await request(app)
-			.post('/lessons')
+			.post('/${version}/lessons')
 			.set('Content-Type', 'application/json')
 			.send(body)
 
@@ -223,7 +223,7 @@ export const lessons = {
 		version: string = 'v1',
 	) {
 		const response = await request(app)
-			.patch(`/lessons/${id}`)
+			.patch(`/${version}/lessons/${id}`)
 			.set('Content-Type', 'application/json')
 			.send(body)
 
@@ -232,7 +232,7 @@ export const lessons = {
 
 	async remove(app: App, id: string, version: string = 'v1') {
 		const response = await request(app)
-			.delete(`/lessons/${id}`)
+			.delete(`/${version}/lessons/${id}`)
 			.set('Content-Type', 'application/json')
 
 		return response
