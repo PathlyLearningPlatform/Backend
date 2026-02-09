@@ -17,6 +17,7 @@ services:
       api-gateway:
         condition: service_healthy
       auth:
+        restart: true
         condition: service_healthy
   api-gateway:
     build:
