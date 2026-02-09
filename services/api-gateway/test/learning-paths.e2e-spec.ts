@@ -11,6 +11,7 @@ import type {
 import type { CreateSectionResponseDto } from '@/sections/dtos'
 import { LearningPathsModule } from '../src/learning-paths/learning-paths.module'
 import { learningPaths, mockedConfigService, sections } from './helpers'
+import { SectionsModule } from '@/sections/sections.module'
 
 describe('LearningPaths', () => {
 	let app: INestApplication
@@ -18,7 +19,7 @@ describe('LearningPaths', () => {
 
 	beforeAll(async () => {
 		const moduleRef = await Test.createTestingModule({
-			imports: [LearningPathsModule],
+			imports: [LearningPathsModule, SectionsModule],
 		})
 			.overrideProvider(ConfigService)
 			.useValue(mockedConfigService)
@@ -246,8 +247,6 @@ describe('LearningPaths', () => {
 			})
 			const createSectionResBody =
 				createSectionRes.body as CreateSectionResponseDto
-
-			console.log(createSectionResBody)
 
 			// act
 			const removeRes = await learningPaths.remove(
