@@ -1,7 +1,7 @@
 import type { Config } from 'jest';
 import { pathsToModuleNameMapper } from 'ts-jest';
 
-const { compilerOptions } = require('../tsconfig.json');
+import tsconfig from '../tsconfig.json';
 
 export const config: Config = {
 	moduleFileExtensions: ['js', 'json', 'ts'],
@@ -11,7 +11,7 @@ export const config: Config = {
 		'^.+\\.(t|j)s$': 'ts-jest',
 	},
 	testEnvironment: 'node',
-	moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
+	moduleNameMapper: pathsToModuleNameMapper(tsconfig.compilerOptions.paths, {
 		prefix: '<rootDir>/',
 	}),
 };
