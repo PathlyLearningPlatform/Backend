@@ -17,6 +17,7 @@
     "services/learning-paths",
     "services/api-gateway",
     "libs/contracts",
-    "libs/ts/common"
+    "libs/ts/common",
+    "libs/ts/core"
   ]
 }
