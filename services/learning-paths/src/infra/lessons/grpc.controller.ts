@@ -25,7 +25,10 @@ import type {
 	RemoveLessonUseCase,
 	UpdateLessonUseCase,
 } from '@/app/lessons/use-cases';
-import { LessonNotFoundException } from '@/domain/lessons/exceptions';
+import {
+	LessonCannotBeRemovedException,
+	LessonNotFoundException,
+} from '@/domain/lessons/exceptions';
 import { UnitNotFoundException } from '@/domain/units/exceptions';
 import { DiToken } from '../common/enums';
 import { errorCodeToMessage } from '../common/helpers/error-code-to-message.helper';
@@ -191,6 +194,18 @@ export class GrpcLessonsController {
 						errorCodeToMessage[LearningPathsApiErrorCodes.LESSON_NOT_FOUND],
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.LESSON_NOT_FOUND,
+					),
+				);
+			}
+
+			if (err instanceof LessonCannotBeRemovedException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						errorCodeToMessage[
+							LearningPathsApiErrorCodes.LESSON_CANNOT_BE_REMOVED
+						],
+						GrpcStatus.FAILED_PRECONDITION,
+						LearningPathsApiErrorCodes.LESSON_CANNOT_BE_REMOVED,
 					),
 				);
 			}
