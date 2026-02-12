@@ -1,5 +1,5 @@
-import { InvalidReferenceException } from '@pathly-backend/common/index.js';
-import type { ILessonsRepository } from '@/app/lessons/interfaces';
+import { InvalidReferenceException } from '@pathly-backend/core/index.js';
+import type { ILessonsRepository } from '@domain/lessons/interfaces';
 import {
 	LessonCannotBeRemovedException,
 	LessonNotFoundException,

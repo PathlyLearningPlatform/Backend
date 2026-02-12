@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto';
-import type { ILearningPathsRepository } from '@/app/learning-paths/interfaces';
+import type { ILearningPathsRepository } from '@/domain/learning-paths/interfaces';
 import type { CreateSectionCommand } from '@/app/sections/commands';
-import type { ISectionsRepository } from '@/app/sections/interfaces';
+import type { ISectionsRepository } from '@domain/sections/interfaces';
 import { LearningPathNotFoundException } from '@/domain/learning-paths/exceptions';
 import { Section } from '@/domain/sections/entities';
 

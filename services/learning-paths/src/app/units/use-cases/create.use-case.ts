@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto';
-import type { ISectionsRepository } from '@/app/sections/interfaces';
+import type { ISectionsRepository } from '@/domain/sections/interfaces';
 import type { CreateUnitCommand } from '@/app/units/commands';
-import type { IUnitsRepository } from '@/app/units/interfaces';
+import type { IUnitsRepository } from '@domain/units/interfaces';
 import { SectionNotFoundException } from '@/domain/sections/exceptions';
 import { Unit } from '@/domain/units/entities';
 

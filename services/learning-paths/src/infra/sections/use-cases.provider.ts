@@ -1,6 +1,6 @@
 import type { Provider } from '@nestjs/common';
-import type { ILearningPathsRepository } from '@/app/learning-paths/interfaces';
-import type { ISectionsRepository } from '@/app/sections/interfaces';
+import type { ILearningPathsRepository } from '@/domain/learning-paths/interfaces';
+import type { ISectionsRepository } from '@/domain/sections/interfaces';
 import {
 	CreateSectionUseCase,
 	FindOneSectionUseCase,

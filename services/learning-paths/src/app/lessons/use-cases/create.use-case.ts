@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto';
 import type { CreateLessonCommand } from '@/app/lessons/commands';
-import type { ILessonsRepository } from '@/app/lessons/interfaces';
-import type { IUnitsRepository } from '@/app/units/interfaces';
+import type { ILessonsRepository } from '@domain/lessons/interfaces';
+import type { IUnitsRepository } from '@/domain/units/interfaces';
 import { Lesson } from '@/domain/lessons/entities';
 import { UnitNotFoundException } from '@/domain/units/exceptions';
 

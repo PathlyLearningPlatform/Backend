@@ -1,6 +1,6 @@
 import type { Activity } from '@/domain/activities/entities';
 import type { FindActivitiesCommand } from '../commands';
-import type { IActivitiesRepository } from '../interfaces';
+import type { IActivitiesRepository } from '@domain/activities/interfaces';
 
 export class FindActivitiesUseCase {
 	constructor(private readonly activitiesRepository: IActivitiesRepository) {}

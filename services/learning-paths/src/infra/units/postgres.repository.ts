@@ -3,10 +3,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
 	InvalidReferenceException,
 	RepositoryException,
-} from '@pathly-backend/common/index.js';
+} from '@pathly-backend/core/index.js';
 import { DrizzleQueryError, eq } from 'drizzle-orm';
 import { DatabaseError as PostgresError } from 'pg';
-import type { IUnitsRepository } from '@/app/units/interfaces';
+import type { IUnitsRepository } from '@/domain/units/interfaces';
 import type { Unit, UnitQuery } from '@/domain/units/entities';
 import type { Db } from '@/infra/common/types';
 import { DbService } from '../db/db.service';

@@ -1,5 +1,5 @@
 import type { FindLearningPathsCommand } from '@/app/learning-paths/commands';
-import type { ILearningPathsRepository } from '@/app/learning-paths/interfaces';
+import type { ILearningPathsRepository } from '@domain/learning-paths/interfaces';
 import type { LearningPath } from '@/domain/learning-paths/entities';
 
 /**

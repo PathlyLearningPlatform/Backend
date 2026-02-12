@@ -1,5 +1,5 @@
-import { InvalidReferenceException } from '@pathly-backend/common/index.js';
-import type { ISectionsRepository } from '@/app/sections/interfaces';
+import { InvalidReferenceException } from '@pathly-backend/core/index.js';
+import type { ISectionsRepository } from '@domain/sections/interfaces';
 import {
 	SectionCannotBeRemovedException,
 	SectionNotFoundException,

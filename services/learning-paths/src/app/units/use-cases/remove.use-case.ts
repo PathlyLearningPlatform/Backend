@@ -1,5 +1,5 @@
-import { InvalidReferenceException } from '@pathly-backend/common/index.js';
-import type { IUnitsRepository } from '@/app/units/interfaces';
+import { InvalidReferenceException } from '@pathly-backend/core/index.js';
+import type { IUnitsRepository } from '@domain/units/interfaces';
 import {
 	UnitCannotBeRemovedException,
 	UnitNotFoundException,

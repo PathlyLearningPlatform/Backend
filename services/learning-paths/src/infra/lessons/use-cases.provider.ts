@@ -1,5 +1,5 @@
 import type { Provider } from '@nestjs/common';
-import type { ILessonsRepository } from '@/app/lessons/interfaces';
+import type { ILessonsRepository } from '@/domain/lessons/interfaces';
 import {
 	CreateLessonUseCase,
 	FindLessonsUseCase,
@@ -7,7 +7,7 @@ import {
 	RemoveLessonUseCase,
 	UpdateLessonUseCase,
 } from '@/app/lessons/use-cases';
-import type { IUnitsRepository } from '@/app/units/interfaces';
+import type { IUnitsRepository } from '@/domain/units/interfaces';
 import { DiToken } from '../common/enums';
 import { PostgresUnitsRepository } from '../units/postgres.repository';
 import { PostgresLessonsRepository } from './postgres.repository';

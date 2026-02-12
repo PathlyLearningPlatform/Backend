@@ -1,4 +1,4 @@
-import type { ILearningPathsRepository } from '@/app/learning-paths/interfaces';
+import type { ILearningPathsRepository } from '@domain/learning-paths/interfaces';
 import type { LearningPath } from '@/domain/learning-paths/entities';
 import { LearningPathNotFoundException } from '@/domain/learning-paths/exceptions';
 

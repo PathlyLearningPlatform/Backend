@@ -3,12 +3,11 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
 	InvalidReferenceException,
 	RepositoryException,
-	SortType,
-} from '@pathly-backend/common/index.js';
+} from '@pathly-backend/core/index.js';
+import { SortType } from '@pathly-backend/common/index.js';
 import { asc, DrizzleQueryError, desc, eq } from 'drizzle-orm';
 import { DatabaseError as PostgresError } from 'pg';
-import type { CreateLearningPathCommand } from '@/app/learning-paths/commands';
-import type { ILearningPathsRepository } from '@/app/learning-paths/interfaces';
+import type { ILearningPathsRepository } from '@/domain/learning-paths/interfaces';
 import type {
 	LearningPath,
 	LearningPathQuery,

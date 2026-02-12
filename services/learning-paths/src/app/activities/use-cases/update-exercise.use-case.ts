@@ -1,10 +1,15 @@
 import type { Exercise } from '@/domain/activities/entities';
 import { ActivityNotFoundException } from '@/domain/activities/exceptions';
 import type { UpdateExerciseCommand } from '../commands/update-exercise.command';
-import type { IActivitiesRepository } from '../interfaces';
+import type { IActivitiesRepository } from '@domain/activities/interfaces';
+import { ILessonsRepository } from '@/domain/lessons/interfaces';
+import { LessonNotFoundException } from '@/domain/lessons/exceptions';
 
 export class UpdateExerciseUseCase {
-	constructor(private readonly activitiesRepository: IActivitiesRepository) {}
+	constructor(
+		private readonly activitiesRepository: IActivitiesRepository,
+		private readonly lessonsRepository: ILessonsRepository,
+	) {}
 
 	async execute(command: UpdateExerciseCommand): Promise<Exercise> {
 		const exercise = await this.activitiesRepository.findOneExercise(
@@ -22,6 +27,12 @@ export class UpdateExerciseUseCase {
 			order: command.fields?.order,
 			difficulty: command.fields?.difficulty,
 		});
+
+		const lesson = await this.lessonsRepository.findOne(exercise.lessonId);
+
+		if (!lesson) {
+			throw new LessonNotFoundException(exercise.lessonId);
+		}
 
 		await this.activitiesRepository.saveExercise(exercise);
 

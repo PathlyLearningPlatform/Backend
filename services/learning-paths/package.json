@@ -36,6 +36,7 @@
 		"@nestjs/microservices": "^11.1.9",
 		"@nestjs/platform-express": "^11.1.9",
 		"@pathly-backend/common": "^1.0.0",
+		"@pathly-backend/core": "^1.0.0",
 		"@pathly-backend/contracts": "^1.0.0",
 		"drizzle-orm": "^1.0.0-beta.2-86f844e",
 		"grpc-health-check": "^2.1.0",

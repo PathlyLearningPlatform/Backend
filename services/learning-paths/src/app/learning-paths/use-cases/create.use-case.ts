@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type { CreateLearningPathCommand } from '@/app/learning-paths/commands';
-import type { ILearningPathsRepository } from '@/app/learning-paths/interfaces';
+import type { ILearningPathsRepository } from '@domain/learning-paths/interfaces';
 import { LearningPath } from '@/domain/learning-paths/entities';
 
 export class CreateLearningPathUseCase {

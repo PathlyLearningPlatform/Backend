@@ -2,12 +2,23 @@ import { randomUUID } from 'crypto';
 import { Article } from '@/domain/activities/entities';
 import { ActivityType } from '@/domain/activities/enums';
 import type { CreateArticleCommand } from '../commands/create-article.command';
-import type { IActivitiesRepository } from '../interfaces';
+import type { IActivitiesRepository } from '@domain/activities/interfaces';
+import { ILessonsRepository } from '@/domain/lessons/interfaces';
+import { LessonNotFoundException } from '@/domain/lessons/exceptions';
 
 export class CreateArticleUseCase {
-	constructor(private readonly activitiesRepository: IActivitiesRepository) {}
+	constructor(
+		private readonly activitiesRepository: IActivitiesRepository,
+		private readonly lessonsRepository: ILessonsRepository,
+	) {}
 
 	async execute(command: CreateArticleCommand): Promise<Article> {
+		const lesson = await this.lessonsRepository.findOne(command.lessonId);
+
+		if (!lesson) {
+			throw new LessonNotFoundException(command.lessonId);
+		}
+
 		const article = new Article({
 			id: randomUUID(),
 			lessonId: command.lessonId,

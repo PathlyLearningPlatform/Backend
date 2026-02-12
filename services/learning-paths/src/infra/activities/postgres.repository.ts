@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { RepositoryException } from '@pathly-backend/common/index.js';
+import { RepositoryException } from '@pathly-backend/core/index.js';
 import { and, eq } from 'drizzle-orm';
-import type { IActivitiesRepository } from '@/app/activities/interfaces';
+import type { IActivitiesRepository } from '@/domain/activities/interfaces';
 import type {
 	Activity,
 	ActivityQuery,

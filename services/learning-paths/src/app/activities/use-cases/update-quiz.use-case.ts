@@ -1,10 +1,15 @@
 import type { Quiz } from '@/domain/activities/entities';
 import { ActivityNotFoundException } from '@/domain/activities/exceptions';
 import type { UpdateQuizCommand } from '../commands/update-quiz.command';
-import type { IActivitiesRepository } from '../interfaces';
+import type { IActivitiesRepository } from '@domain/activities/interfaces';
+import { LessonNotFoundException } from '@/domain/lessons/exceptions';
+import { ILessonsRepository } from '@/domain/lessons/interfaces';
 
 export class UpdateQuizUseCase {
-	constructor(private readonly activitiesRepository: IActivitiesRepository) {}
+	constructor(
+		private readonly activitiesRepository: IActivitiesRepository,
+		private readonly lessonsRepository: ILessonsRepository,
+	) {}
 
 	async execute(command: UpdateQuizCommand): Promise<Quiz> {
 		const quiz = await this.activitiesRepository.findOneQuiz(
@@ -21,6 +26,12 @@ export class UpdateQuizUseCase {
 			name: command.fields?.name,
 			order: command.fields?.order,
 		});
+
+		const lesson = await this.lessonsRepository.findOne(quiz.lessonId);
+
+		if (!lesson) {
+			throw new LessonNotFoundException(quiz.lessonId);
+		}
 
 		await this.activitiesRepository.saveQuiz(quiz);
 

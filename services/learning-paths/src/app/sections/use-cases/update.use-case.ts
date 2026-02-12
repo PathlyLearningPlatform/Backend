@@ -1,5 +1,5 @@
 import type { UpdateSectionCommand } from '@/app/sections/commands';
-import type { ISectionsRepository } from '@/app/sections/interfaces';
+import type { ISectionsRepository } from '@domain/sections/interfaces';
 import type { Section } from '@/domain/sections/entities';
 import { SectionNotFoundException } from '@/domain/sections/exceptions';
 

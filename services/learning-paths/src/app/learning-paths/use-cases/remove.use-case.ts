@@ -1,5 +1,5 @@
-import { InvalidReferenceException } from '@pathly-backend/common/index.js';
-import type { ILearningPathsRepository } from '@/app/learning-paths/interfaces';
+import { InvalidReferenceException } from '@pathly-backend/core/index.js';
+import type { ILearningPathsRepository } from '@domain/learning-paths/interfaces';
 import {
 	LearningPathCannotBeRemovedException,
 	LearningPathNotFoundException,

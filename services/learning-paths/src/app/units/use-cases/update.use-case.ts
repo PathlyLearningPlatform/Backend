@@ -1,5 +1,5 @@
 import type { UpdateUnitCommand } from '@/app/units/commands';
-import type { IUnitsRepository } from '@/app/units/interfaces';
+import type { IUnitsRepository } from '@domain/units/interfaces';
 import type { Unit } from '@/domain/units/entities';
 import { UnitNotFoundException } from '@/domain/units/exceptions';
 

@@ -1,6 +1,6 @@
 import type { Provider } from '@nestjs/common';
-import type { ISectionsRepository } from '@/app/sections/interfaces';
-import type { IUnitsRepository } from '@/app/units/interfaces';
+import type { ISectionsRepository } from '@/domain/sections/interfaces';
+import type { IUnitsRepository } from '@/domain/units/interfaces';
 import {
 	CreateUnitUseCase,
 	FindOneUnitUseCase,
