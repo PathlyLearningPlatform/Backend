@@ -1,7 +1,7 @@
-import type { ILearningPathsRepository } from '@/app/learning-paths/interfaces';
-import type { ILessonsRepository } from '@/app/lessons/interfaces';
-import type { ISectionsRepository } from '@/app/sections/interfaces';
-import type { IUnitsRepository } from '@/app/units/interfaces';
+import type { ILearningPathsRepository } from '@/domain/learning-paths/interfaces';
+import type { ILessonsRepository } from '@/domain/lessons/interfaces';
+import type { ISectionsRepository } from '@/domain/sections/interfaces';
+import type { IUnitsRepository } from '@/domain/units/interfaces';
 
 export const mockedLearningPathsRepository: jest.Mocked<ILearningPathsRepository> =
 	{
