@@ -48,7 +48,7 @@ export class QuizzesController {
 	@ApiOkResponse({ type: FindOneQuizResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@Get(':id')
-	async findOneQuiz(
+	async findOne(
 		@Param('id', ParseUUIDPipe) id: string,
 	): Promise<FindOneQuizResponseDto> {
 		try {
@@ -89,7 +89,7 @@ export class QuizzesController {
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@ApiCreatedResponse({ type: CreateQuizResponseDto })
 	@Post()
-	async createQuiz(
+	async create(
 		@Body(new HttpValidationPipe(createQuizSchema))
 		body: CreateQuizDto,
 	): Promise<CreateQuizResponseDto> {
@@ -134,7 +134,7 @@ export class QuizzesController {
 	@ApiOkResponse({ type: UpdateQuizResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@Patch(':id')
-	async updateQuiz(
+	async update(
 		@Param('id', ParseUUIDPipe) id: string,
 		@Body(new HttpValidationPipe(updateQuizPropsSchema))
 		body: UpdateQuizDto,

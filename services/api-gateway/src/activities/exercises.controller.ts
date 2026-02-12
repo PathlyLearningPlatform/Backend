@@ -48,7 +48,7 @@ export class ExercisesController {
 	@ApiOkResponse({ type: FindOneExerciseResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@Get(':id')
-	async findOneExercise(
+	async findOne(
 		@Param('id', ParseUUIDPipe) id: string,
 	): Promise<FindOneExerciseResponseDto> {
 		try {
@@ -89,7 +89,7 @@ export class ExercisesController {
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@ApiCreatedResponse({ type: CreateExerciseResponseDto })
 	@Post()
-	async createExercise(
+	async create(
 		@Body(new HttpValidationPipe(createExerciseSchema))
 		body: CreateExerciseDto,
 	): Promise<CreateExerciseResponseDto> {
@@ -135,7 +135,7 @@ export class ExercisesController {
 	@ApiOkResponse({ type: UpdateExerciseResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@Patch(':id')
-	async updateExercise(
+	async update(
 		@Param('id', ParseUUIDPipe) id: string,
 		@Body(new HttpValidationPipe(updateExercisePropsSchema))
 		body: UpdateExerciseDto,

@@ -48,7 +48,7 @@ export class ArticlesController {
 	@ApiOkResponse({ type: FindOneArticleResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@Get(':id')
-	async findOneArticle(
+	async findOne(
 		@Param('id', ParseUUIDPipe) id: string,
 	): Promise<FindOneArticleResponseDto> {
 		try {
@@ -89,7 +89,7 @@ export class ArticlesController {
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@ApiCreatedResponse({ type: CreateArticleResponseDto })
 	@Post()
-	async createArticle(
+	async create(
 		@Body(new HttpValidationPipe(createArticleSchema))
 		body: CreateArticleDto,
 	): Promise<CreateArticleResponseDto> {
@@ -135,7 +135,7 @@ export class ArticlesController {
 	@ApiOkResponse({ type: UpdateArticleResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@Patch(':id')
-	async updateArticle(
+	async update(
 		@Param('id', ParseUUIDPipe) id: string,
 		@Body(new HttpValidationPipe(updateArticlePropsSchema))
 		body: UpdateArticleDto,
