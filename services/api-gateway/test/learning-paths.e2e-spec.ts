@@ -10,14 +10,27 @@ import type {
 } from '@/learning-paths/dtos'
 import type { CreateSectionResponseDto } from '@/sections/dtos'
 import { LearningPathsModule } from '../src/learning-paths/learning-paths.module'
-import { learningPaths, mockedConfigService, sections } from './helpers'
+import {
+	LearningPathsApi,
+	SectionsApi,
+	clearLearningPathsServiceDb,
+	mockedConfigService,
+} from './helpers'
 import { SectionsModule } from '@/sections/sections.module'
 
 describe('LearningPaths', () => {
 	let app: INestApplication
 	let httpServer: Server
+	let learningPathsApi: LearningPathsApi
+	let sectionsApi: SectionsApi
+	let api: {
+		learningPaths: LearningPathsApi
+		sections: SectionsApi
+	}
 
 	beforeAll(async () => {
+		await clearLearningPathsServiceDb()
+
 		const moduleRef = await Test.createTestingModule({
 			imports: [LearningPathsModule, SectionsModule],
 		})
@@ -31,21 +44,29 @@ describe('LearningPaths', () => {
 			type: VersioningType.URI,
 		})
 		await app.init()
+
+		learningPathsApi = new LearningPathsApi(httpServer)
+		sectionsApi = new SectionsApi(httpServer)
+
+		api = {
+			learningPaths: learningPathsApi,
+			sections: sectionsApi,
+		}
 	})
 
 	describe('GET /learning-paths (find)', () => {
 		it('Success (200)', async () => {
 			// arrange
-			const createRes = await learningPaths.create(httpServer, {
+			const createRes = await api.learningPaths.create({
 				name: 'learning-path',
 			} as CreateLearningPathBodyDto)
 			const createResBody = createRes.body as CreateLearningPathResponseDto
 
 			// act
-			const findRes = await learningPaths.find(httpServer)
+			const findRes = await api.learningPaths.find()
 
 			// cleanup
-			await learningPaths.remove(httpServer, createResBody.path.id)
+			await api.learningPaths.remove(createResBody.path.id)
 
 			// assert
 			expect(findRes.statusCode).toBe(200)
@@ -54,7 +75,7 @@ describe('LearningPaths', () => {
 
 		it('Bad request (400)', async () => {
 			// act
-			const findRes = await learningPaths.find(httpServer, {
+			const findRes = await api.learningPaths.find({
 				limit: 'badValue',
 			} as any)
 
@@ -66,19 +87,16 @@ describe('LearningPaths', () => {
 	describe('GET /learning-paths/:id (findOne)', () => {
 		it('Success (200)', async () => {
 			// arrange
-			const createRes = await learningPaths.create(httpServer, {
+			const createRes = await api.learningPaths.create({
 				name: 'learning-path',
 			} as CreateLearningPathBodyDto)
 			const createResBody = createRes.body as CreateLearningPathResponseDto
 
 			// act
-			const findOneRes = await learningPaths.findOne(
-				httpServer,
-				createResBody.path.id,
-			)
+			const findOneRes = await api.learningPaths.findOne(createResBody.path.id)
 
 			// cleanup
-			await learningPaths.remove(httpServer, createResBody.path.id)
+			await api.learningPaths.remove(createResBody.path.id)
 
 			// assert
 			expect(findOneRes.statusCode).toBe(200)
@@ -87,7 +105,7 @@ describe('LearningPaths', () => {
 
 		it('Bad request (400)', async () => {
 			// act
-			const findOneRes = await learningPaths.findOne(httpServer, 'invalid id')
+			const findOneRes = await api.learningPaths.findOne('invalid id')
 
 			// assert
 			expect(findOneRes.statusCode).toBe(400)
@@ -95,8 +113,7 @@ describe('LearningPaths', () => {
 
 		it('Not found (404)', async () => {
 			// act
-			const findOneRes = await learningPaths.findOne(
-				httpServer,
+			const findOneRes = await api.learningPaths.findOne(
 				randomUUID() /* non-existent learning path id */,
 			)
 
@@ -108,18 +125,15 @@ describe('LearningPaths', () => {
 	describe('POST /learning-paths (create)', () => {
 		it('Created (201)', async () => {
 			// act
-			const createRes = await learningPaths.create(httpServer, {
+			const createRes = await api.learningPaths.create({
 				name: 'learning-path',
 			} as CreateLearningPathBodyDto)
 			const createResBody = createRes.body as CreateLearningPathResponseDto
 
-			const findOneRes = await learningPaths.findOne(
-				httpServer,
-				createResBody.path.id,
-			)
+			const findOneRes = await api.learningPaths.findOne(createResBody.path.id)
 
 			// cleanup
-			await learningPaths.remove(httpServer, createResBody.path.id)
+			await api.learningPaths.remove(createResBody.path.id)
 
 			// assert
 			expect(createRes.statusCode).toBe(201)
@@ -130,7 +144,7 @@ describe('LearningPaths', () => {
 
 		it('Bad request (400)', async () => {
 			// act
-			const createRes = await learningPaths.create(httpServer, {} as any)
+			const createRes = await api.learningPaths.create({} as any)
 
 			// assert
 			expect(createRes.statusCode).toBe(400)
@@ -140,26 +154,21 @@ describe('LearningPaths', () => {
 	describe('PATCH /learning-paths/:id (update)', () => {
 		it('Success (200)', async () => {
 			// arrange
-			const createRes = await learningPaths.create(httpServer, {
+			const createRes = await api.learningPaths.create({
 				name: 'learning-path',
 			})
 			const createResBody = createRes.body as CreateLearningPathResponseDto
 
 			// act
-			const updateRes = await learningPaths.update(
-				httpServer,
-				createResBody.path.id,
-				{ name: 'updated-learning-path' },
-			)
+			const updateRes = await api.learningPaths.update(createResBody.path.id, {
+				name: 'updated-learning-path',
+			})
 			const updateResBody = updateRes.body as UpdateLearningPathResponseDto
 
-			const findOneRes = await learningPaths.findOne(
-				httpServer,
-				createResBody.path.id,
-			)
+			const findOneRes = await api.learningPaths.findOne(createResBody.path.id)
 
 			// cleanup
-			await learningPaths.remove(httpServer, createResBody.path.id)
+			await api.learningPaths.remove(createResBody.path.id)
 
 			// assert
 			expect(updateRes.statusCode).toBe(200)
@@ -171,7 +180,7 @@ describe('LearningPaths', () => {
 
 		it('Bad request (400)', async () => {
 			// act
-			const updateRes = await learningPaths.update(httpServer, 'invalid id')
+			const updateRes = await api.learningPaths.update('invalid id')
 
 			// assert
 			expect(updateRes.statusCode).toBe(400)
@@ -179,8 +188,7 @@ describe('LearningPaths', () => {
 
 		it('Not found (404)', async () => {
 			// act
-			const updateRes = await learningPaths.update(
-				httpServer,
+			const updateRes = await api.learningPaths.update(
 				randomUUID() /* non-existent path id */,
 				{ name: 'updated-learning-path' },
 			)
@@ -193,20 +201,14 @@ describe('LearningPaths', () => {
 	describe('DELETE /learning-paths/:id (remove)', () => {
 		it('Success (200)', async () => {
 			// arrange
-			const createRes = await learningPaths.create(httpServer, {
+			const createRes = await api.learningPaths.create({
 				name: 'learning-path',
 			})
 			const createResBody = createRes.body as CreateLearningPathResponseDto
 
 			// act
-			const removeRes = await learningPaths.remove(
-				httpServer,
-				createResBody.path.id,
-			)
-			const findOneRes = await learningPaths.findOne(
-				httpServer,
-				createResBody.path.id,
-			)
+			const removeRes = await api.learningPaths.remove(createResBody.path.id)
+			const findOneRes = await api.learningPaths.findOne(createResBody.path.id)
 
 			// assert
 			expect(removeRes.statusCode).toBe(200)
@@ -216,7 +218,7 @@ describe('LearningPaths', () => {
 
 		it('Bad request (400)', async () => {
 			// act
-			const removeRes = await learningPaths.remove(httpServer, 'invalid id')
+			const removeRes = await api.learningPaths.remove('invalid id')
 
 			// assert
 			expect(removeRes.statusCode).toBe(400)
@@ -224,8 +226,7 @@ describe('LearningPaths', () => {
 
 		it('Not found (404)', async () => {
 			// act
-			const removeRes = await learningPaths.remove(
-				httpServer,
+			const removeRes = await api.learningPaths.remove(
 				randomUUID() /* non-existent learning path id */,
 			)
 
@@ -235,12 +236,12 @@ describe('LearningPaths', () => {
 
 		it('Conflict (409)', async () => {
 			// arrange
-			const createRes = await learningPaths.create(httpServer, {
+			const createRes = await api.learningPaths.create({
 				name: 'learning-path',
 			})
 			const createResBody = createRes.body as CreateLearningPathResponseDto
 
-			const createSectionRes = await sections.create(httpServer, {
+			const createSectionRes = await api.sections.create({
 				name: 'section',
 				order: 0,
 				learningPathId: createResBody.path.id,
@@ -249,18 +250,12 @@ describe('LearningPaths', () => {
 				createSectionRes.body as CreateSectionResponseDto
 
 			// act
-			const removeRes = await learningPaths.remove(
-				httpServer,
-				createResBody.path.id,
-			)
-			const findOneRes = await learningPaths.findOne(
-				httpServer,
-				createResBody.path.id,
-			)
+			const removeRes = await api.learningPaths.remove(createResBody.path.id)
+			const findOneRes = await api.learningPaths.findOne(createResBody.path.id)
 
 			// cleanup
-			await sections.remove(httpServer, createSectionResBody.section.id)
-			await learningPaths.remove(httpServer, createResBody.path.id)
+			await api.sections.remove(createSectionResBody.section.id)
+			await api.learningPaths.remove(createResBody.path.id)
 
 			// assert
 			expect(removeRes.statusCode).toBe(409)
