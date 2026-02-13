@@ -336,8 +336,6 @@ describe('Lessons', () => {
 			const createArticleResBody =
 				createArticleRes.body as CreateArticleResponseDto
 
-			console.log(createArticleResBody)
-
 			// act
 			const removeRes = await api.lessons.remove(createResBody.lesson.id)
 			const findOneRes = await api.lessons.findOne(createResBody.lesson.id)
