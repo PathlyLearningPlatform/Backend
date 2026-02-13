@@ -8,11 +8,14 @@ export enum ExceptionMessage {
 
 	UNIT_NOT_FOUND = 'Unit was not found.',
 	UNIT_CANNOT_BE_REMOVED = 'Unit cannot be removed.',
+	UNIT_DUPLICATE_ORDER = 'Unit with that order and section id already exists. Try different order or reorder existing units.',
 
 	LESSON_NOT_FOUND = 'Lesson was not found.',
 	LESSON_CANNOT_BE_REMOVED = 'Lesson cannot be removed.',
+	LESSON_DUPLICATE_ORDER = 'Lesson with that order and unit id already exists. Try different order or reorder existing lessons.',
 
 	ACTIVITY_NOT_FOUND = 'Activity was not found.',
+	ACTIVITY_DUPLICATE_ORDER = 'Activity with that order and lesson id already exists. Try different order or reorder existing activities.',
 
 	INTERNAL_ERROR = 'Internal error. Please try again later.',
 }

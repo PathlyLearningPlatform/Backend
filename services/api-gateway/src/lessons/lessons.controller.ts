@@ -131,6 +131,7 @@ export class LessonsController {
 
 	@ApiBody({ type: CreateLessonBodyDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiConflictResponse({ type: HttpErrorResponse })
 	@ApiCreatedResponse({ type: CreateLessonResponseDto })
 	@Post()
 	async create(
@@ -153,6 +154,14 @@ export class LessonsController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
+				case LearningPathsApiErrorCodes.LESSON_DUPLICATE_ORDER:
+					throw new ConflictException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.LESSON_DUPLICATE_ORDER
+							],
+						),
+					)
 				case LearningPathsApiErrorCodes.UNIT_NOT_FOUND:
 					throw new NotFoundException(
 						new HttpErrorDto(
@@ -175,6 +184,7 @@ export class LessonsController {
 	@ApiBody({ type: UpdateLessonBodyDto })
 	@ApiOkResponse({ type: UpdateLessonResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiConflictResponse({ type: HttpErrorResponse })
 	@Patch(':id')
 	async update(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -199,6 +209,14 @@ export class LessonsController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
+				case LearningPathsApiErrorCodes.LESSON_DUPLICATE_ORDER:
+					throw new ConflictException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.LESSON_DUPLICATE_ORDER
+							],
+						),
+					)
 				case LearningPathsApiErrorCodes.LESSON_NOT_FOUND:
 					throw new NotFoundException(
 						new HttpErrorDto(

@@ -29,6 +29,7 @@ import { SectionNotFoundException } from '@/domain/sections/exceptions';
 import {
 	UnitCannotBeRemovedException,
 	UnitNotFoundException,
+	UnitOrderException,
 } from '@/domain/units/exceptions';
 import { DiToken } from '../common/enums';
 import { errorCodeToMessage } from '../common/helpers/error-code-to-message.helper';
@@ -136,6 +137,17 @@ export class GrpcUnitsController {
 				);
 			}
 
+			if (err instanceof UnitOrderException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						err.message,
+						GrpcStatus.FAILED_PRECONDITION,
+						LearningPathsApiErrorCodes.UNIT_DUPLICATE_ORDER,
+					),
+					err,
+				);
+			}
+
 			throw new GrpcException(
 				new GrpcErrorDto(
 					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
@@ -165,6 +177,17 @@ export class GrpcUnitsController {
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.UNIT_NOT_FOUND,
 					),
+				);
+			}
+
+			if (err instanceof UnitOrderException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						err.message,
+						GrpcStatus.FAILED_PRECONDITION,
+						LearningPathsApiErrorCodes.UNIT_DUPLICATE_ORDER,
+					),
+					err,
 				);
 			}
 

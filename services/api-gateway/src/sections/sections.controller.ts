@@ -130,6 +130,7 @@ export class SectionsController {
 
 	@ApiBody({ type: CreateSectionBodyDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiConflictResponse({ type: HttpErrorResponse })
 	@ApiCreatedResponse({ type: CreateSectionResponseDto })
 	@Post()
 	async create(
@@ -180,6 +181,7 @@ export class SectionsController {
 	@ApiBody({ type: UpdateSectionBodyDto })
 	@ApiOkResponse({ type: UpdateSectionResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiConflictResponse({ type: HttpErrorResponse })
 	@Patch(':id')
 	async update(
 		@Param('id', ParseUUIDPipe) id: string,

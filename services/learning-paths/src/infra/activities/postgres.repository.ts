@@ -1,6 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { RepositoryException } from '@pathly-backend/core/index.js';
-import { and, eq } from 'drizzle-orm';
+import {
+	RepositoryException,
+	UniqueConstraintException,
+} from '@pathly-backend/core/index.js';
+import { and, DrizzleQueryError, eq } from 'drizzle-orm';
 import type { IActivitiesRepository } from '@/domain/activities/interfaces';
 import type {
 	Activity,
@@ -25,6 +28,9 @@ import {
 	dbExerciseToEntity,
 	dbQuizToEntity,
 } from './helpers/db-to-entity.helper';
+import { PG_UNIQUE_VIOLATION } from '@drdgvhbh/postgres-error-codes';
+import { getColumnsFromUniqueConstraint } from '@pathly-backend/common/index.js';
+import { DatabaseError as PostgresError } from 'pg';
 
 @Injectable()
 export class PostgresActivitiesRepository implements IActivitiesRepository {
@@ -155,6 +161,15 @@ export class PostgresActivitiesRepository implements IActivitiesRepository {
 					});
 			});
 		} catch (err) {
+			if (err instanceof DrizzleQueryError) {
+				if (err.cause instanceof PostgresError) {
+					if (err.cause.code === PG_UNIQUE_VIOLATION) {
+						throw new UniqueConstraintException(
+							getColumnsFromUniqueConstraint(err.cause.constraint!),
+						);
+					}
+				}
+			}
 			throw new RepositoryException('db query failed', err);
 		}
 	}
@@ -181,6 +196,15 @@ export class PostgresActivitiesRepository implements IActivitiesRepository {
 					});
 			});
 		} catch (err) {
+			if (err instanceof DrizzleQueryError) {
+				if (err.cause instanceof PostgresError) {
+					if (err.cause.code === PG_UNIQUE_VIOLATION) {
+						throw new UniqueConstraintException(
+							getColumnsFromUniqueConstraint(err.cause.constraint!),
+						);
+					}
+				}
+			}
 			throw new RepositoryException('db query failed', err);
 		}
 	}
@@ -205,6 +229,15 @@ export class PostgresActivitiesRepository implements IActivitiesRepository {
 					});
 			});
 		} catch (err) {
+			if (err instanceof DrizzleQueryError) {
+				if (err.cause instanceof PostgresError) {
+					if (err.cause.code === PG_UNIQUE_VIOLATION) {
+						throw new UniqueConstraintException(
+							getColumnsFromUniqueConstraint(err.cause.constraint!),
+						);
+					}
+				}
+			}
 			throw new RepositoryException('db query failed', err);
 		}
 	}

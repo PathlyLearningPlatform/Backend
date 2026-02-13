@@ -1,5 +1,6 @@
 import {
 	Body,
+	ConflictException,
 	Controller,
 	Get,
 	Inject,
@@ -12,6 +13,7 @@ import {
 } from '@nestjs/common'
 import {
 	ApiBody,
+	ApiConflictResponse,
 	ApiCreatedResponse,
 	ApiNotFoundResponse,
 	ApiOkResponse,
@@ -85,8 +87,9 @@ export class QuizzesController {
 		}
 	}
 
-	@ApiBody({ type: CreateQuizResponseDto })
+	@ApiBody({ type: CreateQuizDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiConflictResponse({ type: HttpErrorResponse })
 	@ApiCreatedResponse({ type: CreateQuizResponseDto })
 	@Post()
 	async create(
@@ -109,6 +112,14 @@ export class QuizzesController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
+				case LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER:
+					throw new ConflictException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER
+							],
+						),
+					)
 				case LearningPathsApiErrorCodes.LESSON_NOT_FOUND:
 					throw new NotFoundException(
 						new HttpErrorDto(
@@ -133,6 +144,7 @@ export class QuizzesController {
 	@ApiBody({ type: UpdateQuizDto })
 	@ApiOkResponse({ type: UpdateQuizResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiConflictResponse({ type: HttpErrorResponse })
 	@Patch(':id')
 	async update(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -158,6 +170,14 @@ export class QuizzesController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
+				case LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER:
+					throw new ConflictException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER
+							],
+						),
+					)
 				case LearningPathsApiErrorCodes.LESSON_CANNOT_BE_REMOVED:
 					throw new NotFoundException(
 						new HttpErrorDto(

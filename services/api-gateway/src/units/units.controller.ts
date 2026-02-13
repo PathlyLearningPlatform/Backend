@@ -127,6 +127,7 @@ export class UnitsController {
 
 	@ApiBody({ type: CreateUnitBodyDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiConflictResponse({ type: HttpErrorResponse })
 	@ApiCreatedResponse({ type: CreateUnitResponseDto })
 	@Post()
 	async create(
@@ -149,6 +150,14 @@ export class UnitsController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
+				case LearningPathsApiErrorCodes.UNIT_DUPLICATE_ORDER:
+					throw new ConflictException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.UNIT_DUPLICATE_ORDER
+							],
+						),
+					)
 				case LearningPathsApiErrorCodes.SECTION_NOT_FOUND:
 					throw new NotFoundException(
 						new HttpErrorDto(
@@ -173,6 +182,7 @@ export class UnitsController {
 	@ApiBody({ type: UpdateUnitBodyDto })
 	@ApiOkResponse({ type: UpdateUnitResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiConflictResponse({ type: HttpErrorResponse })
 	@Patch(':id')
 	async update(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -197,6 +207,14 @@ export class UnitsController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
+				case LearningPathsApiErrorCodes.UNIT_DUPLICATE_ORDER:
+					throw new ConflictException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.UNIT_DUPLICATE_ORDER
+							],
+						),
+					)
 				case LearningPathsApiErrorCodes.UNIT_NOT_FOUND:
 					throw new NotFoundException(
 						new HttpErrorDto(

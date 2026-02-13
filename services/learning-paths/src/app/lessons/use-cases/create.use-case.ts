@@ -4,6 +4,8 @@ import type { ILessonsRepository } from '@domain/lessons/interfaces';
 import type { IUnitsRepository } from '@/domain/units/interfaces';
 import { Lesson } from '@/domain/lessons/entities';
 import { UnitNotFoundException } from '@/domain/units/exceptions';
+import { UniqueConstraintException } from '@pathly-backend/core/index.js';
+import { LessonOrderException } from '@/domain/lessons/exceptions';
 
 export class CreateLessonUseCase {
 	constructor(
@@ -12,24 +14,34 @@ export class CreateLessonUseCase {
 	) {}
 
 	async execute(command: CreateLessonCommand): Promise<Lesson> {
-		const unit = await this.unitsRepository.findOne(command.unitId);
+		try {
+			const unit = await this.unitsRepository.findOne(command.unitId);
+			if (!unit) {
+				throw new UnitNotFoundException(command.unitId);
+			}
 
-		if (!unit) {
-			throw new UnitNotFoundException(command.unitId);
+			const lesson = new Lesson({
+				id: randomUUID(),
+				unitId: unit.id,
+				createdAt: new Date(),
+				updatedAt: new Date(),
+				description: command.description ?? null,
+				name: command.name,
+				order: command.order,
+			});
+
+			await this.lessonsRepository.save(lesson);
+
+			return lesson;
+		} catch (err) {
+			if (err instanceof UniqueConstraintException) {
+				const uniqueOrderViolation =
+					err.fields.includes('order') && err.fields.includes('unitId');
+				if (uniqueOrderViolation) {
+					throw new LessonOrderException();
+				}
+			}
+			throw err;
 		}
-
-		const lesson = new Lesson({
-			id: randomUUID(),
-			unitId: unit.id,
-			createdAt: new Date(),
-			updatedAt: new Date(),
-			description: command.description ?? null,
-			name: command.name,
-			order: command.order,
-		});
-
-		this.lessonsRepository.save(lesson);
-
-		return lesson;
 	}
 }

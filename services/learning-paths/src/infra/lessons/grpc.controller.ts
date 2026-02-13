@@ -28,6 +28,7 @@ import type {
 import {
 	LessonCannotBeRemovedException,
 	LessonNotFoundException,
+	LessonOrderException,
 } from '@/domain/lessons/exceptions';
 import { UnitNotFoundException } from '@/domain/units/exceptions';
 import { DiToken } from '../common/enums';
@@ -136,6 +137,17 @@ export class GrpcLessonsController {
 				);
 			}
 
+			if (err instanceof LessonOrderException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						err.message,
+						GrpcStatus.FAILED_PRECONDITION,
+						LearningPathsApiErrorCodes.LESSON_DUPLICATE_ORDER,
+					),
+					err,
+				);
+			}
+
 			throw new GrpcException(
 				new GrpcErrorDto(
 					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
@@ -165,6 +177,17 @@ export class GrpcLessonsController {
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.LESSON_NOT_FOUND,
 					),
+				);
+			}
+
+			if (err instanceof LessonOrderException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						err.message,
+						GrpcStatus.FAILED_PRECONDITION,
+						LearningPathsApiErrorCodes.LESSON_DUPLICATE_ORDER,
+					),
+					err,
 				);
 			}
 

@@ -1,8 +1,12 @@
-import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
+import {
+	PG_FOREIGN_KEY_VIOLATION,
+	PG_UNIQUE_VIOLATION,
+} from '@drdgvhbh/postgres-error-codes';
 import { Inject, Injectable } from '@nestjs/common';
 import {
 	InvalidReferenceException,
 	RepositoryException,
+	UniqueConstraintException,
 } from '@pathly-backend/core/index.js';
 import { DrizzleQueryError, eq } from 'drizzle-orm';
 import { DatabaseError as PostgresError } from 'pg';
@@ -13,6 +17,7 @@ import { DbService } from '../db/db.service';
 import { lessonsTable } from '../db/schemas';
 import { LessonsApiConstraints } from './enums';
 import { dbLessonToEntity } from './helpers';
+import { getColumnsFromUniqueConstraint } from '@pathly-backend/common/index.js';
 
 @Injectable()
 export class PostgresLessonsRepository implements ILessonsRepository {
@@ -59,6 +64,16 @@ export class PostgresLessonsRepository implements ILessonsRepository {
 				set: entity,
 			});
 		} catch (err) {
+			if (err instanceof DrizzleQueryError) {
+				if (err.cause instanceof PostgresError) {
+					if (err.cause.code === PG_UNIQUE_VIOLATION) {
+						throw new UniqueConstraintException(
+							getColumnsFromUniqueConstraint(err.cause.constraint!),
+						);
+					}
+				}
+			}
+
 			throw new RepositoryException('db error', err);
 		}
 	}

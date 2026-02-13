@@ -4,6 +4,8 @@ import type { CreateUnitCommand } from '@/app/units/commands';
 import type { IUnitsRepository } from '@domain/units/interfaces';
 import { SectionNotFoundException } from '@/domain/sections/exceptions';
 import { Unit } from '@/domain/units/entities';
+import { UniqueConstraintException } from '@pathly-backend/core/index.js';
+import { UnitOrderException } from '@/domain/units/exceptions';
 
 export class CreateUnitUseCase {
 	constructor(
@@ -12,24 +14,35 @@ export class CreateUnitUseCase {
 	) {}
 
 	async execute(command: CreateUnitCommand): Promise<Unit> {
-		const section = await this.sectionsRepository.findOne(command.sectionId);
+		try {
+			const section = await this.sectionsRepository.findOne(command.sectionId);
+			if (!section) {
+				throw new SectionNotFoundException(command.sectionId);
+			}
 
-		if (!section) {
-			throw new SectionNotFoundException(command.sectionId);
+			const unit = new Unit({
+				id: randomUUID(),
+				sectionId: section.id,
+				createdAt: new Date(),
+				updatedAt: new Date(),
+				description: command.description ?? null,
+				name: command.name,
+				order: command.order,
+			});
+
+			await this.unitsRepository.save(unit);
+
+			return unit;
+		} catch (err) {
+			if (err instanceof UniqueConstraintException) {
+				const uniqueOrderViolation =
+					err.fields.includes('order') && err.fields.includes('sectionId');
+				if (uniqueOrderViolation) {
+					throw new UnitOrderException();
+				}
+			}
+
+			throw err;
 		}
-
-		const unit = new Unit({
-			id: randomUUID(),
-			sectionId: section.id,
-			createdAt: new Date(),
-			updatedAt: new Date(),
-			description: command.description ?? null,
-			name: command.name,
-			order: command.order,
-		});
-
-		this.unitsRepository.save(unit);
-
-		return unit;
 	}
 }

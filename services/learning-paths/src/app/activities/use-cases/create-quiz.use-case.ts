@@ -5,6 +5,8 @@ import type { CreateQuizCommand } from '../commands/create-quiz.command';
 import type { IActivitiesRepository } from '@domain/activities/interfaces';
 import { ILessonsRepository } from '@/domain/lessons/interfaces';
 import { LessonNotFoundException } from '@/domain/lessons/exceptions';
+import { UniqueConstraintException } from '@pathly-backend/core/index.js';
+import { ActivityOrderException } from '@/domain/activities/exceptions';
 
 export class CreateQuizUseCase {
 	constructor(
@@ -13,25 +15,38 @@ export class CreateQuizUseCase {
 	) {}
 
 	async execute(command: CreateQuizCommand): Promise<Quiz> {
-		const lesson = await this.lessonsRepository.findOne(command.lessonId);
+		try {
+			const lesson = await this.lessonsRepository.findOne(command.lessonId);
 
-		if (!lesson) {
-			throw new LessonNotFoundException(command.lessonId);
+			if (!lesson) {
+				throw new LessonNotFoundException(command.lessonId);
+			}
+
+			const quiz = new Quiz({
+				id: randomUUID(),
+				lessonId: command.lessonId,
+				createdAt: new Date(),
+				updatedAt: new Date(),
+				name: command.name,
+				order: command.order,
+				type: ActivityType.QUIZ,
+				description: command.description || null,
+			});
+
+			await this.activitiesRepository.saveQuiz(quiz);
+
+			return quiz;
+		} catch (err) {
+			if (err instanceof UniqueConstraintException) {
+				const uniqueOrderViolation =
+					err.fields.includes('order') && err.fields.includes('lessonId');
+
+				if (uniqueOrderViolation) {
+					throw new ActivityOrderException();
+				}
+			}
+
+			throw err;
 		}
-
-		const quiz = new Quiz({
-			id: randomUUID(),
-			lessonId: command.lessonId,
-			createdAt: new Date(),
-			updatedAt: new Date(),
-			name: command.name,
-			order: command.order,
-			type: ActivityType.QUIZ,
-			description: command.description || null,
-		});
-
-		await this.activitiesRepository.saveQuiz(quiz);
-
-		return quiz;
 	}
 }

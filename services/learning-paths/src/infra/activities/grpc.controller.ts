@@ -38,7 +38,10 @@ import type {
 	UpdateExerciseUseCase,
 	UpdateQuizUseCase,
 } from '@/app/activities/use-cases';
-import { ActivityNotFoundException } from '@/domain/activities/exceptions';
+import {
+	ActivityNotFoundException,
+	ActivityOrderException,
+} from '@/domain/activities/exceptions';
 import { LessonNotFoundException } from '@/domain/lessons/exceptions';
 import { DiToken } from '../common/enums';
 import { errorCodeToMessage } from '../common/helpers/error-code-to-message.helper';
@@ -261,6 +264,17 @@ export class GrpcActivitiesController {
 				);
 			}
 
+			if (err instanceof ActivityOrderException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						err.message,
+						GrpcStatus.FAILED_PRECONDITION,
+						LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER,
+					),
+					err,
+				);
+			}
+
 			throw new GrpcException(
 				new GrpcErrorDto(
 					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
@@ -292,6 +306,17 @@ export class GrpcActivitiesController {
 				);
 			}
 
+			if (err instanceof ActivityOrderException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						err.message,
+						GrpcStatus.FAILED_PRECONDITION,
+						LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER,
+					),
+					err,
+				);
+			}
+
 			throw new GrpcException(
 				new GrpcErrorDto(
 					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
@@ -320,6 +345,17 @@ export class GrpcActivitiesController {
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.LESSON_NOT_FOUND,
 					),
+				);
+			}
+
+			if (err instanceof ActivityOrderException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						err.message,
+						GrpcStatus.FAILED_PRECONDITION,
+						LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER,
+					),
+					err,
 				);
 			}
 
@@ -364,6 +400,17 @@ export class GrpcActivitiesController {
 				);
 			}
 
+			if (err instanceof ActivityOrderException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						err.message,
+						GrpcStatus.FAILED_PRECONDITION,
+						LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER,
+					),
+					err,
+				);
+			}
+
 			throw new GrpcException(
 				new GrpcErrorDto(
 					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
@@ -404,6 +451,18 @@ export class GrpcActivitiesController {
 					),
 				);
 			}
+
+			if (err instanceof ActivityOrderException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						err.message,
+						GrpcStatus.FAILED_PRECONDITION,
+						LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER,
+					),
+					err,
+				);
+			}
+
 			throw new GrpcException(
 				new GrpcErrorDto(
 					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
@@ -444,6 +503,28 @@ export class GrpcActivitiesController {
 					),
 				);
 			}
+			if (err instanceof ActivityOrderException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						err.message,
+						GrpcStatus.FAILED_PRECONDITION,
+						LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER,
+					),
+					err,
+				);
+			}
+
+			if (err instanceof ActivityOrderException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						err.message,
+						GrpcStatus.FAILED_PRECONDITION,
+						LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER,
+					),
+					err,
+				);
+			}
+
 			throw new GrpcException(
 				new GrpcErrorDto(
 					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],

@@ -1,5 +1,6 @@
 import {
 	Body,
+	ConflictException,
 	Controller,
 	Get,
 	Inject,
@@ -12,6 +13,7 @@ import {
 } from '@nestjs/common'
 import {
 	ApiBody,
+	ApiConflictResponse,
 	ApiCreatedResponse,
 	ApiNotFoundResponse,
 	ApiOkResponse,
@@ -87,6 +89,7 @@ export class ArticlesController {
 
 	@ApiBody({ type: CreateArticleDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiConflictResponse({ type: HttpErrorResponse })
 	@ApiCreatedResponse({ type: CreateArticleResponseDto })
 	@Post()
 	async create(
@@ -110,6 +113,14 @@ export class ArticlesController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
+				case LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER:
+					throw new ConflictException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER
+							],
+						),
+					)
 				case LearningPathsApiErrorCodes.LESSON_NOT_FOUND:
 					throw new NotFoundException(
 						new HttpErrorDto(
@@ -134,6 +145,7 @@ export class ArticlesController {
 	@ApiBody({ type: UpdateArticleDto })
 	@ApiOkResponse({ type: UpdateArticleResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiConflictResponse({ type: HttpErrorResponse })
 	@Patch(':id')
 	async update(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -160,6 +172,14 @@ export class ArticlesController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
+				case LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER:
+					throw new ConflictException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER
+							],
+						),
+					)
 				case LearningPathsApiErrorCodes.LESSON_CANNOT_BE_REMOVED:
 					throw new NotFoundException(
 						new HttpErrorDto(
