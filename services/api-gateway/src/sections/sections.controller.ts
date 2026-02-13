@@ -46,6 +46,7 @@ import {
 	updateSectionBodySchema,
 } from './schemas'
 import { SectionsService } from './sections.service'
+import { ExceptionMessage } from '@/common/enums'
 
 @Controller({
 	path: 'sections',
@@ -159,6 +160,10 @@ export class SectionsController {
 							],
 						),
 					)
+				case LearningPathsApiErrorCodes.SECTION_DUPLICATE_ORDER:
+					throw new ConflictException(
+						new HttpErrorDto(ExceptionMessage.SECTION_DUPLICATE_ORDER),
+					)
 				default:
 					throw new InternalServerErrorException(
 						new HttpErrorDto(
@@ -206,6 +211,10 @@ export class SectionsController {
 								LearningPathsApiErrorCodes.SECTION_NOT_FOUND
 							],
 						),
+					)
+				case LearningPathsApiErrorCodes.SECTION_DUPLICATE_ORDER:
+					throw new ConflictException(
+						new HttpErrorDto(ExceptionMessage.SECTION_DUPLICATE_ORDER),
 					)
 				default:
 					throw new InternalServerErrorException(

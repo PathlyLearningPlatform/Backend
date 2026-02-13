@@ -4,6 +4,7 @@ export enum ExceptionMessage {
 
 	SECTION_NOT_FOUND = 'Section was not found.',
 	SECTION_CANNOT_BE_REMOVED = 'Section cannot be removed.',
+	SECTION_DUPLICATE_ORDER = 'Section with that order and learning path id already exists. Try different order or reorder existing sections.',
 
 	UNIT_NOT_FOUND = 'Unit was not found.',
 	UNIT_CANNOT_BE_REMOVED = 'Unit cannot be removed.',
