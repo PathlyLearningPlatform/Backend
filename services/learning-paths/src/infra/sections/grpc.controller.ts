@@ -29,6 +29,7 @@ import { LearningPathNotFoundException } from '@/domain/learning-paths/exception
 import {
 	SectionCannotBeRemovedException,
 	SectionNotFoundException,
+	SectionOrderException,
 } from '@/domain/sections/exceptions';
 import { DiToken } from '../common/enums';
 import { errorCodeToMessage } from '../common/helpers/error-code-to-message.helper';
@@ -140,6 +141,17 @@ export class GrpcSectionsController {
 				);
 			}
 
+			if (err instanceof SectionOrderException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						err.message,
+						GrpcStatus.FAILED_PRECONDITION,
+						LearningPathsApiErrorCodes.SECTION_DUPLICATE_ORDER,
+					),
+					err,
+				);
+			}
+
 			throw new GrpcException(
 				new GrpcErrorDto(
 					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
@@ -169,6 +181,17 @@ export class GrpcSectionsController {
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.SECTION_NOT_FOUND,
 					),
+				);
+			}
+
+			if (err instanceof SectionOrderException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						err.message,
+						GrpcStatus.FAILED_PRECONDITION,
+						LearningPathsApiErrorCodes.SECTION_DUPLICATE_ORDER,
+					),
+					err,
 				);
 			}
 
