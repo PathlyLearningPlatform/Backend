@@ -180,11 +180,11 @@ export class ArticlesController {
 							],
 						),
 					)
-				case LearningPathsApiErrorCodes.LESSON_CANNOT_BE_REMOVED:
+				case LearningPathsApiErrorCodes.LESSON_NOT_FOUND:
 					throw new NotFoundException(
 						new HttpErrorDto(
 							exceptionCodeToMessage[
-								LearningPathsApiErrorCodes.LESSON_CANNOT_BE_REMOVED
+								LearningPathsApiErrorCodes.LESSON_NOT_FOUND
 							],
 						),
 					)

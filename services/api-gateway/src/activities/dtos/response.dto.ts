@@ -1,5 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { ExerciseDifficulty } from '@pathly-backend/contracts/learning-paths/v1/activities.js'
+import {
+	ActivityType,
+	ExerciseDifficulty,
+} from '@pathly-backend/contracts/learning-paths/v1/activities.js'
 import { ActivitiesApiConstraints } from '../enums'
 
 export class ActivityResponseDto {
@@ -45,6 +48,11 @@ export class ActivityResponseDto {
 		type: 'number',
 	})
 	order: number
+
+	@ApiProperty({
+		enum: ActivityType,
+	})
+	type: ActivityType
 }
 
 export class ArticleResponseDto extends ActivityResponseDto {
