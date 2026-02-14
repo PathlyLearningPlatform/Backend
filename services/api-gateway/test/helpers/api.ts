@@ -15,6 +15,7 @@ import {
 	CreateArticleDto,
 	CreateExerciseDto,
 	CreateQuizDto,
+	FindActivitiesQueryDto,
 	UpdateArticleDto,
 	UpdateExerciseDto,
 	UpdateQuizDto,
@@ -199,8 +200,10 @@ export class LessonsApi extends Api {
 }
 
 export class ActivitiesApi extends Api {
-	async find(version: string = 'v1') {
-		const response = await request(this.app).get(`/${version}/activities`)
+	async find(version: string = 'v1', query?: FindActivitiesQueryDto) {
+		const response = await request(this.app)
+			.get(`/${version}/activities`)
+			.query(query ?? {})
 
 		return response
 	}

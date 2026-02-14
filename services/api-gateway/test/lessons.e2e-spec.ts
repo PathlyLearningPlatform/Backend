@@ -228,6 +228,29 @@ describe('Lessons', () => {
 			// assert
 			expect(createRes.statusCode).toBe(400)
 		})
+
+		it('Conflict (409) - Duplicate Order', async () => {
+			// arrange
+			const createRes1 = await api.lessons.create({
+				name: 'lesson1',
+				order: 1,
+				unitId: unit.id,
+			})
+			const createRes1Body = createRes1.body as CreateLessonResponseDto
+
+			// act
+			const createRes2 = await api.lessons.create({
+				name: 'lesson2',
+				order: 1,
+				unitId: unit.id,
+			})
+
+			// cleanup
+			await api.lessons.remove(createRes1Body.lesson.id)
+
+			// assert
+			expect(createRes2.statusCode).toBe(409)
+		})
 	})
 
 	describe('PATCH /lessons/:id (update)', () => {

@@ -197,6 +197,29 @@ describe('Units', () => {
 			// assert
 			expect(createRes.statusCode).toBe(400)
 		})
+
+		it('Conflict (409) - Duplicate Order', async () => {
+			// arrange
+			const createRes1 = await api.units.create({
+				name: 'unit1',
+				order: 1,
+				sectionId: section.id,
+			})
+			const createRes1Body = createRes1.body as CreateUnitResponseDto
+
+			// act
+			const createRes2 = await api.units.create({
+				name: 'unit2',
+				order: 1,
+				sectionId: section.id,
+			})
+
+			// cleanup
+			await api.units.remove(createRes1Body.unit.id)
+
+			// assert
+			expect(createRes2.statusCode).toBe(409)
+		})
 	})
 
 	describe('PATCH /units/:id (update)', () => {

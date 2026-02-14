@@ -180,6 +180,29 @@ describe('Sections', () => {
 			// assert
 			expect(createRes.statusCode).toBe(400)
 		})
+
+		it('Conflict (409) - Duplicate Order', async () => {
+			// arrange
+			const createRes1 = await api.sections.create({
+				name: 'section1',
+				order: 1,
+				learningPathId: learningPath.id,
+			})
+			const createRes1Body = createRes1.body as CreateSectionResponseDto
+
+			// act
+			const createRes2 = await api.sections.create({
+				name: 'section2',
+				order: 1,
+				learningPathId: learningPath.id,
+			})
+
+			// cleanup
+			await api.sections.remove(createRes1Body.section.id)
+
+			// assert
+			expect(createRes2.statusCode).toBe(409)
+		})
 	})
 
 	describe('PATCH /sections/:id (update)', () => {
