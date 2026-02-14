@@ -40,7 +40,7 @@ import {
 	CreateExerciseResponseDto,
 	UpdateExerciseResponseDto,
 } from '@/activities/dtos/responses'
-import { ExerciseDifficulty } from '@pathly-backend/contracts/learning-paths/v1/activities.js'
+import { ExerciseDifficulty } from '@/activities/enums'
 
 describe('Activities', () => {
 	let app: INestApplication

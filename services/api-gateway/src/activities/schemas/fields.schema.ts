@@ -1,4 +1,4 @@
-import { ExerciseDifficulty } from '@pathly-backend/contracts/learning-paths/v1/activities.js'
+import { ExerciseDifficulty } from '../enums'
 import { z } from 'zod'
 import { ActivitiesApiConstraints } from '../enums'
 

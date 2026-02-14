@@ -34,7 +34,10 @@ import {
 	FindOneExerciseResponseDto,
 	UpdateExerciseResponseDto,
 } from './dtos/responses'
-import { clientExerciseToResponseDto } from './helpers'
+import {
+	clientExerciseToResponseDto,
+	exerciseDifficultyToClient,
+} from './helpers'
 import { createExerciseSchema, updateExercisePropsSchema } from './schemas'
 
 @Controller({
@@ -102,7 +105,7 @@ export class ExercisesController {
 				description: nullToEmptyString(body.description),
 				order: body.order,
 				lessonId: body.lessonId,
-				difficulty: body.difficulty,
+				difficulty: exerciseDifficultyToClient(body.difficulty),
 			})
 
 			return {

@@ -14,12 +14,15 @@ import type {
 	ExerciseResponseDto,
 	QuizResponseDto,
 } from '../dtos'
+import { clientActivityTypeToResponse } from './client-activity-type-to-response.helper'
+import { clientExerciseDifficultyToResponse } from './client-exercise-difficulty-to-response.helper'
 
 export function clientActivityToResponseDto(
 	client: ClientActivity,
 ): ActivityResponseDto {
 	return {
 		...client,
+		type: clientActivityTypeToResponse(client.type),
 		description: emptyStringToNull(client.description),
 		updatedAt: emptyStringToNull(client.updatedAt),
 	}
@@ -30,6 +33,7 @@ export function clientArticleToResponseDto(
 ): ArticleResponseDto {
 	return {
 		...client,
+		type: clientActivityTypeToResponse(client.type),
 		description: emptyStringToNull(client.description),
 		updatedAt: emptyStringToNull(client.updatedAt),
 	}
@@ -40,6 +44,8 @@ export function clientExerciseToResponseDto(
 ): ExerciseResponseDto {
 	return {
 		...client,
+		difficulty: clientExerciseDifficultyToResponse(client.difficulty),
+		type: clientActivityTypeToResponse(client.type),
 		description: emptyStringToNull(client.description),
 		updatedAt: emptyStringToNull(client.updatedAt),
 	}
@@ -48,6 +54,7 @@ export function clientExerciseToResponseDto(
 export function clientQuizToResponseDto(client: ClientQuiz): QuizResponseDto {
 	return {
 		...client,
+		type: clientActivityTypeToResponse(client.type),
 		description: emptyStringToNull(client.description),
 		updatedAt: emptyStringToNull(client.updatedAt),
 	}

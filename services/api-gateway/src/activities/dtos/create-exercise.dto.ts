@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { ExerciseDifficulty } from '@pathly-backend/contracts/learning-paths/v1/activities.js'
 import { CreateActivityDto } from './create.dto'
+import { ExerciseDifficulty } from '../enums'
 
 export class CreateExerciseDto extends CreateActivityDto {
 	@ApiProperty({
