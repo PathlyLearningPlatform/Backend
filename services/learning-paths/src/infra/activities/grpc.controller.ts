@@ -546,6 +546,17 @@ export class GrpcActivitiesController {
 
 			return {};
 		} catch (err) {
+			if (err instanceof ActivityNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						errorCodeToMessage[LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND],
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND,
+					),
+					err,
+				);
+			}
+
 			throw new GrpcException(
 				new GrpcErrorDto(
 					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
