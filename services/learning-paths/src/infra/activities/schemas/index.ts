@@ -3,3 +3,9 @@ export * from './find.schema';
 export * from './find-one.schema';
 export * from './remove.schema';
 export * from './update.schema';
+
+export * from './create-question.schema';
+export * from './find-one-question.schema';
+export * from './update-question.schema';
+export * from './remove-question.schema';
+export * from './find-questions.schema';

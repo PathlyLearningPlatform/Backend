@@ -24,3 +24,6 @@ export const pageSchema = z.coerce
 	.number()
 	.int()
 	.min(ActivitiesApiConstraints.MIN_PAGE)
+
+export const quizContentSchema = z.string()
+export const quizCorrectAnswerSchema = z.string()

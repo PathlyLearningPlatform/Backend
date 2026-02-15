@@ -1,3 +1,3 @@
-import type { ActivityCreateFields } from '@/domain/activities/entities';
+import type { QuizCreateFields } from '@/domain/activities/entities';
 
-export type CreateQuizCommand = Omit<ActivityCreateFields, 'type' | 'id'>;
+export type CreateQuizCommand = Omit<QuizCreateFields, 'type' | 'id'>;

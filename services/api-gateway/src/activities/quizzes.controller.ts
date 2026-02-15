@@ -2,11 +2,13 @@ import {
 	Body,
 	ConflictException,
 	Controller,
+	Delete,
 	Get,
 	Inject,
 	InternalServerErrorException,
 	NotFoundException,
 	Param,
+	ParseIntPipe,
 	ParseUUIDPipe,
 	Patch,
 	Post,
@@ -28,14 +30,29 @@ import {
 import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js'
 import { exceptionCodeToMessage } from '../common/helpers'
 import { ActivitiesService } from './activities.service'
-import { CreateQuizDto, UpdateQuizDto } from './dtos'
 import {
+	CreateQuestionDto,
+	CreateQuizDto,
+	UpdateQuestionDto,
+	UpdateQuizDto,
+} from './dtos'
+import {
+	CreateQuestionResponseDto,
 	CreateQuizResponseDto,
+	FindOneQuestionResponseDto,
 	FindOneQuizResponseDto,
+	FindQuestionsResponseDto,
+	RemoveQuestionResponseDto,
+	UpdateQuestionResponseDto,
 	UpdateQuizResponseDto,
 } from './dtos/responses'
-import { clientQuizToResponseDto } from './helpers'
-import { createQuizSchema, updateQuizPropsSchema } from './schemas'
+import { clientQuestionToResponseDto, clientQuizToResponseDto } from './helpers'
+import {
+	createQuestionSchema,
+	createQuizSchema,
+	updateQuestionSchema,
+	updateQuizPropsSchema,
+} from './schemas'
 
 @Controller({
 	path: 'quizzes',
@@ -191,6 +208,272 @@ export class QuizzesController {
 						new HttpErrorDto(
 							exceptionCodeToMessage[
 								LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND
+							],
+						),
+					)
+				default:
+					throw new InternalServerErrorException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+						),
+						{
+							cause: err,
+						},
+					)
+			}
+		}
+	}
+
+	@ApiOkResponse({
+		type: FindQuestionsResponseDto,
+	})
+	@ApiNotFoundResponse({
+		type: HttpErrorDto,
+	})
+	@Get(':id/questions')
+	async findQuestions(
+		@Param('id', ParseUUIDPipe) id: string,
+	): Promise<FindQuestionsResponseDto> {
+		try {
+			const result = await this.activitiesService.findQuestions({
+				quizId: id,
+			})
+
+			return {
+				questions: Array.from(result.questions).map(
+					clientQuestionToResponseDto,
+				),
+			}
+		} catch (err) {
+			const grpcErr = err as GrpcException
+			const errRes = grpcErr.getGrpcError()
+
+			switch (errRes.apiCode) {
+				case LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND:
+					throw new NotFoundException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND
+							],
+						),
+					)
+				default:
+					throw new InternalServerErrorException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+						),
+						{
+							cause: err,
+						},
+					)
+			}
+		}
+	}
+
+	@ApiOkResponse({
+		type: FindOneQuestionResponseDto,
+	})
+	@ApiNotFoundResponse({
+		type: HttpErrorDto,
+	})
+	@Get(':id/questions/:questionId')
+	async findOneQuestion(
+		@Param('id', ParseUUIDPipe) id: string,
+		@Param('questionId', ParseIntPipe) questionId: number,
+	): Promise<FindOneQuestionResponseDto> {
+		try {
+			const result = await this.activitiesService.findOneQuestion({
+				where: {
+					quizId: id,
+					id: questionId,
+				},
+			})
+
+			return {
+				question: clientQuestionToResponseDto(result.question!),
+			}
+		} catch (err) {
+			const grpcErr = err as GrpcException
+			const errRes = grpcErr.getGrpcError()
+
+			switch (errRes.apiCode) {
+				case LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND:
+					throw new NotFoundException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND
+							],
+						),
+					)
+				case LearningPathsApiErrorCodes.QUESTION_NOT_FOUND:
+					throw new NotFoundException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.QUESTION_NOT_FOUND
+							],
+						),
+					)
+				default:
+					throw new InternalServerErrorException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+						),
+						{
+							cause: err,
+						},
+					)
+			}
+		}
+	}
+
+	@ApiCreatedResponse({
+		type: CreateQuestionResponseDto,
+	})
+	@ApiNotFoundResponse({
+		type: HttpErrorDto,
+	})
+	@Post(':id/questions')
+	async createQuestion(
+		@Param('id', ParseUUIDPipe) id: string,
+		@Body(new HttpValidationPipe(createQuestionSchema))
+		body: CreateQuestionDto,
+	): Promise<CreateQuestionResponseDto> {
+		try {
+			const result = await this.activitiesService.createQuestion({
+				content: body.content,
+				correctAnswer: body.correctAnswer,
+				quizId: id,
+			})
+
+			return {
+				question: clientQuestionToResponseDto(result.question!),
+			}
+		} catch (err) {
+			const grpcErr = err as GrpcException
+			const errRes = grpcErr.getGrpcError()
+
+			switch (errRes.apiCode) {
+				case LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND:
+					throw new NotFoundException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND
+							],
+						),
+					)
+				default:
+					throw new InternalServerErrorException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+						),
+						{
+							cause: err,
+						},
+					)
+			}
+		}
+	}
+
+	@ApiOkResponse({
+		type: UpdateQuestionResponseDto,
+	})
+	@ApiNotFoundResponse({
+		type: HttpErrorDto,
+	})
+	@Patch(':id/questions/:questionId')
+	async updateQuestion(
+		@Param('id', ParseUUIDPipe) id: string,
+		@Param('questionId', ParseIntPipe) questionId: number,
+		@Body(new HttpValidationPipe(updateQuestionSchema))
+		body: UpdateQuestionDto,
+	): Promise<UpdateQuestionResponseDto> {
+		try {
+			const result = await this.activitiesService.updateQuestion({
+				fields: {
+					content: body.content,
+					correctAnswer: body.correctAnswer,
+				},
+				where: {
+					id: questionId,
+					quizId: id,
+				},
+			})
+
+			return {
+				question: clientQuestionToResponseDto(result.question!),
+			}
+		} catch (err) {
+			const grpcErr = err as GrpcException
+			const errRes = grpcErr.getGrpcError()
+
+			switch (errRes.apiCode) {
+				case LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND:
+					throw new NotFoundException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND
+							],
+						),
+					)
+				case LearningPathsApiErrorCodes.QUESTION_NOT_FOUND:
+					throw new NotFoundException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.QUESTION_NOT_FOUND
+							],
+						),
+					)
+				default:
+					throw new InternalServerErrorException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+						),
+						{
+							cause: err,
+						},
+					)
+			}
+		}
+	}
+
+	@ApiOkResponse({
+		type: RemoveQuestionResponseDto,
+	})
+	@ApiNotFoundResponse({
+		type: HttpErrorDto,
+	})
+	@Delete(':id/questions/:questionId')
+	async removeQuestion(
+		@Param('id', ParseUUIDPipe) id: string,
+		@Param('questionId', ParseIntPipe) questionId: number,
+	): Promise<RemoveQuestionResponseDto> {
+		try {
+			await this.activitiesService.removeQuestion({
+				where: {
+					id: questionId,
+					quizId: id,
+				},
+			})
+
+			return {}
+		} catch (err) {
+			const grpcErr = err as GrpcException
+			const errRes = grpcErr.getGrpcError()
+
+			switch (errRes.apiCode) {
+				case LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND:
+					throw new NotFoundException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND
+							],
+						),
+					)
+				case LearningPathsApiErrorCodes.QUESTION_NOT_FOUND:
+					throw new NotFoundException(
+						new HttpErrorDto(
+							exceptionCodeToMessage[
+								LearningPathsApiErrorCodes.QUESTION_NOT_FOUND
 							],
 						),
 					)

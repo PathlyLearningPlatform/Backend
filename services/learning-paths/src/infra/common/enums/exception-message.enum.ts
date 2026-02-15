@@ -14,5 +14,7 @@ export enum ExceptionMessage {
 	ACTIVITY_NOT_FOUND = 'Activity was not found.',
 	ACTIVITY_CANNOT_BE_REMOVED = 'Activity cannot be removed.',
 
+	QUESTION_NOT_FOUND = 'Question was not found.',
+
 	INTERNAL_ERROR = 'Internal error. Please try again later.',
 }

@@ -1,15 +1,15 @@
-import { pgTable, uuid, text, primaryKey, serial } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, text, primaryKey, integer } from 'drizzle-orm/pg-core';
 import { quizzesTable } from './quizzes.table';
 
 export const questionsTable = pgTable(
 	'questions',
 	{
-		id: serial(),
-		quizId: uuid()
+		id: integer().notNull(),
+		quizId: uuid('quiz_id')
 			.notNull()
-			.references(() => quizzesTable.activityId),
-		content: text().notNull(),
-		correctAnswer: text().notNull(),
+			.references(() => quizzesTable.activityId, { onDelete: 'cascade' }),
+		content: text('content').notNull(),
+		correctAnswer: text('correct_answer').notNull(),
 	},
 	(t) => [primaryKey({ columns: [t.quizId, t.id] })],
 );

@@ -3,9 +3,12 @@ import { z } from 'zod'
 import {
 	descriptionSchema,
 	difficultySchema,
+	idSchema,
 	lessonIdSchema,
 	nameSchema,
 	orderSchema,
+	quizContentSchema,
+	quizCorrectAnswerSchema,
 	refSchema,
 } from './fields.schema'
 
@@ -32,3 +35,11 @@ export const createExerciseSchema = createActivitySchema
 	.strict()
 
 export const createQuizSchema = createActivitySchema.safeExtend({}).strict()
+
+export const createQuestionSchema = z
+	.object({
+		quizId: idSchema,
+		content: quizContentSchema,
+		correctAnswer: quizCorrectAnswerSchema,
+	})
+	.strict()

@@ -62,7 +62,34 @@ export class ArticleResponseDto extends ActivityResponseDto {
 	ref: string
 }
 
-export class QuizResponseDto extends ActivityResponseDto {}
+export class QuestionResponseDto {
+	@ApiProperty({
+		type: 'number',
+	})
+	id: number
+
+	@ApiProperty({
+		type: 'string',
+	})
+	quizId: string
+
+	@ApiProperty({
+		type: 'string',
+	})
+	content: string
+
+	@ApiProperty({
+		type: 'string',
+	})
+	correctAnswer: string
+}
+
+export class QuizResponseDto extends ActivityResponseDto {
+	@ApiProperty({
+		type: [QuestionResponseDto],
+	})
+	questions: QuestionResponseDto[]
+}
 
 export class ExerciseResponseDto extends ActivityResponseDto {
 	@ApiProperty({

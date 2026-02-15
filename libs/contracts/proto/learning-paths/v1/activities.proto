@@ -21,6 +21,12 @@ service ActivitiesService {
   rpc UpdateQuiz (UpdateQuizRequest) returns (UpdateQuizResponse);
 
   rpc Remove (RemoveActivityRequest) returns (RemoveActivityResponse);
+
+  rpc FindQuestions (FindQuestionsRequest) returns (FindQuestionsResponse);
+  rpc FindOneQuestion (FindOneQuestionRequest) returns (FindOneQuestionResponse);
+  rpc CreateQuestion (CreateQuestionRequest) returns (CreateQuestionResponse);
+  rpc UpdateQuestion (UpdateQuestionRequest) returns (UpdateQuestionResponse);
+  rpc RemoveQuestion (RemoveQuestionRequest) returns (RemoveQuestionResponse);
 }
 
 enum ActivityType {
@@ -81,9 +87,73 @@ message Quiz {
   int32 order = 6;
   string lessonId = 7;
   ActivityType type = 8;
+  int32 nextQuestionId = 9;
+  repeated Question questions = 10;
+}
+
+message Question {
+  int32 id = 1;
+  string quizId = 2;
+  string content = 3;
+  string correctAnswer = 4;
 }
 
 // Request/Response
+
+message FindQuestionsRequest {
+  string quizId = 1;
+}
+message FindQuestionsResponse {
+  repeated Question questions = 1;
+}
+
+message FindOneQuestionRequest {
+  message Where {
+    int32 id = 1;
+    string quizId = 2;
+  }
+
+  Where where = 1;
+}
+message FindOneQuestionResponse {
+  Question question = 1;
+}
+
+message CreateQuestionRequest {
+  string quizId = 1;
+  string content = 2;
+  string correctAnswer = 3;
+}
+message CreateQuestionResponse {
+  Question question = 1;
+}
+
+message UpdateQuestionRequest {
+  message Where {
+    int32 id = 1;
+    string quizId = 2;
+  }
+  message Fields {
+    optional string content = 1;
+    optional string correctAnswer = 2;
+  }
+
+  Where where = 1;
+  optional Fields fields = 2;
+}
+message UpdateQuestionResponse {
+  Question question = 1;
+}
+
+message RemoveQuestionRequest {
+  message Where {
+    int32 id = 1;
+    string quizId = 2;
+  }
+
+  Where where = 1;
+}
+message RemoveQuestionResponse {}
 
 message FindActivitiesRequest {
   message Options {

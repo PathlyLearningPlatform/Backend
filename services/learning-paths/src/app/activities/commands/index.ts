@@ -5,3 +5,5 @@ export * from './find.command';
 export * from './update-article.command';
 export * from './update-exercise.command';
 export * from './update-quiz.command';
+export * from './create-question.command';
+export * from './update-question.command';

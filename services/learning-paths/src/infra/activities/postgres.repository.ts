@@ -3,7 +3,7 @@ import {
 	RepositoryException,
 	UniqueConstraintException,
 } from '@pathly-backend/core/index.js';
-import { and, DrizzleQueryError, eq } from 'drizzle-orm';
+import { and, DrizzleQueryError, eq, notInArray, sql } from 'drizzle-orm';
 import type { IActivitiesRepository } from '@/domain/activities/interfaces';
 import type {
 	Activity,
@@ -19,6 +19,7 @@ import {
 	activitiesTable,
 	articlesTable,
 	exercisesTable,
+	questionsTable,
 	quizzesTable,
 } from '../db/schemas';
 import { ActivitiesApiConstraints } from './enums';
@@ -118,21 +119,40 @@ export class PostgresActivitiesRepository implements IActivitiesRepository {
 	}
 	async findOneQuiz(activityId: string): Promise<Quiz | null> {
 		try {
-			const result = await this.db
-				.select()
-				.from(activitiesTable)
-				.innerJoin(
-					quizzesTable,
-					eq(activitiesTable.id, quizzesTable.activityId),
-				)
-				.where(
-					and(
-						eq(activitiesTable.id, activityId),
-						eq(activitiesTable.type, ActivityType.QUIZ),
-					),
-				);
+			const result = await this.db.transaction(async (tx) => {
+				const quizzes = await tx
+					.select()
+					.from(activitiesTable)
+					.innerJoin(
+						quizzesTable,
+						eq(activitiesTable.id, quizzesTable.activityId),
+					)
+					.where(
+						and(
+							eq(activitiesTable.id, activityId),
+							eq(activitiesTable.type, ActivityType.QUIZ),
+						),
+					);
 
-			return result.length <= 0 ? null : dbQuizToEntity(result[0]);
+				if (quizzes.length <= 0) {
+					return null;
+				}
+
+				const quiz = quizzes[0];
+
+				const questions = await tx
+					.select()
+					.from(questionsTable)
+					.where(eq(questionsTable.quizId, quiz.quizzes.activityId));
+
+				return dbQuizToEntity({
+					activity: quiz.activities,
+					questions: questions,
+					quiz: quiz.quizzes,
+				});
+			});
+
+			return result;
 		} catch (err) {
 			throw new RepositoryException('db query failed', err);
 		}
@@ -211,20 +231,65 @@ export class PostgresActivitiesRepository implements IActivitiesRepository {
 	async saveQuiz(entity: Quiz): Promise<void> {
 		try {
 			await this.db.transaction(async (tx) => {
-				await tx.insert(activitiesTable).values(entity).onConflictDoUpdate({
-					target: activitiesTable.id,
-					set: entity,
-				});
+				await tx
+					.insert(activitiesTable)
+					.values(entity)
+					.onConflictDoUpdate({
+						target: activitiesTable.id,
+						set: {
+							createdAt: entity.createdAt,
+							updatedAt: entity.updatedAt,
+							description: entity.description,
+							name: entity.name,
+							order: entity.order,
+							id: entity.id,
+							lessonId: entity.lessonId,
+							type: ActivityType.QUIZ,
+						},
+					});
 
 				await tx
 					.insert(quizzesTable)
 					.values({
 						activityId: entity.id,
+						nextQuestionId: entity.nextQuestionId,
 					})
 					.onConflictDoUpdate({
 						target: quizzesTable.activityId,
 						set: {
-							activityId: entity.id,
+							nextQuestionId: entity.nextQuestionId,
+						},
+					});
+
+				const questionIds = entity.questions.map((q) => q.id);
+
+				if (questionIds.length <= 0) {
+					await tx
+						.delete(questionsTable)
+						.where(eq(questionsTable.quizId, entity.id));
+
+					return;
+				}
+
+				await tx
+					.delete(questionsTable)
+					.where(
+						and(
+							eq(questionsTable.quizId, entity.id),
+							notInArray(questionsTable.id, questionIds),
+						),
+					);
+
+				await tx
+					.insert(questionsTable)
+					.values(entity.questions)
+					.onConflictDoUpdate({
+						target: [questionsTable.id, questionsTable.quizId],
+						set: {
+							content: sql.raw(`excluded.${questionsTable.content.name}`),
+							correctAnswer: sql.raw(
+								`excluded.${questionsTable.correctAnswer.name}`,
+							),
 						},
 					});
 			});

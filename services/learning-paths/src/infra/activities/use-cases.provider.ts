@@ -2,15 +2,20 @@ import type { Provider } from '@nestjs/common';
 import {
 	CreateArticleUseCase,
 	CreateExerciseUseCase,
+	CreateQuestionUseCase,
 	CreateQuizUseCase,
 	FindActivitiesUseCase,
 	FindOneActivityUseCase,
 	FindOneArticleUseCase,
 	FindOneExerciseUseCase,
+	FindOneQuestionUseCase,
 	FindOneQuizUseCase,
+	FindQuestionsUseCase,
 	RemoveActivityUseCase,
+	RemoveQuestionUseCase,
 	UpdateArticleUseCase,
 	UpdateExerciseUseCase,
+	UpdateQuestionUseCase,
 	UpdateQuizUseCase,
 } from '@/app/activities/use-cases';
 import { DiToken } from '../common/enums';
@@ -102,6 +107,36 @@ export const activitiesUseCasesProvider: Provider[] = [
 		provide: DiToken.REMOVE_ACTIVITY_USE_CASE,
 		useFactory: (repository: PostgresActivitiesRepository) =>
 			new RemoveActivityUseCase(repository),
+		inject: [PostgresActivitiesRepository],
+	},
+	{
+		provide: DiToken.FIND_QUESTIONS_USE_CASE,
+		useFactory: (repository: PostgresActivitiesRepository) =>
+			new FindQuestionsUseCase(repository),
+		inject: [PostgresActivitiesRepository],
+	},
+	{
+		provide: DiToken.FIND_ONE_QUESTION_USE_CASE,
+		useFactory: (repository: PostgresActivitiesRepository) =>
+			new FindOneQuestionUseCase(repository),
+		inject: [PostgresActivitiesRepository],
+	},
+	{
+		provide: DiToken.CREATE_QUESTION_USE_CASE,
+		useFactory: (repository: PostgresActivitiesRepository) =>
+			new CreateQuestionUseCase(repository),
+		inject: [PostgresActivitiesRepository],
+	},
+	{
+		provide: DiToken.UPDATE_QUESTION_USE_CASE,
+		useFactory: (repository: PostgresActivitiesRepository) =>
+			new UpdateQuestionUseCase(repository),
+		inject: [PostgresActivitiesRepository],
+	},
+	{
+		provide: DiToken.REMOVE_QUESTION_USE_CASE,
+		useFactory: (repository: PostgresActivitiesRepository) =>
+			new RemoveQuestionUseCase(repository),
 		inject: [PostgresActivitiesRepository],
 	},
 ];

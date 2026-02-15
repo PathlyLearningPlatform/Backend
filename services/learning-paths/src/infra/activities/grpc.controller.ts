@@ -9,6 +9,11 @@ import {
 } from '@pathly-backend/common/index.js';
 import {
 	ACTIVITIES_SERVICE_NAME,
+	CreateQuestionResponse,
+	FindOneQuestionResponse,
+	FindQuestionsResponse,
+	RemoveQuestionResponse,
+	UpdateQuestionResponse,
 	type CreateArticleResponse,
 	type CreateExerciseResponse,
 	type CreateQuizResponse,
@@ -23,43 +28,55 @@ import {
 	type UpdateQuizResponse,
 } from '@pathly-backend/contracts/learning-paths/v1/activities.js';
 import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js';
-import type z from 'zod';
+import z from 'zod';
 import type {
 	CreateArticleUseCase,
 	CreateExerciseUseCase,
+	CreateQuestionUseCase,
 	CreateQuizUseCase,
 	FindActivitiesUseCase,
 	FindOneActivityUseCase,
 	FindOneArticleUseCase,
 	FindOneExerciseUseCase,
+	FindOneQuestionUseCase,
 	FindOneQuizUseCase,
+	FindQuestionsUseCase,
 	RemoveActivityUseCase,
+	RemoveQuestionUseCase,
 	UpdateArticleUseCase,
 	UpdateExerciseUseCase,
+	UpdateQuestionUseCase,
 	UpdateQuizUseCase,
 } from '@/app/activities/use-cases';
 import {
 	ActivityNotFoundException,
 	ActivityOrderException,
+	QuestionNotFoundException,
 } from '@/domain/activities/exceptions';
 import { LessonNotFoundException } from '@/domain/lessons/exceptions';
-import { DiToken } from '../common/enums';
+import { DiToken, ExceptionMessage } from '../common/enums';
 import { errorCodeToMessage } from '../common/helpers/error-code-to-message.helper';
 import {
 	activityEntityToClient,
 	articleEntityToClient,
 	exerciseEntityToClient,
+	questionEntityToClient,
 	quizEntityToClient,
 } from './helpers';
 import {
 	createArticleSchema,
 	createExerciseSchema,
+	createQuestionSchema,
 	createQuizSchema,
 	findActivitiesSchema,
 	findOneActivitySchema,
+	findOneQuestionSchema,
+	findQuestionsSchema,
 	removeActivitySchema,
+	removeQuestionSchema,
 	updateArticleSchema,
 	updateExerciseSchema,
+	updateQuestionSchema,
 	updateQuizSchema,
 } from './schemas';
 
@@ -91,6 +108,17 @@ export class GrpcActivitiesController {
 		private readonly updateQuizUseCase: UpdateQuizUseCase,
 		@Inject(DiToken.REMOVE_ACTIVITY_USE_CASE)
 		private readonly removeActivityUseCase: RemoveActivityUseCase,
+
+		@Inject(DiToken.FIND_QUESTIONS_USE_CASE)
+		private readonly findQuestionsUseCase: FindQuestionsUseCase,
+		@Inject(DiToken.FIND_ONE_QUESTION_USE_CASE)
+		private readonly findOneQuestionUseCase: FindOneQuestionUseCase,
+		@Inject(DiToken.CREATE_QUESTION_USE_CASE)
+		private readonly createQuestionUseCase: CreateQuestionUseCase,
+		@Inject(DiToken.UPDATE_QUESTION_USE_CASE)
+		private readonly updateQuestionUseCase: UpdateQuestionUseCase,
+		@Inject(DiToken.REMOVE_QUESTION_USE_CASE)
+		private readonly removeQuestionUseCase: RemoveQuestionUseCase,
 	) {}
 
 	@GrpcMethod(ACTIVITIES_SERVICE_NAME)
@@ -552,6 +580,216 @@ export class GrpcActivitiesController {
 						errorCodeToMessage[LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND],
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND,
+					),
+					err,
+				);
+			}
+
+			throw new GrpcException(
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
+				err,
+			);
+		}
+	}
+
+	@GrpcMethod(ACTIVITIES_SERVICE_NAME)
+	async findQuestions(
+		@Payload(new RpcValidationPipe(findQuestionsSchema)) payload: z.infer<
+			typeof findQuestionsSchema
+		>,
+	): Promise<FindQuestionsResponse> {
+		try {
+			const questions = await this.findQuestionsUseCase.execute(payload.quizId);
+
+			return { questions: questions.map(questionEntityToClient) };
+		} catch (err) {
+			if (err instanceof ActivityNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						errorCodeToMessage[LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND],
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND,
+					),
+					err,
+				);
+			}
+
+			throw new GrpcException(
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
+				err,
+			);
+		}
+	}
+
+	@GrpcMethod(ACTIVITIES_SERVICE_NAME)
+	async findOneQuestion(
+		@Payload(new RpcValidationPipe(findOneQuestionSchema)) payload: z.infer<
+			typeof findOneQuestionSchema
+		>,
+	): Promise<FindOneQuestionResponse> {
+		try {
+			const question = await this.findOneQuestionUseCase.execute(
+				payload.where.quizId,
+				payload.where.id,
+			);
+
+			return {
+				question: questionEntityToClient(question),
+			};
+		} catch (err) {
+			if (err instanceof ActivityNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						errorCodeToMessage[LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND],
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND,
+					),
+					err,
+				);
+			}
+
+			if (err instanceof QuestionNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						ExceptionMessage.QUESTION_NOT_FOUND,
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.QUESTION_NOT_FOUND,
+					),
+					err,
+				);
+			}
+
+			throw new GrpcException(
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
+				err,
+			);
+		}
+	}
+
+	@GrpcMethod(ACTIVITIES_SERVICE_NAME)
+	async createQuestion(
+		@Payload(new RpcValidationPipe(createQuestionSchema)) payload: z.infer<
+			typeof createQuestionSchema
+		>,
+	): Promise<CreateQuestionResponse> {
+		try {
+			const question = await this.createQuestionUseCase.execute(payload);
+
+			return {
+				question: questionEntityToClient(question),
+			};
+		} catch (err) {
+			if (err instanceof ActivityNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						errorCodeToMessage[LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND],
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND,
+					),
+					err,
+				);
+			}
+
+			throw new GrpcException(
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
+				err,
+			);
+		}
+	}
+
+	@GrpcMethod(ACTIVITIES_SERVICE_NAME)
+	async updateQuestion(
+		@Payload(new RpcValidationPipe(updateQuestionSchema)) payload: z.infer<
+			typeof updateQuestionSchema
+		>,
+	): Promise<UpdateQuestionResponse> {
+		try {
+			const question = await this.updateQuestionUseCase.execute(payload);
+
+			return {
+				question: questionEntityToClient(question),
+			};
+		} catch (err) {
+			if (err instanceof ActivityNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						errorCodeToMessage[LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND],
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND,
+					),
+					err,
+				);
+			}
+
+			if (err instanceof QuestionNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						ExceptionMessage.QUESTION_NOT_FOUND,
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.QUESTION_NOT_FOUND,
+					),
+					err,
+				);
+			}
+
+			throw new GrpcException(
+				new GrpcErrorDto(
+					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
+				err,
+			);
+		}
+	}
+
+	@GrpcMethod(ACTIVITIES_SERVICE_NAME)
+	async removeQuestion(
+		@Payload(new RpcValidationPipe(removeQuestionSchema)) payload: z.infer<
+			typeof removeQuestionSchema
+		>,
+	): Promise<RemoveQuestionResponse> {
+		try {
+			await this.removeQuestionUseCase.execute(
+				payload.where.quizId,
+				payload.where.id,
+			);
+
+			return {};
+		} catch (err) {
+			if (err instanceof ActivityNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						errorCodeToMessage[LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND],
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND,
+					),
+					err,
+				);
+			}
+
+			if (err instanceof QuestionNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						ExceptionMessage.QUESTION_NOT_FOUND,
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.QUESTION_NOT_FOUND,
 					),
 					err,
 				);

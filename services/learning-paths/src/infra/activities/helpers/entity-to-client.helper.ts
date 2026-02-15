@@ -4,6 +4,7 @@ import type {
 	Article as ClientArticle,
 	Exercise as ClientExercise,
 	Quiz as ClientQuiz,
+	Question as ClientQuestion,
 } from '@pathly-backend/contracts/learning-paths/v1/activities.js';
 import type {
 	Activity,
@@ -15,10 +16,14 @@ import {
 	activityTypeToClient,
 	exerciseDifficultyToClient,
 } from './enums.helper';
+import { Question } from '@/domain/activities/entities/question.entity';
 
 export function activityEntityToClient(entity: Activity): ClientActivity {
 	return {
-		...entity,
+		id: entity.id,
+		lessonId: entity.lessonId,
+		name: entity.name,
+		order: entity.order,
 		description: nullToEmptyString(entity.description),
 		type: activityTypeToClient(entity.type),
 		updatedAt: entity.updatedAt === null ? '' : entity.updatedAt.toISOString(),
@@ -38,5 +43,25 @@ export function exerciseEntityToClient(entity: Exercise): ClientExercise {
 }
 
 export function quizEntityToClient(entity: Quiz): ClientQuiz {
-	return { ...activityEntityToClient(entity) };
+	return {
+		...activityEntityToClient(entity),
+		nextQuestionId: entity.nextQuestionId,
+		questions: entity.questions.map((q) => {
+			return {
+				id: q.id,
+				quizId: q.quizId,
+				correctAnswer: q.correctAnswer,
+				content: q.content,
+			};
+		}),
+	};
+}
+
+export function questionEntityToClient(entity: Question): ClientQuestion {
+	return {
+		content: entity.content,
+		correctAnswer: entity.correctAnswer,
+		id: entity.id,
+		quizId: entity.quizId,
+	};
 }

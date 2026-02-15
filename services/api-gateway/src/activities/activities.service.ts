@@ -3,6 +3,16 @@ import type { ClientGrpc } from '@nestjs/microservices'
 import { throwGrpcException } from '@pathly-backend/common/index.js'
 import {
 	ACTIVITIES_SERVICE_NAME,
+	CreateQuestionRequest,
+	CreateQuestionResponse,
+	FindOneQuestionRequest,
+	FindOneQuestionResponse,
+	FindQuestionsRequest,
+	FindQuestionsResponse,
+	RemoveQuestionRequest,
+	RemoveQuestionResponse,
+	UpdateQuestionRequest,
+	UpdateQuestionResponse,
 	type ActivitiesServiceClient,
 	type CreateArticleRequest,
 	type CreateArticleResponse,
@@ -162,6 +172,56 @@ export class ActivitiesService implements OnModuleInit {
 		await firstValueFrom(
 			this.activitiesServiceClient
 				.remove(request)
+				.pipe(catchError(throwGrpcException)),
+		)
+	}
+
+	async findQuestions(
+		request: FindQuestionsRequest,
+	): Promise<FindQuestionsResponse> {
+		return await firstValueFrom(
+			this.activitiesServiceClient
+				.findQuestions(request)
+				.pipe(catchError(throwGrpcException)),
+		)
+	}
+
+	async findOneQuestion(
+		request: FindOneQuestionRequest,
+	): Promise<FindOneQuestionResponse> {
+		return await firstValueFrom(
+			this.activitiesServiceClient
+				.findOneQuestion(request)
+				.pipe(catchError(throwGrpcException)),
+		)
+	}
+
+	async createQuestion(
+		request: CreateQuestionRequest,
+	): Promise<CreateQuestionResponse> {
+		return await firstValueFrom(
+			this.activitiesServiceClient
+				.createQuestion(request)
+				.pipe(catchError(throwGrpcException)),
+		)
+	}
+
+	async updateQuestion(
+		request: UpdateQuestionRequest,
+	): Promise<UpdateQuestionResponse> {
+		return await firstValueFrom(
+			this.activitiesServiceClient
+				.updateQuestion(request)
+				.pipe(catchError(throwGrpcException)),
+		)
+	}
+
+	async removeQuestion(
+		request: RemoveQuestionRequest,
+	): Promise<RemoveQuestionResponse> {
+		return await firstValueFrom(
+			this.activitiesServiceClient
+				.removeQuestion(request)
 				.pipe(catchError(throwGrpcException)),
 		)
 	}

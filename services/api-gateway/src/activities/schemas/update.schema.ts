@@ -6,6 +6,8 @@ import {
 	lessonIdSchema,
 	nameSchema,
 	orderSchema,
+	quizContentSchema,
+	quizCorrectAnswerSchema,
 	refSchema,
 } from './fields.schema'
 
@@ -33,5 +35,13 @@ export const updateExercisePropsSchema = updateActivitySchema
 
 export const updateQuizPropsSchema = updateActivitySchema
 	.safeExtend({})
+	.strict()
+	.optional()
+
+export const updateQuestionSchema = z
+	.object({
+		content: quizContentSchema.optional(),
+		correctAnswer: quizCorrectAnswerSchema.optional(),
+	})
 	.strict()
 	.optional()

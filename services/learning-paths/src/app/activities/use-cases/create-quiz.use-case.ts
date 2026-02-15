@@ -31,6 +31,8 @@ export class CreateQuizUseCase {
 				order: command.order,
 				type: ActivityType.QUIZ,
 				description: command.description || null,
+				questions: [],
+				nextQuestionId: 0,
 			});
 
 			await this.activitiesRepository.saveQuiz(quiz);

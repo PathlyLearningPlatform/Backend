@@ -4,7 +4,14 @@ import {
 	Exercise,
 	Quiz,
 } from '@/domain/activities/entities';
-import type { DbActivity, DbArticle, DbExercise, DbQuiz } from '../types';
+import type {
+	DbActivity,
+	DbArticle,
+	DbExercise,
+	DbQuestion,
+	DbQuiz,
+} from '../types';
+import { Question } from '@/domain/activities/entities/question.entity';
 
 export type DbArticleActivity = {
 	activities: DbActivity;
@@ -12,8 +19,9 @@ export type DbArticleActivity = {
 };
 
 export type DbQuizActivity = {
-	activities: DbActivity;
-	quizzes: DbQuiz;
+	activity: DbActivity;
+	quiz: DbQuiz;
+	questions: DbQuestion[];
 };
 
 export type DbExerciseActivity = {
@@ -35,15 +43,23 @@ export function dbActivityToEntity(db: DbActivity): Activity {
 }
 
 export function dbQuizToEntity(db: DbQuizActivity): Quiz {
+	const questions: Question[] = [];
+
+	for (const q of db.questions) {
+		questions.push(new Question(q));
+	}
+
 	return new Quiz({
-		createdAt: db.activities.createdAt,
-		updatedAt: db.activities.updatedAt,
-		description: db.activities.description,
-		id: db.quizzes.activityId,
-		lessonId: db.activities.lessonId,
-		name: db.activities.name,
-		order: db.activities.order,
-		type: db.activities.type,
+		createdAt: db.activity.createdAt,
+		updatedAt: db.activity.updatedAt,
+		description: db.activity.description,
+		id: db.quiz.activityId,
+		lessonId: db.activity.lessonId,
+		name: db.activity.name,
+		order: db.activity.order,
+		type: db.activity.type,
+		nextQuestionId: db.quiz.nextQuestionId,
+		questions: questions,
 	});
 }
 

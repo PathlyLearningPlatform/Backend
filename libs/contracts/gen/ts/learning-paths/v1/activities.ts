@@ -66,6 +66,77 @@ export interface Quiz {
   order: number;
   lessonId: string;
   type: ActivityType;
+  nextQuestionId: number;
+  questions: Question[];
+}
+
+export interface Question {
+  id: number;
+  quizId: string;
+  content: string;
+  correctAnswer: string;
+}
+
+export interface FindQuestionsRequest {
+  quizId: string;
+}
+
+export interface FindQuestionsResponse {
+  questions: Question[];
+}
+
+export interface FindOneQuestionRequest {
+  where: FindOneQuestionRequest_Where | undefined;
+}
+
+export interface FindOneQuestionRequest_Where {
+  id: number;
+  quizId: string;
+}
+
+export interface FindOneQuestionResponse {
+  question: Question | undefined;
+}
+
+export interface CreateQuestionRequest {
+  quizId: string;
+  content: string;
+  correctAnswer: string;
+}
+
+export interface CreateQuestionResponse {
+  question: Question | undefined;
+}
+
+export interface UpdateQuestionRequest {
+  where: UpdateQuestionRequest_Where | undefined;
+  fields?: UpdateQuestionRequest_Fields | undefined;
+}
+
+export interface UpdateQuestionRequest_Where {
+  id: number;
+  quizId: string;
+}
+
+export interface UpdateQuestionRequest_Fields {
+  content?: string | undefined;
+  correctAnswer?: string | undefined;
+}
+
+export interface UpdateQuestionResponse {
+  question: Question | undefined;
+}
+
+export interface RemoveQuestionRequest {
+  where: RemoveQuestionRequest_Where | undefined;
+}
+
+export interface RemoveQuestionRequest_Where {
+  id: number;
+  quizId: string;
+}
+
+export interface RemoveQuestionResponse {
 }
 
 export interface FindActivitiesRequest {
@@ -239,6 +310,16 @@ export interface ActivitiesServiceClient {
   updateQuiz(request: UpdateQuizRequest): Observable<UpdateQuizResponse>;
 
   remove(request: RemoveActivityRequest): Observable<RemoveActivityResponse>;
+
+  findQuestions(request: FindQuestionsRequest): Observable<FindQuestionsResponse>;
+
+  findOneQuestion(request: FindOneQuestionRequest): Observable<FindOneQuestionResponse>;
+
+  createQuestion(request: CreateQuestionRequest): Observable<CreateQuestionResponse>;
+
+  updateQuestion(request: UpdateQuestionRequest): Observable<UpdateQuestionResponse>;
+
+  removeQuestion(request: RemoveQuestionRequest): Observable<RemoveQuestionResponse>;
 }
 
 export interface ActivitiesServiceController {
@@ -265,6 +346,16 @@ export interface ActivitiesServiceController {
   updateQuiz(request: UpdateQuizRequest): Observable<UpdateQuizResponse>;
 
   remove(request: RemoveActivityRequest): Observable<RemoveActivityResponse>;
+
+  findQuestions(request: FindQuestionsRequest): Observable<FindQuestionsResponse>;
+
+  findOneQuestion(request: FindOneQuestionRequest): Observable<FindOneQuestionResponse>;
+
+  createQuestion(request: CreateQuestionRequest): Observable<CreateQuestionResponse>;
+
+  updateQuestion(request: UpdateQuestionRequest): Observable<UpdateQuestionResponse>;
+
+  removeQuestion(request: RemoveQuestionRequest): Observable<RemoveQuestionResponse>;
 }
 
 export function ActivitiesServiceControllerMethods() {
@@ -282,6 +373,11 @@ export function ActivitiesServiceControllerMethods() {
       "updateExercise",
       "updateQuiz",
       "remove",
+      "findQuestions",
+      "findOneQuestion",
+      "createQuestion",
+      "updateQuestion",
+      "removeQuestion",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
