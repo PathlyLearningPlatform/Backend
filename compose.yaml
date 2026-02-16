@@ -23,6 +23,7 @@ services:
       auth:
         condition: service_healthy
         restart: true
+    restart: always
   api-gateway:
     build:
       context: .
@@ -35,6 +36,7 @@ services:
       - ./services/api-gateway/test:/usr/src/app/services/api-gateway/test
       - ./services/api-gateway/@types:/usr/src/app/services/api-gateway/@types
       - ./libs/ts/common/src:/usr/src/app/libs/ts/common/src
+      - ./libs/ts/core/src:/usr/src/app/libs/ts/core/src
       - ./libs/contracts/proto:/usr/src/app/libs/contracts/proto
     ports:
       - 3000:3000

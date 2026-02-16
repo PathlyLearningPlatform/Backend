@@ -19,6 +19,7 @@ services:
       auth:
         restart: true
         condition: service_healthy
+    restart: always
   api-gateway:
     build:
       context: .
