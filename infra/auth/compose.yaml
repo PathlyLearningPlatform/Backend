@@ -19,7 +19,7 @@ services:
       interval: 10s
       timeout: 15s
       retries: 3
-      start_period: 30s
+      start_period: 40s
     ports:
       - 8080:8080
   auth-db:
