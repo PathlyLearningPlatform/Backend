@@ -58,7 +58,7 @@ export function dbQuizToEntity(db: DbQuizActivity): Quiz {
 		name: db.activity.name,
 		order: db.activity.order,
 		type: db.activity.type,
-		nextQuestionId: db.quiz.nextQuestionId,
+		nextQuestionOrder: db.quiz.nextQuestionOrder,
 		questions: questions,
 	});
 }

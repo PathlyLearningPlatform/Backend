@@ -273,6 +273,28 @@ export class QuizzesApi extends Api {
 
 		return response
 	}
+
+	async findQuestions(quizId: string, version: string = 'v1') {}
+
+	async findOneQuestion(
+		quizId: string,
+		questionId: number,
+		version: string = 'v1',
+	) {}
+
+	async createQuestion(quizId: string, version: string = 'v1') {}
+
+	async updateQuestion(
+		quizId: string,
+		questionId: number,
+		version: string = 'v1',
+	) {}
+
+	async removeQuestion(
+		quizId: string,
+		questionId: number,
+		version: string = 'v1',
+	) {}
 }
 
 export class ExercisesApi extends Api {

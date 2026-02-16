@@ -63,24 +63,19 @@ export class ArticleResponseDto extends ActivityResponseDto {
 }
 
 export class QuestionResponseDto {
-	@ApiProperty({
-		type: 'number',
-	})
-	id: number
+	@ApiProperty()
+	id: string
 
-	@ApiProperty({
-		type: 'string',
-	})
+	@ApiProperty()
 	quizId: string
 
-	@ApiProperty({
-		type: 'string',
-	})
+	@ApiProperty()
+	order: number
+
+	@ApiProperty()
 	content: string
 
-	@ApiProperty({
-		type: 'string',
-	})
+	@ApiProperty()
 	correctAnswer: string
 }
 

@@ -66,15 +66,16 @@ export interface Quiz {
   order: number;
   lessonId: string;
   type: ActivityType;
-  nextQuestionId: number;
+  nextQuestionOrder: number;
   questions: Question[];
 }
 
 export interface Question {
-  id: number;
+  id: string;
   quizId: string;
   content: string;
   correctAnswer: string;
+  order: number;
 }
 
 export interface FindQuestionsRequest {
@@ -90,7 +91,7 @@ export interface FindOneQuestionRequest {
 }
 
 export interface FindOneQuestionRequest_Where {
-  id: number;
+  id: string;
   quizId: string;
 }
 
@@ -114,7 +115,7 @@ export interface UpdateQuestionRequest {
 }
 
 export interface UpdateQuestionRequest_Where {
-  id: number;
+  id: string;
   quizId: string;
 }
 
@@ -132,7 +133,7 @@ export interface RemoveQuestionRequest {
 }
 
 export interface RemoveQuestionRequest_Where {
-  id: number;
+  id: string;
   quizId: string;
 }
 

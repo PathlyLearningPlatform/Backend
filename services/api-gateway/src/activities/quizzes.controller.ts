@@ -8,7 +8,6 @@ import {
 	InternalServerErrorException,
 	NotFoundException,
 	Param,
-	ParseIntPipe,
 	ParseUUIDPipe,
 	Patch,
 	Post,
@@ -279,7 +278,7 @@ export class QuizzesController {
 	@Get(':id/questions/:questionId')
 	async findOneQuestion(
 		@Param('id', ParseUUIDPipe) id: string,
-		@Param('questionId', ParseIntPipe) questionId: number,
+		@Param('questionId', ParseUUIDPipe) questionId: string,
 	): Promise<FindOneQuestionResponseDto> {
 		try {
 			const result = await this.activitiesService.findOneQuestion({
@@ -383,7 +382,7 @@ export class QuizzesController {
 	@Patch(':id/questions/:questionId')
 	async updateQuestion(
 		@Param('id', ParseUUIDPipe) id: string,
-		@Param('questionId', ParseIntPipe) questionId: number,
+		@Param('questionId', ParseUUIDPipe) questionId: string,
 		@Body(new HttpValidationPipe(updateQuestionSchema))
 		body: UpdateQuestionDto,
 	): Promise<UpdateQuestionResponseDto> {
@@ -445,7 +444,7 @@ export class QuizzesController {
 	@Delete(':id/questions/:questionId')
 	async removeQuestion(
 		@Param('id', ParseUUIDPipe) id: string,
-		@Param('questionId', ParseIntPipe) questionId: number,
+		@Param('questionId', ParseUUIDPipe) questionId: string,
 	): Promise<RemoveQuestionResponseDto> {
 		try {
 			await this.activitiesService.removeQuestion({

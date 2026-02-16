@@ -1,7 +1,4 @@
-import {
-	emptyStringToNull,
-	nullToEmptyString,
-} from '@pathly-backend/common/index.js'
+import { emptyStringToNull } from '@pathly-backend/common/index.js'
 import type {
 	Activity as ClientActivity,
 	Article as ClientArticle,
@@ -73,6 +70,7 @@ export function clientQuestionToResponseDto(
 		content: client.content,
 		correctAnswer: client.correctAnswer,
 		id: client.id,
+		order: client.order,
 		quizId: client.quizId,
 	}
 }

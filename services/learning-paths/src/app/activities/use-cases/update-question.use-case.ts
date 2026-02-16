@@ -21,10 +21,7 @@ export class UpdateQuestionUseCase {
 		const question = quiz.findOneQuestion(command.where.id);
 
 		if (!question) {
-			throw new QuestionNotFoundException(
-				command.where.quizId,
-				command.where.id,
-			);
+			throw new QuestionNotFoundException(command.where.id);
 		}
 
 		question.update(command.fields);

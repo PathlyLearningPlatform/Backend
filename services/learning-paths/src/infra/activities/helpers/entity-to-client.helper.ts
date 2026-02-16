@@ -45,13 +45,14 @@ export function exerciseEntityToClient(entity: Exercise): ClientExercise {
 export function quizEntityToClient(entity: Quiz): ClientQuiz {
 	return {
 		...activityEntityToClient(entity),
-		nextQuestionId: entity.nextQuestionId,
+		nextQuestionOrder: entity.nextQuestionOrder,
 		questions: entity.questions.map((q) => {
 			return {
 				id: q.id,
 				quizId: q.quizId,
 				correctAnswer: q.correctAnswer,
 				content: q.content,
+				order: q.order,
 			};
 		}),
 	};
@@ -63,5 +64,6 @@ export function questionEntityToClient(entity: Question): ClientQuestion {
 		correctAnswer: entity.correctAnswer,
 		id: entity.id,
 		quizId: entity.quizId,
+		order: entity.order,
 	};
 }

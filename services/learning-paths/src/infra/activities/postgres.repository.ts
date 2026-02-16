@@ -252,12 +252,12 @@ export class PostgresActivitiesRepository implements IActivitiesRepository {
 					.insert(quizzesTable)
 					.values({
 						activityId: entity.id,
-						nextQuestionId: entity.nextQuestionId,
+						nextQuestionOrder: entity.nextQuestionOrder,
 					})
 					.onConflictDoUpdate({
 						target: quizzesTable.activityId,
 						set: {
-							nextQuestionId: entity.nextQuestionId,
+							nextQuestionOrder: entity.nextQuestionOrder,
 						},
 					});
 
@@ -288,6 +288,7 @@ export class PostgresActivitiesRepository implements IActivitiesRepository {
 							id: q.id,
 							quizId: q.quizId,
 							correctAnswer: q.correctAnswer,
+							order: q.order,
 						})),
 					)
 					.onConflictDoUpdate({

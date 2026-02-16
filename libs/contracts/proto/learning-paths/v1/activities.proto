@@ -87,15 +87,16 @@ message Quiz {
   int32 order = 6;
   string lessonId = 7;
   ActivityType type = 8;
-  int32 nextQuestionId = 9;
+  int32 nextQuestionOrder = 9;
   repeated Question questions = 10;
 }
 
 message Question {
-  int32 id = 1;
+  string id = 1;
   string quizId = 2;
   string content = 3;
   string correctAnswer = 4;
+  int32 order = 5;
 }
 
 // Request/Response
@@ -109,7 +110,7 @@ message FindQuestionsResponse {
 
 message FindOneQuestionRequest {
   message Where {
-    int32 id = 1;
+    string id = 1;
     string quizId = 2;
   }
 
@@ -130,7 +131,7 @@ message CreateQuestionResponse {
 
 message UpdateQuestionRequest {
   message Where {
-    int32 id = 1;
+    string id = 1;
     string quizId = 2;
   }
   message Fields {
@@ -147,7 +148,7 @@ message UpdateQuestionResponse {
 
 message RemoveQuestionRequest {
   message Where {
-    int32 id = 1;
+    string id = 1;
     string quizId = 2;
   }
 

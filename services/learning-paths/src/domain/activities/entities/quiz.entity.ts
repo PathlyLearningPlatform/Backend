@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import {
 	Activity,
 	ActivityAllowedCreateFields,
@@ -8,13 +9,12 @@ import {
 import {
 	Question,
 	QuestionCreateFields,
-	QuestionFields,
 	QuestionUpdateFields,
 } from './question.entity';
 
 export interface QuizFields extends ActivityFields {
 	questions: Question[];
-	nextQuestionId: number;
+	nextQuestionOrder: number;
 }
 
 export type QuizRequiredCreateFields = ActivityRequiredCreateFields;
@@ -27,7 +27,7 @@ export class Quiz extends Activity {
 	constructor(fields: QuizFields) {
 		super(fields);
 
-		this.nextQuestionId = fields.nextQuestionId;
+		this.nextQuestionOrder = fields.nextQuestionOrder;
 		this.questions = fields.questions;
 	}
 
@@ -50,9 +50,9 @@ export class Quiz extends Activity {
 	}
 
 	findQuestions() {
-		return this.questions.sort((q1, q2) => q1.id - q2.id);
+		return this.questions.sort((q1, q2) => q1.order - q2.order);
 	}
-	findOneQuestion(id: number): Question | null {
+	findOneQuestion(id: string): Question | null {
 		const question = this.questions.find((q) => q.id === id);
 
 		return question ?? null;
@@ -62,16 +62,17 @@ export class Quiz extends Activity {
 			content: fields.content,
 			correctAnswer: fields.correctAnswer,
 			quizId: this.id,
-			id: this.nextQuestionId,
+			id: randomUUID(),
+			order: this.nextQuestionOrder,
 		});
 
-		this.nextQuestionId++;
+		this.nextQuestionOrder++;
 
 		this.questions.push(question);
 
 		return question;
 	}
-	updateQuestion(id: number, fields: QuestionUpdateFields): Question | null {
+	updateQuestion(id: string, fields: QuestionUpdateFields): Question | null {
 		const question = this.questions.find((q) => q.id === id);
 
 		if (!question) {
@@ -82,7 +83,7 @@ export class Quiz extends Activity {
 
 		return question;
 	}
-	removeQuestion(id: number): boolean {
+	removeQuestion(id: string): boolean {
 		const filteredQuestions = this.questions.filter((q) => q.id !== id);
 
 		if (filteredQuestions.length === this.questions.length) {
@@ -94,6 +95,6 @@ export class Quiz extends Activity {
 		return true;
 	}
 
-	nextQuestionId: number;
+	nextQuestionOrder: number;
 	questions: Question[];
 }

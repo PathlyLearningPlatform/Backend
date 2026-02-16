@@ -1,9 +1,5 @@
 import { IActivitiesRepository } from '@/domain/activities/interfaces';
-import { CreateQuestionCommand } from '../commands';
-import {
-	ActivityNotFoundException,
-	QuestionNotFoundException,
-} from '@/domain/activities/exceptions';
+import { ActivityNotFoundException } from '@/domain/activities/exceptions';
 import { Question } from '@/domain/activities/entities/question.entity';
 
 export class FindQuestionsUseCase {

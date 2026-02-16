@@ -1,5 +1,6 @@
 export interface QuestionFields {
-	id: number;
+	id: string;
+	order: number;
 	quizId: string;
 	content: string;
 	correctAnswer: string;
@@ -9,25 +10,21 @@ export type QuestionRequiredCreateFields = Pick<
 	QuestionFields,
 	'quizId' | 'content' | 'correctAnswer'
 >;
-export type QuestionAllowedCreateFields = Omit<QuestionFields, 'id'>;
+export type QuestionAllowedCreateFields = Omit<QuestionFields, 'id' | 'order'>;
 export type QuestionCreateFields = QuestionRequiredCreateFields &
 	QuestionAllowedCreateFields;
 export type QuestionUpdateFields = Partial<
-	Omit<QuestionFields, 'id' | 'quizId'>
+	Omit<QuestionFields, 'id' | 'quizId' | 'order'>
 >;
 
 export class Question implements QuestionFields {
 	constructor(fields: QuestionFields) {
 		this.id = fields.id;
 		this.quizId = fields.quizId;
+		this.order = fields.order;
 		this.content = fields.content;
 		this.correctAnswer = fields.correctAnswer;
 	}
-
-	id: number;
-	quizId: string;
-	content: string;
-	correctAnswer: string;
 
 	update(fields?: QuestionUpdateFields) {
 		if (fields?.content) {
@@ -38,4 +35,10 @@ export class Question implements QuestionFields {
 			this.correctAnswer = fields.correctAnswer;
 		}
 	}
+
+	id: string;
+	order: number;
+	quizId: string;
+	content: string;
+	correctAnswer: string;
 }

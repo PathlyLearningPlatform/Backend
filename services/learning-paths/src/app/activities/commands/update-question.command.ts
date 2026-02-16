@@ -3,7 +3,7 @@ import { QuestionUpdateFields } from '@/domain/activities/entities/question.enti
 export type UpdateQuestionCommand = {
 	where: {
 		quizId: string;
-		id: number;
+		id: string;
 	};
 	fields?: QuestionUpdateFields;
 };

@@ -899,4 +899,50 @@ describe('Activities', () => {
 			expect(updateRes.statusCode).toBe(404)
 		})
 	})
+
+	describe('GET /quizzes/:id/questions', () => {
+		test('Success (200)', async () => {})
+
+		test('Quiz not found (404)', async () => {})
+
+		test('Bad request (400)', async () => {})
+	})
+
+	describe('GET /quizzes/:id/questions/:questionId', () => {
+		test('Success (200)', async () => {})
+
+		test('Quiz not found (404)', async () => {})
+
+		test('Question not found (404)', async () => {})
+
+		test('Bad request (400)', async () => {})
+	})
+
+	describe('POST /quizzes/:id/questions', () => {
+		test('Created (201)', async () => {})
+
+		test('Quiz not found (404)', async () => {})
+
+		test('Bad request (400)', async () => {})
+	})
+
+	describe('PATCH /quizzes/:id/questions/:questionId', () => {
+		test('Success (200)', async () => {})
+
+		test('Quiz not found (404)', async () => {})
+
+		test('Question not found (404)', async () => {})
+
+		test('Bad request (400)', async () => {})
+	})
+
+	describe('DELETE /quizzes/:id/questions/:questionId', () => {
+		test('Success (200)', async () => {})
+
+		test('Quiz not found (404)', async () => {})
+
+		test('Question not found (404)', async () => {})
+
+		test('Bad request (400)', async () => {})
+	})
 })

@@ -1,5 +1,4 @@
 import { IActivitiesRepository } from '@/domain/activities/interfaces';
-import { CreateQuestionCommand } from '../commands';
 import {
 	ActivityNotFoundException,
 	QuestionNotFoundException,
@@ -9,9 +8,7 @@ import { Question } from '@/domain/activities/entities/question.entity';
 export class FindOneQuestionUseCase {
 	constructor(private readonly activitiesRepository: IActivitiesRepository) {}
 
-	async execute(quizId: string, id: number): Promise<Question> {
-		console.log('sds');
-
+	async execute(quizId: string, id: string): Promise<Question> {
 		const quiz = await this.activitiesRepository.findOneQuiz(quizId);
 
 		if (!quiz) {
@@ -23,7 +20,7 @@ export class FindOneQuestionUseCase {
 		console.log(question);
 
 		if (!question) {
-			throw new QuestionNotFoundException(quizId, id);
+			throw new QuestionNotFoundException(id);
 		}
 
 		return question;

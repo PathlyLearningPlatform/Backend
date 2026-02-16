@@ -7,7 +7,7 @@ import {
 export class RemoveQuestionUseCase {
 	constructor(private readonly activitiesRepository: IActivitiesRepository) {}
 
-	async execute(quizId: string, id: number): Promise<void> {
+	async execute(quizId: string, id: string): Promise<void> {
 		const quiz = await this.activitiesRepository.findOneQuiz(quizId);
 
 		if (!quiz) {
@@ -17,7 +17,7 @@ export class RemoveQuestionUseCase {
 		const wasRemoved = quiz.removeQuestion(id);
 
 		if (!wasRemoved) {
-			throw new QuestionNotFoundException(quizId, id);
+			throw new QuestionNotFoundException(id);
 		}
 
 		await this.activitiesRepository.saveQuiz(quiz);
