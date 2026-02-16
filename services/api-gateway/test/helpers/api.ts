@@ -14,10 +14,12 @@ import type { CreateUnitBodyDto, UpdateUnitBodyDto } from '@/units/dtos'
 import {
 	CreateArticleDto,
 	CreateExerciseDto,
+	CreateQuestionDto,
 	CreateQuizDto,
 	FindActivitiesQueryDto,
 	UpdateArticleDto,
 	UpdateExerciseDto,
+	UpdateQuestionDto,
 	UpdateQuizDto,
 } from '@/activities/dtos'
 
@@ -274,27 +276,64 @@ export class QuizzesApi extends Api {
 		return response
 	}
 
-	async findQuestions(quizId: string, version: string = 'v1') {}
+	async findQuestions(quizId: string, version: string = 'v1') {
+		const response = await request(this.app).get(
+			`/${version}/quizzes/${quizId}/questions`,
+		)
+
+		return response
+	}
 
 	async findOneQuestion(
 		quizId: string,
-		questionId: number,
+		questionId: string,
 		version: string = 'v1',
-	) {}
+	) {
+		const response = await request(this.app).get(
+			`/${version}/quizzes/${quizId}/questions/${questionId}`,
+		)
 
-	async createQuestion(quizId: string, version: string = 'v1') {}
+		return response
+	}
+
+	async createQuestion(
+		quizId: string,
+		body: CreateQuestionDto,
+		version: string = 'v1',
+	) {
+		const response = await request(this.app)
+			.post(`/${version}/quizzes/${quizId}/questions`)
+			.set('Content-Type', 'application/json')
+			.send(body)
+
+		return response
+	}
 
 	async updateQuestion(
 		quizId: string,
-		questionId: number,
+		questionId: string,
+		body: UpdateQuestionDto,
 		version: string = 'v1',
-	) {}
+	) {
+		const response = await request(this.app)
+			.patch(`/${version}/quizzes/${quizId}/questions/${questionId}`)
+			.set('Content-Type', 'application/json')
+			.send(body)
+
+		return response
+	}
 
 	async removeQuestion(
 		quizId: string,
-		questionId: number,
+		questionId: string,
 		version: string = 'v1',
-	) {}
+	) {
+		const response = await request(this.app).delete(
+			`/${version}/quizzes/${quizId}/questions/${questionId}`,
+		)
+
+		return response
+	}
 }
 
 export class ExercisesApi extends Api {

@@ -35,6 +35,8 @@ import { randomUUID } from 'node:crypto'
 import {
 	CreateQuizResponseDto,
 	UpdateQuizResponseDto,
+	CreateQuestionResponseDto,
+	UpdateQuestionResponseDto,
 } from '@/activities/dtos/responses'
 import {
 	CreateExerciseResponseDto,
@@ -901,48 +903,378 @@ describe('Activities', () => {
 	})
 
 	describe('GET /quizzes/:id/questions', () => {
-		test('Success (200)', async () => {})
+		test('Success (200)', async () => {
+			// arrange
+			const createQuizRes = await api.quizzes.create({
+				name: 'quiz',
+				lessonId: lesson.id,
+				order: 0,
+			})
+			const createQuizResBody = createQuizRes.body as CreateQuizResponseDto
 
-		test('Quiz not found (404)', async () => {})
+			const createQuestionRes = await api.quizzes.createQuestion(
+				createQuizResBody.quiz.id,
+				{
+					content: 'question',
+					correctAnswer: 'answer',
+				},
+			)
+			const createQuestionResBody =
+				createQuestionRes.body as CreateQuestionResponseDto
 
-		test('Bad request (400)', async () => {})
+			// act
+			const findQuestionsRes = await api.quizzes.findQuestions(
+				createQuizResBody.quiz.id,
+			)
+
+			// cleanup
+			await api.activities.remove(createQuizResBody.quiz.id)
+
+			// assert
+			expect(findQuestionsRes.statusCode).toBe(200)
+			expect(findQuestionsRes.body).toEqual({
+				questions: [createQuestionResBody.question],
+			})
+		})
+
+		test('Quiz not found (404)', async () => {
+			// act
+			const findQuestionsRes = await api.quizzes.findQuestions(randomUUID())
+
+			// assert
+			expect(findQuestionsRes.statusCode).toBe(404)
+		})
+
+		test('Bad request (400)', async () => {
+			// act
+			const findQuestionsRes = await api.quizzes.findQuestions('invalid-id')
+
+			// assert
+			expect(findQuestionsRes.statusCode).toBe(400)
+		})
 	})
 
 	describe('GET /quizzes/:id/questions/:questionId', () => {
-		test('Success (200)', async () => {})
+		test('Success (200)', async () => {
+			// arrange
+			const createQuizRes = await api.quizzes.create({
+				name: 'quiz',
+				lessonId: lesson.id,
+				order: 0,
+			})
+			const createQuizResBody = createQuizRes.body as CreateQuizResponseDto
 
-		test('Quiz not found (404)', async () => {})
+			const createQuestionRes = await api.quizzes.createQuestion(
+				createQuizResBody.quiz.id,
+				{
+					content: 'question',
+					correctAnswer: 'answer',
+				},
+			)
+			const createQuestionResBody =
+				createQuestionRes.body as CreateQuestionResponseDto
 
-		test('Question not found (404)', async () => {})
+			// act
+			const findOneRes = await api.quizzes.findOneQuestion(
+				createQuizResBody.quiz.id,
+				createQuestionResBody.question.id,
+			)
 
-		test('Bad request (400)', async () => {})
+			// cleanup
+			await api.activities.remove(createQuizResBody.quiz.id)
+
+			// assert
+			expect(findOneRes.statusCode).toBe(200)
+			expect(findOneRes.body).toEqual({
+				question: createQuestionResBody.question,
+			})
+		})
+
+		test('Quiz not found (404)', async () => {
+			// act
+			const findOneRes = await api.quizzes.findOneQuestion(
+				randomUUID(),
+				randomUUID(),
+			)
+
+			// assert
+			expect(findOneRes.statusCode).toBe(404)
+		})
+
+		test('Question not found (404)', async () => {
+			// arrange
+			const createQuizRes = await api.quizzes.create({
+				name: 'quiz',
+				lessonId: lesson.id,
+				order: 0,
+			})
+			const createQuizResBody = createQuizRes.body as CreateQuizResponseDto
+
+			// act
+			const findOneRes = await api.quizzes.findOneQuestion(
+				createQuizResBody.quiz.id,
+				randomUUID(),
+			)
+
+			// cleanup
+			await api.activities.remove(createQuizResBody.quiz.id)
+
+			// assert
+			expect(findOneRes.statusCode).toBe(404)
+		})
+
+		test('Bad request (400)', async () => {
+			// act
+			const findOneRes = await api.quizzes.findOneQuestion(
+				'invalid-id',
+				'invalid-id',
+			)
+
+			// assert
+			expect(findOneRes.statusCode).toBe(400)
+		})
 	})
 
 	describe('POST /quizzes/:id/questions', () => {
-		test('Created (201)', async () => {})
+		test('Created (201)', async () => {
+			// arrange
+			const createQuizRes = await api.quizzes.create({
+				name: 'quiz',
+				lessonId: lesson.id,
+				order: 0,
+			})
+			const createQuizResBody = createQuizRes.body as CreateQuizResponseDto
 
-		test('Quiz not found (404)', async () => {})
+			// act
+			const createQuestionRes = await api.quizzes.createQuestion(
+				createQuizResBody.quiz.id,
+				{
+					content: 'question',
+					correctAnswer: 'answer',
+				},
+			)
+			const createQuestionResBody =
+				createQuestionRes.body as CreateQuestionResponseDto
 
-		test('Bad request (400)', async () => {})
+			const findOneRes = await api.quizzes.findOneQuestion(
+				createQuizResBody.quiz.id,
+				createQuestionResBody.question.id,
+			)
+
+			// cleanup
+			await api.activities.remove(createQuizResBody.quiz.id)
+
+			// assert
+			expect(createQuestionRes.statusCode).toBe(201)
+			expect(findOneRes.statusCode).toBe(200)
+			expect(findOneRes.body).toEqual({
+				question: createQuestionResBody.question,
+			})
+		})
+
+		test('Quiz not found (404)', async () => {
+			// act
+			const createQuestionRes = await api.quizzes.createQuestion(randomUUID(), {
+				content: 'question',
+				correctAnswer: 'answer',
+			})
+
+			// assert
+			expect(createQuestionRes.statusCode).toBe(404)
+		})
+
+		test('Bad request (400)', async () => {
+			// act
+			const createQuestionRes = await api.quizzes.createQuestion('invalid-id', {
+				content: 'question',
+				correctAnswer: 'answer',
+			})
+
+			// assert
+			expect(createQuestionRes.statusCode).toBe(400)
+		})
 	})
 
 	describe('PATCH /quizzes/:id/questions/:questionId', () => {
-		test('Success (200)', async () => {})
+		test('Success (200)', async () => {
+			// arrange
+			const createQuizRes = await api.quizzes.create({
+				name: 'quiz',
+				lessonId: lesson.id,
+				order: 0,
+			})
+			const createQuizResBody = createQuizRes.body as CreateQuizResponseDto
 
-		test('Quiz not found (404)', async () => {})
+			const createQuestionRes = await api.quizzes.createQuestion(
+				createQuizResBody.quiz.id,
+				{
+					content: 'question',
+					correctAnswer: 'answer',
+				},
+			)
+			const createQuestionResBody =
+				createQuestionRes.body as CreateQuestionResponseDto
 
-		test('Question not found (404)', async () => {})
+			// act
+			const updateRes = await api.quizzes.updateQuestion(
+				createQuizResBody.quiz.id,
+				createQuestionResBody.question.id,
+				{
+					content: 'updated-question',
+				},
+			)
+			const updateResBody = updateRes.body as UpdateQuestionResponseDto
 
-		test('Bad request (400)', async () => {})
+			const findOneRes = await api.quizzes.findOneQuestion(
+				createQuizResBody.quiz.id,
+				createQuestionResBody.question.id,
+			)
+
+			// cleanup
+			await api.activities.remove(createQuizResBody.quiz.id)
+
+			// assert
+			expect(updateRes.statusCode).toBe(200)
+			expect(updateRes.body).toEqual({ question: updateResBody.question })
+			expect(findOneRes.statusCode).toBe(200)
+			expect(findOneRes.body).toEqual({ question: updateResBody.question })
+		})
+
+		test('Quiz not found (404)', async () => {
+			// act
+			const updateRes = await api.quizzes.updateQuestion(
+				randomUUID(),
+				randomUUID(),
+				{
+					content: 'updated-question',
+				},
+			)
+
+			// assert
+			expect(updateRes.statusCode).toBe(404)
+		})
+
+		test('Question not found (404)', async () => {
+			// arrange
+			const createQuizRes = await api.quizzes.create({
+				name: 'quiz',
+				lessonId: lesson.id,
+				order: 0,
+			})
+			const createQuizResBody = createQuizRes.body as CreateQuizResponseDto
+
+			// act
+			const updateRes = await api.quizzes.updateQuestion(
+				createQuizResBody.quiz.id,
+				randomUUID(),
+				{
+					content: 'updated-question',
+				},
+			)
+
+			// cleanup
+			await api.activities.remove(createQuizResBody.quiz.id)
+
+			// assert
+			expect(updateRes.statusCode).toBe(404)
+		})
+
+		test('Bad request (400)', async () => {
+			// act
+			const updateRes = await api.quizzes.updateQuestion(
+				'invalid-id',
+				'invalid-id',
+				{
+					content: 'updated-question',
+				},
+			)
+
+			// assert
+			expect(updateRes.statusCode).toBe(400)
+		})
 	})
 
 	describe('DELETE /quizzes/:id/questions/:questionId', () => {
-		test('Success (200)', async () => {})
+		test('Success (200)', async () => {
+			// arrange
+			const createQuizRes = await api.quizzes.create({
+				name: 'quiz',
+				lessonId: lesson.id,
+				order: 0,
+			})
+			const createQuizResBody = createQuizRes.body as CreateQuizResponseDto
 
-		test('Quiz not found (404)', async () => {})
+			const createQuestionRes = await api.quizzes.createQuestion(
+				createQuizResBody.quiz.id,
+				{
+					content: 'question',
+					correctAnswer: 'answer',
+				},
+			)
+			const createQuestionResBody =
+				createQuestionRes.body as CreateQuestionResponseDto
 
-		test('Question not found (404)', async () => {})
+			// act
+			const removeRes = await api.quizzes.removeQuestion(
+				createQuizResBody.quiz.id,
+				createQuestionResBody.question.id,
+			)
 
-		test('Bad request (400)', async () => {})
+			const findOneRes = await api.quizzes.findOneQuestion(
+				createQuizResBody.quiz.id,
+				createQuestionResBody.question.id,
+			)
+
+			// cleanup
+			await api.activities.remove(createQuizResBody.quiz.id)
+
+			// assert
+			expect(removeRes.statusCode).toBe(200)
+			expect(findOneRes.statusCode).toBe(404)
+		})
+
+		test('Quiz not found (404)', async () => {
+			// act
+			const removeRes = await api.quizzes.removeQuestion(
+				randomUUID(),
+				randomUUID(),
+			)
+
+			// assert
+			expect(removeRes.statusCode).toBe(404)
+		})
+
+		test('Question not found (404)', async () => {
+			// arrange
+			const createQuizRes = await api.quizzes.create({
+				name: 'quiz',
+				lessonId: lesson.id,
+				order: 0,
+			})
+			const createQuizResBody = createQuizRes.body as CreateQuizResponseDto
+
+			// act
+			const removeRes = await api.quizzes.removeQuestion(
+				createQuizResBody.quiz.id,
+				randomUUID(),
+			)
+
+			// cleanup
+			await api.activities.remove(createQuizResBody.quiz.id)
+
+			// assert
+			expect(removeRes.statusCode).toBe(404)
+		})
+
+		test('Bad request (400)', async () => {
+			// act
+			const removeRes = await api.quizzes.removeQuestion(
+				'invalid-id',
+				'invalid-id',
+			)
+
+			// assert
+			expect(removeRes.statusCode).toBe(400)
+		})
 	})
 })
