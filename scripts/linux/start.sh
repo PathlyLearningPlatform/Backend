@@ -1,3 +1,5 @@
+chmod u+x ./scripts/linux/setup-env.sh && ./scripts/linux/setup-env.sh
+
 docker compose up -d --build
 
 docker compose exec learning-paths npm run db:push -w learning-paths
