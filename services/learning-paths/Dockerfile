@@ -23,7 +23,7 @@ COPY ./libs/contracts ./libs/contracts
 COPY ./services/learning-paths ./services/learning-paths
 
 # bulding libs and service code only
-RUN npm run build -w libs/ts/common -w libs/ts/common -w libs/contracts -w services/learning-paths
+RUN npm run build -w libs/ts/common -w libs/ts/core -w libs/contracts -w services/learning-paths
 
 FROM base AS dev
 
