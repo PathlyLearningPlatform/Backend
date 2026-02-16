@@ -39,7 +39,15 @@ Architecture, important decisions are presicely described. Documentation consist
 
 ## Development
 
-In order to run backend in development mode run [start.sh](./scripts/linux/start.sh) script (or [start.bat](./scripts/win/start.bat) for windows) or run `npm run start` command.
+### Linux
+
+- open project root directory in terminal of your choice
+- run `npm start`
+
+### Windows
+
+- open project root directory in terminal of your choice
+- run `.\scripts\win\start.bat`
 
 ## Production
 
