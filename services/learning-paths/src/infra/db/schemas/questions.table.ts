@@ -3,7 +3,7 @@ import { quizzesTable } from './quizzes.table';
 
 export const questionsTable = pgTable('questions', {
 	id: uuid().primaryKey(),
-	order: integer().notNull(),
+	order: integer().notNull().unique(),
 	quizId: uuid('quiz_id')
 		.notNull()
 		.references(() => quizzesTable.activityId, { onDelete: 'cascade' }),

@@ -292,7 +292,7 @@ export class PostgresActivitiesRepository implements IActivitiesRepository {
 						})),
 					)
 					.onConflictDoUpdate({
-						target: [questionsTable.id, questionsTable.quizId],
+						target: questionsTable.id,
 						set: {
 							content: sql.raw(`excluded.${questionsTable.content.name}`),
 							correctAnswer: sql.raw(
