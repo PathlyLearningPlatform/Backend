@@ -282,7 +282,14 @@ export class PostgresActivitiesRepository implements IActivitiesRepository {
 
 				await tx
 					.insert(questionsTable)
-					.values(entity.questions)
+					.values(
+						entity.questions.map((q) => ({
+							content: q.content,
+							id: q.id,
+							quizId: q.quizId,
+							correctAnswer: q.correctAnswer,
+						})),
+					)
 					.onConflictDoUpdate({
 						target: [questionsTable.id, questionsTable.quizId],
 						set: {
