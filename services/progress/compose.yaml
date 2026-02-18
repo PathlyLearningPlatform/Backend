@@ -1,0 +1,39 @@
+services:
+  progress:
+    build:
+      context: ../../
+      target: dev
+      dockerfile: ./services/progress/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - ./src:/usr/src/app/services/progress/src
+      - ./test:/usr/src/app/services/progress/test
+      - ../../libs/ts/common/src:/usr/src/app/libs/ts/common/src
+      - ../../libs/ts/core/src:/usr/src/app/libs/ts/core/src
+      - ../../libs/contracts/proto:/usr/src/app/libs/contracts/proto
+    depends_on:
+      progress-db:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'grpc_health_probe -addr=progress:3000']
+      timeout: 10s
+      start_period: 15s
+    ports:
+      - 3002:3000
+
+  progress-db:
+    build:
+      context: ./db
+    env_file:
+      - ./db/.env
+    volumes:
+      - progress-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD', 'pg_isready']
+      timeout: 30s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  progress-db-data:

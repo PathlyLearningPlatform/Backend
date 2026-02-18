@@ -7,6 +7,8 @@ microservices=(
   "./services/api-gateway" 
   "./services/learning-paths" 
   "./services/learning-paths/db"
+  "./services/progress"
+  "./services/progress/db"
 )
 
 for key in "${!microservices[@]}"

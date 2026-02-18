@@ -18,6 +18,7 @@
     "services/api-gateway",
     "libs/contracts",
     "libs/ts/common",
-    "libs/ts/core"
+    "libs/ts/core",
+    "services/progress"
   ]
 }
