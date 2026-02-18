@@ -55,7 +55,7 @@ COPY --from=builder /usr/src/app/libs/contracts/package.json ./libs/contracts/
 COPY --from=builder /usr/src/app/libs/contracts/dist/ts  ./libs/contracts/dist/ts/
 
 # installing dependencies for production
-RUN npm ci --omit=dev -w libs/ts/common -w libs/ts/core -w libs/contracts -w services/api-gateway
+RUN npm ci --omit=dev -w libs/ts/common -w libs/ts/core -w libs/contracts -w services/learning-paths
 
 # switching to non-root user
 USER node
