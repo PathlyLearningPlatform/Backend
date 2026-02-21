@@ -1,6 +1,6 @@
 import { LearningPathProgressCreateFields } from '@/domain/learning-path-progress/entities';
 
-export type SaveLearningPathProgressCommand = Omit<
+export type CreateLearningPathProgressCommand = Omit<
 	LearningPathProgressCreateFields,
 	'id'
 >;

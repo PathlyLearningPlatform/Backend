@@ -6,6 +6,6 @@ export interface ILearningPath {
 	description: string | null;
 }
 
-export interface ILearningPathService {
-	findOneLearningPath(): Promise<ILearningPath>;
+export interface ILearningPathsService {
+	findOneLearningPath(id: string): Promise<ILearningPath | null>;
 }
