@@ -20,9 +20,8 @@ export type LearningPathProgressCreateFields =
 	LearningPathProgressRequiredCreateFields &
 		LearningPathProgressAllowedCreateFields;
 
-export type LearningPathProgressUpdateFields = Omit<
-	LearningPathProgressFields,
-	'id' | 'userId' | 'learningPathId'
+export type LearningPathProgressUpdateFields = Partial<
+	Omit<LearningPathProgressFields, 'id' | 'userId' | 'learningPathId'>
 >;
 
 export type LearningPathProgressQuery = {
