@@ -1,3 +1,4 @@
+import { LearningPathProgressStatus } from '@/domain/learning-path-progress/enums';
 import {
 	integer,
 	pgEnum,
@@ -7,11 +8,10 @@ import {
 	uuid,
 } from 'drizzle-orm/pg-core';
 
-const status = pgEnum('learning_path_progress_status', [
-	'NOT_STARTED',
-	'IN_PROGRESS',
-	'DONE',
-]);
+const status = pgEnum(
+	'learning_path_progress_status',
+	LearningPathProgressStatus,
+);
 
 export const learningPathProgressTable = pgTable(
 	'learning_path_progress',
@@ -19,7 +19,7 @@ export const learningPathProgressTable = pgTable(
 		id: uuid('id').primaryKey(),
 		learningPathId: uuid('learning_path_id').notNull(),
 		userId: uuid('user_id').notNull(),
-		status: status().notNull().default('NOT_STARTED'),
+		status: status().notNull().default(LearningPathProgressStatus.NOT_STARTED),
 		completedSectionsCount: integer('completed_sections_count')
 			.notNull()
 			.default(0),
