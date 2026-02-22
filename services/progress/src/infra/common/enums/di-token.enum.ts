@@ -1,0 +1,13 @@
+/**
+ * @description This enum is collection of dependency injection tokens for nestjs. It's purpose is to keep them in one place to avoid using literals.
+ */
+export enum DiToken {
+	PG_POOL = 'PG_POOL',
+	DRIZZLE = 'DRIZZLE',
+
+	FIND_LEARNING_PATHS_USE_CASE = 'FIND_LEARNING_PATHS_USE_CASE',
+	FIND_ONE_LEARNING_PATH_USE_CASE = 'FIND_ONE_LEARNING_PATH_USE_CASE',
+	CREATE_LEARNING_PATH_USE_CASE = 'CREATE_LEARNING_PATH_USE_CASE',
+	UPDATE_LEARNING_PATH_USE_CASE = 'UPDATE_LEARNING_PATH_USE_CASE',
+	REMOVE_LEARNING_PATH_USE_CASE = 'REMOVE_LEARNING_PATH_USE_CASE',
+}
