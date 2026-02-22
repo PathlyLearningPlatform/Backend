@@ -1,1 +1,1 @@
-export * from './learning-path-not-found.exception';
+export * from './activity-not-found.exception';
