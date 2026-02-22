@@ -1,1 +1,1 @@
-export * from './learning-path-progress.schema';
+export * from './activity-progress.schema';
