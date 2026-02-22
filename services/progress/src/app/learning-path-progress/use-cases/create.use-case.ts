@@ -22,7 +22,9 @@ export class CreateLearningPathProgressUseCase {
 			throw new LearningPathNotFoundException(command.learningPathId);
 		}
 
-		// TODO: handle situation where progress with provided learningPathId and userId already exists
+		// TODO: check for user existence
+
+		// TODO: check if progress with provided learning path and user ids already exists
 
 		const progress = new LearningPathProgress({
 			id: randomUUID(),
