@@ -2,11 +2,13 @@ syntax = "proto3";
 
 package progress.v1;
 
-enum LearningPathsApiErrorCodes {
+enum ProgressApiErrorCodes {
   LEARNING_PATH_NOT_FOUND = 0;
 
   VALIDATION_ERROR = 1;
   INTERNAL_ERROR = 2;
 
   LEARNING_PATH_PROGRESS_NOT_FOUND = 3;
+  ACTIVITY_PROGRESS_NOT_FOUND = 4;
+  ACTIVITY_NOT_FOUND = 5;
 }

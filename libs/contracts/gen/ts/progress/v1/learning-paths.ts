@@ -5,7 +5,40 @@
 // source: progress/v1/learning-paths.proto
 
 /* eslint-disable */
+import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
+import { Observable } from "rxjs";
 
 export const protobufPackage = "progress.v1";
 
+export interface TestRequest {
+}
+
+export interface TestReponse {
+}
+
 export const PROGRESS_V1_PACKAGE_NAME = "progress.v1";
+
+export interface LearningPathsServiceClient {
+  test(request: TestRequest): Observable<TestReponse>;
+}
+
+export interface LearningPathsServiceController {
+  test(request: TestRequest): Observable<TestReponse>;
+}
+
+export function LearningPathsServiceControllerMethods() {
+  return function (constructor: Function) {
+    const grpcMethods: string[] = ["test"];
+    for (const method of grpcMethods) {
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcMethod("LearningPathsService", method)(constructor.prototype[method], method, descriptor);
+    }
+    const grpcStreamMethods: string[] = [];
+    for (const method of grpcStreamMethods) {
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcStreamMethod("LearningPathsService", method)(constructor.prototype[method], method, descriptor);
+    }
+  };
+}
+
+export const LEARNING_PATHS_SERVICE_NAME = "LearningPathsService";

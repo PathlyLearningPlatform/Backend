@@ -10,6 +10,7 @@ export const appConfigSchema = z
 				port: z.int32().default(3000),
 				hostname: z.hostname(),
 				protoDir: z.string(),
+				learningPathsServiceUrl: z.url(),
 			})
 			.strict(),
 		db: z

@@ -5,7 +5,7 @@ import { ActivityProgress } from '@/domain/activity-progress/entities';
 import { randomUUID } from 'crypto';
 import { ActivityNotFoundException } from '@/app/exceptions';
 
-export class StartActivityProgressUseCase {
+export class StartActivityUseCase {
 	constructor(
 		private readonly activityProgressRepository: IActivityProgressRepository,
 		private readonly learningPathsService: ILearningPathsService,

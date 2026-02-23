@@ -7,6 +7,7 @@ import {
 	RpcRequestInterceptor,
 } from '@pathly-backend/common/index.js';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ActivityProgressModule } from './infra/activity-progress/activity-progress.module';
 
 @Module({
 	imports: [
@@ -19,6 +20,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 		AppLoggerModule.register({
 			isGlobal: true,
 		}),
+		ActivityProgressModule,
 	],
 	providers: [
 		{

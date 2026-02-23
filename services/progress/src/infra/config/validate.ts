@@ -13,6 +13,7 @@ export function validateConfig(config: Record<string, unknown>) {
 			port: parseIntOrReturn(config.PORT),
 			hostname: config.HOSTNAME,
 			protoDir: config.PROTO_DIR,
+			learningPathsServiceUrl: config.LEARNING_PATHS_SERVICE_URL,
 		},
 		db: {
 			host: config.DB_HOST,

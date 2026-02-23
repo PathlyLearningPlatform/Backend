@@ -1,30 +1,25 @@
-import { IActivityProgressRepository } from '../interfaces';
-import { CompleteActivityCommand } from '../commands';
-import { ActivityProgressNotFoundException } from '@/domain/activity-progress/exceptions';
 import { ActivityProgress } from '@/domain/activity-progress/entities';
+import { IActivityProgressRepository } from '../interfaces';
+import { ActivityProgressNotFoundException } from '@/domain/activity-progress/exceptions';
 
-export class CompleteActivityUseCase {
+export class FindOneActivityProgressUseCase {
 	constructor(
 		private readonly activityProgressRepository: IActivityProgressRepository,
 	) {}
 
-	async execute(command: CompleteActivityCommand): Promise<ActivityProgress> {
+	async execute(activityId: string, userId: string): Promise<ActivityProgress> {
 		const activityProgress = await this.activityProgressRepository.findOne(
-			command.activityId,
-			command.userId,
+			activityId,
+			userId,
 		);
 
 		if (!activityProgress) {
 			throw new ActivityProgressNotFoundException(
 				undefined,
-				command.activityId,
-				command.userId,
+				activityId,
+				userId,
 			);
 		}
-
-		activityProgress.complete();
-
-		await this.activityProgressRepository.save(activityProgress);
 
 		return activityProgress;
 	}

@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package progress.v1;
+
+import "common/types.proto";
+
+service ActivityProgressService {
+  rpc List(ListActivityProgressRequest) returns (ListActivityProgressResponse) {};
+
+  rpc FindOne(FindOneActivityProgressRequest) returns (FindOneActivityProgressResponse) {};
+  rpc FindById(FindActivityProgressByIdRequest) returns (FindActivityProgressByIdResponse) {};
+
+  rpc Start(StartActivityRequest) returns (StartActivityResponse) {};
+  rpc Complete(CompleteActivityRequest) returns (CompleteActivityResponse) {};
+
+  rpc RemoveById(RemoveActivityProgressByIdRequest) returns (RemoveActivityProgressByIdResponse) {};
+}
+
+message ActivityProgress {
+  string id = 1;
+  string activityId = 2;
+  string userId = 3;
+  string completedAt = 4;
+}
+
+message ListActivityProgressRequest {
+  message Options {
+    optional int32 limit = 1;
+    optional int32 page = 2;
+  }
+  message Where {
+    optional string userId = 1;
+  }
+
+  optional Options options = 1;
+  optional Where where = 2;
+}
+message ListActivityProgressResponse {
+  repeated ActivityProgress activityProgress = 1;
+}
+
+message FindOneActivityProgressRequest {
+  string activityId = 1;
+  string userId = 2;
+}
+message FindOneActivityProgressResponse {
+  ActivityProgress activityProgress = 1;
+}
+
+message FindActivityProgressByIdRequest {
+  string id = 1;
+}
+message FindActivityProgressByIdResponse {
+  ActivityProgress activityProgress = 1;
+}
+
+message StartActivityRequest {
+  string activityId = 1;
+  string userId = 2;
+}
+message StartActivityResponse {
+  ActivityProgress activityProgress = 1;
+}
+
+message CompleteActivityRequest {
+  string activityId = 1;
+  string userId = 2;
+}
+message CompleteActivityResponse {
+  ActivityProgress activityProgress = 1;
+}
+
+message RemoveActivityProgressByIdRequest {
+  string id = 1;
+}
+message RemoveActivityProgressByIdResponse {}
