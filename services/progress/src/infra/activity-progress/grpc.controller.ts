@@ -36,7 +36,10 @@ import z from 'zod';
 import { status as GrpcStatus } from '@grpc/grpc-js';
 import { ProgressApiErrorCodes } from '@pathly-backend/contracts/progress/v1/api.js';
 import { activityProgressToClient } from './helpers';
-import { ActivityProgressNotFoundException } from '@/domain/activity-progress/exceptions';
+import {
+	ActivityAlreadyCompletedException,
+	ActivityProgressNotFoundException,
+} from '@/domain/activity-progress/exceptions';
 import { ActivityNotFoundException } from '@/app/exceptions';
 
 @UseFilters(GrpcExceptionFilter)
@@ -179,6 +182,17 @@ export class GrpcActivityProgressController {
 						ExceptionMessage.ACTIVITY_NOT_FOUND,
 						GrpcStatus.NOT_FOUND,
 						ProgressApiErrorCodes.ACTIVITY_NOT_FOUND,
+					),
+					err,
+				);
+			}
+
+			if (err instanceof ActivityAlreadyCompletedException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						ExceptionMessage.ACTIVITY_ALREADY_COMPLETED,
+						GrpcStatus.FAILED_PRECONDITION,
+						ProgressApiErrorCodes.ACTIVITY_ALREADY_COMPLETED,
 					),
 					err,
 				);

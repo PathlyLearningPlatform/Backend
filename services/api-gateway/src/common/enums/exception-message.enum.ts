@@ -18,4 +18,7 @@ export enum ExceptionMessage {
 	ACTIVITY_DUPLICATE_ORDER = 'Activity with that order and lesson id already exists. Try different order or reorder existing activities.',
 
 	INTERNAL_ERROR = 'Internal error. Please try again later.',
+
+	ACTIVITY_PROGRESS_NOT_FOUND = 'Progress entry for that activity was not found.',
+	ACTIVITY_ALREADY_COMPLETED = 'Activity which has been completed cannot be started again',
 }

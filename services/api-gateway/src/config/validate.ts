@@ -7,6 +7,7 @@ export function validateConfig(config: Record<string, unknown>) {
 			port: parseIntOrReturn(config.PORT),
 			hostname: config.HOSTNAME,
 			learningPathsServiceUrl: config.LEARNING_PATHS_SERVICE_URL,
+			progressServiceUrl: config.PROGRESS_SERVICE_URL,
 			protoDir: config.PROTO_DIR,
 		},
 	}

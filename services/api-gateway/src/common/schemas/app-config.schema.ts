@@ -8,6 +8,7 @@ export const appConfigSchema = z
 				protoDir: z.string(),
 				hostname: z.hostname(),
 				learningPathsServiceUrl: z.url(),
+				progressServiceUrl: z.url(),
 			})
 			.strict(),
 	})

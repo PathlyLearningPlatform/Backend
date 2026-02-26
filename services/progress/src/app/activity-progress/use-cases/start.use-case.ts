@@ -4,6 +4,7 @@ import { StartActivityCommand } from '../commands';
 import { ActivityProgress } from '@/domain/activity-progress/entities';
 import { randomUUID } from 'crypto';
 import { ActivityNotFoundException } from '@/app/exceptions';
+import { ActivityAlreadyCompletedException } from '@/domain/activity-progress/exceptions';
 
 export class StartActivityUseCase {
 	constructor(
@@ -12,6 +13,8 @@ export class StartActivityUseCase {
 	) {}
 
 	async execute(command: StartActivityCommand): Promise<ActivityProgress> {
+		// TODO: check if user exists
+
 		const exists = await this.learningPathsService.activityExistsById(
 			command.activityId,
 		);
@@ -20,16 +23,27 @@ export class StartActivityUseCase {
 			throw new ActivityNotFoundException(command.activityId);
 		}
 
-		// TODO: check if user exists
+		const activityProgress = await this.activityProgressRepository.findOne(
+			command.activityId,
+			command.userId,
+		);
 
-		const activityProgress = new ActivityProgress({
+		if (activityProgress) {
+			if (activityProgress.completedAt !== null) {
+				throw new ActivityAlreadyCompletedException();
+			}
+
+			return activityProgress;
+		}
+
+		const newActivityProgress = new ActivityProgress({
 			activityId: command.activityId,
 			userId: command.userId,
 			id: randomUUID(),
 		});
 
-		await this.activityProgressRepository.save(activityProgress);
+		await this.activityProgressRepository.save(newActivityProgress);
 
-		return activityProgress;
+		return newActivityProgress;
 	}
 }

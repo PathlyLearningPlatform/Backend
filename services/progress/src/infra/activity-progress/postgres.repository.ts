@@ -85,11 +85,9 @@ export class PostgresActivityProgressRepository
 					completedAt: entity.completedAt,
 				})
 				.onConflictDoUpdate({
-					target: activityProgressTable.id,
+					target: [activityProgressTable.id],
 					set: {
-						activityId: entity.activityId,
 						completedAt: entity.completedAt,
-						userId: entity.userId,
 					},
 				});
 		} catch (err) {

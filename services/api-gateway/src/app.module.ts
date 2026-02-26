@@ -13,6 +13,7 @@ import { LearningPathsModule } from './learning-paths/learning-paths.module'
 import { LessonsModule } from './lessons/lessons.module'
 import { SectionsModule } from './sections/sections.module'
 import { UnitsModule } from './units/units.module'
+import { ProgressModule } from './progress/progress.module'
 
 @Module({
 	imports: [
@@ -29,6 +30,7 @@ import { UnitsModule } from './units/units.module'
 		UnitsModule,
 		LessonsModule,
 		ActivitiesModule,
+		ProgressModule,
 	],
 	providers: [
 		{
