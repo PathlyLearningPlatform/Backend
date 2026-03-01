@@ -27,13 +27,18 @@ export class CreateSectionUseCase {
 				id: randomUUID(),
 				learningPathId: command.learningPathId,
 				createdAt: new Date(),
-				updatedAt: new Date(),
 				name: command.name,
 				order: command.order,
 				description: command.description ?? null,
 			});
 
 			await this.sectionsRepository.save(section);
+
+			learningPath.update({
+				sectionCount: learningPath.sectionCount + 1,
+			});
+
+			await this.learningPathsRepository.save(learningPath);
 
 			return section;
 		} catch (err) {

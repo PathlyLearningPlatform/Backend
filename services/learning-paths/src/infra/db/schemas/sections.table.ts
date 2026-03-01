@@ -21,6 +21,7 @@ export const sectionsTable = pgTable(
 		name: varchar({ length: 255 }).notNull(),
 		description: text(),
 		order: integer().notNull(),
+		unitCount: integer().notNull().default(0),
 	},
 	(t) => [unique().on(t.learningPathId, t.order)],
 );

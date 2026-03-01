@@ -46,9 +46,12 @@ export const lessonsUseCasesProvider: Provider[] = [
 	},
 	{
 		provide: DiToken.REMOVE_LESSON_USE_CASE,
-		useFactory(lessonsRepository: PostgresLessonsRepository) {
-			return new RemoveLessonUseCase(lessonsRepository);
+		useFactory(
+			lessonsRepository: PostgresLessonsRepository,
+			unitsRepository: IUnitsRepository,
+		) {
+			return new RemoveLessonUseCase(lessonsRepository, unitsRepository);
 		},
-		inject: [PostgresLessonsRepository],
+		inject: [PostgresLessonsRepository, PostgresUnitsRepository],
 	},
 ];

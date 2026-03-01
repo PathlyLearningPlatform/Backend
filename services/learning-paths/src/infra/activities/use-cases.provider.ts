@@ -105,9 +105,11 @@ export const activitiesUseCasesProvider: Provider[] = [
 	},
 	{
 		provide: DiToken.REMOVE_ACTIVITY_USE_CASE,
-		useFactory: (repository: PostgresActivitiesRepository) =>
-			new RemoveActivityUseCase(repository),
-		inject: [PostgresActivitiesRepository],
+		useFactory: (
+			activitiesRepository: IActivitiesRepository,
+			lessonsRepository: ILessonsRepository,
+		) => new RemoveActivityUseCase(activitiesRepository, lessonsRepository),
+		inject: [PostgresActivitiesRepository, PostgresLessonsRepository],
 	},
 	{
 		provide: DiToken.FIND_QUESTIONS_USE_CASE,

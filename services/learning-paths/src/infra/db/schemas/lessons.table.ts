@@ -21,6 +21,7 @@ export const lessonsTable = pgTable(
 		name: varchar({ length: 255 }).notNull(),
 		description: text(),
 		order: integer().notNull(),
+		activityCount: integer().notNull().default(0),
 	},
 	(t) => [unique().on(t.unitId, t.order)],
 );

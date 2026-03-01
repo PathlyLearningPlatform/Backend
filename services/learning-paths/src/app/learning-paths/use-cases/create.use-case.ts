@@ -12,7 +12,6 @@ export class CreateLearningPathUseCase {
 		const learningPath = new LearningPath({
 			id: randomUUID(),
 			createdAt: new Date(),
-			updatedAt: new Date(),
 			name: command.name,
 			description: command.description ?? null,
 		});

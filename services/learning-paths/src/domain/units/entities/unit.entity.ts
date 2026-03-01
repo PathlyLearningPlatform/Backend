@@ -1,4 +1,4 @@
-export type UnitFields = {
+type Fields = {
 	id: string;
 	sectionId: string;
 	createdAt: Date;
@@ -6,19 +6,16 @@ export type UnitFields = {
 	name: string;
 	description: string | null;
 	order: number;
+	lessonCount: number;
 };
 
-export type UnitRequiredCreateFields = Pick<
-	UnitFields,
-	'name' | 'order' | 'sectionId'
->;
-export type UnitAllowedCreateFields = Partial<
-	Omit<UnitFields, 'id' | 'createdAt' | 'updatedAt'>
->;
-export type UnitCreateFields = UnitRequiredCreateFields &
-	UnitAllowedCreateFields;
-export type UnitUpdateFields = Partial<
-	Omit<UnitFields, 'id' | 'createdAt' | 'updatedAt' | 'sectionId'>
+export type CreateFields = Pick<
+	Fields,
+	'id' | 'name' | 'order' | 'createdAt' | 'sectionId'
+> &
+	Partial<Fields>;
+export type UpdateFields = Partial<
+	Omit<Fields, 'id' | 'createdAt' | 'updatedAt' | 'sectionId'>
 >;
 export type UnitQuery = {
 	options?: {
@@ -31,18 +28,19 @@ export type UnitQuery = {
 	};
 };
 
-export class Unit implements UnitFields {
-	constructor(fields: UnitFields) {
+export class Unit implements Fields {
+	constructor(fields: CreateFields) {
 		this.id = fields.id;
 		this.sectionId = fields.sectionId;
 		this.createdAt = fields.createdAt;
-		this.updatedAt = fields.updatedAt;
+		this.updatedAt = fields.updatedAt ?? null;
 		this.name = fields.name;
-		this.description = fields.description;
+		this.description = fields.description ?? null;
 		this.order = fields.order;
+		this.lessonCount = fields.lessonCount ?? 0;
 	}
 
-	update(fields: UnitUpdateFields) {
+	update(fields: UpdateFields) {
 		if (fields.description !== undefined) {
 			this.description = fields.description;
 		}
@@ -54,6 +52,10 @@ export class Unit implements UnitFields {
 		if (fields.order !== undefined) {
 			this.order = fields.order;
 		}
+
+		if (fields.lessonCount !== undefined) {
+			this.lessonCount = fields.lessonCount;
+		}
 	}
 
 	id: string;
@@ -63,4 +65,5 @@ export class Unit implements UnitFields {
 	name: string;
 	description: string | null;
 	order: number;
+	lessonCount: number;
 }

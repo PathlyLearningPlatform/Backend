@@ -1,3 +1,6 @@
-import type { SectionCreateFields } from '@/domain/sections/entities';
-
-export type CreateSectionCommand = SectionCreateFields;
+export type CreateSectionCommand = {
+	name: string;
+	description?: string | null;
+	learningPathId: string;
+	order: number;
+};

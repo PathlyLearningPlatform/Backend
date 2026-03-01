@@ -49,9 +49,15 @@ export const sectionsUseCasesProvider: Provider[] = [
 	},
 	{
 		provide: DiToken.REMOVE_SECTION_USE_CASE,
-		useFactory(sectionsSepository: ISectionsRepository) {
-			return new RemoveSectionUseCase(sectionsSepository);
+		useFactory(
+			sectionsSepository: ISectionsRepository,
+			learningPathsRepository: ILearningPathsRepository,
+		) {
+			return new RemoveSectionUseCase(
+				sectionsSepository,
+				learningPathsRepository,
+			);
 		},
-		inject: [PostgresSectionsRepository],
+		inject: [PostgresSectionsRepository, PostgresLearningPathsRepository],
 	},
 ];

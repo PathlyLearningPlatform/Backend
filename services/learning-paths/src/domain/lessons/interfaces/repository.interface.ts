@@ -7,5 +7,5 @@ export interface ILessonsRepository {
 
 	save(entity: Lesson): Promise<void>;
 
-	remove(id: string): Promise<boolean>;
+	remove(id: string): Promise<Lesson | null>;
 }

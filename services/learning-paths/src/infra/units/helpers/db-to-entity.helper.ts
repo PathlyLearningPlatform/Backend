@@ -10,5 +10,6 @@ export function dbUnitToEntity(db: DbUnit): Unit {
 		name: db.name,
 		description: db.description,
 		order: db.order,
+		lessonCount: db.lessonCount,
 	});
 }

@@ -18,5 +18,5 @@ export interface IActivitiesRepository {
 	saveExercise(entity: Exercise): Promise<void>;
 	saveQuiz(entity: Quiz): Promise<void>;
 
-	remove(id: string): Promise<boolean>;
+	remove(id: string): Promise<Activity | null>;
 }

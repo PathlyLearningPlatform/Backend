@@ -32,6 +32,12 @@ export class CreateLessonUseCase {
 
 			await this.lessonsRepository.save(lesson);
 
+			unit.update({
+				lessonCount: unit.lessonCount + 1,
+			});
+
+			await this.unitsRepository.save(unit);
+
 			return lesson;
 		} catch (err) {
 			if (err instanceof UniqueConstraintException) {

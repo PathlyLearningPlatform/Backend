@@ -1,3 +1,6 @@
-import type { LessonCreateFields } from '@/domain/lessons/entities';
-
-export type CreateLessonCommand = LessonCreateFields;
+export type CreateLessonCommand = {
+	name: string;
+	description?: string | null;
+	unitId: string;
+	order: number;
+};

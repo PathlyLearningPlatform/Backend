@@ -7,5 +7,5 @@ export interface ISectionsRepository {
 
 	save(entity: Section): Promise<void>;
 
-	remove(id: string): Promise<boolean>;
+	remove(id: string): Promise<Section | null>;
 }

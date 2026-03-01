@@ -1,4 +1,4 @@
-export type LessonFields = {
+type Fields = {
 	id: string;
 	unitId: string;
 	createdAt: Date;
@@ -6,19 +6,16 @@ export type LessonFields = {
 	name: string;
 	description: string | null;
 	order: number;
+	activityCount: number;
 };
 
-export type LessonRequiredCreateFields = Pick<
-	LessonFields,
-	'name' | 'order' | 'unitId'
->;
-export type LessonAllowedCreateFields = Partial<
-	Omit<LessonFields, 'id' | 'createdAt' | 'updatedAt'>
->;
-export type LessonCreateFields = LessonRequiredCreateFields &
-	LessonAllowedCreateFields;
-export type LessonUpdateFields = Partial<
-	Omit<LessonFields, 'id' | 'createdAt' | 'updatedAt' | 'unitId'>
+type CreateFields = Pick<
+	Fields,
+	'id' | 'unitId' | 'order' | 'createdAt' | 'name'
+> &
+	Partial<Fields>;
+type UpdateFields = Partial<
+	Omit<Fields, 'id' | 'createdAt' | 'updatedAt' | 'unitId'>
 >;
 export type LessonQuery = {
 	options?: {
@@ -31,18 +28,19 @@ export type LessonQuery = {
 	};
 };
 
-export class Lesson implements LessonFields {
-	constructor(fields: LessonFields) {
+export class Lesson implements Fields {
+	constructor(fields: CreateFields) {
 		this.id = fields.id;
 		this.unitId = fields.unitId;
 		this.createdAt = fields.createdAt;
-		this.updatedAt = fields.updatedAt;
+		this.updatedAt = fields.updatedAt ?? null;
 		this.name = fields.name;
-		this.description = fields.description;
+		this.description = fields.description ?? null;
 		this.order = fields.order;
+		this.activityCount = fields.activityCount ?? 0;
 	}
 
-	update(fields: LessonUpdateFields) {
+	update(fields: UpdateFields) {
 		if (fields.description !== undefined) {
 			this.description = fields.description;
 		}
@@ -54,6 +52,10 @@ export class Lesson implements LessonFields {
 		if (fields.order !== undefined) {
 			this.order = fields.order;
 		}
+
+		if (fields.activityCount !== undefined) {
+			this.activityCount = fields.activityCount;
+		}
 	}
 
 	id: string;
@@ -63,4 +65,5 @@ export class Lesson implements LessonFields {
 	name: string;
 	description: string | null;
 	order: number;
+	activityCount: number;
 }

@@ -10,5 +10,6 @@ export function dbSectionToEntity(db: DbSection): Section {
 		description: db.description,
 		name: db.name,
 		order: db.order,
+		unitCount: db.unitCount,
 	});
 }

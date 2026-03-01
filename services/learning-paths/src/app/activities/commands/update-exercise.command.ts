@@ -1,8 +1,14 @@
-import type { ExerciseUpdateFields } from '@/domain/activities/entities';
+import { ExerciseDifficulty } from '@/domain/activities/enums';
 
 export type UpdateExerciseCommand = {
 	where: {
 		activityId: string;
 	};
-	fields?: ExerciseUpdateFields;
+	fields?: {
+		name?: string;
+		description?: string | null;
+		order?: number;
+		lessonId?: string;
+		difficulty?: ExerciseDifficulty;
+	};
 };

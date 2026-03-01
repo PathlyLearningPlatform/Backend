@@ -1,23 +1,18 @@
 import type { SortType } from '@pathly-backend/common/index.js';
 import type { LearningPathsOrderByFields } from '../enums';
 
-export type LearningPathFields = {
+type Fields = {
 	id: string;
 	createdAt: Date;
 	updatedAt: Date | null;
 	name: string;
 	description: string | null;
+	sectionCount: number;
 };
 
-export type LearningPathRequiredCreateFields = Pick<LearningPathFields, 'name'>;
-export type LearningPathAllowedCreateFields = Partial<
-	Omit<LearningPathFields, 'id' | 'createdAt' | 'updatedAt'>
->;
-export type LearningPathCreateFields = LearningPathRequiredCreateFields &
-	LearningPathAllowedCreateFields;
-export type LearningPathUpdateFields = Partial<
-	Omit<LearningPathFields, 'id' | 'createdAt' | 'updatedAt'>
->;
+type CreateFields = Pick<Fields, 'name' | 'id' | 'createdAt'> & Partial<Fields>;
+type UpdateFields = Partial<Omit<Fields, 'id' | 'createdAt' | 'updatedAt'>>;
+
 export type LearningPathQuery = {
 	options?: {
 		limit?: number;
@@ -30,16 +25,21 @@ export type LearningPathQuery = {
 	};
 };
 
-export class LearningPath implements LearningPathFields {
-	constructor(fields: LearningPathFields) {
+export class LearningPath implements Fields {
+	constructor(fields: CreateFields) {
 		this.id = fields.id;
 		this.createdAt = fields.createdAt;
-		this.updatedAt = fields.updatedAt;
+		this.updatedAt = fields.updatedAt ?? null;
 		this.name = fields.name;
-		this.description = fields.description;
+		this.description = fields.description ?? null;
+		this.sectionCount = fields.sectionCount ?? 0;
 	}
 
-	update(fields: LearningPathUpdateFields) {
+	update(fields: UpdateFields) {
+		if (fields.sectionCount !== undefined) {
+			this.sectionCount = fields.sectionCount;
+		}
+
 		if (fields.description !== undefined) {
 			this.description = fields.description;
 		}
@@ -54,4 +54,5 @@ export class LearningPath implements LearningPathFields {
 	updatedAt: Date | null;
 	name: string;
 	description: string | null;
+	sectionCount: number;
 }

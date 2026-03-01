@@ -24,13 +24,18 @@ export class CreateUnitUseCase {
 				id: randomUUID(),
 				sectionId: section.id,
 				createdAt: new Date(),
-				updatedAt: new Date(),
 				description: command.description ?? null,
 				name: command.name,
 				order: command.order,
 			});
 
 			await this.unitsRepository.save(unit);
+
+			section.update({
+				unitCount: section.unitCount + 1,
+			});
+
+			await this.sectionsRepository.save(section);
 
 			return unit;
 		} catch (err) {

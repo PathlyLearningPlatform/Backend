@@ -78,14 +78,14 @@ export class PostgresLessonsRepository implements ILessonsRepository {
 		}
 	}
 
-	async remove(id: string): Promise<boolean> {
+	async remove(id: string): Promise<Lesson | null> {
 		try {
 			const result = await this.db
 				.delete(lessonsTable)
 				.where(eq(lessonsTable.id, id))
 				.returning();
 
-			return result.length > 0;
+			return result.length > 0 ? dbLessonToEntity(result[0]) : null;
 		} catch (err) {
 			if (err instanceof DrizzleQueryError) {
 				if (err.cause instanceof PostgresError) {

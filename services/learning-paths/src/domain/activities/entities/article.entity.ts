@@ -1,8 +1,7 @@
 import {
 	Activity,
-	type ActivityAllowedCreateFields,
+	ActivityCreateFields,
 	type ActivityFields,
-	type ActivityRequiredCreateFields,
 	type ActivityUpdateFields,
 } from './activity.entity';
 
@@ -10,16 +9,14 @@ export interface ArticleFields extends ActivityFields {
 	ref: string;
 }
 
-export type ArticleRequiredCreateFields = Pick<ArticleFields, 'ref'> &
-	ActivityRequiredCreateFields;
-export type ArticleAllowedCreateFields = ActivityAllowedCreateFields;
-export type ArticleCreateFields = ArticleRequiredCreateFields &
-	ArticleAllowedCreateFields;
+export type ArticleCreateFields = ActivityCreateFields &
+	Pick<ArticleFields, 'ref'> &
+	Partial<ArticleFields>;
 export type ArticleUpdateFields = ActivityUpdateFields &
 	Partial<Pick<ArticleFields, 'ref'>>;
 
 export class Article extends Activity implements ArticleFields {
-	constructor(fields: ArticleFields) {
+	constructor(fields: ArticleCreateFields) {
 		super(fields);
 
 		this.ref = fields.ref;

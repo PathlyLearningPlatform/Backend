@@ -1,8 +1,10 @@
-import type { SectionUpdateFields } from '@/domain/sections/entities';
-
 export type UpdateSectionCommand = {
 	where: {
 		id: string;
 	};
-	fields?: SectionUpdateFields;
+	fields?: {
+		name?: string;
+		description?: string | null;
+		order?: number;
+	};
 };

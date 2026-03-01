@@ -1,3 +1,7 @@
-import type { ArticleCreateFields } from '@/domain/activities/entities';
-
-export type CreateArticleCommand = Omit<ArticleCreateFields, 'type' | 'id'>;
+export type CreateArticleCommand = {
+	name: string;
+	description?: string | null;
+	lessonId: string;
+	order: number;
+	ref: string;
+};

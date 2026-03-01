@@ -1,3 +1,6 @@
-import type { UnitCreateFields } from '@/domain/units/entities';
-
-export type CreateUnitCommand = UnitCreateFields;
+export type CreateUnitCommand = {
+	name: string;
+	description?: string | null;
+	sectionId: string;
+	order: number;
+};

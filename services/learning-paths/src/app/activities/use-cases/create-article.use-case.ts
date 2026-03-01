@@ -6,7 +6,6 @@ import type { IActivitiesRepository } from '@domain/activities/interfaces';
 import { ILessonsRepository } from '@/domain/lessons/interfaces';
 import { LessonNotFoundException } from '@/domain/lessons/exceptions';
 import { UniqueConstraintException } from '@pathly-backend/core/index.js';
-import { UnitOrderException } from '@/domain/units/exceptions';
 import { ActivityOrderException } from '@/domain/activities/exceptions';
 
 export class CreateArticleUseCase {
@@ -36,6 +35,12 @@ export class CreateArticleUseCase {
 			});
 
 			await this.activitiesRepository.saveArticle(article);
+
+			lesson.update({
+				activityCount: lesson.activityCount + 1,
+			});
+
+			await this.lessonsRepository.save(lesson);
 
 			return article;
 		} catch (err) {

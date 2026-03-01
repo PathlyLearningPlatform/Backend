@@ -1,8 +1,10 @@
-import type { LessonUpdateFields } from '@/domain/lessons/entities';
-
 export type UpdateLessonCommand = {
 	where: {
 		id: string;
 	};
-	fields?: LessonUpdateFields;
+	fields?: {
+		name?: string;
+		description?: string | null;
+		order?: number;
+	};
 };

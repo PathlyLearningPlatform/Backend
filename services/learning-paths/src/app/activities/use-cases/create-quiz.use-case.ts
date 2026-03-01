@@ -37,6 +37,12 @@ export class CreateQuizUseCase {
 
 			await this.activitiesRepository.saveQuiz(quiz);
 
+			lesson.update({
+				activityCount: lesson.activityCount + 1,
+			});
+
+			await this.lessonsRepository.save(lesson);
+
 			return quiz;
 		} catch (err) {
 			if (err instanceof UniqueConstraintException) {

@@ -1,3 +1,4 @@
-import type { LearningPathCreateFields } from '@/domain/learning-paths/entities';
-
-export type CreateLearningPathCommand = LearningPathCreateFields;
+export type CreateLearningPathCommand = {
+	name: string;
+	description?: string | null;
+};

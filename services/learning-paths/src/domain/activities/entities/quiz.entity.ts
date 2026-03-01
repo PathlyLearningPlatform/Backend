@@ -1,9 +1,8 @@
 import { randomUUID } from 'node:crypto';
 import {
 	Activity,
-	ActivityAllowedCreateFields,
+	ActivityCreateFields,
 	ActivityFields,
-	ActivityRequiredCreateFields,
 	ActivityUpdateFields,
 } from './activity.entity';
 import {
@@ -17,18 +16,15 @@ export interface QuizFields extends ActivityFields {
 	nextQuestionOrder: number;
 }
 
-export type QuizRequiredCreateFields = ActivityRequiredCreateFields;
-export type QuizAllowedCreateFields = ActivityAllowedCreateFields;
-export type QuizCreateFields = QuizRequiredCreateFields &
-	QuizAllowedCreateFields;
+export type QuizCreateFields = ActivityCreateFields & Partial<QuizFields>;
 export type QuizUpdateFields = ActivityUpdateFields;
 
 export class Quiz extends Activity {
-	constructor(fields: QuizFields) {
+	constructor(fields: QuizCreateFields) {
 		super(fields);
 
-		this.nextQuestionOrder = fields.nextQuestionOrder;
-		this.questions = fields.questions;
+		this.nextQuestionOrder = fields.nextQuestionOrder ?? 0;
+		this.questions = fields.questions ?? [];
 	}
 
 	update(fields?: QuizUpdateFields) {

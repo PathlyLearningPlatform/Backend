@@ -22,6 +22,7 @@ export const unitsTable = pgTable(
 		name: varchar({ length: UnitConstraints.MAX_NAME_LENGTH }).notNull(),
 		description: text(),
 		order: integer().notNull(),
+		lessonCount: integer().notNull().default(0),
 	},
 	(t) => [unique().on(t.sectionId, t.order)],
 );

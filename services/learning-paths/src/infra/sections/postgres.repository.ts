@@ -78,14 +78,14 @@ export class PostgresSectionsRepository implements ISectionsRepository {
 		}
 	}
 
-	async remove(id: string): Promise<boolean> {
+	async remove(id: string): Promise<Section | null> {
 		try {
 			const result = await this.db
 				.delete(sectionsTable)
 				.where(eq(sectionsTable.id, id))
 				.returning();
 
-			return result.length > 0;
+			return result.length > 0 ? dbSectionToEntity(result[0]) : null;
 		} catch (err) {
 			if (err instanceof DrizzleQueryError) {
 				if (err.cause instanceof PostgresError) {

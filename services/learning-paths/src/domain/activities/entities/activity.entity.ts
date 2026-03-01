@@ -11,15 +11,11 @@ export interface ActivityFields {
 	type: ActivityType;
 }
 
-export type ActivityRequiredCreateFields = Pick<
+export type ActivityCreateFields = Pick<
 	ActivityFields,
-	'lessonId' | 'name' | 'order' | 'type'
->;
-export type ActivityAllowedCreateFields = Partial<
-	Omit<ActivityFields, 'id' | 'createdAt' | 'updatedAt'>
->;
-export type ActivityCreateFields = ActivityRequiredCreateFields &
-	ActivityAllowedCreateFields;
+	'id' | 'name' | 'order' | 'lessonId' | 'createdAt' | 'type'
+> &
+	Partial<ActivityFields>;
 
 export type ActivityUpdateFields = Partial<
 	Omit<ActivityFields, 'id' | 'createdAt' | 'updatedAt' | 'type'>
@@ -35,13 +31,13 @@ export type ActivityQuery = {
 };
 
 export class Activity implements ActivityFields {
-	constructor(fields: ActivityFields) {
+	constructor(fields: ActivityCreateFields) {
 		this.id = fields.id;
 		this.createdAt = fields.createdAt;
-		this.updatedAt = fields.updatedAt;
+		this.updatedAt = fields.updatedAt ?? null;
 		this.lessonId = fields.lessonId;
 		this.name = fields.name;
-		this.description = fields.description;
+		this.description = fields.description ?? null;
 		this.order = fields.order;
 		this.type = fields.type;
 	}

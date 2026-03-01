@@ -46,9 +46,12 @@ export const unitsUseCasesProvider: Provider[] = [
 	},
 	{
 		provide: DiToken.REMOVE_UNIT_USE_CASE,
-		useFactory(unitsRepository: PostgresUnitsRepository) {
-			return new RemoveUnitUseCase(unitsRepository);
+		useFactory(
+			unitsRepository: PostgresUnitsRepository,
+			sectionsRepository: ISectionsRepository,
+		) {
+			return new RemoveUnitUseCase(unitsRepository, sectionsRepository);
 		},
-		inject: [PostgresUnitsRepository],
+		inject: [PostgresUnitsRepository, PostgresSectionsRepository],
 	},
 ];

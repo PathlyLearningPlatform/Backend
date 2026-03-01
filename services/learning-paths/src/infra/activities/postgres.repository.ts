@@ -315,14 +315,14 @@ export class PostgresActivitiesRepository implements IActivitiesRepository {
 		}
 	}
 
-	async remove(id: string): Promise<boolean> {
+	async remove(id: string): Promise<Activity | null> {
 		try {
 			const result = await this.db
 				.delete(activitiesTable)
 				.where(eq(activitiesTable.id, id))
 				.returning();
 
-			return result.length > 0;
+			return result.length > 0 ? dbActivityToEntity(result[0]) : null;
 		} catch (err) {
 			throw new RepositoryException('db query failed', err);
 		}

@@ -1,3 +1,9 @@
-import type { ExerciseCreateFields } from '@/domain/activities/entities';
+import { ExerciseDifficulty } from '@/domain/activities/enums';
 
-export type CreateExerciseCommand = Omit<ExerciseCreateFields, 'type' | 'id'>;
+export type CreateExerciseCommand = {
+	name: string;
+	description?: string | null;
+	lessonId: string;
+	order: number;
+	difficulty: ExerciseDifficulty;
+};

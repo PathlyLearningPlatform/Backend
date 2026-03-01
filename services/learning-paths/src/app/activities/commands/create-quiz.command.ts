@@ -1,3 +1,6 @@
-import type { QuizCreateFields } from '@/domain/activities/entities';
-
-export type CreateQuizCommand = Omit<QuizCreateFields, 'type' | 'id'>;
+export type CreateQuizCommand = {
+	name: string;
+	description?: string | null;
+	lessonId: string;
+	order: number;
+};

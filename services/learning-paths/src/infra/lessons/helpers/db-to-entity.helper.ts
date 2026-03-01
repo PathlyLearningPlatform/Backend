@@ -10,5 +10,6 @@ export function dbLessonToEntity(db: DbLesson): Lesson {
 		name: db.name,
 		description: db.description,
 		order: db.order,
+		activityCount: db.activityCount,
 	});
 }

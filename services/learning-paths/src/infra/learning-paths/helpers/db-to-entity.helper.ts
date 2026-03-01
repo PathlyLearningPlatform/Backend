@@ -8,5 +8,6 @@ export function dbLearningPathToEntity(db: DbLearningPath): LearningPath {
 		updatedAt: db.updatedAt,
 		description: db.description,
 		name: db.name,
+		sectionCount: db.sectionCount,
 	});
 }

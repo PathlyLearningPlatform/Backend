@@ -78,14 +78,14 @@ export class PostgresUnitsRepository implements IUnitsRepository {
 		}
 	}
 
-	async remove(id: string): Promise<boolean> {
+	async remove(id: string): Promise<Unit | null> {
 		try {
 			const result = await this.db
 				.delete(unitsTable)
 				.where(eq(unitsTable.id, id))
 				.returning();
 
-			return result.length > 0;
+			return result.length > 0 ? dbUnitToEntity(result[0]) : null;
 		} catch (err) {
 			if (err instanceof DrizzleQueryError) {
 				if (err.cause instanceof PostgresError) {

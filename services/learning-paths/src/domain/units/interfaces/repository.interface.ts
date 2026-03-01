@@ -7,5 +7,5 @@ export interface IUnitsRepository {
 
 	save(entity: Unit): Promise<void>;
 
-	remove(id: string): Promise<boolean>;
+	remove(id: string): Promise<Unit | null>;
 }
