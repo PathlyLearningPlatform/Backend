@@ -18,6 +18,7 @@ export interface Lesson {
   description: string;
   order: number;
   unitId: string;
+  activityCount: number;
 }
 
 export interface FindLessonsOptions {

@@ -10,6 +10,7 @@ message LearningPath {
   string updatedAt = 3;
   string name = 4;
   string description = 5;
+  int32 sectionCount = 6;
 }
 
 service LearningPathsService {

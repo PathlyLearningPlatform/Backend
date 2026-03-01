@@ -44,4 +44,7 @@ export class LessonResponseDto {
 		type: 'number',
 	})
 	order: number
+
+	@ApiProperty()
+	activityCount: number
 }

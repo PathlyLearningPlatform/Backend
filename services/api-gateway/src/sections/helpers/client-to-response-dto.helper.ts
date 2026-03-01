@@ -6,7 +6,12 @@ export function clientSectionToResponseDto(
 	client: ClientSection,
 ): SectionResponseDto {
 	return {
-		...client,
+		id: client.id,
+		name: client.name,
+		createdAt: client.createdAt,
+		learningPathId: client.learningPathId,
+		order: client.order,
+		unitCount: client.unitCount,
 		description: emptyStringToNull(client.description),
 		updatedAt: emptyStringToNull(client.description),
 	}

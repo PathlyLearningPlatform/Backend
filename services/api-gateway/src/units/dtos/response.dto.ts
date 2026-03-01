@@ -44,4 +44,7 @@ export class UnitResponseDto {
 		type: 'number',
 	})
 	order: number
+
+	@ApiProperty()
+	lessonCount: number
 }

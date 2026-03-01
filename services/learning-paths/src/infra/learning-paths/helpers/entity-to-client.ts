@@ -6,9 +6,11 @@ export function learningPathEntityToClient(
 	entity: LearningPath,
 ): ClientLearningPath {
 	return {
-		...entity,
+		id: entity.id,
+		name: entity.name,
 		description: nullToEmptyString(entity.description),
 		updatedAt: entity.updatedAt === null ? '' : entity.updatedAt.toISOString(),
 		createdAt: entity.createdAt.toISOString(),
+		sectionCount: entity.sectionCount,
 	};
 }

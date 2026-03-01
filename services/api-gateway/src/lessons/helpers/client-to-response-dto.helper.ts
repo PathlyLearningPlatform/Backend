@@ -6,7 +6,12 @@ export function clientLessonToResponseDto(
 	client: ClientLesson,
 ): LessonResponseDto {
 	return {
-		...client,
+		id: client.id,
+		name: client.name,
+		activityCount: client.activityCount,
+		createdAt: client.createdAt,
+		order: client.order,
+		unitId: client.unitId,
 		description: emptyStringToNull(client.description),
 		updatedAt: emptyStringToNull(client.description),
 	}

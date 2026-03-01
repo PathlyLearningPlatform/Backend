@@ -12,6 +12,7 @@ message Section {
   string description = 5;
   int32 order = 6;
   string learningPathId = 7;
+  int32 unitCount = 8;
 }
 
 service SectionsService {

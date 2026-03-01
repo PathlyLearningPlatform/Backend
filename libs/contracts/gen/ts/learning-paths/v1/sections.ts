@@ -18,6 +18,7 @@ export interface Section {
   description: string;
   order: number;
   learningPathId: string;
+  unitCount: number;
 }
 
 export interface FindSectionsOptions {

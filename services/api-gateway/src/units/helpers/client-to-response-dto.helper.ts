@@ -4,7 +4,12 @@ import type { UnitResponseDto } from '../dtos'
 
 export function clientUnitToResponseDto(client: ClientUnit): UnitResponseDto {
 	return {
-		...client,
+		id: client.id,
+		name: client.name,
+		order: client.order,
+		createdAt: client.createdAt,
+		lessonCount: client.lessonCount,
+		sectionId: client.sectionId,
 		description: emptyStringToNull(client.description),
 		updatedAt: emptyStringToNull(client.description),
 	}

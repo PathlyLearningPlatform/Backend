@@ -12,6 +12,7 @@ message Unit {
   string description = 5;
   int32 order = 6;
   string sectionId = 7;
+  int32 lessonCount = 8;
 }
 
 service UnitsService {

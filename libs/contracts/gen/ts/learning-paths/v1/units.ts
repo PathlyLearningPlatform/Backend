@@ -18,6 +18,7 @@ export interface Unit {
   description: string;
   order: number;
   sectionId: string;
+  lessonCount: number;
 }
 
 export interface FindUnitsOptions {

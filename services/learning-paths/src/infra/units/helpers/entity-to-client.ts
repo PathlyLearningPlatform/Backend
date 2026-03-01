@@ -4,7 +4,11 @@ import type { Unit } from '@/domain/units/entities';
 
 export function unitEntityToClient(entity: Unit): ClientUnit {
 	return {
-		...entity,
+		id: entity.id,
+		name: entity.name,
+		order: entity.order,
+		lessonCount: entity.lessonCount,
+		sectionId: entity.sectionId,
 		description: nullToEmptyString(entity.description),
 		updatedAt: entity.updatedAt === null ? '' : entity.updatedAt.toISOString(),
 		createdAt: entity.createdAt.toISOString(),

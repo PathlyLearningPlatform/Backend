@@ -44,4 +44,7 @@ export class SectionResponseDto {
 		type: 'number',
 	})
 	order: number
+
+	@ApiProperty()
+	unitCount: number
 }

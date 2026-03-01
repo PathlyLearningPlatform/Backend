@@ -23,6 +23,7 @@ export interface LearningPath {
   updatedAt: string;
   name: string;
   description: string;
+  sectionCount: number;
 }
 
 export interface FindLearningPathsOptions {

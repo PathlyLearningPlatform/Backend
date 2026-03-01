@@ -33,4 +33,7 @@ export class LearningPathResponseDto {
 		nullable: true,
 	})
 	updatedAt: string | null
+
+	@ApiProperty()
+	sectionCount: number
 }
