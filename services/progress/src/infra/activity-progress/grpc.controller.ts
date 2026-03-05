@@ -40,7 +40,7 @@ import {
 	ActivityAlreadyCompletedException,
 	ActivityProgressNotFoundException,
 } from '@/domain/activity-progress/exceptions';
-import { ActivityNotFoundException } from '@/app/exceptions';
+import { ActivityNotFoundException } from '@/app/common/exceptions';
 
 @UseFilters(GrpcExceptionFilter)
 @Controller()

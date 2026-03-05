@@ -7,5 +7,6 @@ export function dbActivityProgressToEntity(db: DbActivityProgress) {
 		id: db.id,
 		userId: db.userId,
 		completedAt: db.completedAt,
+		lessonId: db.lessonId,
 	});
 }

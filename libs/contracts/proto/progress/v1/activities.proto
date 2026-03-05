@@ -21,6 +21,7 @@ message ActivityProgress {
   string activityId = 2;
   string userId = 3;
   string completedAt = 4;
+  string lessonId = 5;
 }
 
 message ListActivityProgressRequest {

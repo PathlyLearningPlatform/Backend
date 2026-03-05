@@ -10,5 +10,6 @@ export function activityProgressToClient(
 			entity.completedAt === null ? '' : entity.completedAt.toISOString(),
 		id: entity.id,
 		userId: entity.userId,
+		lessonId: entity.lessonId,
 	};
 }

@@ -8,9 +8,11 @@ import {
 } from '@pathly-backend/common/index.js';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ActivityProgressModule } from './infra/activity-progress/activity-progress.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
 	imports: [
+		EventEmitterModule.forRoot(),
 		DbModule,
 		ConfigModule.forRoot({
 			validate: validateConfig,

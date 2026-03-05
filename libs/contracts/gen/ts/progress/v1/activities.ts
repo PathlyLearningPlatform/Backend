@@ -15,6 +15,7 @@ export interface ActivityProgress {
   activityId: string;
   userId: string;
   completedAt: string;
+  lessonId: string;
 }
 
 export interface ListActivityProgressRequest {

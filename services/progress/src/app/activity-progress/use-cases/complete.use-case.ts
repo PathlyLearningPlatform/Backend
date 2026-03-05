@@ -2,10 +2,12 @@ import { IActivityProgressRepository } from '../interfaces';
 import { CompleteActivityCommand } from '../commands';
 import { ActivityProgressNotFoundException } from '@/domain/activity-progress/exceptions';
 import { ActivityProgress } from '@/domain/activity-progress/entities';
+import { IEventBus } from '@/app/common';
 
 export class CompleteActivityUseCase {
 	constructor(
 		private readonly activityProgressRepository: IActivityProgressRepository,
+		private readonly eventBus: IEventBus,
 	) {}
 
 	async execute(command: CompleteActivityCommand): Promise<ActivityProgress> {
@@ -22,9 +24,11 @@ export class CompleteActivityUseCase {
 			);
 		}
 
-		activityProgress.complete();
+		activityProgress.complete(new Date());
 
-		await this.activityProgressRepository.save(activityProgress);
+		const events = await this.activityProgressRepository.save(activityProgress);
+
+		this.eventBus.publish(events);
 
 		return activityProgress;
 	}

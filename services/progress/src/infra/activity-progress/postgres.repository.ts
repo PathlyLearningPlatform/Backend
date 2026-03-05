@@ -9,6 +9,7 @@ import { activityProgressTable } from '../db/schemas';
 import { dbActivityProgressToEntity } from './helpers';
 import { ActivityProgressConstraints } from './enums';
 import { and, eq } from 'drizzle-orm';
+import { DomainEvent } from '@/domain/common';
 
 @Injectable()
 export class PostgresActivityProgressRepository
@@ -74,11 +75,12 @@ export class PostgresActivityProgressRepository
 		}
 	}
 
-	async save(entity: ActivityProgress): Promise<void> {
+	async save(entity: ActivityProgress): Promise<DomainEvent[]> {
 		try {
 			await this.db
 				.insert(activityProgressTable)
 				.values({
+					lessonId: entity.lessonId,
 					activityId: entity.activityId,
 					id: entity.id,
 					userId: entity.userId,
@@ -90,6 +92,8 @@ export class PostgresActivityProgressRepository
 						completedAt: entity.completedAt,
 					},
 				});
+
+			return entity.events;
 		} catch (err) {
 			throw new RepositoryException('db error', err);
 		}

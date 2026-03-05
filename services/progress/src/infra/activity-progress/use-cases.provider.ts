@@ -10,16 +10,20 @@ import {
 	RemoveActivityProgressByIdUseCase,
 	StartActivityUseCase,
 } from '@/app/activity-progress/use-cases';
-import { ILearningPathsService } from '@/app/interfaces';
-import { LearningPathsService } from '../services';
+import { ILearningPathsService } from '@/app/common/interfaces';
+import { InMemoryEventBus, LearningPathsService } from '@/infra/common';
+import { IEventBus } from '@/app/common/interfaces';
 
 export const activityProgressUseCasesProvider: Provider[] = [
 	{
 		provide: DiToken.COMPLETE_ACTIVITY_USE_CASE,
-		useFactory(activityProgressRepository: IActivityProgressRepository) {
-			return new CompleteActivityUseCase(activityProgressRepository);
+		useFactory(
+			activityProgressRepository: IActivityProgressRepository,
+			eventBus: IEventBus,
+		) {
+			return new CompleteActivityUseCase(activityProgressRepository, eventBus);
 		},
-		inject: [PostgresActivityProgressRepository],
+		inject: [PostgresActivityProgressRepository, InMemoryEventBus],
 	},
 	{
 		provide: DiToken.START_ACTIVITY_USE_CASE,

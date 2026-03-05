@@ -1,4 +1,4 @@
-import { OffsetPagination } from '@/app/types';
+import { OffsetPagination } from '@/app/common';
 
 export type ActivityProgressFilter = {
 	options?: OffsetPagination;
