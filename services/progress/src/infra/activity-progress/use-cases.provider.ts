@@ -11,8 +11,9 @@ import {
 	StartActivityUseCase,
 } from '@/app/activity-progress/use-cases';
 import { ILearningPathsService } from '@/app/common/interfaces';
-import { InMemoryEventBus, LearningPathsService } from '@/infra/common';
 import { IEventBus } from '@/app/common/interfaces';
+import { InMemoryEventBus } from '../common/modules/events/event-bus.provider';
+import { LearningPathsService } from '../common/modules/learning-paths/learning-paths.service';
 
 export const activityProgressUseCasesProvider: Provider[] = [
 	{

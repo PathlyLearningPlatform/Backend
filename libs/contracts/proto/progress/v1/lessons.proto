@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package progress.v1;
+
+import "common/types.proto";
+
+service LessonProgressService {
+  rpc List(ListLessonProgressRequest) returns (ListLessonProgressResponse) {};
+
+  rpc FindOneForUser(FindOneLessonProgressForUserRequest) returns (FindOneLessonProgressForUserResponse) {};
+  rpc FindById(FindLessonProgressByIdRequest) returns (FindLessonProgressByIdResponse) {};
+
+  rpc Start(StartLessonRequest) returns (StartLessonResponse) {};
+
+  rpc RemoveById(RemoveLessonProgressByIdRequest) returns (RemoveLessonProgressByIdResponse) {};
+}
+
+message LessonProgress {
+  string id = 1;
+  string lessonId = 2;
+  string userId = 3;
+  string completedAt = 4;
+  int32 totalActivityCount = 5;
+  int32 completedActivityCount = 6;
+}
+
+message ListLessonProgressRequest {
+  message Options {
+    optional int32 limit = 1;
+    optional int32 page = 2;
+  }
+  message Where {
+    optional string userId = 1;
+  }
+
+  optional Options options = 1;
+  optional Where where = 2;
+}
+message ListLessonProgressResponse {
+  repeated LessonProgress lessonProgress = 1;
+}
+
+message FindOneLessonProgressForUserRequest {
+  string lessonId = 1;
+  string userId = 2;
+}
+message FindOneLessonProgressForUserResponse {
+  LessonProgress lessonProgress = 1;
+}
+
+message FindLessonProgressByIdRequest {
+  string id = 1;
+}
+message FindLessonProgressByIdResponse {
+  LessonProgress lessonProgress = 1;
+}
+
+message StartLessonRequest {
+  string lessonId = 1;
+  string userId = 2;
+}
+message StartLessonResponse {
+  LessonProgress lessonProgress = 1;
+}
+
+message RemoveLessonProgressByIdRequest {
+  string id = 1;
+}
+message RemoveLessonProgressByIdResponse {}

@@ -28,7 +28,7 @@ export class CompleteActivityUseCase {
 
 		const events = await this.activityProgressRepository.save(activityProgress);
 
-		this.eventBus.publish(events);
+		await this.eventBus.publish(events);
 
 		return activityProgress;
 	}

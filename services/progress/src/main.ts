@@ -26,6 +26,7 @@ async function bootstrap() {
 				protoPath: [
 					healthCheckProtoPath,
 					join(protoDir, 'progress/v1/activities.proto'),
+					join(protoDir, 'progress/v1/lessons.proto'),
 					join(protoDir, 'common/types.proto'),
 				],
 				url: `${hostname}:${port}`,

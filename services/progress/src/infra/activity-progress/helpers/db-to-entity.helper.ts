@@ -1,5 +1,5 @@
 import { ActivityProgress } from '@/domain/activity-progress/entities';
-import { DbActivityProgress } from '../types';
+import { DbActivityProgress } from '@infra/common/modules/db/types';
 
 export function dbActivityProgressToEntity(db: DbActivityProgress) {
 	return new ActivityProgress({

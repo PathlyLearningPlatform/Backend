@@ -31,7 +31,7 @@ export class ActivityProgress implements ActivityProgressFields {
 			return;
 		}
 
-		this.completedAt = { ...now };
+		this.completedAt = now;
 
 		this._events.push(
 			new ActivityCompletedEvent(this.id, this.userId, this.lessonId),
