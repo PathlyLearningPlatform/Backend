@@ -1,14 +1,11 @@
-import type {
-	LearningPath,
-	LearningPathQuery,
-} from '@/domain/learning-paths/entities';
+import { LearningPathId } from '../value-objects/id.vo';
+import { LearningPath } from '../learning-path.aggregate';
+import { DomainEvent } from '@/domain/common';
 
-export interface ILearningPathsRepository {
-	find(query?: LearningPathQuery): Promise<LearningPath[]>;
+export interface ILearningPathRepository {
+	load(id: LearningPathId): Promise<LearningPath | null>;
 
-	findOne(id: string): Promise<LearningPath | null>;
+	save(aggregate: LearningPath): Promise<void>;
 
-	save(entity: LearningPath): Promise<void>;
-
-	remove(id: string): Promise<boolean>;
+	remove(id: LearningPathId): Promise<boolean>;
 }

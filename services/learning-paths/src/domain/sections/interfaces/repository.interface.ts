@@ -1,11 +1,11 @@
-import type { Section, SectionQuery } from '@/domain/sections/entities';
+import { DomainEvent } from '@/domain/common';
+import { Section } from '../section.aggregate';
+import { SectionId } from '../value-objects/id.vo';
 
-export interface ISectionsRepository {
-	find(query?: SectionQuery): Promise<Section[]>;
+export interface ISectionRepository {
+	load(id: SectionId): Promise<Section | null>;
 
-	findOne(id: string): Promise<Section | null>;
+	save(aggregate: Section): Promise<void>;
 
-	save(entity: Section): Promise<void>;
-
-	remove(id: string): Promise<Section | null>;
+	remove(id: SectionId): Promise<boolean>;
 }

@@ -1,9 +1,8 @@
-import { LearningPathException } from './base.exception';
+import { DomainException } from '@/domain/common';
 
-export class LearningPathCannotBeRemovedException extends LearningPathException {
-	constructor(pathId: string) {
-		const message = `Path ${pathId} cannot be removed, because it has sections. Before deleting path please remove the sctions.`;
-
+export class LearningPathCannotBeRemovedException extends DomainException {
+	constructor(public readonly learningPathId: string) {
+		const message = `Learning path with id = ${learningPathId} cannot be removed.`;
 		super(message);
 	}
 }
