@@ -1,4 +1,6 @@
+import { Order } from '../common';
 import { AggregateRoot } from '../common/aggregate-root';
+import { InvalidOrderException } from '../common/exceptions';
 import { SectionId } from '../sections/value-objects/id.vo';
 import { LearningPathCannotBeRemovedException } from './exceptions';
 import { SectionAlreadyExistsException } from './exceptions/section-already-exists.exception';
@@ -121,6 +123,26 @@ export class LearningPath extends AggregateRoot<
 		return sectionRef;
 	}
 
+	reorderSection(sectionId: SectionId, newOrder: Order): Order | null {
+		const currentIndex = this._props.sectionRefs.findIndex((ref) =>
+			ref.sectionId.equals(sectionId),
+		);
+
+		if (currentIndex === -1) {
+			return null;
+		}
+
+		const clampedOrder = Order.create(
+			Math.max(0, Math.min(this._props.sectionRefs.length - 1, newOrder.value)),
+		);
+
+		const [ref] = this._props.sectionRefs.splice(currentIndex, 1);
+		this._props.sectionRefs.splice(clampedOrder.value, 0, ref);
+		this._rearangeSections();
+
+		return clampedOrder;
+	}
+
 	removeSection(sectionId: SectionId): void {
 		const i = this._props.sectionRefs.findIndex((ref) =>
 			ref.sectionId.equals(sectionId),
@@ -142,10 +164,10 @@ export class LearningPath extends AggregateRoot<
 	}
 
 	private _rearangeSections(): void {
-		this._props.sectionRefs.map(
+		this._props.sectionRefs = this._props.sectionRefs.map(
 			(ref, i) =>
 				new SectionRef({
-					order: i,
+					order: Order.create(i),
 					sectionId: ref.sectionId,
 				}),
 		);

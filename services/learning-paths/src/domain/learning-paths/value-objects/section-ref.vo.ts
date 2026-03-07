@@ -1,9 +1,9 @@
-import { ValueObject, UUID } from '@/domain/common';
+import { ValueObject, Order } from '@/domain/common';
 import { SectionId } from '@/domain/sections/value-objects/id.vo';
 
 type Props = {
 	sectionId: SectionId;
-	order: number;
+	order: Order;
 };
 
 type CreateProps = {
@@ -16,14 +16,14 @@ export class SectionRef extends ValueObject<Props> {
 		return this._props.sectionId;
 	}
 
-	get order(): number {
+	get order(): Order {
 		return this._props.order;
 	}
 
 	static create(props: CreateProps) {
 		return new SectionRef({
 			sectionId: SectionId.create(props.sectionId),
-			order: props.order,
+			order: Order.create(props.order),
 		});
 	}
 }

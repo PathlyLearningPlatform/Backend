@@ -11,29 +11,24 @@ import { SectionId } from '@/domain/sections/value-objects/id.vo';
 import { randomUUID } from 'node:crypto';
 import { LearningPathNotFoundException } from '@app/common';
 import { SectionDto } from '@/app/sections/dtos';
+import { Order } from '@/domain/common';
 
-type AddSectionToLearningPathCommand = {
+type AddSectionCommand = {
 	learningPathId: string;
 	name: string;
 	description?: string | null;
 };
-type AddSectionToLearningPathResult = SectionDto;
+type AddSectionResult = SectionDto;
 
-export class AddSectionToLearningPathHandler
-	implements
-		ICommandHandler<
-			AddSectionToLearningPathCommand,
-			AddSectionToLearningPathResult
-		>
+export class AddSectionHandler
+	implements ICommandHandler<AddSectionCommand, AddSectionResult>
 {
 	constructor(
 		private readonly learningPathRepository: ILearningPathRepository,
 		private readonly sectionRepository: ISectionRepository,
 	) {}
 
-	async execute(
-		command: AddSectionToLearningPathCommand,
-	): Promise<AddSectionToLearningPathResult> {
+	async execute(command: AddSectionCommand): Promise<AddSectionResult> {
 		const id = LearningPathId.create(command.learningPathId);
 		const learningPath = await this.learningPathRepository.load(id);
 
@@ -69,7 +64,8 @@ export class AddSectionToLearningPathHandler
 			description: section.description?.value ?? null,
 			name: section.name.value,
 			updatedAt: section.updatedAt ?? null,
-			order: section.order,
+			order: section.order.value,
+			unitCount: section.unitCount,
 		};
 	}
 }

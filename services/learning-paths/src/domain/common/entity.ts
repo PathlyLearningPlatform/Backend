@@ -1,9 +1,9 @@
-import { UUID } from './value-objects';
+import { ValueObject } from './value-object';
 
-export abstract class Entity<T> {
-	protected readonly _id: UUID;
+export abstract class Entity<ID extends ValueObject<object>, Props> {
+	protected readonly _id: ID;
 
-	constructor(id: UUID) {
+	constructor(id: ID) {
 		this._id = id;
 	}
 
@@ -11,7 +11,7 @@ export abstract class Entity<T> {
 		return this._id;
 	}
 
-	equals(other: Entity<T>): boolean {
+	equals(other: Entity<ID, Props>): boolean {
 		return this._id.equals(other._id);
 	}
 }

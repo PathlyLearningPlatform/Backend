@@ -1,7 +1,10 @@
-import { AggregateRoot } from '../common';
-import { SectionDescription, SectionName } from './value-objects';
+import { AggregateRoot, Order } from '../common';
+import { SectionDescription, SectionName, UnitRef } from './value-objects';
 import { SectionId } from './value-objects/id.vo';
 import { LearningPathId } from '../learning-paths/value-objects';
+import { UnitId } from '../units/value-objects/id.vo';
+import { SectionCannotBeRemovedException } from './exceptions';
+import { UnitAlreadyExistsException } from './exceptions/unit-already-exists.exception';
 
 type SectionProps = {
 	learningPathId: LearningPathId;
@@ -9,16 +12,20 @@ type SectionProps = {
 	description: SectionDescription | null;
 	createdAt: Date;
 	updatedAt: Date | null;
-	order: number;
+	order: Order;
+	unitRefs: UnitRef[];
+	unitCount: number;
 };
 type CreateSectionProps = {
 	learningPathId: LearningPathId;
 	name: SectionName;
 	description?: SectionDescription | null;
 	createdAt: Date;
-	order: number;
+	order: Order;
 };
-type UpdateSectionProps = Partial<Pick<SectionProps, 'name' | 'description'>>;
+type UpdateSectionProps = Partial<
+	Pick<SectionProps, 'name' | 'description' | 'order'>
+>;
 type SectionFromDataSourceProps = {
 	id: string;
 	learningPathId: string;
@@ -27,6 +34,8 @@ type SectionFromDataSourceProps = {
 	createdAt: Date;
 	updatedAt: Date | null;
 	order: number;
+	unitRefs: UnitRef[];
+	unitCount: number;
 };
 
 export class Section extends AggregateRoot<SectionId, SectionProps> {
@@ -44,15 +53,20 @@ export class Section extends AggregateRoot<SectionId, SectionProps> {
 		const description = props.description
 			? SectionDescription.create(props.description)
 			: null;
+		const order = Order.create(props.order);
 
 		const section = new Section(id, {
 			learningPathId,
 			name,
 			description,
-			order: props.order,
+			order,
 			createdAt: props.createdAt,
 			updatedAt: props.updatedAt,
+			unitRefs: props.unitRefs,
+			unitCount: props.unitCount,
 		});
+
+		section._rearrangeUnits();
 
 		return section;
 	}
@@ -65,6 +79,8 @@ export class Section extends AggregateRoot<SectionId, SectionProps> {
 			learningPathId: props.learningPathId,
 			updatedAt: null,
 			order: props.order,
+			unitRefs: [],
+			unitCount: 0,
 		});
 
 		return section;
@@ -73,23 +89,33 @@ export class Section extends AggregateRoot<SectionId, SectionProps> {
 	get id(): SectionId {
 		return this._id;
 	}
+
 	get learningPathId(): LearningPathId {
 		return this._props.learningPathId;
 	}
+
 	get name(): SectionName {
 		return this._props.name;
 	}
+
 	get description(): SectionDescription | null {
 		return this._props.description;
 	}
+
 	get createdAt(): Date {
 		return this._props.createdAt;
 	}
+
 	get updatedAt(): Date | null {
 		return this._props.updatedAt;
 	}
-	get order(): number {
+
+	get order(): Order {
 		return this._props.order;
+	}
+
+	get unitCount(): number {
+		return this._props.unitCount;
 	}
 
 	update(now: Date, props?: UpdateSectionProps) {
@@ -101,8 +127,82 @@ export class Section extends AggregateRoot<SectionId, SectionProps> {
 			this._props.description = props.description;
 		}
 
+		if (props?.order) {
+			this._props.order = props.order;
+		}
+
 		this._props.updatedAt = now;
 	}
 
-	ensureCanRemove() {}
+	ensureCanRemove() {
+		if (this._props.unitRefs.length > 0) {
+			throw new SectionCannotBeRemovedException(this._id.value);
+		}
+	}
+
+	addUnit(unitId: UnitId): UnitRef {
+		const unitRef = UnitRef.create({
+			unitId: unitId.value,
+			order: this._props.unitRefs.length,
+		});
+
+		if (this._findUnit(unitRef)) {
+			throw new UnitAlreadyExistsException(unitId.value);
+		}
+
+		this._props.unitRefs.push(unitRef);
+		this._props.unitCount = this._props.unitRefs.length;
+
+		return unitRef;
+	}
+
+	reorderUnit(unitId: UnitId, newOrder: Order): Order | null {
+		const currentIndex = this._props.unitRefs.findIndex((ref) =>
+			ref.unitId.equals(unitId),
+		);
+
+		if (currentIndex === -1) {
+			return null;
+		}
+
+		const clampedOrder = Order.create(
+			Math.max(0, Math.min(newOrder.value, this._props.unitRefs.length - 1)),
+		);
+
+		const [ref] = this._props.unitRefs.splice(currentIndex, 1);
+		this._props.unitRefs.splice(clampedOrder.value, 0, ref);
+		this._rearrangeUnits();
+
+		return clampedOrder;
+	}
+
+	removeUnit(unitId: UnitId): void {
+		const i = this._props.unitRefs.findIndex((ref) =>
+			ref.unitId.equals(unitId),
+		);
+
+		if (i === -1) {
+			return;
+		}
+
+		this._props.unitRefs.splice(i, 1);
+		this._rearrangeUnits();
+		this._props.unitCount = this._props.unitRefs.length;
+	}
+
+	private _findUnit(unitRef: UnitRef): UnitRef | null {
+		const ref = this._props.unitRefs.find((ref) => ref.equals(unitRef));
+
+		return ref === undefined ? null : ref;
+	}
+
+	private _rearrangeUnits(): void {
+		this._props.unitRefs = this._props.unitRefs.map(
+			(ref, i) =>
+				new UnitRef({
+					order: Order.create(i),
+					unitId: ref.unitId,
+				}),
+		);
+	}
 }
