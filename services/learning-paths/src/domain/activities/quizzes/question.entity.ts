@@ -53,6 +53,30 @@ export class Question extends Entity<QuestionId, QuestionProps> {
 		});
 	}
 
+	get quizId(): ActivityId {
+		return this._props.quizId;
+	}
+
+	get content(): string {
+		return this._props.content;
+	}
+
+	get correctAnswer(): string {
+		return this._props.correctAnswer;
+	}
+
+	get order(): Order {
+		return this._props.order;
+	}
+
+	get createdAt(): Date {
+		return this._props.createdAt;
+	}
+
+	get updatedAt(): Date | null {
+		return this._props.updatedAt ?? null;
+	}
+
 	update(now: Date, props?: UpdateQuestionProps) {
 		if (props?.content) {
 			this._props.content = props.content;

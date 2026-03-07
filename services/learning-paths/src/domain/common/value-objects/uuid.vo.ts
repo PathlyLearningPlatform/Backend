@@ -1,4 +1,4 @@
-import { DomainException } from '../domain-exception';
+import { InvalidUUIDException } from '../exceptions';
 import { ValueObject } from '../value-object';
 
 type Props = {
@@ -15,7 +15,7 @@ export class UUID extends ValueObject<Props> {
 			/^[[:xdigit:]]{8}(?:\-[[:xdigit:]]{4}){3}\-[[:xdigit:]]{12}$/gm;
 
 		if (!regex.test(value)) {
-			throw new DomainException('Invalid UUID');
+			throw new InvalidUUIDException(value);
 		}
 
 		return new UUID({

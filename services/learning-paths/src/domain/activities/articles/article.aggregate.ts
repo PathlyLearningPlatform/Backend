@@ -19,7 +19,7 @@ type ArticleProps = ActivityProps & {
 };
 type CreateArticleProps = Omit<
 	CreateActivityProps & {
-		ref: string;
+		ref: Url;
 	},
 	'type'
 >;
@@ -51,7 +51,7 @@ export class Article extends Activity {
 			updatedAt: null,
 			order: props.order,
 			type: ActivityType.ARTICLE,
-			ref: Url.create(props.ref),
+			ref: props.ref,
 		});
 	}
 

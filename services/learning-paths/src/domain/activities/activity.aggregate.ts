@@ -37,6 +37,7 @@ export type ActivityFromDataSourceProps = {
 export type UpdateActivityProps = Partial<{
 	name: ActivityName;
 	description: ActivityDescription | null;
+	order: Order;
 }>;
 
 export abstract class Activity extends AggregateRoot<
@@ -82,6 +83,10 @@ export abstract class Activity extends AggregateRoot<
 
 		if (props?.description) {
 			this._props.description = props.description;
+		}
+
+		if (props?.order) {
+			this._props.order = props.order;
 		}
 
 		this._props.updatedAt = now;
