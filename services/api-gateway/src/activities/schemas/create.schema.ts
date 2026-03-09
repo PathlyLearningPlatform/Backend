@@ -4,11 +4,9 @@ import {
 	descriptionSchema,
 	difficultySchema,
 	lessonIdSchema,
-	nameSchema,
-	orderSchema,
-	questionContentSchema,
+	nameSchema, questionContentSchema,
 	questionCorrectAnswerSchema,
-	refSchema,
+	refSchema
 } from './fields.schema'
 
 export const createActivitySchema = z.object({
@@ -17,7 +15,6 @@ export const createActivitySchema = z.object({
 		emptyStringToNull,
 		descriptionSchema.optional().nullable(),
 	),
-	order: orderSchema,
 	lessonId: lessonIdSchema,
 })
 

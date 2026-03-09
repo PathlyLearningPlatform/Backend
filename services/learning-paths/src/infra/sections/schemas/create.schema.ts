@@ -4,7 +4,6 @@ import {
 	descriptionSchema,
 	learningPathIdSchema,
 	nameSchema,
-	orderSchema,
 } from './fields.schema';
 
 export const createSectionSchema = z
@@ -14,7 +13,6 @@ export const createSectionSchema = z
 			emptyStringToNull,
 			descriptionSchema.optional().default(null),
 		),
-		order: orderSchema,
 		learningPathId: learningPathIdSchema,
 	})
 	.strict();

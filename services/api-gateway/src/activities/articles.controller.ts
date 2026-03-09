@@ -50,11 +50,11 @@ export class ArticlesController {
 	@ApiOkResponse({ type: FindOneArticleResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@Get(':id')
-	async findOne(
+	async findById(
 		@Param('id', ParseUUIDPipe) id: string,
 	): Promise<FindOneArticleResponseDto> {
 		try {
-			const result = await this.activitiesService.findOneArticle({
+			const result = await this.activitiesService.findArticleById({
 				where: { id },
 			})
 
@@ -100,7 +100,6 @@ export class ArticlesController {
 			const result = await this.activitiesService.createArticle({
 				name: body.name,
 				description: nullToEmptyString(body.description),
-				order: body.order,
 				lessonId: body.lessonId,
 				ref: body.ref,
 			})
@@ -113,14 +112,6 @@ export class ArticlesController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
-				case LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER:
-					throw new ConflictException(
-						new HttpErrorDto(
-							exceptionCodeToMessage[
-								LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER
-							],
-						),
-					)
 				case LearningPathsApiErrorCodes.LESSON_NOT_FOUND:
 					throw new NotFoundException(
 						new HttpErrorDto(
@@ -158,7 +149,6 @@ export class ArticlesController {
 				fields: {
 					name: body.name,
 					description: nullToEmptyString(body.description),
-					order: body.order,
 					ref: body.ref,
 					lessonId: body.lessonId,
 				},
@@ -172,14 +162,6 @@ export class ArticlesController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
-				case LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER:
-					throw new ConflictException(
-						new HttpErrorDto(
-							exceptionCodeToMessage[
-								LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER
-							],
-						),
-					)
 				case LearningPathsApiErrorCodes.LESSON_NOT_FOUND:
 					throw new NotFoundException(
 						new HttpErrorDto(

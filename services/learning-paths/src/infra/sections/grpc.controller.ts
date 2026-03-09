@@ -2,7 +2,6 @@ import { status as GrpcStatus } from '@grpc/grpc-js';
 import { Controller, Inject, UseFilters } from '@nestjs/common';
 import { GrpcMethod, Payload } from '@nestjs/microservices';
 import {
-	AppLogger,
 	GrpcErrorDto,
 	GrpcException,
 	GrpcExceptionFilter,
@@ -11,71 +10,78 @@ import {
 import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js';
 import {
 	type CreateSectionResponse,
-	type FindOneSectionResponse,
-	type FindSectionsResponse,
-	type RemoveSectionResponse,
-	SECTIONS_SERVICE_NAME,
+	type FindSectionByIdResponse,
+	type ListSectionsResponse,
 	type UpdateSectionResponse,
+	SECTIONS_SERVICE_NAME,
 } from '@pathly-backend/contracts/learning-paths/v1/sections.js';
 import type z from 'zod';
 import type {
-	CreateSectionUseCase,
-	FindOneSectionUseCase,
-	FindSectionsUseCase,
-	RemoveSectionUseCase,
-	UpdateSectionUseCase,
-} from '@/app/sections/use-cases';
-import { LearningPathNotFoundException } from '@/domain/learning-paths/exceptions';
+	AddSectionHandler,
+	ReorderSectionHandler,
+} from '@/app/learning-paths/commands';
+import type {
+	UpdateSectionHandler,
+	RemoveSectionHandler,
+} from '@/app/sections/commands';
+import type {
+	ListSectionsHandler,
+	FindSectionByIdHandler,
+} from '@/app/sections/queries';
 import {
-	SectionCannotBeRemovedException,
+	LearningPathNotFoundException,
 	SectionNotFoundException,
-	SectionOrderException,
-} from '@/domain/sections/exceptions';
-import { DiToken } from '../common/enums';
-import { errorCodeToMessage } from '../common/helpers/error-code-to-message.helper';
-import { sectionEntityToClient } from './helpers';
+} from '@/app/common';
+import { DiToken, ExceptionMessage } from '../common/enums';
+import { sectionDtoToClient } from './helpers';
 import {
 	createSectionSchema,
-	findOneSectionSchema,
-	findSectionsSchema,
+	listSectionsSchema,
+	findSectionByIdSchema,
 	removeSectionSchema,
 	updateSectionSchema,
+	reorderSectionSchema,
 } from './schemas';
 
 @UseFilters(GrpcExceptionFilter)
 @Controller()
 export class GrpcSectionsController {
 	constructor(
-		@Inject(DiToken.FIND_SECTIONS_USE_CASE)
-		private readonly findSectionsUseCase: FindSectionsUseCase,
-		@Inject(DiToken.FIND_ONE_SECTION_USE_CASE)
-		private readonly findOneSectionUseCase: FindOneSectionUseCase,
-		@Inject(DiToken.CREATE_SECTION_USE_CASE)
-		private readonly createSectionUseCase: CreateSectionUseCase,
-		@Inject(DiToken.UPDATE_SECTION_USE_CASE)
-		private readonly updateSectionUseCase: UpdateSectionUseCase,
-		@Inject(DiToken.REMOVE_SECTION_USE_CASE)
-		private readonly removeSectionUseCase: RemoveSectionUseCase,
-		@Inject(AppLogger)
-		private readonly appLogger: AppLogger,
+		@Inject(DiToken.LIST_SECTIONS_HANDLER)
+		private readonly listSectionsHandler: ListSectionsHandler,
+		@Inject(DiToken.FIND_SECTION_BY_ID_HANDLER)
+		private readonly findSectionByIdHandler: FindSectionByIdHandler,
+		@Inject(DiToken.ADD_SECTION_HANDLER)
+		private readonly addSectionHandler: AddSectionHandler,
+		@Inject(DiToken.UPDATE_SECTION_HANDLER)
+		private readonly updateSectionHandler: UpdateSectionHandler,
+		@Inject(DiToken.REORDER_SECTION_HANDLER)
+		private readonly reorderSectionHandler: ReorderSectionHandler,
+		@Inject(DiToken.REMOVE_SECTION_HANDLER)
+		private readonly removeSectionHandler: RemoveSectionHandler,
 	) {}
 
 	@GrpcMethod(SECTIONS_SERVICE_NAME)
-	async find(
-		@Payload(new RpcValidationPipe(findSectionsSchema)) payload: z.infer<
-			typeof findSectionsSchema
+	async list(
+		@Payload(new RpcValidationPipe(listSectionsSchema)) payload: z.infer<
+			typeof listSectionsSchema
 		>,
-	): Promise<FindSectionsResponse> {
+	): Promise<ListSectionsResponse> {
 		try {
-			const sections = await this.findSectionsUseCase.execute(payload);
+			const sections = await this.listSectionsHandler.execute({
+				where: {
+					learningPathId: payload.where?.learningPathId,
+				},
+				options: payload.options,
+			});
 
 			return {
-				sections: sections.map(sectionEntityToClient),
+				sections: sections.map(sectionDtoToClient),
 			};
 		} catch (err) {
 			throw new GrpcException(
 				new GrpcErrorDto(
-					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					ExceptionMessage.INTERNAL_ERROR,
 					GrpcStatus.INTERNAL,
 					LearningPathsApiErrorCodes.INTERNAL_ERROR,
 				),
@@ -85,21 +91,21 @@ export class GrpcSectionsController {
 	}
 
 	@GrpcMethod(SECTIONS_SERVICE_NAME)
-	async findOne(
-		@Payload(new RpcValidationPipe(findOneSectionSchema))
-		payload: z.infer<typeof findOneSectionSchema>,
-	): Promise<FindOneSectionResponse> {
+	async findById(
+		@Payload(new RpcValidationPipe(findSectionByIdSchema))
+		payload: z.infer<typeof findSectionByIdSchema>,
+	): Promise<FindSectionByIdResponse> {
 		try {
-			const section = await this.findOneSectionUseCase.execute(
-				payload.where.id,
-			);
+			const section = await this.findSectionByIdHandler.execute({
+				where: { id: payload.where.id },
+			});
 
-			return { section: sectionEntityToClient(section) };
+			return { section: sectionDtoToClient(section) };
 		} catch (err) {
 			if (err instanceof SectionNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						errorCodeToMessage[LearningPathsApiErrorCodes.SECTION_NOT_FOUND],
+						ExceptionMessage.SECTION_NOT_FOUND,
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.SECTION_NOT_FOUND,
 					),
@@ -108,7 +114,7 @@ export class GrpcSectionsController {
 
 			throw new GrpcException(
 				new GrpcErrorDto(
-					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					ExceptionMessage.INTERNAL_ERROR,
 					GrpcStatus.INTERNAL,
 					LearningPathsApiErrorCodes.INTERNAL_ERROR,
 				),
@@ -119,42 +125,31 @@ export class GrpcSectionsController {
 
 	@GrpcMethod(SECTIONS_SERVICE_NAME)
 	async create(
-		@Payload(new RpcValidationPipe(createSectionSchema)) payload: z.infer<
-			typeof createSectionSchema
-		>,
+		@Payload(new RpcValidationPipe(createSectionSchema))
+		payload: z.infer<typeof createSectionSchema>,
 	): Promise<CreateSectionResponse> {
 		try {
-			const section = await this.createSectionUseCase.execute(payload);
+			const section = await this.addSectionHandler.execute({
+				learningPathId: payload.learningPathId,
+				name: payload.name,
+				description: payload.description,
+			});
 
-			return { section: sectionEntityToClient(section) };
+			return { section: sectionDtoToClient(section) };
 		} catch (err) {
 			if (err instanceof LearningPathNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						errorCodeToMessage[
-							LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND
-						],
+						ExceptionMessage.LEARNING_PATH_NOT_FOUND,
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND,
 					),
-					err,
-				);
-			}
-
-			if (err instanceof SectionOrderException) {
-				throw new GrpcException(
-					new GrpcErrorDto(
-						err.message,
-						GrpcStatus.FAILED_PRECONDITION,
-						LearningPathsApiErrorCodes.SECTION_DUPLICATE_ORDER,
-					),
-					err,
 				);
 			}
 
 			throw new GrpcException(
 				new GrpcErrorDto(
-					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					ExceptionMessage.INTERNAL_ERROR,
 					GrpcStatus.INTERNAL,
 					LearningPathsApiErrorCodes.INTERNAL_ERROR,
 				),
@@ -165,39 +160,62 @@ export class GrpcSectionsController {
 
 	@GrpcMethod(SECTIONS_SERVICE_NAME)
 	async update(
-		@Payload(new RpcValidationPipe(updateSectionSchema)) payload: z.infer<
-			typeof updateSectionSchema
-		>,
+		@Payload(new RpcValidationPipe(updateSectionSchema))
+		payload: z.infer<typeof updateSectionSchema>,
 	): Promise<UpdateSectionResponse> {
 		try {
-			const section = await this.updateSectionUseCase.execute(payload);
+			const section = await this.updateSectionHandler.execute({
+				where: { id: payload.where.id },
+				props: payload.fields,
+			});
 
-			return { section: sectionEntityToClient(section) };
+			return { section: sectionDtoToClient(section) };
 		} catch (err) {
 			if (err instanceof SectionNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						errorCodeToMessage[LearningPathsApiErrorCodes.SECTION_NOT_FOUND],
+						ExceptionMessage.SECTION_NOT_FOUND,
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.SECTION_NOT_FOUND,
 					),
 				);
 			}
 
-			if (err instanceof SectionOrderException) {
+			throw new GrpcException(
+				new GrpcErrorDto(
+					ExceptionMessage.INTERNAL_ERROR,
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
+				err,
+			);
+		}
+	}
+
+	@GrpcMethod(SECTIONS_SERVICE_NAME)
+	async reorder(
+		@Payload(new RpcValidationPipe(reorderSectionSchema))
+		payload: z.infer<typeof reorderSectionSchema>,
+	): Promise<void> {
+		try {
+			await this.reorderSectionHandler.execute({
+				sectionId: payload.sectionId,
+				order: payload.order,
+			});
+		} catch (err) {
+			if (err instanceof SectionNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						err.message,
-						GrpcStatus.FAILED_PRECONDITION,
-						LearningPathsApiErrorCodes.SECTION_DUPLICATE_ORDER,
+						ExceptionMessage.SECTION_NOT_FOUND,
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.SECTION_NOT_FOUND,
 					),
-					err,
 				);
 			}
 
 			throw new GrpcException(
 				new GrpcErrorDto(
-					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					ExceptionMessage.INTERNAL_ERROR,
 					GrpcStatus.INTERNAL,
 					LearningPathsApiErrorCodes.INTERNAL_ERROR,
 				),
@@ -208,29 +226,18 @@ export class GrpcSectionsController {
 
 	@GrpcMethod(SECTIONS_SERVICE_NAME)
 	async remove(
-		@Payload(new RpcValidationPipe(removeSectionSchema)) payload: z.infer<
-			typeof removeSectionSchema
-		>,
+		@Payload(new RpcValidationPipe(removeSectionSchema))
+		payload: z.infer<typeof removeSectionSchema>,
 	): Promise<void> {
 		try {
-			await this.removeSectionUseCase.execute(payload.where.id);
+			await this.removeSectionHandler.execute({
+				sectionId: payload.where.id,
+			});
 		} catch (err) {
-			if (err instanceof SectionCannotBeRemovedException) {
-				throw new GrpcException(
-					new GrpcErrorDto(
-						errorCodeToMessage[
-							LearningPathsApiErrorCodes.SECTION_CANNOT_BE_REMOVED
-						],
-						GrpcStatus.FAILED_PRECONDITION,
-						LearningPathsApiErrorCodes.SECTION_CANNOT_BE_REMOVED,
-					),
-				);
-			}
-
 			if (err instanceof SectionNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						errorCodeToMessage[LearningPathsApiErrorCodes.SECTION_NOT_FOUND],
+						ExceptionMessage.SECTION_NOT_FOUND,
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.SECTION_NOT_FOUND,
 					),
@@ -239,7 +246,7 @@ export class GrpcSectionsController {
 
 			throw new GrpcException(
 				new GrpcErrorDto(
-					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					ExceptionMessage.INTERNAL_ERROR,
 					GrpcStatus.INTERNAL,
 					LearningPathsApiErrorCodes.INTERNAL_ERROR,
 				),

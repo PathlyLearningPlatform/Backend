@@ -1,3 +1,3 @@
-import type { lessonsTable } from '@/infra/db/schemas';
+import { lessonsTable } from '@/infra/common/db/schemas';
 
 export type DbLesson = typeof lessonsTable.$inferSelect;

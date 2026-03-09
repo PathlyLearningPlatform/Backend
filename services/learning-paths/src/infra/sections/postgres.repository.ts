@@ -1,101 +1,105 @@
-import {
-	PG_FOREIGN_KEY_VIOLATION,
-	PG_UNIQUE_VIOLATION,
-} from '@drdgvhbh/postgres-error-codes';
 import { Inject, Injectable } from '@nestjs/common';
-import {
-	InvalidReferenceException,
-	RepositoryException,
-	UniqueConstraintException,
-} from '@pathly-backend/core/index.js';
-import { DrizzleQueryError, eq } from 'drizzle-orm';
-import { DatabaseError as PostgresError } from 'pg';
-import type { ISectionsRepository } from '@/domain/sections/interfaces';
-import type { Section, SectionQuery } from '@/domain/sections/entities';
+import type { ISectionRepository } from '@/domain/sections/interfaces';
 import type { Db } from '@/infra/common/types';
-import { DbService } from '../db/db.service';
-import { sectionsTable } from '../db/schemas';
-import { SectionsApiConstraints } from './enums';
-import { dbSectionToEntity } from './helpers';
-import { getColumnsFromUniqueConstraint } from '@pathly-backend/common/index.js';
+import { DbService } from '@infra/common/db/db.service';
+import { Section } from '@/domain/sections/section.aggregate';
+import { SectionId } from '@/domain/sections/value-objects/id.vo';
+import { UnitRef } from '@/domain/sections/value-objects';
+import { sectionsTable, unitsTable } from '../common/db/schemas';
+import { RepositoryException } from '@pathly-backend/common/index.js';
+import { eq } from 'drizzle-orm';
 
 @Injectable()
-export class PostgresSectionsRepository implements ISectionsRepository {
+export class PostgresSectionRepository implements ISectionRepository {
 	private db: Db;
 
 	constructor(@Inject(DbService) private readonly dbService: DbService) {
 		this.db = this.dbService.getDb();
 	}
 
-	async find(query?: SectionQuery): Promise<Section[]> {
-		const limit = query?.options?.limit ?? SectionsApiConstraints.DEFAULT_LIMIT;
-		const page = query?.options?.page ?? SectionsApiConstraints.DEFAULT_PAGE;
+	async load(id: SectionId): Promise<Section | null> {
+		const rawId = id.value;
 
 		try {
-			const result = await this.db
-				.select()
-				.from(sectionsTable)
-				.limit(limit)
-				.offset(page * limit);
+			const result = await this.db.transaction(async (tx) => {
+				const [dbSection] = await tx
+					.select()
+					.from(sectionsTable)
+					.where(eq(sectionsTable.id, rawId));
 
-			return result.map(dbSectionToEntity);
-		} catch (err) {
-			throw new RepositoryException('db error', err);
-		}
-	}
-
-	async findOne(id: string): Promise<Section | null> {
-		try {
-			const result = await this.db
-				.select()
-				.from(sectionsTable)
-				.where(eq(sectionsTable.id, id));
-
-			return result.length <= 0 ? null : dbSectionToEntity(result[0]);
-		} catch (err) {
-			throw new RepositoryException('db error', err);
-		}
-	}
-
-	async save(entity: Section): Promise<void> {
-		try {
-			await this.db.insert(sectionsTable).values(entity).onConflictDoUpdate({
-				target: sectionsTable.id,
-				set: entity,
-			});
-		} catch (err) {
-			if (err instanceof DrizzleQueryError) {
-				if (err.cause instanceof PostgresError) {
-					if (err.cause.code === PG_UNIQUE_VIOLATION) {
-						throw new UniqueConstraintException(
-							getColumnsFromUniqueConstraint(err.cause.constraint!),
-						);
-					}
+				if (!dbSection) {
+					return null;
 				}
-			}
 
-			throw new RepositoryException('db error', err);
+				const unitRefs = await tx
+					.select({ order: unitsTable.order, unitId: unitsTable.id })
+					.from(unitsTable)
+					.where(eq(unitsTable.sectionId, rawId));
+
+				const section = Section.fromDataSource({
+					id: dbSection.id,
+					learningPathId: dbSection.learningPathId,
+					name: dbSection.name,
+					description: dbSection.description,
+					createdAt: dbSection.createdAt,
+					updatedAt: dbSection.updatedAt,
+					order: dbSection.order,
+					unitCount: dbSection.unitCount,
+					unitRefs: unitRefs.map((ref) =>
+						UnitRef.create({
+							order: ref.order,
+							unitId: ref.unitId,
+						}),
+					),
+				});
+
+				return section;
+			});
+
+			return result;
+		} catch (err) {
+			throw new RepositoryException('postgres exception', err);
 		}
 	}
 
-	async remove(id: string): Promise<Section | null> {
+	async remove(id: SectionId): Promise<boolean> {
 		try {
 			const result = await this.db
 				.delete(sectionsTable)
-				.where(eq(sectionsTable.id, id))
-				.returning();
+				.where(eq(sectionsTable.id, id.value));
 
-			return result.length > 0 ? dbSectionToEntity(result[0]) : null;
+			return result.rows.length > 0;
 		} catch (err) {
-			if (err instanceof DrizzleQueryError) {
-				if (err.cause instanceof PostgresError) {
-					if (err.cause.code === PG_FOREIGN_KEY_VIOLATION) {
-						throw new InvalidReferenceException(err.message, err);
-					}
-				}
-			}
+			throw new RepositoryException('postgres exception', err);
+		}
+	}
 
-			throw new RepositoryException('db error', err);
+	async save(aggregate: Section): Promise<void> {
+		try {
+			await this.db
+				.insert(sectionsTable)
+				.values({
+					id: aggregate.id.value,
+					learningPathId: aggregate.learningPathId.value,
+					name: aggregate.name.value,
+					description: aggregate.description?.value ?? null,
+					order: aggregate.order.value,
+					createdAt: aggregate.createdAt,
+					updatedAt: aggregate.updatedAt,
+					unitCount: aggregate.unitCount,
+				})
+				.onConflictDoUpdate({
+					target: sectionsTable.id,
+					set: {
+						name: aggregate.name.value,
+						description: aggregate.description?.value ?? null,
+						order: aggregate.order.value,
+						updatedAt: aggregate.updatedAt,
+						unitCount: aggregate.unitCount,
+					},
+				});
+		} catch (err) {
+			throw new RepositoryException('postgres exception', err);
 		}
 	}
 }

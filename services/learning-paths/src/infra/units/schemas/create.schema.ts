@@ -3,7 +3,6 @@ import { z } from 'zod';
 import {
 	descriptionSchema,
 	nameSchema,
-	orderSchema,
 	sectionIdSchema,
 } from './fields.schema';
 
@@ -14,7 +13,6 @@ export const createUnitSchema = z
 			emptyStringToNull,
 			descriptionSchema.optional().default(null),
 		),
-		order: orderSchema,
 		sectionId: sectionIdSchema,
 	})
 	.strict();

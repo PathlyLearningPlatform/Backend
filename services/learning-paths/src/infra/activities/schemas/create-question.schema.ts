@@ -1,14 +1,10 @@
-import z from 'zod';
-import {
-	idSchema,
-	questionContentSchema,
-	questionCorrectAnswerSchema,
-} from './fields.schema';
+import { z } from 'zod';
+import { contentSchema, correctAnswerSchema } from './fields.schema';
 
 export const createQuestionSchema = z
 	.object({
-		quizId: idSchema,
-		content: questionContentSchema,
-		correctAnswer: questionCorrectAnswerSchema,
+		quizId: z.uuid(),
+		content: contentSchema,
+		correctAnswer: correctAnswerSchema,
 	})
 	.strict();

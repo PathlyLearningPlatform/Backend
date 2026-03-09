@@ -1,16 +1,22 @@
 import { Module } from '@nestjs/common';
-import { DbModule } from '../db/db.module';
+import { DbModule } from '@infra/common/db/db.module';
 import { GrpcLearningPathsController } from './grpc.controller';
-import { PostgresLearningPathsRepository } from './postgres.repository';
-import { learningPathsUseCasesProvider } from './use-cases.provider';
+import { PostgresLearningPathRepository } from './postgres.repository';
+import { learningPathHandlersProvider } from './handlers.provider';
+import { PostgresLearningPathReadRepository } from './postgres-read.repository';
 
 @Module({
 	imports: [DbModule],
 	controllers: [GrpcLearningPathsController],
 	providers: [
-		PostgresLearningPathsRepository,
-		...learningPathsUseCasesProvider,
+		PostgresLearningPathRepository,
+		PostgresLearningPathReadRepository,
+		...learningPathHandlersProvider,
 	],
-	exports: [PostgresLearningPathsRepository, ...learningPathsUseCasesProvider],
+	exports: [
+		PostgresLearningPathRepository,
+		PostgresLearningPathReadRepository,
+		...learningPathHandlersProvider,
+	],
 })
 export class LearningPathsModule {}

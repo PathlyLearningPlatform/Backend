@@ -1,6 +1,6 @@
 import { emptyStringToNull } from '@pathly-backend/common/index.js';
 import { z } from 'zod';
-import { descriptionSchema, nameSchema, orderSchema } from './fields.schema';
+import { descriptionSchema, nameSchema } from './fields.schema';
 
 export const updateLessonSchema = z
 	.object({
@@ -16,7 +16,6 @@ export const updateLessonSchema = z
 					emptyStringToNull,
 					descriptionSchema.optional(),
 				),
-				order: orderSchema.optional(),
 			})
 			.strict()
 			.optional(),

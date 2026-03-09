@@ -10,7 +10,6 @@ export const nameSchema = z
 export const descriptionSchema = z
 	.string()
 	.max(ActivitiesApiConstraints.MAX_DESCRIPTION_LENGTH)
-export const orderSchema = z.number().int().min(0)
 export const lessonIdSchema = z.uuid()
 export const refSchema = z.url()
 export const difficultySchema = z.enum(ExerciseDifficulty)

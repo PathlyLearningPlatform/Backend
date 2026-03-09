@@ -1,3 +1,3 @@
-import type { unitsTable } from '@/infra/db/schemas';
+import { unitsTable } from '@/infra/common/db/schemas';
 
 export type DbUnit = typeof unitsTable.$inferSelect;

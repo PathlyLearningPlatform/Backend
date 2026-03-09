@@ -1,106 +1,107 @@
-import { PG_FOREIGN_KEY_VIOLATION } from '@drdgvhbh/postgres-error-codes';
 import { Inject, Injectable } from '@nestjs/common';
-import {
-	InvalidReferenceException,
-	RepositoryException,
-} from '@pathly-backend/core/index.js';
-import { SortType } from '@pathly-backend/common/index.js';
-import { asc, DrizzleQueryError, desc, eq } from 'drizzle-orm';
-import { DatabaseError as PostgresError } from 'pg';
-import type { ILearningPathsRepository } from '@/domain/learning-paths/interfaces';
-import type {
-	LearningPath,
-	LearningPathQuery,
-} from '@/domain/learning-paths/entities';
-import { LearningPathsOrderByFields } from '@/domain/learning-paths/enums';
+import type { ILearningPathRepository } from '@/domain/learning-paths/interfaces';
 import type { Db } from '@/infra/common/types';
-import { DbService } from '../db/db.service';
-import { learningPathsTable } from '../db/schemas';
-import { LearningPathsApiConstraints } from './enums';
-import { dbLearningPathToEntity } from './helpers';
+import { DbService } from '@infra/common/db/db.service';
+import { LearningPath } from '@/domain/learning-paths/learning-path.aggregate';
+import {
+	LearningPathDescription,
+	LearningPathId,
+	LearningPathName,
+	SectionRef,
+} from '@/domain/learning-paths/value-objects';
+import { learningPathsTable, sectionsTable } from '../common/db/schemas';
+import { RepositoryException } from '@pathly-backend/common/index.js';
+import { eq } from 'drizzle-orm';
+import { SectionId } from '@/domain/sections/value-objects';
+import { Order } from '@/domain/common';
 
 @Injectable()
-export class PostgresLearningPathsRepository
-	implements ILearningPathsRepository
-{
+export class PostgresLearningPathRepository implements ILearningPathRepository {
 	private db: Db;
 
 	constructor(@Inject(DbService) private readonly dbService: DbService) {
 		this.db = this.dbService.getDb();
 	}
 
-	async find(query?: LearningPathQuery): Promise<LearningPath[]> {
-		const limit =
-			query?.options?.limit ?? LearningPathsApiConstraints.DEFAULT_LIMIT;
-		const page =
-			query?.options?.page ?? LearningPathsApiConstraints.DEFAULT_PAGE;
-		const orderBy =
-			query?.options?.orderBy ?? LearningPathsOrderByFields.CREATED_AT;
-		const sortType = query?.options?.sortType || SortType.DESC;
+	async load(id: LearningPathId): Promise<LearningPath | null> {
+		const rawId = id.value;
 
 		try {
-			const result = await this.db
-				.select()
-				.from(learningPathsTable)
-				.orderBy(
-					sortType === SortType.ASC
-						? asc(learningPathsTable[orderBy])
-						: desc(learningPathsTable[orderBy]),
-				)
-				.limit(limit)
-				.offset(page * limit);
+			const result = await this.db.transaction(async (tx) => {
+				const [dbLearningPath] = await tx
+					.select()
+					.from(learningPathsTable)
+					.where(eq(learningPathsTable.id, rawId));
 
-			return result.map(dbLearningPathToEntity);
-		} catch (err) {
-			throw new RepositoryException('db error', err);
-		}
-	}
+				if (!dbLearningPath) {
+					return null;
+				}
 
-	async findOne(id: string): Promise<LearningPath | null> {
-		try {
-			const result = await this.db
-				.select()
-				.from(learningPathsTable)
-				.where(eq(learningPathsTable.id, id));
+				const sectionRefs = await tx
+					.select({ order: sectionsTable.order, sectionId: sectionsTable.id })
+					.from(sectionsTable)
+					.where(eq(sectionsTable.learningPathId, rawId));
 
-			return result.length <= 0 ? null : dbLearningPathToEntity(result[0]);
-		} catch (err) {
-			throw new RepositoryException('db error', err);
-		}
-	}
-
-	async save(entity: LearningPath): Promise<void> {
-		try {
-			await this.db
-				.insert(learningPathsTable)
-				.values(entity)
-				.onConflictDoUpdate({
-					target: learningPathsTable.id,
-					set: entity,
+				const learningPath = LearningPath.fromDataSource(id, {
+					name: LearningPathName.create(dbLearningPath.name),
+					description: dbLearningPath.description
+						? LearningPathDescription.create(dbLearningPath.description)
+						: null,
+					createdAt: dbLearningPath.createdAt,
+					updatedAt: dbLearningPath.updatedAt,
+					sectionCount: dbLearningPath.sectionCount,
+					sectionRefs: sectionRefs.map((ref) =>
+						SectionRef.create({
+							order: Order.create(ref.order),
+							sectionId: SectionId.create(ref.sectionId),
+						}),
+					),
 				});
+
+				return learningPath;
+			});
+
+			return result;
 		} catch (err) {
-			throw new RepositoryException('db error', err);
+			throw new RepositoryException('postgres exception', err);
 		}
 	}
 
-	async remove(id: string): Promise<boolean> {
+	async remove(id: LearningPathId): Promise<boolean> {
 		try {
 			const result = await this.db
 				.delete(learningPathsTable)
-				.where(eq(learningPathsTable.id, id))
-				.returning();
+				.where(eq(learningPathsTable.id, id.value));
 
-			return result.length > 0;
+			return result.rows.length > 0;
 		} catch (err) {
-			if (err instanceof DrizzleQueryError) {
-				if (err.cause instanceof PostgresError) {
-					if (err.cause.code === PG_FOREIGN_KEY_VIOLATION) {
-						throw new InvalidReferenceException(err.message, err);
-					}
-				}
-			}
+			throw new RepositoryException('postgres exception', err);
+		}
+	}
 
-			throw new RepositoryException('db error', err);
+	async save(aggregate: LearningPath): Promise<void> {
+		try {
+			await this.db
+				.insert(learningPathsTable)
+				.values({
+					id: aggregate.id.value,
+					name: aggregate.name.value,
+					description: aggregate.description?.value ?? null,
+					createdAt: aggregate.createdAt,
+					updatedAt: aggregate.updatedAt,
+					sectionCount: aggregate.sectionCount,
+				})
+				.onConflictDoUpdate({
+					target: learningPathsTable.id,
+					set: {
+						name: aggregate.name.value,
+						description: aggregate.description?.value ?? null,
+						updatedAt: aggregate.updatedAt,
+						sectionCount: aggregate.sectionCount,
+					},
+				});
+		} catch (err) {
+			throw new RepositoryException('postgres exception', err);
 		}
 	}
 }

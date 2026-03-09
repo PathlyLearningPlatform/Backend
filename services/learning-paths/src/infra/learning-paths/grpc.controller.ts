@@ -11,31 +11,29 @@ import {
 import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js';
 import {
 	type CreateLearningPathResponse,
-	type FindLearningPathsResponse,
-	type FindOneLearningPathResponse,
+	FindLearningPathByIdResponse,
 	LEARNING_PATHS_SERVICE_NAME,
-	type RemoveLearningPathResponse,
+	ListLearningPathsResponse,
 	type UpdateLearningPathResponse,
 } from '@pathly-backend/contracts/learning-paths/v1/learning-paths.js';
 import type z from 'zod';
-import type {
-	CreateLearningPathUseCase,
-	FindLearningPathsUseCase,
-	FindOneLearningPathUseCase,
-	RemoveLearningPathUseCase,
-	UpdateLearningPathUseCase,
-} from '@/app/learning-paths/use-cases';
 import {
-	LearningPathCannotBeRemovedException,
-	LearningPathNotFoundException,
-} from '@/domain/learning-paths/exceptions';
-import { DiToken } from '../common/enums';
-import { errorCodeToMessage } from '../common/helpers/error-code-to-message.helper';
-import { learningPathEntityToClient } from './helpers';
+	CreateLearningPathHandler,
+	RemoveLearningPathHandler,
+	UpdateLearningPathHandler,
+} from '@/app/learning-paths/commands';
+import {
+	FindLearningPathByIdHandler,
+	ListLearningPathsHandler,
+} from '@app/learning-paths/queries';
+import { LearningPathNotFoundException } from '@/app/common';
+import { LearningPathCannotBeRemovedException } from '@/domain/learning-paths/exceptions';
+import { DiToken, ExceptionMessage } from '../common/enums';
+import { learningPathDtoToClient } from './helpers';
 import {
 	createLearningPathSchema,
-	findLearningPathsSchema,
-	findOneLearningPathSchema,
+	listLearningPathsSchema,
+	findLearningPathByIdSchema,
 	removeLearningPathSchema,
 	updateLearningPathSchema,
 } from './schemas';
@@ -44,37 +42,35 @@ import {
 @Controller()
 export class GrpcLearningPathsController {
 	constructor(
-		@Inject(DiToken.FIND_LEARNING_PATHS_USE_CASE)
-		private readonly findLearningPathsUseCase: FindLearningPathsUseCase,
-		@Inject(DiToken.FIND_ONE_LEARNING_PATH_USE_CASE)
-		private readonly findOneLearningPathUseCase: FindOneLearningPathUseCase,
-		@Inject(DiToken.CREATE_LEARNING_PATH_USE_CASE)
-		private readonly createLearningPathUseCase: CreateLearningPathUseCase,
-		@Inject(DiToken.UPDATE_LEARNING_PATH_USE_CASE)
-		private readonly updateLearningPathUseCase: UpdateLearningPathUseCase,
-		@Inject(DiToken.REMOVE_LEARNING_PATH_USE_CASE)
-		private readonly removeLearningPathUseCase: RemoveLearningPathUseCase,
-		@Inject(AppLogger)
-		private readonly appLogger: AppLogger,
+		@Inject(DiToken.LIST_LEARNING_PATHS_HANDLER)
+		private readonly listLearningPathsHandler: ListLearningPathsHandler,
+		@Inject(DiToken.FIND_LEARNING_PATH_BY_ID_HANDLER)
+		private readonly findLearningPathByIdHandler: FindLearningPathByIdHandler,
+		@Inject(DiToken.CREATE_LEARNING_PATH_HANDLER)
+		private readonly createLearningPathHandler: CreateLearningPathHandler,
+		@Inject(DiToken.UPDATE_LEARNING_PATH_HANDLER)
+		private readonly updateLearningPathHandler: UpdateLearningPathHandler,
+		@Inject(DiToken.REMOVE_LEARNING_PATH_HANDLER)
+		private readonly removeLearningPathHandler: RemoveLearningPathHandler,
 	) {}
 
 	@GrpcMethod(LEARNING_PATHS_SERVICE_NAME)
-	async find(
-		@Payload(new RpcValidationPipe(findLearningPathsSchema)) payload: z.infer<
-			typeof findLearningPathsSchema
+	async list(
+		@Payload(new RpcValidationPipe(listLearningPathsSchema)) payload: z.infer<
+			typeof listLearningPathsSchema
 		>,
-	): Promise<FindLearningPathsResponse> {
+	): Promise<ListLearningPathsResponse> {
 		try {
 			const learningPaths =
-				await this.findLearningPathsUseCase.execute(payload);
+				await this.listLearningPathsHandler.execute(payload);
 
 			return {
-				learningPaths: learningPaths.map(learningPathEntityToClient),
+				learningPaths: learningPaths.map(learningPathDtoToClient),
 			};
 		} catch (err) {
 			throw new GrpcException(
 				new GrpcErrorDto(
-					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					ExceptionMessage.INTERNAL_ERROR,
 					GrpcStatus.INTERNAL,
 					LearningPathsApiErrorCodes.INTERNAL_ERROR,
 				),
@@ -84,23 +80,23 @@ export class GrpcLearningPathsController {
 	}
 
 	@GrpcMethod(LEARNING_PATHS_SERVICE_NAME)
-	async findOne(
-		@Payload(new RpcValidationPipe(findOneLearningPathSchema))
-		payload: z.infer<typeof findOneLearningPathSchema>,
-	): Promise<FindOneLearningPathResponse> {
+	async findById(
+		@Payload(new RpcValidationPipe(findLearningPathByIdSchema))
+		payload: z.infer<typeof findLearningPathByIdSchema>,
+	): Promise<FindLearningPathByIdResponse> {
 		try {
-			const learningPath = await this.findOneLearningPathUseCase.execute(
-				payload.where.id,
-			);
+			const learningPath = await this.findLearningPathByIdHandler.execute({
+				where: {
+					id: payload.where.id,
+				},
+			});
 
-			return { learningPath: learningPathEntityToClient(learningPath) };
+			return { learningPath: learningPathDtoToClient(learningPath) };
 		} catch (err) {
 			if (err instanceof LearningPathNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						errorCodeToMessage[
-							LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND
-						],
+						ExceptionMessage.LEARNING_PATH_NOT_FOUND,
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND,
 					),
@@ -109,7 +105,7 @@ export class GrpcLearningPathsController {
 
 			throw new GrpcException(
 				new GrpcErrorDto(
-					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					ExceptionMessage.INTERNAL_ERROR,
 					GrpcStatus.INTERNAL,
 					LearningPathsApiErrorCodes.INTERNAL_ERROR,
 				),
@@ -120,19 +116,20 @@ export class GrpcLearningPathsController {
 
 	@GrpcMethod(LEARNING_PATHS_SERVICE_NAME)
 	async create(
-		@Payload(new RpcValidationPipe(createLearningPathSchema)) payload: z.infer<
-			typeof createLearningPathSchema
-		>,
+		@Payload(new RpcValidationPipe(createLearningPathSchema))
+		payload: z.infer<typeof createLearningPathSchema>,
 	): Promise<CreateLearningPathResponse> {
 		try {
 			const createdLearningpath =
-				await this.createLearningPathUseCase.execute(payload);
+				await this.createLearningPathHandler.execute(payload);
 
-			return { learningPath: learningPathEntityToClient(createdLearningpath) };
+			return {
+				learningPath: learningPathDtoToClient(createdLearningpath),
+			};
 		} catch (err) {
 			throw new GrpcException(
 				new GrpcErrorDto(
-					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					ExceptionMessage.INTERNAL_ERROR,
 					GrpcStatus.INTERNAL,
 					LearningPathsApiErrorCodes.INTERNAL_ERROR,
 				),
@@ -143,22 +140,21 @@ export class GrpcLearningPathsController {
 
 	@GrpcMethod(LEARNING_PATHS_SERVICE_NAME)
 	async update(
-		@Payload(new RpcValidationPipe(updateLearningPathSchema)) payload: z.infer<
-			typeof updateLearningPathSchema
-		>,
+		@Payload(new RpcValidationPipe(updateLearningPathSchema))
+		payload: z.infer<typeof updateLearningPathSchema>,
 	): Promise<UpdateLearningPathResponse> {
 		try {
 			const updatedLearningPath =
-				await this.updateLearningPathUseCase.execute(payload);
+				await this.updateLearningPathHandler.execute(payload);
 
-			return { learningPath: learningPathEntityToClient(updatedLearningPath) };
+			return {
+				learningPath: learningPathDtoToClient(updatedLearningPath),
+			};
 		} catch (err) {
 			if (err instanceof LearningPathNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						errorCodeToMessage[
-							LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND
-						],
+						ExceptionMessage.LEARNING_PATH_NOT_FOUND,
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND,
 					),
@@ -167,7 +163,7 @@ export class GrpcLearningPathsController {
 
 			throw new GrpcException(
 				new GrpcErrorDto(
-					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					ExceptionMessage.INTERNAL_ERROR,
 					GrpcStatus.INTERNAL,
 					LearningPathsApiErrorCodes.INTERNAL_ERROR,
 				),
@@ -178,19 +174,18 @@ export class GrpcLearningPathsController {
 
 	@GrpcMethod(LEARNING_PATHS_SERVICE_NAME)
 	async remove(
-		@Payload(new RpcValidationPipe(removeLearningPathSchema)) payload: z.infer<
-			typeof removeLearningPathSchema
-		>,
+		@Payload(new RpcValidationPipe(removeLearningPathSchema))
+		payload: z.infer<typeof removeLearningPathSchema>,
 	): Promise<void> {
 		try {
-			await this.removeLearningPathUseCase.execute(payload.where.id);
+			await this.removeLearningPathHandler.execute({
+				where: { id: payload.where.id },
+			});
 		} catch (err) {
 			if (err instanceof LearningPathCannotBeRemovedException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						errorCodeToMessage[
-							LearningPathsApiErrorCodes.LEARNING_PATH_CANNOT_BE_REMOVED
-						],
+						ExceptionMessage.LESSON_CANNOT_BE_REMOVED,
 						GrpcStatus.FAILED_PRECONDITION,
 						LearningPathsApiErrorCodes.LEARNING_PATH_CANNOT_BE_REMOVED,
 					),
@@ -200,9 +195,7 @@ export class GrpcLearningPathsController {
 			if (err instanceof LearningPathNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						errorCodeToMessage[
-							LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND
-						],
+						ExceptionMessage.LEARNING_PATH_NOT_FOUND,
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND,
 					),
@@ -211,7 +204,7 @@ export class GrpcLearningPathsController {
 
 			throw new GrpcException(
 				new GrpcErrorDto(
-					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					ExceptionMessage.INTERNAL_ERROR,
 					GrpcStatus.INTERNAL,
 					LearningPathsApiErrorCodes.INTERNAL_ERROR,
 				),

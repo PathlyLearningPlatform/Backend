@@ -16,64 +16,78 @@ message Lesson {
 }
 
 service LessonsService {
-  rpc Find(FindLessonsRequest) returns (FindLessonsResponse) {};
-  rpc FindOne(FindOneLessonRequest) returns (FindOneLessonResponse) {};
+  rpc List(ListLessonsRequest) returns (ListLessonsResponse) {};
+  rpc FindById(FindLessonByIdRequest) returns (FindLessonByIdResponse) {};
   rpc Create(CreateLessonRequest) returns (CreateLessonResponse) {};
   rpc Update(UpdateLessonRequest) returns (UpdateLessonResponse) {};
+  rpc Reorder(ReorderLessonRequest) returns (ReorderLessonResponse) {};
   rpc Remove(RemoveLessonRequest) returns (RemoveLessonResponse) {};
 }
 
-message FindLessonsOptions {
-  optional int32 limit = 1;
-  optional int32 page = 2;
+
+message ListLessonsRequest {
+  message Options {
+    optional int32 limit = 1;
+    optional int32 page = 2;
+  }
+  message Where {
+    optional string unitId = 1;
+  }
+
+  optional Options options = 1;
+  optional Where where = 2;
 }
-message FindLessonsRequest {
-  optional FindLessonsOptions options = 1;
-}
-message FindLessonsResponse {
+message ListLessonsResponse {
   repeated Lesson lessons = 1;
 }
 
-message FindOneLessonWhere {
-  string id = 1;
+message FindLessonByIdRequest {
+  message Where {
+    string id = 1;
+  }
+
+  Where where = 1;
 }
-message FindOneLessonRequest {
-  FindOneLessonWhere where = 1;
-}
-message FindOneLessonResponse {
+message FindLessonByIdResponse {
   Lesson lesson = 1;
 }
 
 message CreateLessonRequest {
   string name = 1;
   optional string description = 2;
-  int32 order = 3;
-  string unitId = 4;
+  string unitId = 3;
 }
 message CreateLessonResponse {
   Lesson lesson = 1;
 }
 
-message UpdateLessonFields {
-  optional string name = 1;
-  optional string description = 2;
-  optional int32 order = 3;
-}
-message UpdateLessonWhere {
-  string id = 1;
-}
 message UpdateLessonRequest {
-  UpdateLessonWhere where = 1;
-  optional UpdateLessonFields fields = 2;
+  message Fields {
+    optional string name = 1;
+    optional string description = 2;
+  }
+  message Where {
+    string id = 1;
+  }
+
+  Where where = 1;
+  optional Fields fields = 2;
 }
 message UpdateLessonResponse {
   Lesson lesson = 1;
 }
 
-message RemoveLessonWhere {
-  string id = 1;
+message ReorderLessonRequest {
+  string lessonId = 1;
+  int32 order = 2;
 }
+message ReorderLessonResponse {}
+
 message RemoveLessonRequest {
-  RemoveLessonWhere where = 1;
+  message Where {
+    string id = 1;
+  }
+
+  Where where = 1;
 }
 message RemoveLessonResponse {}

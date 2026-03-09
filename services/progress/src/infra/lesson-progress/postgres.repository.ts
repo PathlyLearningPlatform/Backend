@@ -3,7 +3,7 @@ import { LessonProgressFilter } from '@/app/lesson-progress/types';
 import { DomainEvent } from '@/domain/common';
 import { LessonProgress } from '@/domain/lesson-progress/entities';
 import { Inject, Injectable } from '@nestjs/common';
-import { RepositoryException } from '@pathly-backend/core';
+import { RepositoryException } from '@pathly-backend/common';
 import { LessonProgressConstraints } from './enums';
 import { DbService } from '@infra/common/modules/db/db.service';
 import { Db } from '../common/modules/db/types';

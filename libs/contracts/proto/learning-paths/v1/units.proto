@@ -16,64 +16,78 @@ message Unit {
 }
 
 service UnitsService {
-  rpc Find(FindUnitsRequest) returns (FindUnitsResponse) {};
-  rpc FindOne(FindOneUnitRequest) returns (FindOneUnitResponse) {};
+  rpc List(ListUnitsRequest) returns (ListUnitsResponse) {};
+  rpc FindById(FindUnitByIdRequest) returns (FindUnitByIdResponse) {};
   rpc Create(CreateUnitRequest) returns (CreateUnitResponse) {};
   rpc Update(UpdateUnitRequest) returns (UpdateUnitResponse) {};
+  rpc Reorder(ReorderUnitRequest) returns (ReorderUnitResponse) {};
   rpc Remove(RemoveUnitRequest) returns (RemoveUnitResponse) {};
 }
 
-message FindUnitsOptions {
-  optional int32 limit = 1;
-  optional int32 page = 2;
+message ListUnitsRequest {
+  message Options {
+    optional int32 limit = 1;
+    optional int32 page = 2;
+  }
+
+  message Where {
+    optional string sectionId = 1;
+  }
+
+  optional Options options = 1;
+  optional Where where = 2;
 }
-message FindUnitsRequest {
-  optional FindUnitsOptions options = 1;
-}
-message FindUnitsResponse {
+message ListUnitsResponse {
   repeated Unit units = 1;
 }
 
-message FindOneUnitWhere {
-  string id = 1;
+message FindUnitByIdRequest {
+  message Where {
+    string id = 1;
+  }
+
+  Where where = 1;
 }
-message FindOneUnitRequest {
-  FindOneUnitWhere where = 1;
-}
-message FindOneUnitResponse {
+message FindUnitByIdResponse {
   Unit unit = 1;
 }
 
 message CreateUnitRequest {
   string name = 1;
   optional string description = 2;
-  int32 order = 3;
-  string sectionId = 4;
+  string sectionId = 3;
 }
 message CreateUnitResponse {
   Unit unit = 1;
 }
 
-message UpdateUnitFields {
-  optional string name = 1;
-  optional string description = 2;
-  optional int32 order = 3;
-}
-message UpdateUnitWhere {
-  string id = 1;
-}
 message UpdateUnitRequest {
-  UpdateUnitWhere where = 1;
-  optional UpdateUnitFields fields = 2;
+  message Fields {
+    optional string name = 1;
+    optional string description = 2;
+  }
+  message Where {
+    string id = 1;
+  }
+
+  Where where = 1;
+  optional Fields fields = 2;
 }
 message UpdateUnitResponse {
   Unit unit = 1;
 }
 
-message RemoveUnitWhere {
-  string id = 1;
+message ReorderUnitRequest {
+  string unitId = 1;
+  int32 order = 2;
 }
+message ReorderUnitResponse {}
+
 message RemoveUnitRequest {
-  RemoveUnitWhere where = 1;
+  message Where {
+    string id = 1;
+  }
+
+  Where where = 1;
 }
 message RemoveUnitResponse {}

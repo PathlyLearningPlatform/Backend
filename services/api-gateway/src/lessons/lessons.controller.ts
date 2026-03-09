@@ -59,12 +59,12 @@ export class LessonsController {
 	@ApiQuery({ type: FindLessonsQueryDto })
 	@ApiOkResponse({ type: FindLessonsResponseDto })
 	@Get()
-	async find(
+	async list(
 		@Query(new HttpValidationPipe(findLessonsQuerySchema))
 		query: FindLessonsQueryDto,
 	): Promise<FindLessonsResponseDto> {
 		try {
-			const result = await this.lessonsService.find({
+			const result = await this.lessonsService.list({
 				options: query,
 			})
 
@@ -94,11 +94,11 @@ export class LessonsController {
 	@ApiOkResponse({ type: FindOneLessonResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@Get(':id')
-	async findOne(
+	async findById(
 		@Param('id', ParseUUIDPipe) id: string,
 	): Promise<FindOneLessonResponseDto> {
 		try {
-			const result = await this.lessonsService.findOne({ where: { id } })
+			const result = await this.lessonsService.findById({ where: { id } })
 
 			return {
 				lesson: clientLessonToResponseDto(result.lesson!),
@@ -142,7 +142,6 @@ export class LessonsController {
 			const result = await this.lessonsService.create({
 				name: body.name,
 				description: nullToEmptyString(body.description),
-				order: body.order,
 				unitId: body.unitId,
 			})
 
@@ -154,14 +153,6 @@ export class LessonsController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
-				case LearningPathsApiErrorCodes.LESSON_DUPLICATE_ORDER:
-					throw new ConflictException(
-						new HttpErrorDto(
-							exceptionCodeToMessage[
-								LearningPathsApiErrorCodes.LESSON_DUPLICATE_ORDER
-							],
-						),
-					)
 				case LearningPathsApiErrorCodes.UNIT_NOT_FOUND:
 					throw new NotFoundException(
 						new HttpErrorDto(
@@ -197,7 +188,6 @@ export class LessonsController {
 				fields: {
 					name: body.name,
 					description: nullToEmptyString(body.description),
-					order: body.order,
 				},
 			})
 
@@ -209,14 +199,6 @@ export class LessonsController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
-				case LearningPathsApiErrorCodes.LESSON_DUPLICATE_ORDER:
-					throw new ConflictException(
-						new HttpErrorDto(
-							exceptionCodeToMessage[
-								LearningPathsApiErrorCodes.LESSON_DUPLICATE_ORDER
-							],
-						),
-					)
 				case LearningPathsApiErrorCodes.LESSON_NOT_FOUND:
 					throw new NotFoundException(
 						new HttpErrorDto(

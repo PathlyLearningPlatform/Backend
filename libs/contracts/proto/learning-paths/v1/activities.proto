@@ -5,28 +5,32 @@ package learning_paths.v1;
 import "common/types.proto";
 
 service ActivitiesService {
-  rpc Find (FindActivitiesRequest) returns (FindActivitiesResponse);
+  rpc List (ListActivitiesRequest) returns (ListActivitiesResponse) {};
+  rpc ListArticles (ListActivitiesRequest) returns (ListArticlesResponse) {};
+  rpc ListExercises (ListActivitiesRequest) returns (ListExercisesResponse) {};
+  rpc ListQuizzes (ListActivitiesRequest) returns (ListQuizzesResponse) {};
 
-  rpc FindOne (FindOneActivityRequest) returns (FindOneActivityResponse);
-  rpc FindOneArticle (FindOneActivityRequest) returns (FindOneArticleResponse);
-  rpc FindOneExercise (FindOneActivityRequest) returns (FindOneExerciseResponse);
-  rpc FindOneQuiz (FindOneActivityRequest) returns (FindOneQuizResponse);
+  rpc FindById (FindActivityByIdRequest) returns (FindActivityByIdResponse) {};
+  rpc FindArticleById (FindActivityByIdRequest) returns (FindArticleByIdResponse) {};
+  rpc FindExerciseById (FindActivityByIdRequest) returns (FindExerciseByIdResponse) {};
+  rpc FindQuizById (FindActivityByIdRequest) returns (FindQuizByIdResponse) {};
 
-  rpc CreateArticle (CreateArticleRequest) returns (CreateArticleResponse);
-  rpc CreateExercise (CreateExerciseRequest) returns (CreateExerciseResponse);
-  rpc CreateQuiz (CreateQuizRequest) returns (CreateQuizResponse);
+  rpc CreateArticle (CreateArticleRequest) returns (CreateArticleResponse) {};
+  rpc CreateExercise (CreateExerciseRequest) returns (CreateExerciseResponse) {};
+  rpc CreateQuiz (CreateQuizRequest) returns (CreateQuizResponse) {};
 
-  rpc UpdateArticle (UpdateArticleRequest) returns (UpdateArticleResponse);
-  rpc UpdateExercise (UpdateExerciseRequest) returns (UpdateExerciseResponse);
-  rpc UpdateQuiz (UpdateQuizRequest) returns (UpdateQuizResponse);
+  rpc UpdateArticle (UpdateArticleRequest) returns (UpdateArticleResponse) {};
+  rpc UpdateExercise (UpdateExerciseRequest) returns (UpdateExerciseResponse) {};
+  rpc UpdateQuiz (UpdateQuizRequest) returns (UpdateQuizResponse) {};
 
-  rpc Remove (RemoveActivityRequest) returns (RemoveActivityResponse);
+  rpc Reorder(ReorderActivityRequest) returns (ReorderActivityResponse) {};
+  rpc Remove (RemoveActivityRequest) returns (RemoveActivityResponse) {};
 
-  rpc FindQuestions (FindQuestionsRequest) returns (FindQuestionsResponse);
-  rpc FindOneQuestion (FindOneQuestionRequest) returns (FindOneQuestionResponse);
-  rpc CreateQuestion (CreateQuestionRequest) returns (CreateQuestionResponse);
-  rpc UpdateQuestion (UpdateQuestionRequest) returns (UpdateQuestionResponse);
-  rpc RemoveQuestion (RemoveQuestionRequest) returns (RemoveQuestionResponse);
+  rpc FindQuestionById (FindQuestionByIdRequest) returns (FindQuestionByIdResponse) {};
+  rpc CreateQuestion (CreateQuestionRequest) returns (CreateQuestionResponse) {};
+  rpc UpdateQuestion (UpdateQuestionRequest) returns (UpdateQuestionResponse) {};
+  rpc ReorderQuestion (ReorderQuestionRequest) returns (ReorderQuestionResponse) {};
+  rpc RemoveQuestion (RemoveQuestionRequest) returns (RemoveQuestionResponse) {};
 }
 
 enum ActivityType {
@@ -40,8 +44,6 @@ enum ExerciseDifficulty {
   EXERCISE_DIFFICULTY_MEDIUM = 1;
   EXERCISE_DIFFICULTY_HARD = 2;
 }
-
-// Entities
 
 message Activity {
   string id = 1;
@@ -78,6 +80,14 @@ message Exercise {
   ExerciseDifficulty difficulty = 9;
 }
 
+message Question {
+  string id = 1;
+  string quizId = 2;
+  string content = 3;
+  string correctAnswer = 4;
+  int32 order = 5;
+}
+
 message Quiz {
   string id = 1;
   string createdAt = 2;
@@ -87,28 +97,10 @@ message Quiz {
   int32 order = 6;
   string lessonId = 7;
   ActivityType type = 8;
-  int32 nextQuestionOrder = 9;
-  repeated Question questions = 10;
+  repeated Question questions = 9;
 }
 
-message Question {
-  string id = 1;
-  string quizId = 2;
-  string content = 3;
-  string correctAnswer = 4;
-  int32 order = 5;
-}
-
-// Request/Response
-
-message FindQuestionsRequest {
-  string quizId = 1;
-}
-message FindQuestionsResponse {
-  repeated Question questions = 1;
-}
-
-message FindOneQuestionRequest {
+message FindQuestionByIdRequest {
   message Where {
     string id = 1;
     string quizId = 2;
@@ -116,7 +108,7 @@ message FindOneQuestionRequest {
 
   Where where = 1;
 }
-message FindOneQuestionResponse {
+message FindQuestionByIdResponse {
   Question question = 1;
 }
 
@@ -146,6 +138,13 @@ message UpdateQuestionResponse {
   Question question = 1;
 }
 
+message ReorderQuestionRequest {
+  string questionId = 1;
+  int32 order = 2;
+  string quizId = 3;
+}
+message ReorderQuestionResponse {}
+
 message RemoveQuestionRequest {
   message Where {
     string id = 1;
@@ -156,50 +155,59 @@ message RemoveQuestionRequest {
 }
 message RemoveQuestionResponse {}
 
-message FindActivitiesRequest {
+message ListActivitiesRequest {
   message Options {
     optional int32 limit = 1;
     optional int32 page = 2;
   }
 
-  optional Options options = 1;
-}
+  message Where {
+    optional string lessonId = 1;
+  }
 
-message FindActivitiesResponse {
+  optional Options options = 1;
+  optional Where where = 2;
+}
+message ListActivitiesResponse {
   repeated Activity activities = 1;
 }
 
-message FindOneActivityRequest {
+message ListArticlesResponse {
+  repeated Article articles = 1;
+}
+message ListExercisesResponse {
+  repeated Exercise exercises = 1;
+}
+message ListQuizzesResponse {
+  repeated Quiz quizzes = 1;
+}
+
+message FindActivityByIdRequest {
   message Where {
     string id = 1;
   }
   Where where = 1;
 }
-
-message FindOneActivityResponse {
+message FindActivityByIdResponse {
   Activity activity = 1;
 }
 
-message FindOneArticleResponse {
+message FindArticleByIdResponse {
   Article article = 1;
 }
-
-message FindOneExerciseResponse {
+message FindExerciseByIdResponse {
   Exercise exercise = 1;
 }
-
-message FindOneQuizResponse {
+message FindQuizByIdResponse {
   Quiz quiz = 1;
 }
 
 message CreateArticleRequest {
   string lessonId = 1;
   string name = 2;
-  int32 order = 3;
   optional string description = 4;
   string ref = 5;
 }
-
 message CreateArticleResponse {
   Article article = 1;
 }
@@ -207,11 +215,9 @@ message CreateArticleResponse {
 message CreateExerciseRequest {
   string lessonId = 1;
   string name = 2;
-  int32 order = 3;
   optional string description = 4;
   ExerciseDifficulty difficulty = 5;
 }
-
 message CreateExerciseResponse {
   Exercise exercise = 1;
 }
@@ -219,10 +225,8 @@ message CreateExerciseResponse {
 message CreateQuizRequest {
   string lessonId = 1;
   string name = 2;
-  int32 order = 3;
   optional string description = 4;
 }
-
 message CreateQuizResponse {
   Quiz quiz = 1;
 }
@@ -231,17 +235,17 @@ message UpdateArticleRequest {
   message Where {
     string activityId = 1;
   }
+
   message Fields {
     optional string name = 1;
     optional string description = 2;
-    optional int32 order = 3;
     optional string lessonId = 4;
     optional string ref = 5;
   }
+
   Where where = 1;
   Fields fields = 2;
 }
-
 message UpdateArticleResponse {
   Article article = 1;
 }
@@ -250,17 +254,17 @@ message UpdateExerciseRequest {
   message Where {
     string activityId = 1;
   }
+
   message Fields {
     optional string name = 1;
     optional string description = 2;
-    optional int32 order = 3;
     optional string lessonId = 4;
     optional ExerciseDifficulty difficulty = 5;
   }
+
   Where where = 1;
   Fields fields = 2;
 }
-
 message UpdateExerciseResponse {
   Exercise exercise = 1;
 }
@@ -269,19 +273,25 @@ message UpdateQuizRequest {
   message Where {
     string activityId = 1;
   }
+
   message Fields {
     optional string name = 1;
     optional string description = 2;
-    optional int32 order = 3;
     optional string lessonId = 4;
   }
+
   Where where = 1;
   Fields fields = 2;
 }
-
 message UpdateQuizResponse {
   Quiz quiz = 1;
 }
+
+message ReorderActivityRequest {
+  string activityId = 1;
+  int32 order = 2;
+}
+message ReorderActivityResponse {}
 
 message RemoveActivityRequest {
   message Where {
@@ -289,5 +299,4 @@ message RemoveActivityRequest {
   }
   Where where = 1;
 }
-
 message RemoveActivityResponse {}

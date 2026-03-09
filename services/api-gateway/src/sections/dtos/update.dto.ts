@@ -14,9 +14,4 @@ export class UpdateSectionBodyDto {
 		nullable: true,
 	})
 	description?: string | null
-
-	@ApiPropertyOptional({
-		type: 'number',
-	})
-	order?: number
 }

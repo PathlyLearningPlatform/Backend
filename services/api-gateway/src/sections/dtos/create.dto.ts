@@ -16,11 +16,6 @@ export class CreateSectionBodyDto {
 	description?: string | null
 
 	@ApiProperty({
-		type: 'number',
-	})
-	order: number
-
-	@ApiProperty({
 		type: 'string',
 		format: 'uuid',
 	})

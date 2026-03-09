@@ -1,17 +1,20 @@
 import type { ServiceError } from '@grpc/grpc-js'
 import { Inject, Injectable, type OnModuleInit } from '@nestjs/common'
 import type { ClientGrpc } from '@nestjs/microservices'
-import { throwGrpcException } from '@pathly-backend/common/nestjs/helpers/throw-grpc-exception.helper.js'
+import { throwGrpcException } from '@pathly-backend/common'
 import {
 	type CreateLessonRequest,
 	type CreateLessonResponse,
-	type FindLessonsRequest,
-	type FindLessonsResponse,
-	type FindOneLessonRequest,
-	type FindOneLessonResponse,
+	type FindLessonByIdRequest,
+	type FindLessonByIdResponse,
+	type ListLessonsRequest,
+	type ListLessonsResponse,
+	type ReorderLessonRequest,
+	type ReorderLessonResponse,
 	LESSONS_SERVICE_NAME,
 	type LessonsServiceClient,
 	type RemoveLessonRequest,
+	type RemoveLessonResponse,
 	type UpdateLessonRequest,
 	type UpdateLessonResponse,
 } from '@pathly-backend/contracts/learning-paths/v1/lessons.js'
@@ -29,20 +32,22 @@ export class LessonsService implements OnModuleInit {
 			this.client.getService<LessonsServiceClient>(LESSONS_SERVICE_NAME)
 	}
 
-	async find(request: FindLessonsRequest): Promise<FindLessonsResponse> {
+	async list(request: ListLessonsRequest): Promise<ListLessonsResponse> {
 		const result = await firstValueFrom(
 			this.lessonsServiceClient
-				.find(request)
+				.list(request)
 				.pipe(catchError((err: ServiceError) => throwGrpcException(err))),
 		)
 
 		return result
 	}
 
-	async findOne(request: FindOneLessonRequest): Promise<FindOneLessonResponse> {
+	async findById(
+		request: FindLessonByIdRequest,
+	): Promise<FindLessonByIdResponse> {
 		const result = await firstValueFrom(
 			this.lessonsServiceClient
-				.findOne(request)
+				.findById(request)
 				.pipe(catchError((err: ServiceError) => throwGrpcException(err))),
 		)
 
@@ -69,11 +74,23 @@ export class LessonsService implements OnModuleInit {
 		return result
 	}
 
-	async remove(request: RemoveLessonRequest): Promise<void> {
-		await firstValueFrom(
+	async reorder(request: ReorderLessonRequest): Promise<ReorderLessonResponse> {
+		const result = await firstValueFrom(
+			this.lessonsServiceClient
+				.reorder(request)
+				.pipe(catchError((err: ServiceError) => throwGrpcException(err))),
+		)
+
+		return result
+	}
+
+	async remove(request: RemoveLessonRequest): Promise<RemoveLessonResponse> {
+		const result = await firstValueFrom(
 			this.lessonsServiceClient
 				.remove(request)
 				.pipe(catchError((err: ServiceError) => throwGrpcException(err))),
 		)
+
+		return result
 	}
 }

@@ -1,101 +1,105 @@
-import {
-	PG_FOREIGN_KEY_VIOLATION,
-	PG_UNIQUE_VIOLATION,
-} from '@drdgvhbh/postgres-error-codes';
 import { Inject, Injectable } from '@nestjs/common';
-import {
-	InvalidReferenceException,
-	RepositoryException,
-	UniqueConstraintException,
-} from '@pathly-backend/core/index.js';
-import { DrizzleQueryError, eq } from 'drizzle-orm';
-import { DatabaseError as PostgresError } from 'pg';
-import type { IUnitsRepository } from '@/domain/units/interfaces';
-import type { Unit, UnitQuery } from '@/domain/units/entities';
+import type { IUnitRepository } from '@/domain/units/interfaces';
 import type { Db } from '@/infra/common/types';
-import { DbService } from '../db/db.service';
-import { unitsTable } from '../db/schemas';
-import { UnitsApiConstraints } from './enums';
-import { dbUnitToEntity } from './helpers';
-import { getColumnsFromUniqueConstraint } from '@pathly-backend/common/index.js';
+import { DbService } from '@infra/common/db/db.service';
+import { Unit } from '@/domain/units/unit.aggregate';
+import { UnitId } from '@/domain/units/value-objects/id.vo';
+import { LessonRef } from '@/domain/units/value-objects';
+import { unitsTable, lessonsTable } from '../common/db/schemas';
+import { RepositoryException } from '@pathly-backend/common/index.js';
+import { eq } from 'drizzle-orm';
 
 @Injectable()
-export class PostgresUnitsRepository implements IUnitsRepository {
+export class PostgresUnitRepository implements IUnitRepository {
 	private db: Db;
 
 	constructor(@Inject(DbService) private readonly dbService: DbService) {
 		this.db = this.dbService.getDb();
 	}
 
-	async find(query?: UnitQuery): Promise<Unit[]> {
-		const limit = query?.options?.limit ?? UnitsApiConstraints.DEFAULT_LIMIT;
-		const page = query?.options?.page ?? UnitsApiConstraints.DEFAULT_PAGE;
+	async load(id: UnitId): Promise<Unit | null> {
+		const rawId = id.value;
 
 		try {
-			const result = await this.db
-				.select()
-				.from(unitsTable)
-				.limit(limit)
-				.offset(page * limit);
+			const result = await this.db.transaction(async (tx) => {
+				const [dbUnit] = await tx
+					.select()
+					.from(unitsTable)
+					.where(eq(unitsTable.id, rawId));
 
-			return result.map(dbUnitToEntity);
-		} catch (err) {
-			throw new RepositoryException('db error', err);
-		}
-	}
-
-	async findOne(id: string): Promise<Unit | null> {
-		try {
-			const result = await this.db
-				.select()
-				.from(unitsTable)
-				.where(eq(unitsTable.id, id));
-
-			return result.length <= 0 ? null : dbUnitToEntity(result[0]);
-		} catch (err) {
-			throw new RepositoryException('db error', err);
-		}
-	}
-
-	async save(entity: Unit): Promise<void> {
-		try {
-			await this.db.insert(unitsTable).values(entity).onConflictDoUpdate({
-				target: unitsTable.id,
-				set: entity,
-			});
-		} catch (err) {
-			if (err instanceof DrizzleQueryError) {
-				if (err.cause instanceof PostgresError) {
-					if (err.cause.code === PG_UNIQUE_VIOLATION) {
-						throw new UniqueConstraintException(
-							getColumnsFromUniqueConstraint(err.cause.constraint!),
-						);
-					}
+				if (!dbUnit) {
+					return null;
 				}
-			}
 
-			throw new RepositoryException('db error', err);
+				const lessonRefs = await tx
+					.select({ order: lessonsTable.order, lessonId: lessonsTable.id })
+					.from(lessonsTable)
+					.where(eq(lessonsTable.unitId, rawId));
+
+				const unit = Unit.fromDataSource({
+					id: dbUnit.id,
+					sectionId: dbUnit.sectionId,
+					name: dbUnit.name,
+					description: dbUnit.description,
+					createdAt: dbUnit.createdAt,
+					updatedAt: dbUnit.updatedAt,
+					order: dbUnit.order,
+					lessonCount: dbUnit.lessonCount,
+					lessonRefs: lessonRefs.map((ref) =>
+						LessonRef.create({
+							order: ref.order,
+							lessonId: ref.lessonId,
+						}),
+					),
+				});
+
+				return unit;
+			});
+
+			return result;
+		} catch (err) {
+			throw new RepositoryException('postgres exception', err);
 		}
 	}
 
-	async remove(id: string): Promise<Unit | null> {
+	async remove(id: UnitId): Promise<boolean> {
 		try {
 			const result = await this.db
 				.delete(unitsTable)
-				.where(eq(unitsTable.id, id))
-				.returning();
+				.where(eq(unitsTable.id, id.value));
 
-			return result.length > 0 ? dbUnitToEntity(result[0]) : null;
+			return result.rows.length > 0;
 		} catch (err) {
-			if (err instanceof DrizzleQueryError) {
-				if (err.cause instanceof PostgresError) {
-					if (err.cause.code === PG_FOREIGN_KEY_VIOLATION) {
-						throw new InvalidReferenceException(err.message, err);
-					}
-				}
-			}
+			throw new RepositoryException('postgres exception', err);
+		}
+	}
 
-			throw new RepositoryException('db error', err);
+	async save(aggregate: Unit): Promise<void> {
+		try {
+			await this.db
+				.insert(unitsTable)
+				.values({
+					id: aggregate.id.value,
+					sectionId: aggregate.sectionId.value,
+					name: aggregate.name.value,
+					description: aggregate.description?.value ?? null,
+					order: aggregate.order.value,
+					createdAt: aggregate.createdAt,
+					updatedAt: aggregate.updatedAt,
+					lessonCount: aggregate.lessonCount,
+				})
+				.onConflictDoUpdate({
+					target: unitsTable.id,
+					set: {
+						name: aggregate.name.value,
+						description: aggregate.description?.value ?? null,
+						order: aggregate.order.value,
+						updatedAt: aggregate.updatedAt,
+						lessonCount: aggregate.lessonCount,
+					},
+				});
+		} catch (err) {
+			throw new RepositoryException('postgres exception', err);
 		}
 	}
 }

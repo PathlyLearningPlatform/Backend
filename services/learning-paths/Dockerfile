@@ -10,12 +10,11 @@ FROM base AS builder
 
 # copying package.json files to install dependnecies
 COPY ./libs/ts/common/package.json ./libs/ts/common/
-COPY ./libs/ts/core/package.json ./libs/ts/core/
 COPY ./libs/contracts/package.json ./libs/contracts/
 COPY ./services/learning-paths/package.json ./services/learning-paths/
 
 # install dependencies required only for the service
-RUN npm ci -w libs/ts/common -w libs/ts/core -w libs/contracts -w services/learning-paths
+RUN npm ci -w libs/ts/common -w libs/contracts -w services/learning-paths
 
 # copying app and libs source code
 COPY ./libs/ts/ ./libs/ts
@@ -23,7 +22,7 @@ COPY ./libs/contracts ./libs/contracts
 COPY ./services/learning-paths ./services/learning-paths
 
 # bulding libs and service code only
-RUN npm run build -w libs/ts/common -w libs/ts/core -w libs/contracts -w services/learning-paths
+RUN npm run build -w libs/ts/common -w libs/contracts -w services/learning-paths
 
 FROM base AS dev
 
@@ -48,14 +47,11 @@ COPY --from=builder /usr/src/app/services/learning-paths/dist ./services/learnin
 COPY --from=builder /usr/src/app/libs/ts/common/package.json ./libs/ts/common/
 COPY --from=builder /usr/src/app/libs/ts/common/dist  ./libs/ts/common/dist/
 
-COPY --from=builder /usr/src/app/libs/ts/core/package.json ./libs/ts/core/
-COPY --from=builder /usr/src/app/libs/ts/core/dist  ./libs/ts/core/dist/
-
 COPY --from=builder /usr/src/app/libs/contracts/package.json ./libs/contracts/
 COPY --from=builder /usr/src/app/libs/contracts/dist/ts  ./libs/contracts/dist/ts/
 
 # installing dependencies for production
-RUN npm ci --omit=dev -w libs/ts/common -w libs/ts/core -w libs/contracts -w services/learning-paths
+RUN npm ci --omit=dev -w libs/ts/common -w libs/contracts -w services/learning-paths
 
 # switching to non-root user
 USER node

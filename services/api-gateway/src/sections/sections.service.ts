@@ -1,15 +1,18 @@
 import type { ServiceError } from '@grpc/grpc-js'
 import { Inject, Injectable, type OnModuleInit } from '@nestjs/common'
 import type { ClientGrpc } from '@nestjs/microservices'
-import { throwGrpcException } from '@pathly-backend/common/nestjs/helpers/throw-grpc-exception.helper.js'
+import { throwGrpcException } from '@pathly-backend/common'
 import {
 	type CreateSectionRequest,
 	type CreateSectionResponse,
-	type FindOneSectionRequest,
-	type FindOneSectionResponse,
-	type FindSectionsRequest,
-	type FindSectionsResponse,
+	type FindSectionByIdRequest,
+	type FindSectionByIdResponse,
+	type ListSectionsRequest,
+	type ListSectionsResponse,
+	type ReorderSectionRequest,
+	type ReorderSectionResponse,
 	type RemoveSectionRequest,
+	type RemoveSectionResponse,
 	SECTIONS_SERVICE_NAME,
 	type SectionsServiceClient,
 	type UpdateSectionRequest,
@@ -30,22 +33,22 @@ export class SectionsService implements OnModuleInit {
 		)
 	}
 
-	async find(request: FindSectionsRequest): Promise<FindSectionsResponse> {
+	async list(request: ListSectionsRequest): Promise<ListSectionsResponse> {
 		const result = await firstValueFrom(
 			this.sectionsServiceClient
-				.find(request)
+				.list(request)
 				.pipe(catchError((err: ServiceError) => throwGrpcException(err))),
 		)
 
 		return result
 	}
 
-	async findOne(
-		request: FindOneSectionRequest,
-	): Promise<FindOneSectionResponse> {
+	async findById(
+		request: FindSectionByIdRequest,
+	): Promise<FindSectionByIdResponse> {
 		const result = await firstValueFrom(
 			this.sectionsServiceClient
-				.findOne(request)
+				.findById(request)
 				.pipe(catchError((err: ServiceError) => throwGrpcException(err))),
 		)
 
@@ -72,11 +75,23 @@ export class SectionsService implements OnModuleInit {
 		return result
 	}
 
-	async remove(request: RemoveSectionRequest): Promise<void> {
-		await firstValueFrom(
+	async reorder(request: ReorderSectionRequest): Promise<ReorderSectionResponse> {
+		const result = await firstValueFrom(
+			this.sectionsServiceClient
+				.reorder(request)
+				.pipe(catchError((err: ServiceError) => throwGrpcException(err))),
+		)
+
+		return result
+	}
+
+	async remove(request: RemoveSectionRequest): Promise<RemoveSectionResponse> {
+		const result = await firstValueFrom(
 			this.sectionsServiceClient
 				.remove(request)
 				.pipe(catchError((err: ServiceError) => throwGrpcException(err))),
 		)
+
+		return result
 	}
 }

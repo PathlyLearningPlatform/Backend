@@ -16,64 +16,80 @@ message Section {
 }
 
 service SectionsService {
-  rpc Find(FindSectionsRequest) returns (FindSectionsResponse) {};
-  rpc FindOne(FindOneSectionRequest) returns (FindOneSectionResponse) {};
+  rpc List(ListSectionsRequest) returns (ListSectionsResponse) {};
+  rpc FindById(FindSectionByIdRequest) returns (FindSectionByIdResponse) {};
   rpc Create(CreateSectionRequest) returns (CreateSectionResponse) {};
   rpc Update(UpdateSectionRequest) returns (UpdateSectionResponse) {};
+  rpc Reorder(ReorderSectionRequest) returns (ReorderSectionResponse) {};
   rpc Remove(RemoveSectionRequest) returns (RemoveSectionResponse) {};
 }
 
-message FindSectionsOptions {
-  optional int32 limit = 1;
-  optional int32 page = 2;
+
+message ListSectionsRequest {
+  message Options {
+    optional int32 limit = 1;
+    optional int32 page = 2;
+  }
+
+  message Where {
+    optional string learningPathId = 1;
+  }
+
+  optional Options options = 1;
+  optional Where where = 2;
 }
-message FindSectionsRequest {
-  optional FindSectionsOptions options = 1;
-}
-message FindSectionsResponse {
+message ListSectionsResponse {
   repeated Section sections = 1;
 }
 
-message FindOneSectionWhere {
-  string id = 1;
+message FindSectionByIdRequest {
+  message Where {
+    string id = 1;
+  }
+
+  Where where = 1;
 }
-message FindOneSectionRequest {
-  FindOneSectionWhere where = 1;
-}
-message FindOneSectionResponse {
+message FindSectionByIdResponse {
   Section section = 1;
 }
 
 message CreateSectionRequest {
   string name = 1;
   optional string description = 2;
-  int32 order = 3;
-  string learningPathId = 4;
+  string learningPathId = 3;
 }
 message CreateSectionResponse {
   Section section = 1;
 }
 
-message UpdateSectionFields {
-  optional string name = 1;
-  optional string description = 2;
-  optional int32 order = 3;
-}
-message UpdateSectionWhere {
-  string id = 1;
-}
 message UpdateSectionRequest {
-  UpdateSectionWhere where = 1;
-  optional UpdateSectionFields fields = 2;
+  message Fields {
+    optional string name = 1;
+    optional string description = 2;
+  }
+
+  message Where {
+    string id = 1;
+  }
+
+  Where where = 1;
+  optional Fields fields = 2;
 }
 message UpdateSectionResponse {
   Section section = 1;
 }
 
-message RemoveSectionWhere {
-  string id = 1;
+message ReorderSectionRequest {
+  string sectionId = 1;
+  int32 order = 2;
 }
+message ReorderSectionResponse {}
+
 message RemoveSectionRequest {
-  RemoveSectionWhere where = 1;
+  message Where {
+    string id = 1;
+  }
+
+  Where where = 1;
 }
 message RemoveSectionResponse {}

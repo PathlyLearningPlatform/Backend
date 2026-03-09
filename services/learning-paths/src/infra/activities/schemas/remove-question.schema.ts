@@ -1,12 +1,11 @@
-import z from 'zod';
-import { idSchema, questionIdSchema } from './fields.schema';
+import { z } from 'zod';
 
 export const removeQuestionSchema = z
 	.object({
 		where: z
 			.object({
-				quizId: idSchema,
-				id: questionIdSchema,
+				id: z.uuid(),
+				quizId: z.uuid(),
 			})
 			.strict(),
 	})

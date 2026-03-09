@@ -14,9 +14,4 @@ export class UpdateLessonBodyDto {
 		nullable: true,
 	})
 	description?: string | null
-
-	@ApiPropertyOptional({
-		type: 'number',
-	})
-	order?: number
 }

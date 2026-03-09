@@ -10,7 +10,6 @@ services:
       - ./src:/usr/src/app/services/progress/src
       - ./test:/usr/src/app/services/progress/test
       - ../../libs/ts/common/src:/usr/src/app/libs/ts/common/src
-      - ../../libs/ts/core/src:/usr/src/app/libs/ts/core/src
       - ../../libs/contracts/proto:/usr/src/app/libs/contracts/proto
     depends_on:
       progress-db:

@@ -2,7 +2,6 @@ import { status as GrpcStatus } from '@grpc/grpc-js';
 import { Controller, Inject, UseFilters } from '@nestjs/common';
 import { GrpcMethod, Payload } from '@nestjs/microservices';
 import {
-	AppLogger,
 	GrpcErrorDto,
 	GrpcException,
 	GrpcExceptionFilter,
@@ -11,71 +10,75 @@ import {
 import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js';
 import {
 	type CreateLessonResponse,
-	type FindLessonsResponse,
-	type FindOneLessonResponse,
-	LESSONS_SERVICE_NAME,
-	type RemoveLessonResponse,
+	type FindLessonByIdResponse,
+	type ListLessonsResponse,
 	type UpdateLessonResponse,
+	LESSONS_SERVICE_NAME,
 } from '@pathly-backend/contracts/learning-paths/v1/lessons.js';
 import type z from 'zod';
 import type {
-	CreateLessonUseCase,
-	FindLessonsUseCase,
-	FindOneLessonUseCase,
-	RemoveLessonUseCase,
-	UpdateLessonUseCase,
-} from '@/app/lessons/use-cases';
-import {
-	LessonCannotBeRemovedException,
-	LessonNotFoundException,
-	LessonOrderException,
-} from '@/domain/lessons/exceptions';
-import { UnitNotFoundException } from '@/domain/units/exceptions';
-import { DiToken } from '../common/enums';
-import { errorCodeToMessage } from '../common/helpers/error-code-to-message.helper';
-import { lessonEntityToClient } from './helpers';
+	AddLessonHandler,
+	ReorderLessonHandler,
+} from '@/app/units/commands';
+import type {
+	UpdateLessonHandler,
+	RemoveLessonHandler,
+} from '@/app/lessons/commands';
+import type {
+	ListLessonsHandler,
+	FindLessonByIdHandler,
+} from '@/app/lessons/queries';
+import { UnitNotFoundException, LessonNotFoundException } from '@/app/common';
+import { DiToken, ExceptionMessage } from '../common/enums';
+import { lessonDtoToClient } from './helpers';
 import {
 	createLessonSchema,
-	findLessonsSchema,
-	findOneLessonSchema,
+	listLessonsSchema,
+	findLessonByIdSchema,
 	removeLessonSchema,
 	updateLessonSchema,
+	reorderLessonSchema,
 } from './schemas';
 
 @UseFilters(GrpcExceptionFilter)
 @Controller()
 export class GrpcLessonsController {
 	constructor(
-		@Inject(DiToken.FIND_LESSONS_USE_CASE)
-		private readonly findLessonsUseCase: FindLessonsUseCase,
-		@Inject(DiToken.FIND_ONE_LESSON_USE_CASE)
-		private readonly findOneLessonUseCase: FindOneLessonUseCase,
-		@Inject(DiToken.CREATE_LESSON_USE_CASE)
-		private readonly createLessonUseCase: CreateLessonUseCase,
-		@Inject(DiToken.UPDATE_LESSON_USE_CASE)
-		private readonly updateLessonUseCase: UpdateLessonUseCase,
-		@Inject(DiToken.REMOVE_LESSON_USE_CASE)
-		private readonly removeLessonUseCase: RemoveLessonUseCase,
-		@Inject(AppLogger)
-		private readonly appLogger: AppLogger,
+		@Inject(DiToken.LIST_LESSONS_HANDLER)
+		private readonly listLessonsHandler: ListLessonsHandler,
+		@Inject(DiToken.FIND_LESSON_BY_ID_HANDLER)
+		private readonly findLessonByIdHandler: FindLessonByIdHandler,
+		@Inject(DiToken.ADD_LESSON_HANDLER)
+		private readonly addLessonHandler: AddLessonHandler,
+		@Inject(DiToken.UPDATE_LESSON_HANDLER)
+		private readonly updateLessonHandler: UpdateLessonHandler,
+		@Inject(DiToken.REORDER_LESSON_HANDLER)
+		private readonly reorderLessonHandler: ReorderLessonHandler,
+		@Inject(DiToken.REMOVE_LESSON_HANDLER)
+		private readonly removeLessonHandler: RemoveLessonHandler,
 	) {}
 
 	@GrpcMethod(LESSONS_SERVICE_NAME)
-	async find(
-		@Payload(new RpcValidationPipe(findLessonsSchema)) payload: z.infer<
-			typeof findLessonsSchema
+	async list(
+		@Payload(new RpcValidationPipe(listLessonsSchema)) payload: z.infer<
+			typeof listLessonsSchema
 		>,
-	): Promise<FindLessonsResponse> {
+	): Promise<ListLessonsResponse> {
 		try {
-			const lessons = await this.findLessonsUseCase.execute(payload);
+			const lessons = await this.listLessonsHandler.execute({
+				where: {
+					unitId: payload.where?.unitId,
+				},
+				options: payload.options,
+			});
 
 			return {
-				lessons: lessons.map(lessonEntityToClient),
+				lessons: lessons.map(lessonDtoToClient),
 			};
 		} catch (err) {
 			throw new GrpcException(
 				new GrpcErrorDto(
-					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					ExceptionMessage.INTERNAL_ERROR,
 					GrpcStatus.INTERNAL,
 					LearningPathsApiErrorCodes.INTERNAL_ERROR,
 				),
@@ -85,19 +88,21 @@ export class GrpcLessonsController {
 	}
 
 	@GrpcMethod(LESSONS_SERVICE_NAME)
-	async findOne(
-		@Payload(new RpcValidationPipe(findOneLessonSchema))
-		payload: z.infer<typeof findOneLessonSchema>,
-	): Promise<FindOneLessonResponse> {
+	async findById(
+		@Payload(new RpcValidationPipe(findLessonByIdSchema))
+		payload: z.infer<typeof findLessonByIdSchema>,
+	): Promise<FindLessonByIdResponse> {
 		try {
-			const lesson = await this.findOneLessonUseCase.execute(payload.where.id);
+			const lesson = await this.findLessonByIdHandler.execute({
+				where: { id: payload.where.id },
+			});
 
-			return { lesson: lessonEntityToClient(lesson) };
+			return { lesson: lessonDtoToClient(lesson) };
 		} catch (err) {
 			if (err instanceof LessonNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						errorCodeToMessage[LearningPathsApiErrorCodes.LESSON_NOT_FOUND],
+						ExceptionMessage.LESSON_NOT_FOUND,
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.LESSON_NOT_FOUND,
 					),
@@ -106,7 +111,7 @@ export class GrpcLessonsController {
 
 			throw new GrpcException(
 				new GrpcErrorDto(
-					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					ExceptionMessage.INTERNAL_ERROR,
 					GrpcStatus.INTERNAL,
 					LearningPathsApiErrorCodes.INTERNAL_ERROR,
 				),
@@ -117,40 +122,31 @@ export class GrpcLessonsController {
 
 	@GrpcMethod(LESSONS_SERVICE_NAME)
 	async create(
-		@Payload(new RpcValidationPipe(createLessonSchema)) payload: z.infer<
-			typeof createLessonSchema
-		>,
+		@Payload(new RpcValidationPipe(createLessonSchema))
+		payload: z.infer<typeof createLessonSchema>,
 	): Promise<CreateLessonResponse> {
 		try {
-			const lesson = await this.createLessonUseCase.execute(payload);
+			const lesson = await this.addLessonHandler.execute({
+				unitId: payload.unitId,
+				name: payload.name,
+				description: payload.description,
+			});
 
-			return { lesson: lessonEntityToClient(lesson) };
+			return { lesson: lessonDtoToClient(lesson) };
 		} catch (err) {
 			if (err instanceof UnitNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						errorCodeToMessage[LearningPathsApiErrorCodes.UNIT_NOT_FOUND],
+						ExceptionMessage.UNIT_NOT_FOUND,
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.UNIT_NOT_FOUND,
 					),
-					err,
-				);
-			}
-
-			if (err instanceof LessonOrderException) {
-				throw new GrpcException(
-					new GrpcErrorDto(
-						err.message,
-						GrpcStatus.FAILED_PRECONDITION,
-						LearningPathsApiErrorCodes.LESSON_DUPLICATE_ORDER,
-					),
-					err,
 				);
 			}
 
 			throw new GrpcException(
 				new GrpcErrorDto(
-					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					ExceptionMessage.INTERNAL_ERROR,
 					GrpcStatus.INTERNAL,
 					LearningPathsApiErrorCodes.INTERNAL_ERROR,
 				),
@@ -161,39 +157,62 @@ export class GrpcLessonsController {
 
 	@GrpcMethod(LESSONS_SERVICE_NAME)
 	async update(
-		@Payload(new RpcValidationPipe(updateLessonSchema)) payload: z.infer<
-			typeof updateLessonSchema
-		>,
+		@Payload(new RpcValidationPipe(updateLessonSchema))
+		payload: z.infer<typeof updateLessonSchema>,
 	): Promise<UpdateLessonResponse> {
 		try {
-			const lesson = await this.updateLessonUseCase.execute(payload);
+			const lesson = await this.updateLessonHandler.execute({
+				where: { id: payload.where.id },
+				props: payload.fields,
+			});
 
-			return { lesson: lessonEntityToClient(lesson) };
+			return { lesson: lessonDtoToClient(lesson) };
 		} catch (err) {
 			if (err instanceof LessonNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						errorCodeToMessage[LearningPathsApiErrorCodes.LESSON_NOT_FOUND],
+						ExceptionMessage.LESSON_NOT_FOUND,
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.LESSON_NOT_FOUND,
 					),
 				);
 			}
 
-			if (err instanceof LessonOrderException) {
+			throw new GrpcException(
+				new GrpcErrorDto(
+					ExceptionMessage.INTERNAL_ERROR,
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
+				err,
+			);
+		}
+	}
+
+	@GrpcMethod(LESSONS_SERVICE_NAME)
+	async reorder(
+		@Payload(new RpcValidationPipe(reorderLessonSchema))
+		payload: z.infer<typeof reorderLessonSchema>,
+	): Promise<void> {
+		try {
+			await this.reorderLessonHandler.execute({
+				lessonId: payload.lessonId,
+				order: payload.order,
+			});
+		} catch (err) {
+			if (err instanceof LessonNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						err.message,
-						GrpcStatus.FAILED_PRECONDITION,
-						LearningPathsApiErrorCodes.LESSON_DUPLICATE_ORDER,
+						ExceptionMessage.LESSON_NOT_FOUND,
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.LESSON_NOT_FOUND,
 					),
-					err,
 				);
 			}
 
 			throw new GrpcException(
 				new GrpcErrorDto(
-					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					ExceptionMessage.INTERNAL_ERROR,
 					GrpcStatus.INTERNAL,
 					LearningPathsApiErrorCodes.INTERNAL_ERROR,
 				),
@@ -204,38 +223,27 @@ export class GrpcLessonsController {
 
 	@GrpcMethod(LESSONS_SERVICE_NAME)
 	async remove(
-		@Payload(new RpcValidationPipe(removeLessonSchema)) payload: z.infer<
-			typeof removeLessonSchema
-		>,
+		@Payload(new RpcValidationPipe(removeLessonSchema))
+		payload: z.infer<typeof removeLessonSchema>,
 	): Promise<void> {
 		try {
-			await this.removeLessonUseCase.execute(payload.where.id);
+			await this.removeLessonHandler.execute({
+				lessonId: payload.where.id,
+			});
 		} catch (err) {
 			if (err instanceof LessonNotFoundException) {
 				throw new GrpcException(
 					new GrpcErrorDto(
-						errorCodeToMessage[LearningPathsApiErrorCodes.LESSON_NOT_FOUND],
+						ExceptionMessage.LESSON_NOT_FOUND,
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.LESSON_NOT_FOUND,
 					),
 				);
 			}
 
-			if (err instanceof LessonCannotBeRemovedException) {
-				throw new GrpcException(
-					new GrpcErrorDto(
-						errorCodeToMessage[
-							LearningPathsApiErrorCodes.LESSON_CANNOT_BE_REMOVED
-						],
-						GrpcStatus.FAILED_PRECONDITION,
-						LearningPathsApiErrorCodes.LESSON_CANNOT_BE_REMOVED,
-					),
-				);
-			}
-
 			throw new GrpcException(
 				new GrpcErrorDto(
-					errorCodeToMessage[LearningPathsApiErrorCodes.INTERNAL_ERROR],
+					ExceptionMessage.INTERNAL_ERROR,
 					GrpcStatus.INTERNAL,
 					LearningPathsApiErrorCodes.INTERNAL_ERROR,
 				),

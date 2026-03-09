@@ -1,15 +1,18 @@
 import type { ServiceError } from '@grpc/grpc-js'
 import { Inject, Injectable, type OnModuleInit } from '@nestjs/common'
 import type { ClientGrpc } from '@nestjs/microservices'
-import { throwGrpcException } from '@pathly-backend/common/nestjs/helpers/throw-grpc-exception.helper.js'
+import { throwGrpcException } from '@pathly-backend/common'
 import {
 	type CreateUnitRequest,
 	type CreateUnitResponse,
-	type FindOneUnitRequest,
-	type FindOneUnitResponse,
-	type FindUnitsRequest,
-	type FindUnitsResponse,
+	type FindUnitByIdRequest,
+	type FindUnitByIdResponse,
+	type ListUnitsRequest,
+	type ListUnitsResponse,
+	type ReorderUnitRequest,
+	type ReorderUnitResponse,
 	type RemoveUnitRequest,
+	type RemoveUnitResponse,
 	UNITS_SERVICE_NAME,
 	type UnitsServiceClient,
 	type UpdateUnitRequest,
@@ -29,20 +32,20 @@ export class UnitsService implements OnModuleInit {
 			this.client.getService<UnitsServiceClient>(UNITS_SERVICE_NAME)
 	}
 
-	async find(request: FindUnitsRequest): Promise<FindUnitsResponse> {
+	async list(request: ListUnitsRequest): Promise<ListUnitsResponse> {
 		const result = await firstValueFrom(
 			this.unitsServiceClient
-				.find(request)
+				.list(request)
 				.pipe(catchError((err: ServiceError) => throwGrpcException(err))),
 		)
 
 		return result
 	}
 
-	async findOne(request: FindOneUnitRequest): Promise<FindOneUnitResponse> {
+	async findById(request: FindUnitByIdRequest): Promise<FindUnitByIdResponse> {
 		const result = await firstValueFrom(
 			this.unitsServiceClient
-				.findOne(request)
+				.findById(request)
 				.pipe(catchError((err: ServiceError) => throwGrpcException(err))),
 		)
 
@@ -69,11 +72,23 @@ export class UnitsService implements OnModuleInit {
 		return result
 	}
 
-	async remove(request: RemoveUnitRequest): Promise<void> {
-		await firstValueFrom(
+	async reorder(request: ReorderUnitRequest): Promise<ReorderUnitResponse> {
+		const result = await firstValueFrom(
+			this.unitsServiceClient
+				.reorder(request)
+				.pipe(catchError((err: ServiceError) => throwGrpcException(err))),
+		)
+
+		return result
+	}
+
+	async remove(request: RemoveUnitRequest): Promise<RemoveUnitResponse> {
+		const result = await firstValueFrom(
 			this.unitsServiceClient
 				.remove(request)
 				.pipe(catchError((err: ServiceError) => throwGrpcException(err))),
 		)
+
+		return result
 	}
 }

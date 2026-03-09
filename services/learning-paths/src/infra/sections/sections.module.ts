@@ -1,14 +1,23 @@
 import { Module } from '@nestjs/common';
-import { DbModule } from '../db/db.module';
+import { DbModule } from '@infra/common/db/db.module';
 import { LearningPathsModule } from '../learning-paths/learning-paths.module';
 import { GrpcSectionsController } from './grpc.controller';
-import { PostgresSectionsRepository } from './postgres.repository';
-import { sectionsUseCasesProvider } from './use-cases.provider';
+import { PostgresSectionRepository } from './postgres.repository';
+import { PostgresSectionReadRepository } from './postgres-read.repository';
+import { sectionHandlersProvider } from './handlers.provider';
 
 @Module({
 	imports: [DbModule, LearningPathsModule],
 	controllers: [GrpcSectionsController],
-	providers: [PostgresSectionsRepository, ...sectionsUseCasesProvider],
-	exports: [PostgresSectionsRepository, ...sectionsUseCasesProvider],
+	providers: [
+		PostgresSectionRepository,
+		PostgresSectionReadRepository,
+		...sectionHandlersProvider,
+	],
+	exports: [
+		PostgresSectionRepository,
+		PostgresSectionReadRepository,
+		...sectionHandlersProvider,
+	],
 })
 export class SectionsModule {}

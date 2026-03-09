@@ -14,38 +14,42 @@ message LearningPath {
 }
 
 service LearningPathsService {
-  rpc Find(FindLearningPathsRequest) returns (FindLearningPathsResponse) {};
-  rpc FindOne(FindOneLearningPathRequest) returns (FindOneLearningPathResponse) {};
+  rpc List(ListLearningPathsRequest) returns (ListLearningPathsResponse) {};
+  rpc FindById(FindLearningPathByIdRequest) returns (FindLearningPathByIdResponse) {};
   rpc Create(CreateLearningPathRequest) returns (CreateLearningPathResponse) {};
   rpc Update(UpdateLearningPathRequest) returns (UpdateLearningPathResponse) {};
   rpc Remove(RemoveLearningPathRequest) returns (RemoveLearningPathResponse) {};
 }
 
-enum LearningPathsOrderByFields {
-  NAME = 0;
-  CREATED_AT = 1;
-  UPDATED_AT = 2;
+
+message ListLearningPathsRequest {
+  enum OrderByFields {
+    NAME = 0;
+    CREATED_AT = 1;
+    UPDATED_AT = 2;
+  }
+
+  message Options {
+    optional int32 limit = 1;
+    optional int32 page = 2;
+    optional common.SortType sortType = 3;
+    optional OrderByFields orderBy = 4;
+  }
+
+  optional Options options = 1;
 }
-message FindLearningPathsOptions {
-  optional int32 limit = 1;
-  optional int32 page = 2;
-  optional common.SortType sortType = 3;
-  optional LearningPathsOrderByFields orderBy = 4;
-}
-message FindLearningPathsRequest {
-  optional FindLearningPathsOptions options = 1;
-}
-message FindLearningPathsResponse {
+message ListLearningPathsResponse {
   repeated LearningPath learningPaths = 1;
 }
 
-message FindOneLearningPathWhere {
-  string id = 1;
+message FindLearningPathByIdRequest {
+  message Where {
+    string id = 1;
+  }
+
+  Where where = 1;
 }
-message FindOneLearningPathRequest {
-  FindOneLearningPathWhere where = 1;
-}
-message FindOneLearningPathResponse {
+message FindLearningPathByIdResponse {
   LearningPath learningPath = 1;
 }
 
@@ -57,25 +61,29 @@ message CreateLearningPathResponse {
   LearningPath learningPath = 1;
 }
 
-message UpdateLearningPathFields {
-  optional string name = 1;
-  optional string description = 2;
-}
-message UpdateLearningPathWhere {
-  string id = 1;
-}
+
 message UpdateLearningPathRequest {
-  UpdateLearningPathWhere where = 1;
-  optional UpdateLearningPathFields fields = 2;
+  message Fields {
+    optional string name = 1;
+    optional string description = 2;
+  }
+  message Where {
+    string id = 1;
+  }
+
+  Where where = 1;
+  optional Fields fields = 2;
 }
 message UpdateLearningPathResponse {
   LearningPath learningPath = 1;
 }
 
-message RemoveLearningPathWhere {
-  string id = 1;
-}
+
 message RemoveLearningPathRequest {
-  RemoveLearningPathWhere where = 1;
+  message Where {
+    string id = 1;
+  }
+
+  Where where = 1;
 }
 message RemoveLearningPathResponse {}

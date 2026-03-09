@@ -1,6 +1,5 @@
 import {
 	Body,
-	ConflictException,
 	Controller,
 	Delete,
 	Get,
@@ -14,7 +13,6 @@ import {
 } from '@nestjs/common'
 import {
 	ApiBody,
-	ApiConflictResponse,
 	ApiCreatedResponse,
 	ApiNotFoundResponse,
 	ApiOkResponse,
@@ -66,11 +64,11 @@ export class QuizzesController {
 	@ApiOkResponse({ type: FindOneQuizResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@Get(':id')
-	async findOne(
+	async findById(
 		@Param('id', ParseUUIDPipe) id: string,
 	): Promise<FindOneQuizResponseDto> {
 		try {
-			const result = await this.activitiesService.findOneQuiz({
+			const result = await this.activitiesService.findQuizById({
 				where: { id },
 			})
 
@@ -105,7 +103,6 @@ export class QuizzesController {
 
 	@ApiBody({ type: CreateQuizDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
-	@ApiConflictResponse({ type: HttpErrorResponse })
 	@ApiCreatedResponse({ type: CreateQuizResponseDto })
 	@Post()
 	async create(
@@ -116,7 +113,6 @@ export class QuizzesController {
 			const result = await this.activitiesService.createQuiz({
 				name: body.name,
 				description: nullToEmptyString(body.description),
-				order: body.order,
 				lessonId: body.lessonId,
 			})
 
@@ -128,14 +124,6 @@ export class QuizzesController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
-				case LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER:
-					throw new ConflictException(
-						new HttpErrorDto(
-							exceptionCodeToMessage[
-								LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER
-							],
-						),
-					)
 				case LearningPathsApiErrorCodes.LESSON_NOT_FOUND:
 					throw new NotFoundException(
 						new HttpErrorDto(
@@ -160,7 +148,6 @@ export class QuizzesController {
 	@ApiBody({ type: UpdateQuizDto })
 	@ApiOkResponse({ type: UpdateQuizResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
-	@ApiConflictResponse({ type: HttpErrorResponse })
 	@Patch(':id')
 	async update(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -173,7 +160,6 @@ export class QuizzesController {
 				fields: {
 					name: body.name,
 					description: nullToEmptyString(body.description),
-					order: body.order,
 					lessonId: body.lessonId,
 				},
 			})
@@ -186,14 +172,6 @@ export class QuizzesController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
-				case LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER:
-					throw new ConflictException(
-						new HttpErrorDto(
-							exceptionCodeToMessage[
-								LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER
-							],
-						),
-					)
 				case LearningPathsApiErrorCodes.LESSON_NOT_FOUND:
 					throw new NotFoundException(
 						new HttpErrorDto(
@@ -230,16 +208,16 @@ export class QuizzesController {
 		type: HttpErrorDto,
 	})
 	@Get(':id/questions')
-	async findQuestions(
+	async listQuestions(
 		@Param('id', ParseUUIDPipe) id: string,
 	): Promise<FindQuestionsResponseDto> {
 		try {
-			const result = await this.activitiesService.findQuestions({
-				quizId: id,
+			const result = await this.activitiesService.findQuizById({
+				where: { id },
 			})
 
 			return {
-				questions: Array.from(result.questions).map(
+				questions: Array.from(result.quiz!.questions).map(
 					clientQuestionToResponseDto,
 				),
 			}
@@ -276,12 +254,12 @@ export class QuizzesController {
 		type: HttpErrorDto,
 	})
 	@Get(':id/questions/:questionId')
-	async findOneQuestion(
+	async findQuestionById(
 		@Param('id', ParseUUIDPipe) id: string,
 		@Param('questionId', ParseUUIDPipe) questionId: string,
 	): Promise<FindOneQuestionResponseDto> {
 		try {
-			const result = await this.activitiesService.findOneQuestion({
+			const result = await this.activitiesService.findQuestionById({
 				where: {
 					quizId: id,
 					id: questionId,

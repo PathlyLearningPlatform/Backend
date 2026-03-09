@@ -53,11 +53,11 @@ export class ExercisesController {
 	@ApiOkResponse({ type: FindOneExerciseResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@Get(':id')
-	async findOne(
+	async findById(
 		@Param('id', ParseUUIDPipe) id: string,
 	): Promise<FindOneExerciseResponseDto> {
 		try {
-			const result = await this.activitiesService.findOneExercise({
+			const result = await this.activitiesService.findExerciseById({
 				where: { id },
 			})
 
@@ -103,7 +103,6 @@ export class ExercisesController {
 			const result = await this.activitiesService.createExercise({
 				name: body.name,
 				description: nullToEmptyString(body.description),
-				order: body.order,
 				lessonId: body.lessonId,
 				difficulty: exerciseDifficultyToClient(body.difficulty),
 			})
@@ -116,14 +115,6 @@ export class ExercisesController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
-				case LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER:
-					throw new ConflictException(
-						new HttpErrorDto(
-							exceptionCodeToMessage[
-								LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER
-							],
-						),
-					)
 				case LearningPathsApiErrorCodes.LESSON_NOT_FOUND:
 					throw new NotFoundException(
 						new HttpErrorDto(
@@ -161,7 +152,6 @@ export class ExercisesController {
 				fields: {
 					name: body.name,
 					description: nullToEmptyString(body.description),
-					order: body.order,
 					lessonId: body.lessonId,
 					difficulty: body.difficulty,
 				},
@@ -175,14 +165,6 @@ export class ExercisesController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
-				case LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER:
-					throw new ConflictException(
-						new HttpErrorDto(
-							exceptionCodeToMessage[
-								LearningPathsApiErrorCodes.ACTIVITY_DUPLICATE_ORDER
-							],
-						),
-					)
 				case LearningPathsApiErrorCodes.LESSON_NOT_FOUND:
 					throw new NotFoundException(
 						new HttpErrorDto(

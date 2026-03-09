@@ -1,4 +1,3 @@
-import { OffsetPagination } from '@/app/common';
 import {
 	ActivityDto,
 	ArticleDto,
@@ -6,13 +5,8 @@ import {
 	QuizDto,
 	QuizWithoutQuestionsDto,
 } from '../dtos';
+import { ActivityFilter } from './filter.interface';
 
-type ActivityFilter = {
-	options?: OffsetPagination;
-	where?: Partial<{
-		lessonId: string;
-	}>;
-};
 
 export interface IActivityReadRepository {
 	list(filter?: ActivityFilter): Promise<ActivityDto[]>;

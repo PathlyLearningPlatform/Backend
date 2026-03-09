@@ -16,11 +16,6 @@ export class CreateActivityDto {
 	description?: string | null
 
 	@ApiProperty({
-		type: 'number',
-	})
-	order: number
-
-	@ApiProperty({
 		type: 'string',
 		format: 'uuid',
 	})

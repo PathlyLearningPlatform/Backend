@@ -16,11 +16,6 @@ export class UpdateActivityDto {
 	description?: string | null
 
 	@ApiPropertyOptional({
-		type: 'number',
-	})
-	order?: number
-
-	@ApiPropertyOptional({
 		type: 'string',
 	})
 	lessonId?: string

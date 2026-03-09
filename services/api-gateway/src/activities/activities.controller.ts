@@ -40,12 +40,12 @@ export class ActivitiesController {
 	@ApiQuery({ type: FindActivitiesQueryDto })
 	@ApiOkResponse({ type: FindActivitiesResponseDto })
 	@Get()
-	async find(
+	async list(
 		@Query(new HttpValidationPipe(findActivitiesSchema))
 		query: FindActivitiesQueryDto,
 	): Promise<FindActivitiesResponseDto> {
 		try {
-			const result = await this.activitiesService.find({
+			const result = await this.activitiesService.list({
 				options: { limit: query.limit, page: query.page },
 			})
 
@@ -75,11 +75,11 @@ export class ActivitiesController {
 	@ApiOkResponse({ type: FindOneActivityResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@Get(':id')
-	async findOne(
+	async findById(
 		@Param('id', ParseUUIDPipe) id: string,
 	): Promise<FindOneActivityResponseDto> {
 		try {
-			const result = await this.activitiesService.findOne({ where: { id } })
+			const result = await this.activitiesService.findById({ where: { id } })
 
 			return {
 				activity: clientActivityToResponseDto(result.activity!),

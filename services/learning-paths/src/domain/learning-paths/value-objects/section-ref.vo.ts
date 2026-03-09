@@ -7,8 +7,8 @@ type Props = {
 };
 
 type CreateProps = {
-	sectionId: string;
-	order: number;
+	sectionId: SectionId;
+	order: Order;
 };
 
 export class SectionRef extends ValueObject<Props> {
@@ -22,8 +22,8 @@ export class SectionRef extends ValueObject<Props> {
 
 	static create(props: CreateProps) {
 		return new SectionRef({
-			sectionId: SectionId.create(props.sectionId),
-			order: Order.create(props.order),
+			sectionId: props.sectionId,
+			order: props.order,
 		});
 	}
 }

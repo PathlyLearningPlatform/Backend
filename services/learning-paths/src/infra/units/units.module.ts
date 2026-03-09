@@ -1,14 +1,23 @@
 import { Module } from '@nestjs/common';
-import { DbModule } from '../db/db.module';
+import { DbModule } from '@infra/common/db/db.module';
 import { SectionsModule } from '../sections/sections.module';
 import { GrpcUnitsController } from './grpc.controller';
-import { PostgresUnitsRepository } from './postgres.repository';
-import { unitsUseCasesProvider } from './use-cases.provider';
+import { PostgresUnitRepository } from './postgres.repository';
+import { PostgresUnitReadRepository } from './postgres-read.repository';
+import { unitHandlersProvider } from './handlers.provider';
 
 @Module({
 	imports: [DbModule, SectionsModule],
 	controllers: [GrpcUnitsController],
-	providers: [PostgresUnitsRepository, ...unitsUseCasesProvider],
-	exports: [PostgresUnitsRepository, ...unitsUseCasesProvider],
+	providers: [
+		PostgresUnitRepository,
+		PostgresUnitReadRepository,
+		...unitHandlersProvider,
+	],
+	exports: [
+		PostgresUnitRepository,
+		PostgresUnitReadRepository,
+		...unitHandlersProvider,
+	],
 })
 export class UnitsModule {}

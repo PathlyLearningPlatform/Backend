@@ -109,8 +109,8 @@ export class LearningPath extends AggregateRoot<
 
 	addSection(sectionId: SectionId): SectionRef {
 		const sectionRef = SectionRef.create({
-			sectionId: sectionId.value,
-			order: this._props.sectionRefs.length,
+			sectionId: sectionId,
+			order: Order.create(this._props.sectionRefs.length),
 		});
 
 		if (this._findSection(sectionRef)) {

@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IActivityProgressRepository } from '@/app/activity-progress/interfaces';
 import { ActivityProgress } from '@/domain/activity-progress/entities';
 import { ActivityProgressFilter } from '@/app/activity-progress/types';
-import { RepositoryException } from '@pathly-backend/core/index.js';
+import { RepositoryException } from '@pathly-backend/common/index.js';
 import { Db } from '../common/modules/db/types';
 import { DbService } from '../common/modules/db/db.service';
 import { activityProgressTable } from '../common/modules/db/schemas';

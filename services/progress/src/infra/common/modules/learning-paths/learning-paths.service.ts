@@ -43,7 +43,7 @@ export class LearningPathsService
 		try {
 			await firstValueFrom(
 				this.activitiesServiceClient
-					.findOne({ where: { id } })
+					.findById({ where: { id } })
 					.pipe(catchError(throwGrpcException)),
 			);
 		} catch (err) {
@@ -65,7 +65,7 @@ export class LearningPathsService
 		try {
 			const res = await firstValueFrom(
 				this.activitiesServiceClient
-					.findOne({ where: { id } })
+					.findById({ where: { id } })
 					.pipe(catchError(throwGrpcException)),
 			);
 
@@ -90,7 +90,7 @@ export class LearningPathsService
 		try {
 			const res = await firstValueFrom(
 				this.lessonsServiceClient
-					.findOne({ where: { id } })
+					.findById({ where: { id } })
 					.pipe(catchError(throwGrpcException)),
 			);
 

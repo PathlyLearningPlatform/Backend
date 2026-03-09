@@ -59,12 +59,12 @@ export class UnitsController {
 	@ApiQuery({ type: FindUnitsQueryDto })
 	@ApiOkResponse({ type: FindUnitsResponseDto })
 	@Get()
-	async find(
+	async list(
 		@Query(new HttpValidationPipe(findUnitsQuerySchema))
 		query: FindUnitsQueryDto,
 	): Promise<FindUnitsResponseDto> {
 		try {
-			const result = await this.unitsService.find({
+			const result = await this.unitsService.list({
 				options: query,
 			})
 
@@ -92,11 +92,11 @@ export class UnitsController {
 	@ApiOkResponse({ type: FindOneUnitResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@Get(':id')
-	async findOne(
+	async findById(
 		@Param('id', ParseUUIDPipe) id: string,
 	): Promise<FindOneUnitResponseDto> {
 		try {
-			const result = await this.unitsService.findOne({ where: { id } })
+			const result = await this.unitsService.findById({ where: { id } })
 
 			return {
 				unit: clientUnitToResponseDto(result.unit!),
@@ -138,7 +138,6 @@ export class UnitsController {
 			const result = await this.unitsService.create({
 				name: body.name,
 				description: nullToEmptyString(body.description),
-				order: body.order,
 				sectionId: body.sectionId,
 			})
 
@@ -150,14 +149,6 @@ export class UnitsController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
-				case LearningPathsApiErrorCodes.UNIT_DUPLICATE_ORDER:
-					throw new ConflictException(
-						new HttpErrorDto(
-							exceptionCodeToMessage[
-								LearningPathsApiErrorCodes.UNIT_DUPLICATE_ORDER
-							],
-						),
-					)
 				case LearningPathsApiErrorCodes.SECTION_NOT_FOUND:
 					throw new NotFoundException(
 						new HttpErrorDto(
@@ -195,7 +186,6 @@ export class UnitsController {
 				fields: {
 					name: body.name,
 					description: nullToEmptyString(body.description),
-					order: body.order,
 				},
 			})
 
@@ -207,14 +197,6 @@ export class UnitsController {
 			const errRes = grpcErr.getGrpcError()
 
 			switch (errRes.apiCode) {
-				case LearningPathsApiErrorCodes.UNIT_DUPLICATE_ORDER:
-					throw new ConflictException(
-						new HttpErrorDto(
-							exceptionCodeToMessage[
-								LearningPathsApiErrorCodes.UNIT_DUPLICATE_ORDER
-							],
-						),
-					)
 				case LearningPathsApiErrorCodes.UNIT_NOT_FOUND:
 					throw new NotFoundException(
 						new HttpErrorDto(

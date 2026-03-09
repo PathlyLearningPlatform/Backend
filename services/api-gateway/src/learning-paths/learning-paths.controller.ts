@@ -44,7 +44,6 @@ import {
 	UpdateLearningPathResponseDto,
 } from './dtos'
 import { clientLearningPathToResponseDto } from './helpers'
-import { domainPathsOrderByFieldsToClient } from './helpers/domain-order-by-fields-to-client.helper'
 import { LearningPathsService } from './learning-paths.service'
 import {
 	createLearningPathBodySchema,
@@ -65,20 +64,15 @@ export class LearningPathsController {
 	@ApiQuery({ type: FindLearningPathsQueryDto })
 	@ApiOkResponse({ type: FindLearningPathsResponseDto })
 	@Get()
-	async find(
+	async list(
 		@Query(new HttpValidationPipe(findLearningPathsQuerySchema))
 		query: FindLearningPathsQueryDto,
 	): Promise<FindLearningPathsResponseDto> {
 		try {
-			const result = await this.learningPathsService.find({
+			const result = await this.learningPathsService.list({
 				options: {
-					...query,
-					orderBy: query.orderBy
-						? domainPathsOrderByFieldsToClient(query.orderBy)
-						: undefined,
-					sortType: query.sortType
-						? domainSortTypeToClient(query.sortType)
-						: undefined,
+					limit: query.limit,
+					page: query.page
 				},
 			})
 
@@ -108,11 +102,11 @@ export class LearningPathsController {
 	@ApiOkResponse({ type: FindOneLearningPathResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@Get(':id')
-	async findOne(
+	async findById(
 		@Param('id', ParseUUIDPipe) id: string,
 	): Promise<FindOneLearningPathResponseDto> {
 		try {
-			const result = await this.learningPathsService.findOne({ where: { id } })
+			const result = await this.learningPathsService.findById({ where: { id } })
 
 			return {
 				path: clientLearningPathToResponseDto(result.learningPath!),

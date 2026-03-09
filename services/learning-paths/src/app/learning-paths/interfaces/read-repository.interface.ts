@@ -1,10 +1,5 @@
-import { OffsetPagination } from '@/app/common';
 import { LearningPathDto } from '../dtos';
-
-type LearningPathFilter = {
-	options?: OffsetPagination;
-	where?: {};
-};
+import { LearningPathFilter } from './filter.interface';
 
 export interface ILearningPathReadRepository {
 	list(filter?: LearningPathFilter): Promise<LearningPathDto[]>;

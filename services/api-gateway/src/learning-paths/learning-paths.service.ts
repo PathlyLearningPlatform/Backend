@@ -5,13 +5,14 @@ import { throwGrpcException } from '@pathly-backend/common'
 import {
 	type CreateLearningPathRequest,
 	type CreateLearningPathResponse,
-	type FindLearningPathsRequest,
-	type FindLearningPathsResponse,
-	type FindOneLearningPathRequest,
-	type FindOneLearningPathResponse,
+	type FindLearningPathByIdRequest,
+	type FindLearningPathByIdResponse,
+	type ListLearningPathsRequest,
+	type ListLearningPathsResponse,
 	LEARNING_PATHS_SERVICE_NAME,
 	type LearningPathsServiceClient,
 	type RemoveLearningPathRequest,
+	type RemoveLearningPathResponse,
 	type UpdateLearningPathRequest,
 	type UpdateLearningPathResponse,
 } from '@pathly-backend/contracts/learning-paths/v1/learning-paths.js'
@@ -33,24 +34,24 @@ export class LearningPathsService implements OnModuleInit {
 			)
 	}
 
-	async find(
-		request: FindLearningPathsRequest,
-	): Promise<FindLearningPathsResponse> {
+	async list(
+		request: ListLearningPathsRequest,
+	): Promise<ListLearningPathsResponse> {
 		const result = await firstValueFrom(
 			this.learningPathsServiceClient
-				.find(request)
+				.list(request)
 				.pipe(catchError((err: ServiceError) => throwGrpcException(err))),
 		)
 
 		return result
 	}
 
-	async findOne(
-		request: FindOneLearningPathRequest,
-	): Promise<FindOneLearningPathResponse> {
+	async findById(
+		request: FindLearningPathByIdRequest,
+	): Promise<FindLearningPathByIdResponse> {
 		const result = await firstValueFrom(
 			this.learningPathsServiceClient
-				.findOne(request)
+				.findById(request)
 				.pipe(catchError((err: ServiceError) => throwGrpcException(err))),
 		)
 
@@ -81,11 +82,13 @@ export class LearningPathsService implements OnModuleInit {
 		return result
 	}
 
-	async remove(request: RemoveLearningPathRequest): Promise<void> {
-		await firstValueFrom(
+	async remove(request: RemoveLearningPathRequest): Promise<RemoveLearningPathResponse> {
+		const result = await firstValueFrom(
 			this.learningPathsServiceClient
 				.remove(request)
 				.pipe(catchError((err: ServiceError) => throwGrpcException(err))),
 		)
+
+		return result
 	}
 }

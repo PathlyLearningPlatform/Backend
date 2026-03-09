@@ -46,7 +46,6 @@ import {
 	updateSectionBodySchema,
 } from './schemas'
 import { SectionsService } from './sections.service'
-import { ExceptionMessage } from '@/common/enums'
 
 @Controller({
 	path: 'sections',
@@ -60,12 +59,12 @@ export class SectionsController {
 	@ApiQuery({ type: FindSectionsQueryDto })
 	@ApiOkResponse({ type: FindSectionsResponseDto })
 	@Get()
-	async find(
+	async list(
 		@Query(new HttpValidationPipe(findSectionsQuerySchema))
 		query: FindSectionsQueryDto,
 	): Promise<FindSectionsResponseDto> {
 		try {
-			const result = await this.sectionsService.find({
+			const result = await this.sectionsService.list({
 				options: query,
 			})
 
@@ -93,11 +92,11 @@ export class SectionsController {
 	@ApiOkResponse({ type: FindOneSectionResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
 	@Get(':id')
-	async findOne(
+	async findById(
 		@Param('id', ParseUUIDPipe) id: string,
 	): Promise<FindOneSectionResponseDto> {
 		try {
-			const result = await this.sectionsService.findOne({ where: { id } })
+			const result = await this.sectionsService.findById({ where: { id } })
 
 			return {
 				section: clientSectionToResponseDto(result.section!),
@@ -141,7 +140,6 @@ export class SectionsController {
 			const result = await this.sectionsService.create({
 				name: body.name,
 				description: nullToEmptyString(body.description),
-				order: body.order,
 				learningPathId: body.learningPathId,
 			})
 
@@ -154,17 +152,6 @@ export class SectionsController {
 
 			switch (errRes.apiCode) {
 				case LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND:
-					throw new NotFoundException(
-						new HttpErrorDto(
-							exceptionCodeToMessage[
-								LearningPathsApiErrorCodes.LEARNING_PATH_NOT_FOUND
-							],
-						),
-					)
-				case LearningPathsApiErrorCodes.SECTION_DUPLICATE_ORDER:
-					throw new ConflictException(
-						new HttpErrorDto(ExceptionMessage.SECTION_DUPLICATE_ORDER),
-					)
 				default:
 					throw new InternalServerErrorException(
 						new HttpErrorDto(
@@ -194,7 +181,6 @@ export class SectionsController {
 				fields: {
 					name: body.name,
 					description: nullToEmptyString(body.description),
-					order: body.order,
 				},
 			})
 
@@ -213,10 +199,6 @@ export class SectionsController {
 								LearningPathsApiErrorCodes.SECTION_NOT_FOUND
 							],
 						),
-					)
-				case LearningPathsApiErrorCodes.SECTION_DUPLICATE_ORDER:
-					throw new ConflictException(
-						new HttpErrorDto(ExceptionMessage.SECTION_DUPLICATE_ORDER),
 					)
 				default:
 					throw new InternalServerErrorException(
