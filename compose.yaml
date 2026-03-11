@@ -38,6 +38,12 @@ services:
       - ./services/api-gateway/@types:/usr/src/app/services/api-gateway/@types
       - ./libs/ts/common/src:/usr/src/app/libs/ts/common/src
       - ./libs/contracts/proto:/usr/src/app/libs/contracts/proto
+      - type: bind
+        source: ./services/api-gateway/tsconfig.json
+        target: /usr/src/app/services/api-gateway/tsconfig.json
+      - type: bind
+        source: ./services/api-gateway/jest.config.ts
+        target: /usr/src/app/services/api-gateway/jest.config.ts
     ports:
       - 3000:3000
     healthcheck:

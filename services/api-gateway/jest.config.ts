@@ -1,7 +1,7 @@
 import type { Config } from 'jest'
 import { pathsToModuleNameMapper } from 'ts-jest'
 
-const { compilerOptions } = require('./tsconfig.json')
+import tsconfig from './tsconfig.json'
 
 const config: Config = {
 	moduleFileExtensions: ['js', 'json', 'ts'],
@@ -13,7 +13,7 @@ const config: Config = {
 	collectCoverageFrom: ['**/*.(t|j)s'],
 	coverageDirectory: '../coverage',
 	testEnvironment: 'node',
-	moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
+	moduleNameMapper: pathsToModuleNameMapper(tsconfig.compilerOptions.paths),
 }
 
 export default config

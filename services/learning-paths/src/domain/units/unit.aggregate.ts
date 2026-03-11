@@ -140,14 +140,14 @@ export class Unit extends AggregateRoot<UnitId, UnitProps> {
 	}
 
 	addLesson(lessonId: LessonId): LessonRef {
+		if (this._findLesson(lessonId)) {
+			throw new LessonAlreadyExistsException(lessonId.value);
+		}
+
 		const lessonRef = LessonRef.create({
 			lessonId: lessonId.value,
 			order: this._props.lessonRefs.length,
 		});
-
-		if (this._findLesson(lessonRef)) {
-			throw new LessonAlreadyExistsException(lessonId.value);
-		}
 
 		this._props.lessonRefs.push(lessonRef);
 		this._props.lessonCount = this._props.lessonRefs.length;
@@ -175,7 +175,7 @@ export class Unit extends AggregateRoot<UnitId, UnitProps> {
 		);
 
 		if (currentIndex === -1) {
-			throw null;
+			return null;
 		}
 
 		const clampedOrder = Order.create(
@@ -189,8 +189,10 @@ export class Unit extends AggregateRoot<UnitId, UnitProps> {
 		return clampedOrder;
 	}
 
-	private _findLesson(lessonRef: LessonRef): LessonRef | null {
-		const ref = this._props.lessonRefs.find((ref) => ref.equals(lessonRef));
+	private _findLesson(lessonId: LessonId): LessonRef | null {
+		const ref = this._props.lessonRefs.find((ref) =>
+			ref.lessonId.equals(lessonId),
+		);
 
 		return ref === undefined ? null : ref;
 	}

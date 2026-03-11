@@ -6,6 +6,7 @@ import { ActivityId } from '@/domain/activities/value-objects/id.vo';
 import {
 	ActivityDescription,
 	ActivityName,
+	ActivityType,
 } from '@/domain/activities/value-objects';
 import { Quiz } from '@/domain/activities/quizzes/quiz.aggregate';
 import { randomUUID } from 'node:crypto';
@@ -54,6 +55,7 @@ export class AddQuizHandler
 		await this.lessonRepository.save(lesson);
 
 		return {
+			type: ActivityType.QUIZ,
 			id: quiz.id.value,
 			lessonId: quiz.lessonId.value,
 			name: quiz.name.value,

@@ -141,14 +141,14 @@ export class Section extends AggregateRoot<SectionId, SectionProps> {
 	}
 
 	addUnit(unitId: UnitId): UnitRef {
+		if (this._findUnit(unitId)) {
+			throw new UnitAlreadyExistsException(unitId.value);
+		}
+
 		const unitRef = UnitRef.create({
 			unitId: unitId.value,
 			order: this._props.unitRefs.length,
 		});
-
-		if (this._findUnit(unitRef)) {
-			throw new UnitAlreadyExistsException(unitId.value);
-		}
 
 		this._props.unitRefs.push(unitRef);
 		this._props.unitCount = this._props.unitRefs.length;
@@ -190,8 +190,10 @@ export class Section extends AggregateRoot<SectionId, SectionProps> {
 		this._props.unitCount = this._props.unitRefs.length;
 	}
 
-	private _findUnit(unitRef: UnitRef): UnitRef | null {
-		const ref = this._props.unitRefs.find((ref) => ref.equals(unitRef));
+	private _findUnit(unitId: UnitId): UnitRef | null {
+		const ref = this._props.unitRefs.find((ref) =>
+			ref.unitId.equals(unitId),
+		);
 
 		return ref === undefined ? null : ref;
 	}

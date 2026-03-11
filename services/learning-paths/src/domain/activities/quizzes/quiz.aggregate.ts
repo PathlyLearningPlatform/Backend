@@ -83,7 +83,7 @@ export class Quiz extends Activity {
 	}
 
 	addQuestion(question: Question): void {
-		if (this._findQuestion(question.id)) {
+		if (this.findQuestion(question.id)) {
 			throw new QuestionAlreadyExistsException(question.id.value);
 		}
 
@@ -124,7 +124,7 @@ export class Quiz extends Activity {
 		return clampedOrder;
 	}
 
-	private _findQuestion(id: QuestionId): Question | null {
+	findQuestion(id: QuestionId): Question | null {
 		const question = this._props.questions.find((q) => q.id.equals(id));
 
 		return question ?? null;

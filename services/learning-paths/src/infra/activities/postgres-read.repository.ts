@@ -60,6 +60,7 @@ export class PostgresActivityReadRepository implements IActivityReadRepository {
 				updatedAt: schema.activitiesTable.updatedAt,
 				order: schema.activitiesTable.order,
 				ref: schema.articlesTable.ref,
+				type: schema.activitiesTable.type,
 			})
 			.from(schema.activitiesTable)
 			.innerJoin(
@@ -91,6 +92,7 @@ export class PostgresActivityReadRepository implements IActivityReadRepository {
 				updatedAt: schema.activitiesTable.updatedAt,
 				order: schema.activitiesTable.order,
 				difficulty: schema.exercisesTable.difficulty,
+				type: schema.activitiesTable.type,
 			})
 			.from(schema.activitiesTable)
 			.innerJoin(
@@ -123,6 +125,7 @@ export class PostgresActivityReadRepository implements IActivityReadRepository {
 				createdAt: schema.activitiesTable.createdAt,
 				updatedAt: schema.activitiesTable.updatedAt,
 				order: schema.activitiesTable.order,
+				type: schema.activitiesTable.type,
 			})
 			.from(schema.activitiesTable)
 			.innerJoin(
@@ -177,6 +180,7 @@ export class PostgresActivityReadRepository implements IActivityReadRepository {
 				updatedAt: schema.activitiesTable.updatedAt,
 				order: schema.activitiesTable.order,
 				ref: schema.articlesTable.ref,
+				type: schema.activitiesTable.type,
 			})
 			.from(schema.activitiesTable)
 			.innerJoin(
@@ -199,6 +203,7 @@ export class PostgresActivityReadRepository implements IActivityReadRepository {
 				updatedAt: schema.activitiesTable.updatedAt,
 				order: schema.activitiesTable.order,
 				difficulty: schema.exercisesTable.difficulty,
+				type: schema.activitiesTable.type,
 			})
 			.from(schema.activitiesTable)
 			.innerJoin(
@@ -220,6 +225,7 @@ export class PostgresActivityReadRepository implements IActivityReadRepository {
 				createdAt: schema.activitiesTable.createdAt,
 				updatedAt: schema.activitiesTable.updatedAt,
 				order: schema.activitiesTable.order,
+				type: schema.activitiesTable.type,
 			})
 			.from(schema.activitiesTable)
 			.innerJoin(

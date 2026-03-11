@@ -1,6 +1,5 @@
 import { Order } from '../common';
 import { AggregateRoot } from '../common/aggregate-root';
-import { InvalidOrderException } from '../common/exceptions';
 import { SectionId } from '../sections/value-objects/id.vo';
 import { LearningPathCannotBeRemovedException } from './exceptions';
 import { SectionAlreadyExistsException } from './exceptions/section-already-exists.exception';
@@ -42,6 +41,9 @@ export class LearningPath extends AggregateRoot<
 	static fromDataSource(id: LearningPathId, props: LearningPathProps) {
 		const learningPath = new LearningPath(id, props);
 
+		learningPath._props.sectionRefs.sort(
+			(a, b) => a.order.value - b.order.value,
+		);
 		learningPath._rearangeSections();
 
 		return learningPath;
@@ -113,7 +115,7 @@ export class LearningPath extends AggregateRoot<
 			order: Order.create(this._props.sectionRefs.length),
 		});
 
-		if (this._findSection(sectionRef)) {
+		if (this._findSection(sectionId)) {
 			throw new SectionAlreadyExistsException(sectionId.value);
 		}
 
@@ -157,8 +159,10 @@ export class LearningPath extends AggregateRoot<
 		this._props.sectionCount = this._props.sectionRefs.length;
 	}
 
-	private _findSection(sectionRef: SectionRef): SectionRef | null {
-		const ref = this._props.sectionRefs.find((ref) => ref.equals(sectionRef));
+	private _findSection(sectionId: SectionId): SectionRef | null {
+		const ref = this._props.sectionRefs.find((ref) =>
+			ref.sectionId.equals(sectionId),
+		);
 
 		return ref === undefined ? null : ref;
 	}

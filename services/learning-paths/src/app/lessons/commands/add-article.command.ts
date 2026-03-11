@@ -6,6 +6,7 @@ import { ActivityId } from '@/domain/activities/value-objects/id.vo';
 import {
 	ActivityDescription,
 	ActivityName,
+	ActivityType,
 } from '@/domain/activities/value-objects';
 import { Article } from '@/domain/activities/articles/article.aggregate';
 import { randomUUID } from 'node:crypto';
@@ -57,6 +58,7 @@ export class AddArticleHandler
 		await this.lessonRepository.save(lesson);
 
 		return {
+			type: ActivityType.ARTICLE,
 			id: article.id.value,
 			lessonId: article.lessonId.value,
 			name: article.name.value,

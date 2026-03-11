@@ -20,6 +20,7 @@ import {
 	RemoveActivityHandler,
 	UpdateArticleHandler,
 	UpdateExerciseHandler,
+	UpdateQuestionHandler,
 	AddQuestionHandler,
 	RemoveQuestionHandler,
 	ReorderQuestionHandler,
@@ -118,6 +119,13 @@ export const activityHandlersProvider: Provider[] = [
 		provide: DiToken.ADD_QUESTION_HANDLER,
 		useFactory(activityRepository: IActivityRepository) {
 			return new AddQuestionHandler(activityRepository);
+		},
+		inject: [PostgresActivityRepository],
+	},
+	{
+		provide: DiToken.UPDATE_QUESTION_HANDLER,
+		useFactory(activityRepository: IActivityRepository) {
+			return new UpdateQuestionHandler(activityRepository);
 		},
 		inject: [PostgresActivityRepository],
 	},

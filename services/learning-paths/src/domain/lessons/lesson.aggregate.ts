@@ -148,14 +148,14 @@ export class Lesson extends AggregateRoot<LessonId, LessonProps> {
 	}
 
 	addActivity(activityId: ActivityId): ActivityRef {
+		if (this._findActivity(activityId)) {
+			throw new ActivityAlreadyExistsException(activityId.value);
+		}
+
 		const activityRef = ActivityRef.create({
 			activityId: activityId.value,
 			order: this._props.activityRefs.length,
 		});
-
-		if (this._findActivity(activityRef)) {
-			throw new ActivityAlreadyExistsException(activityId.value);
-		}
 
 		this._props.activityRefs.push(activityRef);
 		this._props.activityCount = this._props.activityRefs.length;
@@ -200,8 +200,10 @@ export class Lesson extends AggregateRoot<LessonId, LessonProps> {
 		return clampedOrder;
 	}
 
-	private _findActivity(activityRef: ActivityRef): ActivityRef | null {
-		const ref = this._props.activityRefs.find((ref) => ref.equals(activityRef));
+	private _findActivity(activityId: ActivityId): ActivityRef | null {
+		const ref = this._props.activityRefs.find((ref) =>
+			ref.activityId.equals(activityId),
+		);
 
 		return ref === undefined ? null : ref;
 	}

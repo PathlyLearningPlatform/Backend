@@ -38,6 +38,7 @@ import type {
 import type {
 	UpdateArticleHandler,
 	UpdateExerciseHandler,
+	UpdateQuestionHandler,
 	RemoveActivityHandler,
 	AddQuestionHandler,
 	RemoveQuestionHandler,
@@ -122,6 +123,8 @@ export class GrpcActivitiesController {
 		private readonly removeActivityHandler: RemoveActivityHandler,
 		@Inject(DiToken.ADD_QUESTION_HANDLER)
 		private readonly addQuestionHandler: AddQuestionHandler,
+		@Inject(DiToken.UPDATE_QUESTION_HANDLER)
+		private readonly updateQuestionHandler: UpdateQuestionHandler,
 		@Inject(DiToken.REORDER_QUESTION_HANDLER)
 		private readonly reorderQuestionHandler: ReorderQuestionHandler,
 		@Inject(DiToken.REMOVE_QUESTION_HANDLER)
@@ -565,30 +568,13 @@ export class GrpcActivitiesController {
 		@Payload(new RpcValidationPipe(updateQuizSchema))
 		payload: z.infer<typeof updateQuizSchema>,
 	): Promise<UpdateQuizResponse> {
-		try {
-			// updateQuiz is not yet implemented in app layer
-			// For now, treat as activity not found
-			throw new ActivityNotFoundException(payload.where.activityId);
-		} catch (err) {
-			if (err instanceof ActivityNotFoundException) {
-				throw new GrpcException(
-					new GrpcErrorDto(
-						ExceptionMessage.ACTIVITY_NOT_FOUND,
-						GrpcStatus.NOT_FOUND,
-						LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND,
-					),
-				);
-			}
-
-			throw new GrpcException(
-				new GrpcErrorDto(
-					ExceptionMessage.INTERNAL_ERROR,
-					GrpcStatus.INTERNAL,
-					LearningPathsApiErrorCodes.INTERNAL_ERROR,
-				),
-				err,
-			);
-		}
+		throw new GrpcException(
+			new GrpcErrorDto(
+				'Not implemented',
+				GrpcStatus.UNIMPLEMENTED,
+				LearningPathsApiErrorCodes.INTERNAL_ERROR,
+			),
+		);
 	}
 
 	// ──────────────────────────────────────────────
@@ -752,8 +738,13 @@ export class GrpcActivitiesController {
 		payload: z.infer<typeof updateQuestionSchema>,
 	): Promise<UpdateQuestionResponse> {
 		try {
-			// updateQuestion handler is not yet implemented in app layer
-			throw new QuestionNotFoundException(payload.where.id);
+			const question = await this.updateQuestionHandler.execute({
+				quizId: payload.where.quizId,
+				questionId: payload.where.id,
+				props: payload.fields,
+			});
+
+			return { question: questionDtoToClient(question) };
 		} catch (err) {
 			if (err instanceof QuestionNotFoundException) {
 				throw new GrpcException(
@@ -761,6 +752,16 @@ export class GrpcActivitiesController {
 						ExceptionMessage.QUESTION_NOT_FOUND,
 						GrpcStatus.NOT_FOUND,
 						LearningPathsApiErrorCodes.QUESTION_NOT_FOUND,
+					),
+				);
+			}
+
+			if (err instanceof ActivityNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						ExceptionMessage.ACTIVITY_NOT_FOUND,
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND,
 					),
 				);
 			}

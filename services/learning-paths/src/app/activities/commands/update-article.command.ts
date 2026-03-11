@@ -4,6 +4,7 @@ import { ActivityId } from '@/domain/activities/value-objects/id.vo';
 import {
 	ActivityDescription,
 	ActivityName,
+	ActivityType,
 } from '@/domain/activities/value-objects';
 import { Article } from '@/domain/activities/articles/article.aggregate';
 import { Url } from '@/domain/common';
@@ -51,6 +52,7 @@ export class UpdateArticleHandler
 		await this.activityRepository.save(activity);
 
 		return {
+			type: ActivityType.ARTICLE,
 			id: activity.id.value,
 			lessonId: activity.lessonId.value,
 			name: activity.name.value,

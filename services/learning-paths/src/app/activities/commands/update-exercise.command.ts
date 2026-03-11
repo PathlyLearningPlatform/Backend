@@ -4,6 +4,7 @@ import { ActivityId } from '@/domain/activities/value-objects/id.vo';
 import {
 	ActivityDescription,
 	ActivityName,
+	ActivityType,
 } from '@/domain/activities/value-objects';
 import { Exercise } from '@/domain/activities/exercises/exercise.aggregate';
 import { ExerciseDifficulty } from '@/domain/activities/exercises/value-objects';
@@ -53,6 +54,7 @@ export class UpdateExerciseHandler
 		await this.activityRepository.save(activity);
 
 		return {
+			type: ActivityType.EXERCISE,
 			id: activity.id.value,
 			lessonId: activity.lessonId.value,
 			name: activity.name.value,

@@ -12,7 +12,7 @@ export class UUID extends ValueObject<Props> {
 
 	static create(value: string): UUID {
 		const regex =
-			/^[[:xdigit:]]{8}(?:\-[[:xdigit:]]{4}){3}\-[[:xdigit:]]{12}$/gm;
+			/[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}/i;
 
 		if (!regex.test(value)) {
 			throw new InvalidUUIDException(value);

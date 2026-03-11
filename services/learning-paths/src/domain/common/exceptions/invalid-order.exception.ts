@@ -1,6 +1,6 @@
-import { DomainException } from '../domain-exception';
+import { ValidationException } from './validation.exception';
 
-export class InvalidOrderException extends DomainException {
+export class InvalidOrderException extends ValidationException {
 	constructor(public readonly order: number) {
 		super(`Order with value = ${order} is invalid`);
 	}

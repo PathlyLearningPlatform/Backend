@@ -1,4 +1,4 @@
-import { DomainException } from '../domain-exception';
+import { InvalidUrlException } from '../exceptions';
 import { ValueObject } from '../value-object';
 
 type Props = {
@@ -12,9 +12,9 @@ export class Url extends ValueObject<Props> {
 
 	static create(value: string): Url {
 		try {
-			new globalThis.URL(value);
+			new URL(value);
 		} catch {
-			throw new DomainException(`Invalid URL: ${value}`);
+			throw new InvalidUrlException(value);
 		}
 
 		return new Url({ value });
