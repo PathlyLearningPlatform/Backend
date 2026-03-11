@@ -21,5 +21,4 @@ export const findLearningPathsQuerySchema = z
 			.default(LearningPathsOrderByFields.CREATED_AT),
 		sortType: z.enum(SortType).default(SortType.DESC),
 	})
-	.strict()
 	.optional()

@@ -4,9 +4,10 @@ import {
 	descriptionSchema,
 	difficultySchema,
 	lessonIdSchema,
-	nameSchema, questionContentSchema,
+	nameSchema,
+	questionContentSchema,
 	questionCorrectAnswerSchema,
-	refSchema
+	refSchema,
 } from './fields.schema'
 
 export const updateActivitySchema = z.object({
@@ -22,17 +23,14 @@ export const updateArticlePropsSchema = updateActivitySchema
 	.safeExtend({
 		ref: refSchema.optional(),
 	})
-	.strict()
 	.optional()
 
 export const updateExercisePropsSchema = updateActivitySchema
 	.safeExtend({ difficulty: difficultySchema.optional() })
-	.strict()
 	.optional()
 
 export const updateQuizPropsSchema = updateActivitySchema
 	.safeExtend({})
-	.strict()
 	.optional()
 
 export const updateQuestionSchema = z
@@ -40,5 +38,4 @@ export const updateQuestionSchema = z
 		content: questionContentSchema.optional(),
 		correctAnswer: questionCorrectAnswerSchema.optional(),
 	})
-	.strict()
 	.optional()

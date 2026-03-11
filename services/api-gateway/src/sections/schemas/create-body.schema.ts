@@ -3,13 +3,11 @@ import type { CreateSectionBodyDto } from '../dtos'
 import {
 	descriptionSchema,
 	learningPathIdSchema,
-	nameSchema
+	nameSchema,
 } from './fields.schema'
 
-export const createSectionBodySchema = z
-	.object({
-		name: nameSchema,
-		description: descriptionSchema.optional(),
-		learningPathId: learningPathIdSchema,
-	})
-	.strict() satisfies z.ZodType<CreateSectionBodyDto>
+export const createSectionBodySchema = z.object({
+	name: nameSchema,
+	description: descriptionSchema.optional(),
+	learningPathId: learningPathIdSchema,
+}) satisfies z.ZodType<CreateSectionBodyDto>

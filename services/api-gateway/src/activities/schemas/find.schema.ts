@@ -6,5 +6,4 @@ export const findActivitiesSchema = z
 		limit: limitSchema.optional(),
 		page: pageSchema.optional(),
 	})
-	.strict()
 	.optional()

@@ -13,5 +13,4 @@ export const listActivityProgressSchema = z
 			.nonnegative()
 			.default(ActivityProgressConstraints.DEFAULT_PAGE),
 	})
-	.strict()
 	.optional()

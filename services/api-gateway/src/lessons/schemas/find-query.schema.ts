@@ -14,5 +14,4 @@ export const findLessonsQuerySchema = z
 			.nonnegative()
 			.default(LessonsApiConstraints.DEFAULT_PAGE),
 	})
-	.strict()
 	.optional() satisfies z.ZodType<FindLessonsQueryDto | undefined>

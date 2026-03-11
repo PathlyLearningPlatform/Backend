@@ -14,5 +14,4 @@ export const findSectionsQuerySchema = z
 			.nonnegative()
 			.default(SectionsApiConstraints.DEFAULT_PAGE),
 	})
-	.strict()
 	.optional() satisfies z.ZodType<FindSectionsQueryDto | undefined>

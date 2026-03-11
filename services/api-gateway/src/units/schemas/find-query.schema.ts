@@ -14,5 +14,4 @@ export const findUnitsQuerySchema = z
 			.nonnegative()
 			.default(UnitsApiConstraints.DEFAULT_PAGE),
 	})
-	.strict()
 	.optional() satisfies z.ZodType<FindUnitsQueryDto | undefined>
