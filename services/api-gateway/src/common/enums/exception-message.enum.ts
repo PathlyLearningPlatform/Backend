@@ -21,4 +21,6 @@ export enum ExceptionMessage {
 
 	ACTIVITY_PROGRESS_NOT_FOUND = 'Progress entry for that activity was not found.',
 	ACTIVITY_ALREADY_COMPLETED = 'Activity which has been completed cannot be started again',
+	LESSON_PROGRESS_NOT_FOUND = 'Progress entry for that lesson was not found.',
+	LESSON_ALREADY_COMPLETED = 'Lesson which has been completed cannot be started again',
 }
