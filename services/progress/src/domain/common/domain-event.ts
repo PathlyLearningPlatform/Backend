@@ -1,3 +1,6 @@
-export class DomainEvent {
-	constructor(public readonly eventName: string) {}
+import { Event } from './value-objects';
+
+export interface DomainEvent {
+	readonly eventName: Event;
+	readonly occuredAt: Date;
 }

@@ -1,3 +1,3 @@
-import { ActivityProgressException } from './base.exception';
+import { DomainException } from '@/domain/common';
 
-export class ActivityAlreadyCompletedException extends ActivityProgressException {}
+export class ActivityAlreadyCompletedException extends DomainException {}

@@ -1,10 +1,14 @@
 import { DomainEvent, Event } from '@/domain/common';
 
-export class LessonCompletedEvent extends DomainEvent {
+export class LessonCompletedEvent implements DomainEvent {
 	constructor(
 		public readonly lessonId: string,
+		public readonly unitId: string,
 		public readonly userId: string,
+		public readonly occuredAt: Date,
 	) {
-		super(Event.LESSON_COMPLETED);
+		this.eventName = Event.LESSON_COMPLETED;
 	}
+
+	public readonly eventName: Event;
 }

@@ -7,13 +7,12 @@ import "common/types.proto";
 service ActivityProgressService {
   rpc List(ListActivityProgressRequest) returns (ListActivityProgressResponse) {};
 
-  rpc FindOne(FindOneActivityProgressRequest) returns (FindOneActivityProgressResponse) {};
+  rpc FindForUser(FindActivityProgressForUserRequest) returns (FindActivityProgressForUserResponse) {};
   rpc FindById(FindActivityProgressByIdRequest) returns (FindActivityProgressByIdResponse) {};
 
-  rpc Start(StartActivityRequest) returns (StartActivityResponse) {};
   rpc Complete(CompleteActivityRequest) returns (CompleteActivityResponse) {};
 
-  rpc RemoveById(RemoveActivityProgressByIdRequest) returns (RemoveActivityProgressByIdResponse) {};
+  rpc Remove(RemoveActivityProgressByIdRequest) returns (RemoveActivityProgressByIdResponse) {};
 }
 
 message ActivityProgress {
@@ -40,11 +39,11 @@ message ListActivityProgressResponse {
   repeated ActivityProgress activityProgress = 1;
 }
 
-message FindOneActivityProgressRequest {
+message FindActivityProgressForUserRequest {
   string activityId = 1;
   string userId = 2;
 }
-message FindOneActivityProgressResponse {
+message FindActivityProgressForUserResponse {
   ActivityProgress activityProgress = 1;
 }
 
@@ -52,14 +51,6 @@ message FindActivityProgressByIdRequest {
   string id = 1;
 }
 message FindActivityProgressByIdResponse {
-  ActivityProgress activityProgress = 1;
-}
-
-message StartActivityRequest {
-  string activityId = 1;
-  string userId = 2;
-}
-message StartActivityResponse {
   ActivityProgress activityProgress = 1;
 }
 
