@@ -1,4 +1,4 @@
-./setup-env.bat
+call .\setup-env.bat
 
 docker compose up -d --build
 
