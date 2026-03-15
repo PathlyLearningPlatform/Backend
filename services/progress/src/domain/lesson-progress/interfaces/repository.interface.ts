@@ -2,7 +2,7 @@ import { LessonProgress } from '../lesson-progress.aggregate';
 import { LessonProgressId } from '../value-objects';
 
 export interface ILessonProgressRepository {
-	load(id: LessonProgressId): Promise<LessonProgress>;
+	load(id: LessonProgressId): Promise<LessonProgress | null>;
 
 	save(aggregate: LessonProgress): Promise<void>;
 
