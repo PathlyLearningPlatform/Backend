@@ -7,12 +7,12 @@ import "common/types.proto";
 service LessonProgressService {
   rpc List(ListLessonProgressRequest) returns (ListLessonProgressResponse) {};
 
-  rpc FindOneForUser(FindOneLessonProgressForUserRequest) returns (FindOneLessonProgressForUserResponse) {};
+  rpc FindForUser(FindLessonProgressForUserRequest) returns (FindLessonProgressForUserResponse) {};
   rpc FindById(FindLessonProgressByIdRequest) returns (FindLessonProgressByIdResponse) {};
 
   rpc Start(StartLessonRequest) returns (StartLessonResponse) {};
 
-  rpc RemoveById(RemoveLessonProgressByIdRequest) returns (RemoveLessonProgressByIdResponse) {};
+  rpc Remove(RemoveLessonProgressRequest) returns (RemoveLessonProgressResponse) {};
 }
 
 message LessonProgress {
@@ -22,6 +22,7 @@ message LessonProgress {
   string completedAt = 4;
   int32 totalActivityCount = 5;
   int32 completedActivityCount = 6;
+  string unitId = 7;
 }
 
 message ListLessonProgressRequest {
@@ -40,11 +41,11 @@ message ListLessonProgressResponse {
   repeated LessonProgress lessonProgress = 1;
 }
 
-message FindOneLessonProgressForUserRequest {
+message FindLessonProgressForUserRequest {
   string lessonId = 1;
   string userId = 2;
 }
-message FindOneLessonProgressForUserResponse {
+message FindLessonProgressForUserResponse {
   LessonProgress lessonProgress = 1;
 }
 
@@ -63,7 +64,7 @@ message StartLessonResponse {
   LessonProgress lessonProgress = 1;
 }
 
-message RemoveLessonProgressByIdRequest {
+message RemoveLessonProgressRequest {
   string id = 1;
 }
-message RemoveLessonProgressByIdResponse {}
+message RemoveLessonProgressResponse {}

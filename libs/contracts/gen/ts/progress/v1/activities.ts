@@ -36,12 +36,12 @@ export interface ListActivityProgressResponse {
   activityProgress: ActivityProgress[];
 }
 
-export interface FindOneActivityProgressRequest {
+export interface FindActivityProgressForUserRequest {
   activityId: string;
   userId: string;
 }
 
-export interface FindOneActivityProgressResponse {
+export interface FindActivityProgressForUserResponse {
   activityProgress: ActivityProgress | undefined;
 }
 
@@ -50,15 +50,6 @@ export interface FindActivityProgressByIdRequest {
 }
 
 export interface FindActivityProgressByIdResponse {
-  activityProgress: ActivityProgress | undefined;
-}
-
-export interface StartActivityRequest {
-  activityId: string;
-  userId: string;
-}
-
-export interface StartActivityResponse {
   activityProgress: ActivityProgress | undefined;
 }
 
@@ -71,11 +62,11 @@ export interface CompleteActivityResponse {
   activityProgress: ActivityProgress | undefined;
 }
 
-export interface RemoveActivityProgressByIdRequest {
+export interface RemoveActivityProgressRequest {
   id: string;
 }
 
-export interface RemoveActivityProgressByIdResponse {
+export interface RemoveActivityProgressResponse {
 }
 
 export const PROGRESS_V1_PACKAGE_NAME = "progress.v1";
@@ -83,34 +74,30 @@ export const PROGRESS_V1_PACKAGE_NAME = "progress.v1";
 export interface ActivityProgressServiceClient {
   list(request: ListActivityProgressRequest): Observable<ListActivityProgressResponse>;
 
-  findOne(request: FindOneActivityProgressRequest): Observable<FindOneActivityProgressResponse>;
+  findForUser(request: FindActivityProgressForUserRequest): Observable<FindActivityProgressForUserResponse>;
 
   findById(request: FindActivityProgressByIdRequest): Observable<FindActivityProgressByIdResponse>;
 
-  start(request: StartActivityRequest): Observable<StartActivityResponse>;
-
   complete(request: CompleteActivityRequest): Observable<CompleteActivityResponse>;
 
-  removeById(request: RemoveActivityProgressByIdRequest): Observable<RemoveActivityProgressByIdResponse>;
+  remove(request: RemoveActivityProgressRequest): Observable<RemoveActivityProgressResponse>;
 }
 
 export interface ActivityProgressServiceController {
   list(request: ListActivityProgressRequest): Observable<ListActivityProgressResponse>;
 
-  findOne(request: FindOneActivityProgressRequest): Observable<FindOneActivityProgressResponse>;
+  findForUser(request: FindActivityProgressForUserRequest): Observable<FindActivityProgressForUserResponse>;
 
   findById(request: FindActivityProgressByIdRequest): Observable<FindActivityProgressByIdResponse>;
 
-  start(request: StartActivityRequest): Observable<StartActivityResponse>;
-
   complete(request: CompleteActivityRequest): Observable<CompleteActivityResponse>;
 
-  removeById(request: RemoveActivityProgressByIdRequest): Observable<RemoveActivityProgressByIdResponse>;
+  remove(request: RemoveActivityProgressRequest): Observable<RemoveActivityProgressResponse>;
 }
 
 export function ActivityProgressServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["list", "findOne", "findById", "start", "complete", "removeById"];
+    const grpcMethods: string[] = ["list", "findForUser", "findById", "complete", "remove"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("ActivityProgressService", method)(constructor.prototype[method], method, descriptor);

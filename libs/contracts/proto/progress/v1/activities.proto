@@ -12,7 +12,7 @@ service ActivityProgressService {
 
   rpc Complete(CompleteActivityRequest) returns (CompleteActivityResponse) {};
 
-  rpc Remove(RemoveActivityProgressByIdRequest) returns (RemoveActivityProgressByIdResponse) {};
+  rpc Remove(RemoveActivityProgressRequest) returns (RemoveActivityProgressResponse) {};
 }
 
 message ActivityProgress {
@@ -62,7 +62,7 @@ message CompleteActivityResponse {
   ActivityProgress activityProgress = 1;
 }
 
-message RemoveActivityProgressByIdRequest {
+message RemoveActivityProgressRequest {
   string id = 1;
 }
-message RemoveActivityProgressByIdResponse {}
+message RemoveActivityProgressResponse {}

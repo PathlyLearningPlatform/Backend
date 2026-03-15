@@ -1,5 +1,6 @@
 import z from 'zod';
 import { limitSchema, pageSchema, userIdSchema } from './fields';
+import { lessonIdSchema } from '@/infra/lesson-progress/schemas/fields';
 
 export const listActivityProgressSchema = z
 	.object({
@@ -13,6 +14,7 @@ export const listActivityProgressSchema = z
 		where: z
 			.object({
 				userId: userIdSchema.optional(),
+				lessonId: lessonIdSchema.optional(),
 			})
 			.strict()
 			.optional(),

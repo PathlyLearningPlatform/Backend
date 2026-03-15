@@ -22,9 +22,9 @@ import {
 	ApiQuery,
 } from '@nestjs/swagger'
 import { ListLessonProgressQueryDto } from './dtos/list.dto.js'
-import { FindOneLessonProgressResponseDto } from './dtos/responses/find-one.dto.js'
+import { FindLessonProgressForUserResponseDto } from './dtos/responses/find-for-user.dto.js'
 import { ListLessonProgressResponseDto } from './dtos/responses/list.dto.js'
-import { RemoveLessonProgressByIdResponseDto } from './dtos/responses/remove-by-id.dto.js'
+import { RemoveLessonProgressResponseDto } from './dtos/responses/remove.dto.js'
 import { StartLessonResponseDto } from './dtos/responses/start.dto.js'
 import {
 	type GrpcException,
@@ -91,14 +91,14 @@ export class LessonProgressController {
 	}
 
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
-	@ApiOkResponse({ type: FindOneLessonProgressResponseDto })
+	@ApiOkResponse({ type: FindLessonProgressForUserResponseDto })
 	@Get(':lessonId')
-	async findOne(
+	async findForUser(
 		@Param('lessonId', ParseUUIDPipe) lessonId: string,
 		@User() user: UserInfo,
-	): Promise<FindOneLessonProgressResponseDto> {
+	): Promise<FindLessonProgressForUserResponseDto> {
 		try {
-			const result = await this.lessonProgressService.findOneForUser({
+			const result = await this.lessonProgressService.findForUser({
 				lessonId,
 				userId: user.id,
 			})
@@ -160,9 +160,9 @@ export class LessonProgressController {
 					throw new NotFoundException(
 						new HttpErrorDto(ExceptionMessage.LESSON_NOT_FOUND),
 					)
-				case ProgressApiErrorCodes.LESSON_ALREADY_COMPLETED:
+				case ProgressApiErrorCodes.UNIT_NOT_STARTED:
 					throw new ConflictException(
-						new HttpErrorDto(ExceptionMessage.LESSON_ALREADY_COMPLETED),
+						new HttpErrorDto(ExceptionMessage.UNIT_NOT_STARTED),
 					)
 				default:
 					throw new InternalServerErrorException(
@@ -177,12 +177,12 @@ export class LessonProgressController {
 
 	@ApiNotImplementedResponse({ type: HttpErrorResponse })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
-	@ApiOkResponse({ type: RemoveLessonProgressByIdResponseDto })
+	@ApiOkResponse({ type: RemoveLessonProgressResponseDto })
 	@Delete(':lessonId')
-	async removeById(
-		@Param('lessonId', ParseUUIDPipe) _lessonId: string,
-		@User() _user: UserInfo,
-	): Promise<RemoveLessonProgressByIdResponseDto> {
+	async remove(
+		@Param('lessonId', ParseUUIDPipe) lessonId: string,
+		@User() user: UserInfo,
+	): Promise<RemoveLessonProgressResponseDto> {
 		throw new NotImplementedException(
 			new HttpErrorDto('endpoint not implemented'),
 		)

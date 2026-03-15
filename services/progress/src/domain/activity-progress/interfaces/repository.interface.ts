@@ -2,7 +2,7 @@ import { ActivityProgress } from '../activity-progress.aggregate';
 import { ActivityProgressId } from '../value-objects';
 
 export interface IActivityProgressRepository {
-	load(id: ActivityProgressId): Promise<ActivityProgress>;
+	load(id: ActivityProgressId): Promise<ActivityProgress | null>;
 
 	save(aggregate: ActivityProgress): Promise<void>;
 

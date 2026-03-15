@@ -6,13 +6,13 @@ import {
 	LESSON_PROGRESS_SERVICE_NAME,
 	type FindLessonProgressByIdRequest,
 	type FindLessonProgressByIdResponse,
-	type FindOneLessonProgressForUserRequest,
-	type FindOneLessonProgressForUserResponse,
+	type FindLessonProgressForUserRequest,
+	type FindLessonProgressForUserResponse,
 	type LessonProgressServiceClient,
 	type ListLessonProgressRequest,
 	type ListLessonProgressResponse,
-	type RemoveLessonProgressByIdRequest,
-	type RemoveLessonProgressByIdResponse,
+	type RemoveLessonProgressRequest,
+	type RemoveLessonProgressResponse,
 	type StartLessonRequest,
 	type StartLessonResponse,
 } from '@pathly-backend/contracts/progress/v1/lessons.js'
@@ -57,12 +57,12 @@ export class LessonProgressService implements OnModuleInit {
 		return result
 	}
 
-	async findOneForUser(
-		request: FindOneLessonProgressForUserRequest,
-	): Promise<FindOneLessonProgressForUserResponse> {
+	async findForUser(
+		request: FindLessonProgressForUserRequest,
+	): Promise<FindLessonProgressForUserResponse> {
 		const result = await firstValueFrom(
 			this.lessonProgressServiceClient
-				.findOneForUser(request)
+				.findForUser(request)
 				.pipe(catchError(throwGrpcException)),
 		)
 
@@ -79,12 +79,12 @@ export class LessonProgressService implements OnModuleInit {
 		return result
 	}
 
-	async removeById(
-		request: RemoveLessonProgressByIdRequest,
-	): Promise<RemoveLessonProgressByIdResponse> {
+	async remove(
+		request: RemoveLessonProgressRequest,
+	): Promise<RemoveLessonProgressResponse> {
 		const result = await firstValueFrom(
 			this.lessonProgressServiceClient
-				.removeById(request)
+				.remove(request)
 				.pipe(catchError(throwGrpcException)),
 		)
 

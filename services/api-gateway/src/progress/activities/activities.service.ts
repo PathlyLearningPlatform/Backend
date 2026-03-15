@@ -9,14 +9,12 @@ import {
 	CompleteActivityResponse,
 	FindActivityProgressByIdRequest,
 	FindActivityProgressByIdResponse,
-	FindOneActivityProgressRequest,
-	FindOneActivityProgressResponse,
+	FindActivityProgressForUserRequest,
+	FindActivityProgressForUserResponse,
 	ListActivityProgressRequest,
 	ListActivityProgressResponse,
-	RemoveActivityProgressByIdRequest,
-	RemoveActivityProgressByIdResponse,
-	StartActivityRequest,
-	StartActivityResponse,
+	RemoveActivityProgressRequest,
+	RemoveActivityProgressResponse,
 } from '@pathly-backend/contracts/progress/v1/activities.js'
 import { catchError, firstValueFrom } from 'rxjs'
 
@@ -58,27 +56,18 @@ export class ActivityProgressService implements OnModuleInit {
 
 		return result
 	}
-	async findOne(
-		request: FindOneActivityProgressRequest,
-	): Promise<FindOneActivityProgressResponse> {
+	async findForUser(
+		request: FindActivityProgressForUserRequest,
+	): Promise<FindActivityProgressForUserResponse> {
 		const result = await firstValueFrom(
 			this.activityProgressServiceClient
-				.findOne(request)
+				.findForUser(request)
 				.pipe(catchError(throwGrpcException)),
 		)
 
 		return result
 	}
 
-	async start(request: StartActivityRequest): Promise<StartActivityResponse> {
-		const result = await firstValueFrom(
-			this.activityProgressServiceClient
-				.start(request)
-				.pipe(catchError(throwGrpcException)),
-		)
-
-		return result
-	}
 	async complete(
 		request: CompleteActivityRequest,
 	): Promise<CompleteActivityResponse> {
@@ -91,12 +80,12 @@ export class ActivityProgressService implements OnModuleInit {
 		return result
 	}
 
-	async removeById(
-		request: RemoveActivityProgressByIdRequest,
-	): Promise<RemoveActivityProgressByIdResponse> {
+	async remove(
+		request: RemoveActivityProgressRequest,
+	): Promise<RemoveActivityProgressResponse> {
 		const result = await firstValueFrom(
 			this.activityProgressServiceClient
-				.removeById(request)
+				.remove(request)
 				.pipe(catchError(throwGrpcException)),
 		)
 

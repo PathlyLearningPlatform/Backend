@@ -8,5 +8,7 @@ export function clientActivityProgressToResponseDto(
 		activityId: client.activityId,
 		completedAt: client.completedAt,
 		userId: client.userId,
+		id: client.id,
+		lessonId: client.lessonId,
 	}
 }

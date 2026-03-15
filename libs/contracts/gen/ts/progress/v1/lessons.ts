@@ -17,6 +17,7 @@ export interface LessonProgress {
   completedAt: string;
   totalActivityCount: number;
   completedActivityCount: number;
+  unitId: string;
 }
 
 export interface ListLessonProgressRequest {
@@ -37,12 +38,12 @@ export interface ListLessonProgressResponse {
   lessonProgress: LessonProgress[];
 }
 
-export interface FindOneLessonProgressForUserRequest {
+export interface FindLessonProgressForUserRequest {
   lessonId: string;
   userId: string;
 }
 
-export interface FindOneLessonProgressForUserResponse {
+export interface FindLessonProgressForUserResponse {
   lessonProgress: LessonProgress | undefined;
 }
 
@@ -63,11 +64,11 @@ export interface StartLessonResponse {
   lessonProgress: LessonProgress | undefined;
 }
 
-export interface RemoveLessonProgressByIdRequest {
+export interface RemoveLessonProgressRequest {
   id: string;
 }
 
-export interface RemoveLessonProgressByIdResponse {
+export interface RemoveLessonProgressResponse {
 }
 
 export const PROGRESS_V1_PACKAGE_NAME = "progress.v1";
@@ -75,30 +76,30 @@ export const PROGRESS_V1_PACKAGE_NAME = "progress.v1";
 export interface LessonProgressServiceClient {
   list(request: ListLessonProgressRequest): Observable<ListLessonProgressResponse>;
 
-  findOneForUser(request: FindOneLessonProgressForUserRequest): Observable<FindOneLessonProgressForUserResponse>;
+  findForUser(request: FindLessonProgressForUserRequest): Observable<FindLessonProgressForUserResponse>;
 
   findById(request: FindLessonProgressByIdRequest): Observable<FindLessonProgressByIdResponse>;
 
   start(request: StartLessonRequest): Observable<StartLessonResponse>;
 
-  removeById(request: RemoveLessonProgressByIdRequest): Observable<RemoveLessonProgressByIdResponse>;
+  remove(request: RemoveLessonProgressRequest): Observable<RemoveLessonProgressResponse>;
 }
 
 export interface LessonProgressServiceController {
   list(request: ListLessonProgressRequest): Observable<ListLessonProgressResponse>;
 
-  findOneForUser(request: FindOneLessonProgressForUserRequest): Observable<FindOneLessonProgressForUserResponse>;
+  findForUser(request: FindLessonProgressForUserRequest): Observable<FindLessonProgressForUserResponse>;
 
   findById(request: FindLessonProgressByIdRequest): Observable<FindLessonProgressByIdResponse>;
 
   start(request: StartLessonRequest): Observable<StartLessonResponse>;
 
-  removeById(request: RemoveLessonProgressByIdRequest): Observable<RemoveLessonProgressByIdResponse>;
+  remove(request: RemoveLessonProgressRequest): Observable<RemoveLessonProgressResponse>;
 }
 
 export function LessonProgressServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["list", "findOneForUser", "findById", "start", "removeById"];
+    const grpcMethods: string[] = ["list", "findForUser", "findById", "start", "remove"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("LessonProgressService", method)(constructor.prototype[method], method, descriptor);

@@ -10,5 +10,7 @@ export function clientLessonProgressToResponseDto(
 		completedAt: client.completedAt,
 		totalActivityCount: client.totalActivityCount,
 		completedActivityCount: client.completedActivityCount,
+		id: client.id,
+		unitId: client.unitId,
 	}
 }

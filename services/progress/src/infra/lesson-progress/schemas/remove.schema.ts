@@ -1,7 +1,7 @@
 import z from 'zod';
 import { lessonProgressIdSchema } from './fields';
 
-export const findLessonProgressByIdSchema = z
+export const removeLessonProgressSchema = z
 	.object({
 		id: lessonProgressIdSchema,
 	})

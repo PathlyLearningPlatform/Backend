@@ -3,7 +3,6 @@ import { ReflectionService } from '@grpc/reflection';
 import { NestFactory } from '@nestjs/core';
 import { type MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppLogger } from '@pathly-backend/common/index.js';
-import { COMMON_PACKAGE_NAME } from '@pathly-backend/contracts/common/types.js';
 import { PROGRESS_V1_PACKAGE_NAME } from '@pathly-backend/contracts/progress/v1/learning-paths.js';
 import {
 	HealthImplementation,
@@ -22,12 +21,11 @@ async function bootstrap() {
 		{
 			transport: Transport.GRPC,
 			options: {
-				package: [PROGRESS_V1_PACKAGE_NAME, COMMON_PACKAGE_NAME],
+				package: PROGRESS_V1_PACKAGE_NAME,
 				protoPath: [
 					healthCheckProtoPath,
 					join(protoDir, 'progress/v1/activities.proto'),
 					join(protoDir, 'progress/v1/lessons.proto'),
-					join(protoDir, 'common/types.proto'),
 				],
 				url: `${hostname}:${port}`,
 				onLoadPackageDefinition: (pkg, server) => {
@@ -41,11 +39,7 @@ async function bootstrap() {
 					new ReflectionService(pkg).addToServer(server);
 				},
 				loader: {
-					includeDirs: [
-						join(protoDir),
-						join(protoDir, 'progress/v1'),
-						join(protoDir, 'common'),
-					],
+					includeDirs: [join(protoDir), join(protoDir, 'progress/v1')],
 					arrays: true,
 					defaults: true,
 					enums: String,

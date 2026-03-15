@@ -2,7 +2,13 @@ import { ApiProperty } from '@nestjs/swagger'
 
 export class LessonProgressResponseDto {
 	@ApiProperty()
+	id: string
+
+	@ApiProperty()
 	lessonId: string
+
+	@ApiProperty()
+	unitId: string
 
 	@ApiProperty()
 	userId: string

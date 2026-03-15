@@ -1,114 +1,79 @@
+import {
+	ActivityProgress,
+	ActivityProgressId,
+	IActivityProgressRepository,
+} from '@/domain/activity-progress';
 import { Inject, Injectable } from '@nestjs/common';
-import { IActivityProgressRepository } from '@/app/activity-progress/interfaces';
-import { ActivityProgress } from '@/domain/activity-progress/entities';
-import { ActivityProgressFilter } from '@/app/activity-progress/types';
+import { DbService } from '@infra/common/db/db.service';
+import { Db } from '../common/db/types';
 import { RepositoryException } from '@pathly-backend/common/index.js';
-import { Db } from '../common/modules/db/types';
-import { DbService } from '../common/modules/db/db.service';
-import { activityProgressTable } from '../common/modules/db/schemas';
-import { dbActivityProgressToEntity } from './helpers';
-import { ActivityProgressConstraints } from './enums';
-import { and, eq } from 'drizzle-orm';
-import { DomainEvent } from '@/domain/common';
+import { activityProgressTable } from '../common/db/schemas';
+import { eq } from 'drizzle-orm';
 
 @Injectable()
 export class PostgresActivityProgressRepository
 	implements IActivityProgressRepository
 {
-	private db: Db;
+	private readonly db: Db;
 
 	constructor(@Inject(DbService) readonly dbService: DbService) {
 		this.db = dbService.getDb();
 	}
 
-	async list(filter?: ActivityProgressFilter): Promise<ActivityProgress[]> {
-		const limit =
-			filter?.options?.limit ?? ActivityProgressConstraints.DEFAULT_LIMIT;
-		const page =
-			filter?.options?.page ?? ActivityProgressConstraints.DEFAULT_PAGE;
-		const userId = filter?.fields?.userId;
-
+	async load(id: ActivityProgressId): Promise<ActivityProgress | null> {
 		try {
-			const result = await this.db
+			const [activityProgress] = await this.db
 				.select()
 				.from(activityProgressTable)
-				.where(userId ? eq(activityProgressTable.userId, userId) : undefined)
-				.offset(page * limit)
-				.limit(limit);
+				.where(eq(activityProgressTable.id, id.toString()));
 
-			return result.map(dbActivityProgressToEntity);
+			if (!activityProgress) {
+				return null;
+			}
+
+			return ActivityProgress.fromDataSource({
+				id: activityProgress.id,
+				activityId: activityProgress.activityId,
+				userId: activityProgress.userId,
+				lessonId: activityProgress.lessonId,
+				completedAt: activityProgress.completedAt,
+			});
 		} catch (err) {
-			throw new RepositoryException('db error', err);
+			throw new RepositoryException('drizzle error', err);
 		}
 	}
 
-	async findOne(
-		activityId: string,
-		userId: string,
-	): Promise<ActivityProgress | null> {
-		try {
-			const result = await this.db
-				.select()
-				.from(activityProgressTable)
-				.where(
-					and(
-						eq(activityProgressTable.activityId, activityId),
-						eq(activityProgressTable.userId, userId),
-					),
-				);
-
-			return result.length > 0 ? dbActivityProgressToEntity(result[0]) : null;
-		} catch (err) {
-			throw new RepositoryException('db error', err);
-		}
-	}
-	async findById(id: string): Promise<ActivityProgress | null> {
-		try {
-			const result = await this.db
-				.select()
-				.from(activityProgressTable)
-				.where(eq(activityProgressTable.id, id));
-
-			return result.length > 0 ? dbActivityProgressToEntity(result[0]) : null;
-		} catch (err) {
-			throw new RepositoryException('db error', err);
-		}
-	}
-
-	async save(entity: ActivityProgress): Promise<DomainEvent[]> {
+	async save(aggregate: ActivityProgress): Promise<void> {
 		try {
 			await this.db
 				.insert(activityProgressTable)
 				.values({
-					lessonId: entity.lessonId,
-					activityId: entity.activityId,
-					id: entity.id,
-					userId: entity.userId,
-					completedAt: entity.completedAt,
+					id: aggregate.id.toString(),
+					activityId: aggregate.activityId.toString(),
+					lessonId: aggregate.lessonId.toString(),
+					userId: aggregate.userId.toString(),
+					completedAt: aggregate.completedAt,
 				})
 				.onConflictDoUpdate({
-					target: [activityProgressTable.id],
+					target: activityProgressTable.id,
 					set: {
-						completedAt: entity.completedAt,
+						completedAt: aggregate.completedAt,
 					},
 				});
-
-			return entity.events;
 		} catch (err) {
-			throw new RepositoryException('db error', err);
+			throw new RepositoryException('drizzle error', err);
 		}
 	}
 
-	async removeById(id: string): Promise<boolean> {
+	async remove(id: ActivityProgressId): Promise<boolean> {
 		try {
 			const result = await this.db
 				.delete(activityProgressTable)
-				.where(eq(activityProgressTable.id, id))
-				.returning();
+				.where(eq(activityProgressTable.id, id.toString()));
 
-			return result.length > 0;
+			return result.rows.length > 0;
 		} catch (err) {
-			throw new RepositoryException('db error', err);
+			throw new RepositoryException('drizzle error', err);
 		}
 	}
 }

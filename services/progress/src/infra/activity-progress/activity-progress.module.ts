@@ -1,20 +1,24 @@
 import { Module } from '@nestjs/common';
 import { GrpcActivityProgressController } from './grpc.controller';
 import { PostgresActivityProgressRepository } from './postgres.repository';
-import { DbModule } from '../common/modules/db/db.module';
-import { LearningPathsModule } from '../common/modules/learning-paths/learning-paths.module';
-import { activityProgressUseCasesProvider } from './use-cases.provider';
+import { DbModule } from '@infra/common/db/db.module';
+import { PostgresActivityProgressReadRepository } from './postgres-read.repository';
+import { activityProgressHandlersProvider } from './handlers.provider';
+import { LessonProgressModule } from '../lesson-progress/lesson-progress.module';
+import { InMemoryEventBus, LearningPathsModule } from '../common';
 
 @Module({
-	imports: [DbModule, LearningPathsModule],
+	imports: [DbModule, LessonProgressModule, LearningPathsModule],
 	controllers: [GrpcActivityProgressController],
 	providers: [
+		InMemoryEventBus,
 		PostgresActivityProgressRepository,
-		...activityProgressUseCasesProvider,
+		PostgresActivityProgressReadRepository,
+		...activityProgressHandlersProvider,
 	],
 	exports: [
 		PostgresActivityProgressRepository,
-		...activityProgressUseCasesProvider,
+		PostgresActivityProgressReadRepository,
 	],
 })
 export class ActivityProgressModule {}

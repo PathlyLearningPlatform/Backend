@@ -1,7 +1,7 @@
 import z from 'zod';
 import { activityProgressidSchema } from './fields';
 
-export const findActivityProgressByIdSchema = z
+export const removeActivityProgressSchema = z
 	.object({
 		id: activityProgressidSchema,
 	})

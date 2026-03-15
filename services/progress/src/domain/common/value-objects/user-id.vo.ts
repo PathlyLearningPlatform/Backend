@@ -1,4 +1,5 @@
-import { UUID, ValueObject } from '@/domain/common';
+import { UUID } from './uuid.vo';
+import { ValueObject } from '../value-object';
 
 type Props = {
 	value: UUID;

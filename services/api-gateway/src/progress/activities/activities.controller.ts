@@ -1,5 +1,4 @@
 import {
-	ConflictException,
 	Controller,
 	Delete,
 	Get,
@@ -15,7 +14,6 @@ import {
 } from '@nestjs/common'
 import { ActivityProgressService } from './activities.service'
 import {
-	ApiConflictResponse,
 	ApiNotFoundResponse,
 	ApiNotImplementedResponse,
 	ApiOkResponse,
@@ -23,11 +21,10 @@ import {
 } from '@nestjs/swagger'
 import {
 	CompleteActivityResponseDto,
-	FindOneActivityProgressResponseDto,
+	FindActivityProgressForUserResponseDto,
 	ListActivityProgressQueryDto,
 	ListActivityProgressResponseDto,
-	RemoveActivityProgressByIdResponseDto,
-	StartActivityResponseDto,
+	RemoveActivityProgressResponseDto,
 } from './dtos'
 import {
 	GrpcException,
@@ -94,14 +91,14 @@ export class ActivityProgressController {
 	}
 
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
-	@ApiOkResponse({ type: FindOneActivityProgressResponseDto })
+	@ApiOkResponse({ type: FindActivityProgressForUserResponseDto })
 	@Get(':activityId')
-	async findOne(
+	async findForUser(
 		@Param('activityId', ParseUUIDPipe) activityId: string,
 		@User() user: UserInfo,
-	): Promise<FindOneActivityProgressResponseDto> {
+	): Promise<FindActivityProgressForUserResponseDto> {
 		try {
-			const result = await this.activityProgressService.findOne({
+			const result = await this.activityProgressService.findForUser({
 				activityId: activityId,
 				userId: user.id,
 			})
@@ -123,49 +120,6 @@ export class ActivityProgressController {
 				case ProgressApiErrorCodes.ACTIVITY_PROGRESS_NOT_FOUND:
 					throw new NotFoundException(
 						new HttpErrorDto(ExceptionMessage.ACTIVITY_PROGRESS_NOT_FOUND),
-					)
-				default:
-					throw new InternalServerErrorException(
-						new HttpErrorDto(ExceptionMessage.INTERNAL_ERROR),
-						{
-							cause: err,
-						},
-					)
-			}
-		}
-	}
-
-	@ApiConflictResponse({ type: HttpErrorResponse })
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
-	@ApiOkResponse({ type: StartActivityResponseDto })
-	@Patch(':activityId/start')
-	async start(
-		@Param('activityId', ParseUUIDPipe) activityId: string,
-		@User() user: UserInfo,
-	): Promise<StartActivityResponseDto> {
-		try {
-			const result = await this.activityProgressService.start({
-				activityId: activityId,
-				userId: user.id,
-			})
-
-			return {
-				activityProgress: clientActivityProgressToResponseDto(
-					result.activityProgress!,
-				),
-			}
-		} catch (err) {
-			const grpcErr = err as GrpcException
-			const errRes = grpcErr.getGrpcError()
-
-			switch (errRes.apiCode) {
-				case ProgressApiErrorCodes.ACTIVITY_NOT_FOUND:
-					throw new NotFoundException(
-						new HttpErrorDto(ExceptionMessage.ACTIVITY_NOT_FOUND),
-					)
-				case ProgressApiErrorCodes.ACTIVITY_ALREADY_COMPLETED:
-					throw new ConflictException(
-						new HttpErrorDto(ExceptionMessage.ACTIVITY_ALREADY_COMPLETED),
 					)
 				default:
 					throw new InternalServerErrorException(
@@ -205,9 +159,9 @@ export class ActivityProgressController {
 					throw new NotFoundException(
 						new HttpErrorDto(ExceptionMessage.ACTIVITY_NOT_FOUND),
 					)
-				case ProgressApiErrorCodes.ACTIVITY_PROGRESS_NOT_FOUND:
+				case ProgressApiErrorCodes.LESSON_NOT_STARTED:
 					throw new NotFoundException(
-						new HttpErrorDto(ExceptionMessage.ACTIVITY_PROGRESS_NOT_FOUND),
+						new HttpErrorDto(ExceptionMessage.LESSON_NOT_STARTED),
 					)
 				default:
 					throw new InternalServerErrorException(
@@ -222,12 +176,12 @@ export class ActivityProgressController {
 
 	@ApiNotImplementedResponse({ type: HttpErrorResponse })
 	@ApiNotFoundResponse({ type: HttpErrorResponse })
-	@ApiOkResponse({ type: RemoveActivityProgressByIdResponseDto })
+	@ApiOkResponse({ type: RemoveActivityProgressResponseDto })
 	@Delete(':activityId')
-	async removeById(
+	async remove(
 		@Param('activityId', ParseUUIDPipe) activityId: string,
 		@User() user: UserInfo,
-	): Promise<RemoveActivityProgressByIdResponseDto> {
+	): Promise<RemoveActivityProgressResponseDto> {
 		throw new NotImplementedException(
 			new HttpErrorDto('endpoint not implemented'),
 		)
