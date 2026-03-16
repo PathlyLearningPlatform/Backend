@@ -4,4 +4,5 @@ export interface LearningPathProgressDto {
 	userId: string;
 	totalSectionCount: number;
 	completedSectionCount: number;
+	completedAt: Date | null;
 }

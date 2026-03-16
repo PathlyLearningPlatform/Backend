@@ -5,7 +5,7 @@ export class UnitNotStartedException extends AppException {
 		public readonly unitId: string,
 		public readonly userId: string,
 	) {
-		const message = `User with id = ${userId} did not complete unit with id = ${unitId}`;
+		const message = `User with id = ${userId} did not start unit with id = ${unitId}`;
 
 		super(message);
 	}

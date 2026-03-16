@@ -1,4 +1,4 @@
-import { IEventBus } from '@/app/common/interfaces';
+import { IEventBus } from '@/app/common/ports';
 import { DomainEvent } from '@/domain/common';
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';

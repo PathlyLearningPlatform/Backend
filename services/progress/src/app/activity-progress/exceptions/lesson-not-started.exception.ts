@@ -5,7 +5,7 @@ export class LessonNotStartedException extends AppException {
 		public readonly lessonId: string,
 		public readonly userId: string,
 	) {
-		const message = `User with id = ${userId} did not complete lesson with id = ${lessonId}`;
+		const message = `User with id = ${userId} did not start lesson with id = ${lessonId}`;
 
 		super(message);
 	}

@@ -6,11 +6,12 @@ import {
 	LessonProgress,
 	LessonProgressId,
 } from '@/domain/lesson-progress';
-import { IEventBus, ILearningPathsService } from '@/app/common/interfaces';
+import { IEventBus, ILearningPathsService } from '@/app/common/ports';
 import { UserId, UUID } from '@/domain/common';
 import { UnitId } from '@/domain/unit-progress';
 import { IUnitProgressReadRepository } from '@/app/unit-progress/interfaces';
 import { UnitNotStartedException } from '../exceptions';
+import { randomUUID } from 'node:crypto';
 
 export type StartLessonCommand = {
 	lessonId: string;
@@ -49,7 +50,7 @@ export class StartLessonHandler
 		}
 		// TODO: check if previous lesson has been completed
 
-		const id = LessonProgressId.create(UUID.create(lesson.id));
+		const id = LessonProgressId.create(UUID.create(randomUUID()));
 		const lessonProgress = LessonProgress.create(id, {
 			lessonId: LessonId.create(UUID.create(command.lessonId)),
 			userId: UserId.create(UUID.create(command.userId)),

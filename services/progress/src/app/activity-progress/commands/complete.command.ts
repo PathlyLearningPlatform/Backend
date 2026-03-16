@@ -1,17 +1,21 @@
-import { ActivityNotFoundException, ICommandHandler } from '@/app/common';
-import { IEventBus, ILearningPathsService } from '@/app/common/interfaces';
+import {
+	ActivityNotFoundException,
+	ICommandHandler,
+	IEventBus,
+	ILearningPathsService,
+} from '@/app/common';
+import { UserId, UUID } from '@/domain/common';
+import { LessonId } from '@/domain/lesson-progress';
 import {
 	ActivityId,
 	ActivityProgress,
 	ActivityProgressId,
 	IActivityProgressRepository,
 } from '@/domain/activity-progress';
+import { ILessonProgressReadRepository } from '@/app/lesson-progress';
 import { ActivityProgressDto } from '../dtos';
-import { UserId, UUID } from '@/domain/common';
-import { randomUUID } from 'crypto';
-import { LessonId } from '@/domain/lesson-progress';
-import { ILessonProgressReadRepository } from '@/app/lesson-progress/interfaces';
 import { LessonNotStartedException } from '../exceptions';
+import { randomUUID } from 'crypto';
 
 export type CompleteActivityCommand = {
 	activityId: string;

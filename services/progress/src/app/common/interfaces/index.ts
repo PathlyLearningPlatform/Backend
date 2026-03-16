@@ -1,2 +1,3 @@
-export * from './event-bus.interface';
-export * from './learning-paths-service.interface';
+export * from './command-handler';
+export * from './event-handler';
+export * from './query-handler';

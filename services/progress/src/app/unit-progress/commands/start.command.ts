@@ -6,11 +6,12 @@ import {
 	UnitProgress,
 	UnitProgressId,
 } from '@/domain/unit-progress';
-import { IEventBus, ILearningPathsService } from '@/app/common/interfaces';
+import { IEventBus, ILearningPathsService } from '@/app/common/ports';
 import { UserId, UUID } from '@/domain/common';
 import { SectionId } from '@/domain/section-progress';
 import { ISectionProgressReadRepository } from '@/app/section-progress/interfaces';
 import { SectionNotStartedException } from '../exceptions';
+import { randomUUID } from 'node:crypto';
 
 export type StartUnitCommand = {
 	unitId: string;
@@ -49,7 +50,7 @@ export class StartUnitHandler
 
 		// TODO: check if previous unit has been completed
 
-		const id = UnitProgressId.create(UUID.create(unit.id));
+		const id = UnitProgressId.create(UUID.create(randomUUID()));
 		const unitProgress = UnitProgress.create(id, {
 			unitId: UnitId.create(UUID.create(command.unitId)),
 			userId: UserId.create(UUID.create(command.userId)),

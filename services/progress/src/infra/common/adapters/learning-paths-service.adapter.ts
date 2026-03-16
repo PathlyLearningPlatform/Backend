@@ -37,7 +37,7 @@ import {
 	ILesson,
 	ISection,
 	IUnit,
-} from '@/app/common/interfaces';
+} from '@/app/common/ports';
 import {
 	GrpcException,
 	throwGrpcException,

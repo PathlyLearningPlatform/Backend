@@ -1,5 +1,5 @@
 import { IEventHandler } from '@/app/common';
-import { IEventBus } from '@/app/common/interfaces';
+import { IEventBus } from '@/app/common/ports';
 import { ILessonProgressReadRepository } from '@/app/lesson-progress/interfaces';
 import { ActivityCompletedEvent } from '@/domain/activity-progress';
 import { UUID } from '@/domain/common';
