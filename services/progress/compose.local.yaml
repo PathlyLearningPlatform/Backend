@@ -1,0 +1,54 @@
+services:
+  progress:
+    build:
+      context: ../../
+      target: dev
+      dockerfile: ./services/progress/Dockerfile
+    environment:
+    - PORT=3000
+    - HOSTNAME=progress
+    - PROTO_DIR=/usr/src/app/libs/contracts/proto
+    - LEARNING_PATHS_SERVICE_URL=learning-paths:3000
+    - DB_HOST=progress-db
+    - DB_NAME=progress
+    - DB_PORT=5432
+    - DB_USER=admin
+    - DB_PASSWORD=admin
+    volumes:
+      - ./src:/usr/src/app/services/progress/src
+      - ./test:/usr/src/app/services/progress/test
+      - ../../libs/ts/common/src:/usr/src/app/libs/ts/common/src
+      - ../../libs/contracts/proto:/usr/src/app/libs/contracts/proto
+      - type: bind
+        source: ./tsconfig.json
+        target: /usr/src/app/services/progress/tsconfig.json
+      - type: bind
+        source: ./jest.config.ts
+        target: /usr/src/app/services/progress/jest.config.ts
+    depends_on:
+      progress-db:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'grpc_health_probe -addr=progress:3000']
+      timeout: 10s
+      start_period: 15s
+    ports:
+      - 3002:3000
+
+  progress-db:
+    build:
+      context: ./db
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=progress
+    volumes:
+      - progress-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD', 'pg_isready']
+      timeout: 30s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  progress-db-data:

@@ -4,19 +4,8 @@ services:
       context: ../../
       target: dev
       dockerfile: ./services/progress/Dockerfile
-    env_file:
-      - .env
-    volumes:
-      - ./src:/usr/src/app/services/progress/src
-      - ./test:/usr/src/app/services/progress/test
-      - ../../libs/ts/common/src:/usr/src/app/libs/ts/common/src
-      - ../../libs/contracts/proto:/usr/src/app/libs/contracts/proto
-      - type: bind
-        source: ./tsconfig.json
-        target: /usr/src/app/services/progress/tsconfig.json
-      - type: bind
-        source: ./jest.config.ts
-        target: /usr/src/app/services/progress/jest.config.ts
+    environment:
+      - name=value
     depends_on:
       progress-db:
         condition: service_healthy
@@ -30,8 +19,8 @@ services:
   progress-db:
     build:
       context: ./db
-    env_file:
-      - ./db/.env
+    environment:
+      - name=value
     volumes:
       - progress-db-data:/var/lib/postgresql/data
     healthcheck:

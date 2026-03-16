@@ -1,0 +1,53 @@
+services:
+  learning-paths:
+    build:
+      context: ../../
+      target: dev
+      dockerfile: ./services/learning-paths/Dockerfile
+    environment:
+      - PORT=3000
+      - HOSTNAME=learning-paths
+      - PROTO_DIR=/usr/src/app/libs/contracts/proto
+      - DB_HOST=learning-paths-db
+      - DB_NAME=learning-paths
+      - DB_PORT=5432
+      - DB_USER=admin
+      - DB_PASSWORD=admin
+    volumes:
+      - ./src:/usr/src/app/services/learning-paths/src
+      - ./test:/usr/src/app/services/learning-paths/test
+      - ../../libs/ts/common/src:/usr/src/app/libs/ts/common/src
+      - ../../libs/contracts/proto:/usr/src/app/libs/contracts/proto
+      - type: bind
+        source: ./tsconfig.json
+        target: /usr/src/app/services/learning-paths/tsconfig.json
+      - type: bind
+        source: ./jest.config.ts
+        target: /usr/src/app/services/learning-paths/jest.config.ts
+    depends_on:
+      learning-paths-db:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'grpc_health_probe -addr=learning-paths:3000']
+      timeout: 10s
+      start_period: 15s
+    ports:
+      - 3001:3000
+
+  learning-paths-db:
+    build:
+      context: ./db
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=learning-paths
+    volumes:
+      - learning-paths-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD', 'pg_isready']
+      timeout: 30s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  learning-paths-db-data:

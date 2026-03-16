@@ -3,14 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "license": "ISC",
-  "author": "",
-  "type": "commonjs",
+  "author": "Kamil Abbasi",
   "main": "index.js",
   "scripts": {
     "gen:contracts": "chmod u+x ./scripts/linux/gen-contracts.sh && ./scripts/linux/gen-contracts.sh",
     "build:libs:ts": "chmod u+x ./scripts/linux/build-ts-libs.sh && ./scripts/linux/build-ts-libs.sh",
+    "start:local": "chmod u+x ./scripts/linux/start.local.sh && ./scripts/linux/start.local.sh",
     "start": "chmod u+x ./scripts/linux/start.sh && ./scripts/linux/start.sh",
-    "start:prod": "chmod u+x ./scripts/linux/start-prod.sh && ./scripts/linux/start-prod.sh",
     "stop": "docker compose down"
   },
   "workspaces": [

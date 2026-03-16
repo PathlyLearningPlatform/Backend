@@ -1,10 +1,11 @@
 # nodejs
 node_modules
+
+# build output
 dist
 
 # environment
 .env
-.env.prod
 
-# vscode
+# IDE
 .vscode
