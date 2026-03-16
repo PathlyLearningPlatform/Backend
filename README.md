@@ -13,7 +13,7 @@
 ### Linux
 
 - open project root directory in terminal of your choice
-- run `npm run start:local`
+- run `./scripts/linux/start.local.sh`
 
 ### Windows
 
@@ -25,7 +25,7 @@
 ### Linux
 
 - open project root directory in terminal of your choice
-- run `npm run start`
+- run `./scripts/linux/start.sh`
 
 ### Windows
 

@@ -5,9 +5,11 @@ ENV KC_METRICS_ENABLED=true
 
 FROM base AS dev
 
+COPY ./realm-export.json /opt/keycloak/data/import/
+
 RUN /opt/keycloak/bin/kc.sh build
 
-CMD ["start-dev"]
+CMD ["start-dev", "--import-realm"]
 
 EXPOSE 8080
 
