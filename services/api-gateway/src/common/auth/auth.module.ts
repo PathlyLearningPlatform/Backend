@@ -26,7 +26,7 @@ import { AppConfig } from '../config'
 				return {
 					publicKey: cert,
 					verifyOptions: {
-						audience: appConfig.jwtAudience,
+						audience: [appConfig.jwtAudience],
 						issuer: appConfig.jwtIssuer,
 					},
 				}
