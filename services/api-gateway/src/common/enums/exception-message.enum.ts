@@ -17,4 +17,10 @@ export enum ExceptionMessage {
 
 	LESSON_PROGRESS_NOT_FOUND = 'Progress entry for that lesson was not found.',
 	UNIT_NOT_STARTED = 'Unit not started',
+	UNIT_PROGRESS_NOT_FOUND = 'Progress entry for that unit was not found.',
+	SECTION_NOT_STARTED = 'Section not started',
+	SECTION_PROGRESS_NOT_FOUND = 'Progress entry for that section was not found.',
+	LEARNING_PATH_NOT_STARTED = 'Learning path not started',
+	LEARNING_PATH_PROGRESS_NOT_FOUND =
+		'Progress entry for that learning path was not found.',
 }

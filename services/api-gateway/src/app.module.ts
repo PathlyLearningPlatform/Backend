@@ -8,7 +8,7 @@ import {
 } from '@pathly-backend/common'
 import { ActivitiesModule } from './activities/activities.module'
 import { AppController } from './app.controller'
-import { validateConfig } from './config'
+import { validateConfig } from './common/config'
 import { LearningPathsModule } from './learning-paths/learning-paths.module'
 import { LessonsModule } from './lessons/lessons.module'
 import { SectionsModule } from './sections/sections.module'

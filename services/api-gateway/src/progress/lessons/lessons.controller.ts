@@ -33,12 +33,12 @@ import {
 	HttpValidationPipe,
 } from '@pathly-backend/common/index.js'
 import { listLessonProgressSchema } from './schemas/index.js'
-import { User } from '@/common/decorators'
-import type { UserInfo } from '@/common/types'
+import { User } from '@/common/auth/user.decorator'
+import type { UserInfo } from '@/common/auth/user-info.type'
 import { ExceptionMessage } from '@/common/enums'
 import { clientLessonProgressToResponseDto } from './helpers/index.js'
 import { ProgressApiErrorCodes } from '@pathly-backend/contracts/progress/v1/api.js'
-import { JwtGuard } from '@/common/modules/auth/jwt.guard'
+import { JwtGuard } from '@/common/auth/jwt.guard'
 
 @UseGuards(JwtGuard)
 @Controller({

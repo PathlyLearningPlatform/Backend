@@ -34,6 +34,9 @@ services:
       - LEARNING_PATHS_SERVICE_URL=learning-paths:3000
       - PROGRESS_SERVICE_URL=progress:3000
       - PROTO_DIR=/usr/src/app/libs/contracts/proto
+      - JWT_AUDIENCE=api
+      - JWT_ISSUER=http://localhost:8080/realms/pathly
+      - JWT_PUBLIC_KEY_PATH=jwt-public-key.pem
     volumes:
       - ./services/api-gateway/src:/usr/src/app/services/api-gateway/src
       - ./services/api-gateway/test:/usr/src/app/services/api-gateway/test

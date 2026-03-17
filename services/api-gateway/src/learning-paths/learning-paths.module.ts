@@ -6,7 +6,7 @@ import { COMMON_PACKAGE_NAME } from '@pathly-backend/contracts/common/types.js'
 import { LEARNING_PATHS_V1_PACKAGE_NAME } from '@pathly-backend/contracts/learning-paths/v1/learning-paths.js'
 import { join } from 'path'
 import { DiToken } from '../common/enums'
-import type { AppConfig } from '../common/types'
+import type { AppConfig } from '../common/config'
 import { LearningPathsController } from './learning-paths.controller'
 import { LearningPathsService } from './learning-paths.service'
 

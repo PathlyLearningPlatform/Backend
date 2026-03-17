@@ -26,6 +26,9 @@ async function bootstrap() {
 					healthCheckProtoPath,
 					join(protoDir, 'progress/v1/activities.proto'),
 					join(protoDir, 'progress/v1/lessons.proto'),
+					join(protoDir, 'progress/v1/units.proto'),
+					join(protoDir, 'progress/v1/sections.proto'),
+					join(protoDir, 'progress/v1/learning-paths.proto'),
 				],
 				url: `${hostname}:${port}`,
 				onLoadPackageDefinition: (pkg, server) => {
