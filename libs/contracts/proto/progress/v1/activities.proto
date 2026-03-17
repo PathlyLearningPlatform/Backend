@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package progress.v1;
 
-import "common/types.proto";
-
 service ActivityProgressService {
   rpc List(ListActivityProgressRequest) returns (ListActivityProgressResponse) {};
 
@@ -30,6 +28,7 @@ message ListActivityProgressRequest {
   }
   message Where {
     optional string userId = 1;
+    optional string lessonId = 2;
   }
 
   optional Options options = 1;

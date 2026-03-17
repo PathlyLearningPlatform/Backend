@@ -6,6 +6,9 @@ import {
 } from '@pathly-backend/common/index.js';
 import { ActivityProgressModule } from './infra/activity-progress/activity-progress.module';
 import { LessonProgressModule } from './infra/lesson-progress/lesson-progress.module';
+import { LearningPathProgressModule } from './infra/learning-path-progress/learning-path-progress.module';
+import { SectionProgressModule } from './infra/section-progress/section-progress.module';
+import { UnitProgressModule } from './infra/unit-progress/unit-progress.module';
 import { ConfigModule } from '@nestjs/config';
 import { InMemoryEventBus, validateConfig } from './infra/common';
 import { EventEmitterModule } from '@nestjs/event-emitter';
@@ -29,6 +32,9 @@ import { eventHandlersProvider } from './infra/event-handlers.provider';
 		}),
 		ActivityProgressModule,
 		LessonProgressModule,
+		LearningPathProgressModule,
+		SectionProgressModule,
+		UnitProgressModule,
 	],
 	providers: [
 		{

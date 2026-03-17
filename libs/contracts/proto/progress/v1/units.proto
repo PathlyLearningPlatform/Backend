@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package progress.v1;
+
+service UnitProgressService {
+  rpc List(ListUnitProgressRequest) returns (ListUnitProgressResponse) {};
+
+  rpc FindForUser(FindUnitProgressForUserRequest) returns (FindUnitProgressForUserResponse) {};
+  rpc FindById(FindUnitProgressByIdRequest) returns (FindUnitProgressByIdResponse) {};
+
+  rpc Start(StartUnitRequest) returns (StartUnitResponse) {};
+
+  rpc Remove(RemoveUnitProgressRequest) returns (RemoveUnitProgressResponse) {};
+}
+
+message UnitProgress {
+  string id = 1;
+  string unitId = 2;
+  string userId = 3;
+  string completedAt = 4;
+  int32 totalLessonCount = 5;
+  int32 completedLessonCount = 6;
+  string sectionId = 7;
+}
+
+message ListUnitProgressRequest {
+  message Options {
+    optional int32 limit = 1;
+    optional int32 page = 2;
+  }
+  message Where {
+    optional string userId = 1;
+    optional string sectionId = 2;
+  }
+
+  optional Options options = 1;
+  optional Where where = 2;
+}
+message ListUnitProgressResponse {
+  repeated UnitProgress unitProgress = 1;
+}
+
+message FindUnitProgressForUserRequest {
+  string unitId = 1;
+  string userId = 2;
+}
+message FindUnitProgressForUserResponse {
+  UnitProgress unitProgress = 1;
+}
+
+message FindUnitProgressByIdRequest {
+  string id = 1;
+}
+message FindUnitProgressByIdResponse {
+  UnitProgress unitProgress = 1;
+}
+
+message StartUnitRequest {
+  string unitId = 1;
+  string userId = 2;
+}
+message StartUnitResponse {
+  UnitProgress unitProgress = 1;
+}
+
+message RemoveUnitProgressRequest {
+  string id = 1;
+}
+message RemoveUnitProgressResponse {}

@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package progress.v1;
+
+service LearningPathProgressService {
+  rpc List(ListLearningPathProgressRequest) returns (ListLearningPathProgressResponse) {};
+
+  rpc FindForUser(FindLearningPathProgressForUserRequest) returns (FindLearningPathProgressForUserResponse) {};
+  rpc FindById(FindLearningPathProgressByIdRequest) returns (FindLearningPathProgressByIdResponse) {};
+
+  rpc Start(StartLearningPathRequest) returns (StartLearningPathResponse) {};
+
+  rpc Remove(RemoveLearningPathProgressRequest) returns (RemoveLearningPathProgressResponse) {};
+}
+
+message LearningPathProgress {
+  string id = 1;
+  string learningPathId = 2;
+  string userId = 3;
+  string completedAt = 4;
+  int32 totalSectionCount = 5;
+  int32 completedSectionCount = 6;
+}
+
+message ListLearningPathProgressRequest {
+  message Options {
+    optional int32 limit = 1;
+    optional int32 page = 2;
+  }
+  message Where {
+    optional string userId = 1;
+  }
+
+  optional Options options = 1;
+  optional Where where = 2;
+}
+message ListLearningPathProgressResponse {
+  repeated LearningPathProgress learningPathProgress = 1;
+}
+
+message FindLearningPathProgressForUserRequest {
+  string learningPathId = 1;
+  string userId = 2;
+}
+message FindLearningPathProgressForUserResponse {
+  LearningPathProgress learningPathProgress = 1;
+}
+
+message FindLearningPathProgressByIdRequest {
+  string id = 1;
+}
+message FindLearningPathProgressByIdResponse {
+  LearningPathProgress learningPathProgress = 1;
+}
+
+message StartLearningPathRequest {
+  string learningPathId = 1;
+  string userId = 2;
+}
+message StartLearningPathResponse {
+  LearningPathProgress learningPathProgress = 1;
+}
+
+message RemoveLearningPathProgressRequest {
+  string id = 1;
+}
+message RemoveLearningPathProgressResponse {}

@@ -32,6 +32,7 @@ export interface ListLessonProgressRequest_Options {
 
 export interface ListLessonProgressRequest_Where {
   userId?: string | undefined;
+  unitId?: string | undefined;
 }
 
 export interface ListLessonProgressResponse {

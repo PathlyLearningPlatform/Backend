@@ -30,6 +30,7 @@ export interface ListActivityProgressRequest_Options {
 
 export interface ListActivityProgressRequest_Where {
   userId?: string | undefined;
+  lessonId?: string | undefined;
 }
 
 export interface ListActivityProgressResponse {
