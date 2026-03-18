@@ -6,6 +6,7 @@ import {
 	lessonIdSchema,
 	difficultySchema,
 } from './fields.schema';
+import { clientExerciseDifficultyToDomain } from '../helpers';
 
 export const createExerciseSchema = z
 	.object({
@@ -15,6 +16,9 @@ export const createExerciseSchema = z
 			descriptionSchema.optional().default(null),
 		),
 		lessonId: lessonIdSchema,
-		difficulty: difficultySchema,
+		difficulty: z.preprocess(
+			clientExerciseDifficultyToDomain,
+			difficultySchema,
+		),
 	})
 	.strict();

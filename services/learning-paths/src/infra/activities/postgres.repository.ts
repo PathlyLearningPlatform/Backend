@@ -205,9 +205,8 @@ export class PostgresActivityRepository implements IActivityRepository {
 						.values({
 							activityId: aggregate.id.value,
 						})
-						.onConflictDoUpdate({
+						.onConflictDoNothing({
 							target: quizzesTable.activityId,
-							set: {},
 						});
 
 					for (const question of aggregate.questions) {
