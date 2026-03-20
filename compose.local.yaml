@@ -4,6 +4,7 @@ include:
   - ./services/auth/compose.local.yaml
   - ./services/learning-paths/compose.local.yaml
   - ./services/progress/compose.local.yaml
+  - ./services/skills/compose.local.yaml
 
 services:
   reverse-proxy:
@@ -59,4 +60,6 @@ services:
       learning-paths:
         condition: service_healthy
       progress:
+        condition: service_healthy
+      skills:
         condition: service_healthy

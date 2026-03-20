@@ -1,0 +1,55 @@
+services:
+  skills:
+    build:
+      context: ../../
+      target: dev
+      dockerfile: ./services/skills/Dockerfile
+    environment:
+    - PORT=3000
+    - HOSTNAME=skills
+    - PROTO_DIR=/usr/src/app/libs/contracts/proto
+    - DB_HOST=skills-db
+    - DB_NAME=neo4j
+    - DB_PORT=7687
+    - DB_USER=neo4j
+    - DB_PASSWORD=zaq1@WSX
+    volumes:
+      - ./src:/usr/src/app/services/skills/src
+      - ./test:/usr/src/app/services/skills/test
+      - ../../libs/ts/common/src:/usr/src/app/libs/ts/common/src
+      - ../../libs/contracts/proto:/usr/src/app/libs/contracts/proto
+      - type: bind
+        source: ./tsconfig.json
+        target: /usr/src/app/services/skills/tsconfig.json
+      - type: bind
+        source: ./jest.config.ts
+        target: /usr/src/app/services/skills/jest.config.ts
+    depends_on:
+      skills-db:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'grpc_health_probe -addr=skills:3000']
+      timeout: 10s
+      start_period: 15s
+    ports:
+      - 3003:3000
+
+  skills-db:
+    image: neo4j:latest
+    volumes:
+      - skills-db-data:/data
+    environment:
+      - NEO4J_AUTH=neo4j/zaq1@WSX
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p zaq1@WSX 'RETURN 1;'"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  skills-db-data:
