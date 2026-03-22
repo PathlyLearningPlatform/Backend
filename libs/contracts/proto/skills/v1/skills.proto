@@ -2,9 +2,122 @@ syntax = "proto3";
 
 package skills.v1;
 
-service SkillsService {
-  rpc Test(TestRequest) returns (TestResponse) {};
+message Skill {
+  string id = 1;
+  string name = 2;
+  string slug = 3;
 }
 
-message TestRequest {}
-message TestResponse {}
+service SkillsService {
+  rpc Create(CreateSkillRequest) returns (CreateSkillResponse) {}
+  rpc Update(UpdateSkillRequest) returns (UpdateSkillResponse) {}
+  rpc Remove(RemoveSkillRequest) returns (RemoveSkillResponse) {}
+
+  rpc AddPrerequisite(AddPrerequisiteSkillRequest) returns (AddPrerequisiteSkillResponse) {}
+  rpc AddChild(AddChildSkillRequest) returns (AddChildSkillResponse) {}
+  rpc AddCommon(AddCommonSkillRequest) returns (AddCommonSkillResponse) {}
+  rpc AddAlternative(AddAlternativeSkillRequest) returns (AddAlternativeSkillResponse) {}
+
+  rpc FindById(FindSkillByIdRequest) returns (FindSkillByIdResponse) {}
+  rpc FindBySlug(FindSkillBySlugRequest) returns (FindSkillBySlugResponse) {}
+
+  rpc ListPrerequisities(ListSkillPrerequisitiesRequest) returns (ListSkillPrerequisitiesResponse) {}
+  rpc ListChildren(ListSkillChildrenRequest) returns (ListSkillChildrenResponse) {}
+  rpc ListCommon(ListCommonSkillsRequest) returns (ListCommonSkillsResponse) {}
+  rpc ListAlternatives(ListSkillAlternativesRequest) returns (ListSkillAlternativesResponse) {}
+}
+
+message CreateSkillRequest {
+  string name = 1;
+  optional string parent_id = 2;
+}
+message CreateSkillResponse {
+  Skill skill = 1;
+}
+
+message UpdateSkillRequest {
+  message Where {
+    string id = 1;
+  }
+
+  message Fields {
+    optional string name = 1;
+  }
+
+  Where where = 1;
+  Fields fields = 2;
+}
+message UpdateSkillResponse {
+  Skill skill = 1;
+}
+
+message RemoveSkillRequest {
+  string id = 1;
+}
+message RemoveSkillResponse {}
+
+message AddPrerequisiteSkillRequest {
+  string prerequisite_skill_id = 1;
+  string target_skill_id = 2;
+}
+message AddPrerequisiteSkillResponse {}
+
+message AddChildSkillRequest {
+  string parent_skill_id = 1;
+  string child_skill_id = 2;
+}
+message AddChildSkillResponse {}
+
+message AddCommonSkillRequest {
+  string first_skill_id = 1;
+  string second_skill_id = 2;
+}
+message AddCommonSkillResponse {}
+
+message AddAlternativeSkillRequest {
+  string first_skill_id = 1;
+  string second_skill_id = 2;
+}
+message AddAlternativeSkillResponse {}
+
+message FindSkillByIdRequest {
+  string id = 1;
+}
+message FindSkillByIdResponse {
+  Skill skill = 1;
+}
+
+message FindSkillBySlugRequest {
+  string slug = 1;
+}
+message FindSkillBySlugResponse {
+  Skill skill = 1;
+}
+
+message ListSkillPrerequisitiesRequest {
+  string skill_id = 1;
+}
+message ListSkillPrerequisitiesResponse {
+  repeated Skill skills = 1;
+}
+
+message ListSkillChildrenRequest {
+  string skill_id = 1;
+}
+message ListSkillChildrenResponse {
+  repeated Skill skills = 1;
+}
+
+message ListCommonSkillsRequest {
+  string skill_id = 1;
+}
+message ListCommonSkillsResponse {
+  repeated Skill skills = 1;
+}
+
+message ListSkillAlternativesRequest {
+  string skill_id = 1;
+}
+message ListSkillAlternativesResponse {
+  repeated Skill skills = 1;
+}

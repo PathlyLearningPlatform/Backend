@@ -1,11 +1,12 @@
-import { Module } from "@nestjs/common";
-import { APP_INTERCEPTOR } from "@nestjs/core";
+import { Module } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import {
 	AppLoggerModule,
 	RpcRequestInterceptor,
-} from "@pathly-backend/common/index.js";
-import { ConfigModule } from "@nestjs/config";
-import { validateConfig } from "./infra/common";
+} from '@pathly-backend/common/index.js';
+import { ConfigModule } from '@nestjs/config';
+import { validateConfig } from './infra/common';
+import { SkillsModule } from './infra/skills/skills.module';
 
 @Module({
 	imports: [
@@ -17,6 +18,7 @@ import { validateConfig } from "./infra/common";
 		AppLoggerModule.register({
 			isGlobal: true,
 		}),
+		SkillsModule,
 	],
 	providers: [
 		{

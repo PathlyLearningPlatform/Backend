@@ -1,0 +1,6 @@
+export enum SkillRelationshipType {
+	PREREQUISITE_OF = 'PREREQUISITE_OF',
+	PART_OF = 'PART_OF',
+	ALTERNATIVE_TO = 'ALTERNATIVE_TO',
+	COMMON_WITH = 'COMMON_WITH',
+}
