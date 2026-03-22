@@ -27,7 +27,7 @@ export const createExerciseSchema = createActivitySchema.safeExtend({
 	difficulty: difficultySchema,
 })
 
-export const createQuizSchema = createActivitySchema.safeExtend({}).strict()
+export const createQuizSchema = createActivitySchema.safeExtend({})
 
 export const createQuestionSchema = z.object({
 	content: questionContentSchema,
