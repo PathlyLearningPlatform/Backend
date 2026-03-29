@@ -1,10 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Neo4jService } from '../common/neo4j/neo4j.service';
 import type { ISkillGraph } from '@/domain/interfaces';
-import { Skill } from '@/domain/skills';
-import type { SkillId, SkillRelationship } from '@/domain/skills';
+import { Skill, SkillRelationshipType } from '@/domain/skills';
+import { SkillId, SkillRelationship } from '@/domain/skills';
 import type { Slug } from '@/domain/common';
-import { SkillNotFoundException } from '@/domain/exceptions';
 import { DbException } from '../common/exceptions/db.exception';
 import type { Record } from 'neo4j-driver';
 
@@ -34,22 +33,6 @@ export class Neo4jSkillGraphAdapter implements ISkillGraph {
 			slug: props.slug,
 			parentId: props.parentId,
 		});
-	}
-
-	private async assertSkillExists(skillId: string): Promise<void> {
-		const query = /*cypher*/ `
-			MATCH (s:Skill {id: $skillId})
-			RETURN count(s) > 0 AS exists
-		`;
-
-		const result = await this.neo4jService.db.executeQuery(query, {
-			skillId,
-		});
-		const exists = result.records[0]?.get('exists') as boolean | undefined;
-
-		if (!exists) {
-			throw new SkillNotFoundException(skillId);
-		}
 	}
 
 	async saveSkill(aggreagate: Skill): Promise<void> {
@@ -96,9 +79,6 @@ export class Neo4jSkillGraphAdapter implements ISkillGraph {
 		const toId = relationship.toId.toString();
 
 		try {
-			await this.assertSkillExists(fromId);
-			await this.assertSkillExists(toId);
-
 			const query = /*cypher*/ `
 				MATCH (fromSkill:Skill {id: $fromId})
 				MATCH (toSkill:Skill {id: $toId})
@@ -114,13 +94,10 @@ export class Neo4jSkillGraphAdapter implements ISkillGraph {
 		}
 	}
 
-	async unlink(relationship: SkillRelationship): Promise<void> {
+	async unlink(relationship: SkillRelationship): Promise<boolean> {
 		try {
 			const fromId = relationship.fromId.toString();
 			const toId = relationship.toId.toString();
-
-			await this.assertSkillExists(fromId);
-			await this.assertSkillExists(toId);
 
 			const query = relationship.isDirectional
 				? /*cypher*/ `
@@ -132,10 +109,12 @@ export class Neo4jSkillGraphAdapter implements ISkillGraph {
 					DELETE r
 				`;
 
-			await this.neo4jService.db.executeQuery(query, {
+			const result = await this.neo4jService.db.executeQuery(query, {
 				fromId,
 				toId,
 			});
+
+			return result.summary.counters.containsUpdates();
 		} catch (err) {
 			throw new DbException('neo4j error', err);
 		}
@@ -210,6 +189,47 @@ export class Neo4jSkillGraphAdapter implements ISkillGraph {
 		}
 	}
 
+	async getTopLevelPrerequisiteGraph() {
+		try {
+			const query = /* cypher */ `
+				MATCH (prerequisite:Skill)
+				WHERE prerequisite.parentId IS NULL
+				OPTIONAL MATCH (prerequisite)<-[r:PREREQUISITE_OF]-(target:Skill)
+				WHERE target.parentId IS NULL
+				RETURN prerequisite, r, target
+			`;
+
+			const { records, summary } =
+				await this.neo4jService.db.executeQuery(query);
+
+			const nodes: Skill[] = [];
+			const edges: SkillRelationship[] = [];
+
+			records.forEach((record) => {
+				const prerequisite = this.mapSkillNode(record, 'prerequisite');
+
+				nodes.push(prerequisite);
+
+				if (record.get('target')) {
+					const target = this.mapSkillNode(record, 'target');
+					const edge = SkillRelationship.create({
+						fromId: prerequisite.id,
+						toId: target.id,
+						type: SkillRelationshipType.PREREQUISITE_OF,
+					});
+					edges.push(edge);
+				}
+			});
+
+			return {
+				nodes,
+				edges,
+			};
+		} catch (err) {
+			throw new DbException('neo4j error', err);
+		}
+	}
+
 	async listCommonSkills(id: SkillId): Promise<Skill[]> {
 		try {
 			const query = /*cypher*/ `
@@ -275,37 +295,6 @@ export class Neo4jSkillGraphAdapter implements ISkillGraph {
 			return result.records.map((record) =>
 				this.mapSkillNode(record, 'prerequisite'),
 			);
-		} catch (err) {
-			throw new DbException('neo4j error', err);
-		}
-	}
-
-	async relationshipExists(relationship: SkillRelationship): Promise<boolean> {
-		try {
-			const fromId = relationship.fromId.toString();
-			const toId = relationship.toId.toString();
-
-			await this.assertSkillExists(fromId);
-			await this.assertSkillExists(toId);
-
-			const query = relationship.isDirectional
-				? /*cypher*/ `
-					MATCH (fromSkill:Skill {id: $fromId})-[r:\`${relationship.type}\`]->(toSkill:Skill {id: $toId})
-					RETURN count(r) > 0 AS exists
-				`
-				: /*cypher*/ `
-					MATCH (fromSkill:Skill {id: $fromId})-[r:\`${relationship.type}\`]-(toSkill:Skill {id: $toId})
-					RETURN count(r) > 0 AS exists
-				`;
-
-			const result = await this.neo4jService.db.executeQuery(query, {
-				fromId,
-				toId,
-			});
-
-			const exists = result.records[0]?.get('exists') as boolean | undefined;
-
-			return Boolean(exists);
 		} catch (err) {
 			throw new DbException('neo4j error', err);
 		}

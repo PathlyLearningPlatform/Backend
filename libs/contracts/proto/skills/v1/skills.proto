@@ -2,10 +2,25 @@ syntax = "proto3";
 
 package skills.v1;
 
+enum SkillRelationshipType {
+  SKILL_RELATIONSHIP_TYPE_UNSPECIFIED = 0;
+  SKILL_RELATIONSHIP_TYPE_PART_OF = 1;
+  SKILL_RELATIONSHIP_TYPE_PREREQUISITE_OF = 2;
+  SKILL_RELATIONSHIP_TYPE_ALTERNATIVE_TO = 3;
+  SKILL_RELATIONSHIP_TYPE_COMMON_WITH = 4;
+}
+
 message Skill {
   string id = 1;
   string name = 2;
   string slug = 3;
+}
+
+message SkillRelationship {
+  string fromId = 1;
+  string toId = 2;
+  bool isDirectional = 3;
+  SkillRelationshipType type = 4;
 }
 
 service SkillsService {
@@ -25,6 +40,8 @@ service SkillsService {
   rpc ListChildren(ListSkillChildrenRequest) returns (ListSkillChildrenResponse) {}
   rpc ListCommon(ListCommonSkillsRequest) returns (ListCommonSkillsResponse) {}
   rpc ListAlternatives(ListSkillAlternativesRequest) returns (ListSkillAlternativesResponse) {}
+
+  rpc GetTopLevelPrerequisiteGraph(GetTopLevelPrerequisiteGraphRequest) returns (GetTopLevelPrerequisiteGraphResponse) {}
 }
 
 message CreateSkillRequest {
@@ -120,4 +137,10 @@ message ListSkillAlternativesRequest {
 }
 message ListSkillAlternativesResponse {
   repeated Skill skills = 1;
+}
+
+message GetTopLevelPrerequisiteGraphRequest {}
+message GetTopLevelPrerequisiteGraphResponse {
+  repeated Skill nodes = 1;
+  repeated SkillRelationship edges = 2;
 }

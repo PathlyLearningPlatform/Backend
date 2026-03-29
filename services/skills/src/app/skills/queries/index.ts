@@ -4,3 +4,4 @@ export * from './list-children.query';
 export * from './list-prerequisities.query';
 export * from './list-alternatives.query';
 export * from './list-common.query';
+export * from './get-top-level-prerequisite-graph.query';

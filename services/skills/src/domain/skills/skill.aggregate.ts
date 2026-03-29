@@ -1,5 +1,8 @@
 import { AggregateRoot, Slug, UUID } from '../common';
-import { RootSkillParentException } from './exceptions';
+import {
+	RootSkillParentException,
+	SkillCannotReferenceItselfException,
+} from './exceptions';
 import { SkillName } from './value-objects';
 import { SkillId } from './value-objects/id.vo';
 
@@ -23,6 +26,7 @@ export type SkillFromDataSourceProps = {
 };
 export type UpdateSkillProps = Partial<{
 	name: SkillName;
+	parentId: SkillId;
 }>;
 
 export class Skill extends AggregateRoot<SkillId, SkillProps> {
@@ -62,6 +66,14 @@ export class Skill extends AggregateRoot<SkillId, SkillProps> {
 	update(props?: UpdateSkillProps) {
 		if (props?.name) {
 			this._props.name = props.name;
+		}
+
+		if (props?.parentId) {
+			if (this._props.parentId?.equals(props.parentId)) {
+				throw new SkillCannotReferenceItselfException();
+			}
+
+			this._props.parentId = props.parentId;
 		}
 	}
 

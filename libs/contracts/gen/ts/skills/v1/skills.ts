@@ -10,10 +10,25 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "skills.v1";
 
+export enum SkillRelationshipType {
+  UNSPECIFIED = "SKILL_RELATIONSHIP_TYPE_UNSPECIFIED",
+  PART_OF = "SKILL_RELATIONSHIP_TYPE_PART_OF",
+  PREREQUISITE_OF = "SKILL_RELATIONSHIP_TYPE_PREREQUISITE_OF",
+  ALTERNATIVE_TO = "SKILL_RELATIONSHIP_TYPE_ALTERNATIVE_TO",
+  COMMON_WITH = "SKILL_RELATIONSHIP_TYPE_COMMON_WITH",
+}
+
 export interface Skill {
   id: string;
   name: string;
   slug: string;
+}
+
+export interface SkillRelationship {
+  fromId: string;
+  toId: string;
+  isDirectional: boolean;
+  type: SkillRelationshipType;
 }
 
 export interface CreateSkillRequest {
@@ -129,6 +144,14 @@ export interface ListSkillAlternativesResponse {
   skills: Skill[];
 }
 
+export interface GetTopLevelPrerequisiteGraphRequest {
+}
+
+export interface GetTopLevelPrerequisiteGraphResponse {
+  nodes: Skill[];
+  edges: SkillRelationship[];
+}
+
 export const SKILLS_V1_PACKAGE_NAME = "skills.v1";
 
 export interface SkillsServiceClient {
@@ -157,6 +180,10 @@ export interface SkillsServiceClient {
   listCommon(request: ListCommonSkillsRequest): Observable<ListCommonSkillsResponse>;
 
   listAlternatives(request: ListSkillAlternativesRequest): Observable<ListSkillAlternativesResponse>;
+
+  getTopLevelPrerequisiteGraph(
+    request: GetTopLevelPrerequisiteGraphRequest,
+  ): Observable<GetTopLevelPrerequisiteGraphResponse>;
 }
 
 export interface SkillsServiceController {
@@ -185,6 +212,10 @@ export interface SkillsServiceController {
   listCommon(request: ListCommonSkillsRequest): Observable<ListCommonSkillsResponse>;
 
   listAlternatives(request: ListSkillAlternativesRequest): Observable<ListSkillAlternativesResponse>;
+
+  getTopLevelPrerequisiteGraph(
+    request: GetTopLevelPrerequisiteGraphRequest,
+  ): Observable<GetTopLevelPrerequisiteGraphResponse>;
 }
 
 export function SkillsServiceControllerMethods() {
@@ -203,6 +234,7 @@ export function SkillsServiceControllerMethods() {
       "listChildren",
       "listCommon",
       "listAlternatives",
+      "getTopLevelPrerequisiteGraph",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

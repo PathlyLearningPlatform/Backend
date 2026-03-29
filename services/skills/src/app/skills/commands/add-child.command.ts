@@ -1,8 +1,8 @@
 import { ICommandHandler } from '@/app/common';
-import { UUID } from '@/domain/common';
+import { UUID, ValidationException } from '@/domain/common';
 import { SkillNotFoundException } from '@/domain/exceptions';
 import { SkillGraphService } from '@/domain/services';
-import { SkillId } from '@/domain/skills';
+import { SkillCannotReferenceItselfException, SkillId } from '@/domain/skills';
 
 export type AddChildSkillCommand = {
 	parentSkillId: string;
@@ -16,6 +16,8 @@ export class AddChildSkillHandler
 
 	/**
 	 * @throws {SkillNotFoundException}
+	 * @throws {SkillCannotReferenceItselfException}
+	 * @throws {ValidationException}
 	 */
 	async execute(command: AddChildSkillCommand): Promise<void> {
 		const parentId = SkillId.create(UUID.create(command.parentSkillId));

@@ -28,6 +28,7 @@ import {
 	type RemoveSkillResponse,
 	SKILLS_SERVICE_NAME,
 	type UpdateSkillResponse,
+	GetTopLevelPrerequisiteGraphResponse,
 } from '@pathly-backend/contracts/skills/v1/skills.js';
 import { SkillsApiErrorCodes } from '@pathly-backend/contracts/skills/v1/api.js';
 import type z from 'zod';
@@ -39,6 +40,7 @@ import type {
 	CreateSkillHandler,
 	FindSkillByIdHandler,
 	FindSkillBySlugHandler,
+	GetTopLevelPrerequisiteGraphHandler,
 	ListCommonSkillsHandler,
 	ListSkillAlternativesHandler,
 	ListSkillChildrenHandler,
@@ -62,6 +64,7 @@ import {
 	removeSkillSchema,
 	updateSkillSchema,
 } from './schemas';
+import { skillRelationshipTypeToClient } from './helpers/relationship-type-to-client.helper';
 
 @UseFilters(GrpcExceptionFilter)
 @Controller()
@@ -93,6 +96,8 @@ export class GrpcSkillsController {
 		private readonly listCommonHandler: ListCommonSkillsHandler,
 		@Inject(DiToken.LIST_SKILL_ALTERNATIVES_HANDLER)
 		private readonly listAlternativesHandler: ListSkillAlternativesHandler,
+		@Inject(DiToken.GET_TOP_LEVEL_PREREQUISITE_GRAPH_HANDLER)
+		private readonly getTopLevelPrerequisiteGraphHandler: GetTopLevelPrerequisiteGraphHandler,
 	) {}
 
 	@GrpcMethod(SKILLS_SERVICE_NAME)
@@ -306,6 +311,25 @@ export class GrpcSkillsController {
 			});
 
 			return { skills };
+		} catch (err) {
+			this.mapAndThrow(err);
+		}
+	}
+
+	@GrpcMethod(SKILLS_SERVICE_NAME)
+	async getTopLevelPrerequisiteGraph(): Promise<GetTopLevelPrerequisiteGraphResponse> {
+		try {
+			const result = await this.getTopLevelPrerequisiteGraphHandler.execute();
+
+			return {
+				edges: result.edges.map((edge) => ({
+					fromId: edge.fromId,
+					isDirectional: edge.isDirectional,
+					toId: edge.toId,
+					type: skillRelationshipTypeToClient(edge.type),
+				})),
+				nodes: result.nodes,
+			};
 		} catch (err) {
 			this.mapAndThrow(err);
 		}
