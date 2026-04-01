@@ -24,7 +24,7 @@ export const activitiesTable = pgTable(
 		name: varchar('name', { length: 255 }).notNull(),
 		description: text('description'),
 		order: integer('order').notNull(),
-		type: activityTypeEnum().notNull(),
+		type: activityTypeEnum('type').notNull(),
 	},
-	(t) => [unique().on(t.lessonId, t.order)],
+	(t) => [unique('uq_activities_lesson_id_order').on(t.lessonId, t.order)],
 );

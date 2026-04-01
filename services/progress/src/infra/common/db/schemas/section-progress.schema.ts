@@ -11,5 +11,7 @@ export const sectionProgressTable = pgTable(
 		completedUnitCount: integer('completed_unit_count').notNull().default(0),
 		totalUnitCount: integer('total_unit_count').notNull(),
 	},
-	(t) => [unique().on(t.sectionId, t.userId)],
+	(t) => [
+		unique('uq_section_progress_section_id_user_id').on(t.sectionId, t.userId),
+	],
 );

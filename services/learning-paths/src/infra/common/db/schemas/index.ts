@@ -5,6 +5,5 @@ export * from './learning-paths.table';
 export * from './lessons.table';
 export * from './questions.table';
 export * from './quizzes.table';
-export * from './relations';
 export * from './sections.table';
 export * from './units.table';

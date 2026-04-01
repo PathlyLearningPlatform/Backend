@@ -1,3 +1,6 @@
+include:
+  - ../db/compose.local.yaml
+
 services:
   learning-paths:
     build:
@@ -8,8 +11,8 @@ services:
       - PORT=3000
       - HOSTNAME=learning-paths
       - PROTO_DIR=/usr/src/app/libs/contracts/proto
-      - DB_HOST=learning-paths-db
-      - DB_NAME=learning-paths
+      - DB_HOST=db
+      - DB_NAME=db
       - DB_PORT=5432
       - DB_USER=admin
       - DB_PASSWORD=admin
@@ -25,7 +28,7 @@ services:
         source: ./jest.config.ts
         target: /usr/src/app/services/learning-paths/jest.config.ts
     depends_on:
-      learning-paths-db:
+      db:
         condition: service_healthy
     healthcheck:
       test: ['CMD-SHELL', 'grpc_health_probe -addr=learning-paths:3000']
@@ -33,21 +36,3 @@ services:
       start_period: 15s
     ports:
       - 3001:3000
-
-  learning-paths-db:
-    build:
-      context: ./db
-    environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=learning-paths
-    volumes:
-      - learning-paths-db-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ['CMD', 'pg_isready']
-      timeout: 30s
-      retries: 5
-      start_period: 20s
-
-volumes:
-  learning-paths-db-data:

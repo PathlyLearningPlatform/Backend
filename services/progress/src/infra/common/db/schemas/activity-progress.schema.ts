@@ -9,5 +9,10 @@ export const activityProgressTable = pgTable(
 		lessonId: uuid('lesson_id').notNull(),
 		completedAt: timestamp('completed_at'),
 	},
-	(t) => [unique().on(t.activityId, t.userId)],
+	(t) => [
+		unique('uq_activity_progress_activity_id_user_id').on(
+			t.activityId,
+			t.userId,
+		),
+	],
 );

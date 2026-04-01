@@ -23,5 +23,5 @@ export const unitsTable = pgTable(
 		order: integer('order').notNull(),
 		lessonCount: integer('lesson_count').notNull().default(0),
 	},
-	(t) => [unique().on(t.sectionId, t.order)],
+	(t) => [unique('uq_units_section_id_order').on(t.sectionId, t.order)],
 );

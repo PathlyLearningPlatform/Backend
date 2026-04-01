@@ -23,5 +23,7 @@ export const sectionsTable = pgTable(
 		order: integer('order').notNull(),
 		unitCount: integer('unit_count').notNull().default(0),
 	},
-	(t) => [unique().on(t.learningPathId, t.order)],
+	(t) => [
+		unique('uq_sections_learning_path_id_order').on(t.learningPathId, t.order),
+	],
 );

@@ -13,5 +13,5 @@ export const unitProgressTable = pgTable(
 			.default(0),
 		totalLessonCount: integer('total_lesson_count').notNull(),
 	},
-	(t) => [unique().on(t.unitId, t.userId)],
+	(t) => [unique('uq_unit_progress_unit_id_user_id').on(t.unitId, t.userId)],
 );

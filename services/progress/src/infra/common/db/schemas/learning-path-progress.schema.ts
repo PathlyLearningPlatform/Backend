@@ -12,5 +12,10 @@ export const learningPathProgressTable = pgTable(
 			.default(0),
 		totalSectionCount: integer('total_section_count').notNull(),
 	},
-	(t) => [unique().on(t.learningPathId, t.userId)],
+	(t) => [
+		unique('uq_learning_path_progress_learning_path_id_user_id').on(
+			t.learningPathId,
+			t.userId,
+		),
+	],
 );

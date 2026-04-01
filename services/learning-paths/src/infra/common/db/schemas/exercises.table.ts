@@ -11,5 +11,5 @@ export const exercisesTable = pgTable('exercises', {
 	activityId: uuid('activity_id')
 		.primaryKey()
 		.references(() => activitiesTable.id, { onDelete: 'cascade' }),
-	difficulty: exerciseDifficultyEnum().notNull(),
+	difficulty: exerciseDifficultyEnum('difficulty').notNull(),
 });
