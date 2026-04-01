@@ -1,2 +1,0 @@
-MATCH (n1)-[r]-(n2)
-RETURN DISTINCT n1, r, n2

@@ -17,7 +17,6 @@
     "services/api-gateway",
     "libs/contracts",
     "libs/ts/common",
-    "services/progress",
-    "services/skills"
+    "services/progress"
   ]
 }
