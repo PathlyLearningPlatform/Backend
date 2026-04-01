@@ -346,7 +346,7 @@ export class GrpcSkillsController {
 	): Promise<GetTopLevelPrerequisiteGraphResponse> {
 		try {
 			const result = await this.getPrerequisiteGraphHandler.execute({
-				parentSkillId: payload.parentSkillid,
+				parentSkillId: payload.parentSkillId,
 			});
 
 			return {
