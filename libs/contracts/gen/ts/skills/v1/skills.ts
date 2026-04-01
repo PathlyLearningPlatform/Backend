@@ -152,6 +152,15 @@ export interface GetTopLevelPrerequisiteGraphResponse {
   edges: SkillRelationship[];
 }
 
+export interface GetPrerequisiteGraphRequest {
+  parentSkillId?: string | undefined;
+}
+
+export interface GetPrerequisiteGraphResponse {
+  nodes: Skill[];
+  edges: SkillRelationship[];
+}
+
 export const SKILLS_V1_PACKAGE_NAME = "skills.v1";
 
 export interface SkillsServiceClient {
@@ -184,6 +193,8 @@ export interface SkillsServiceClient {
   getTopLevelPrerequisiteGraph(
     request: GetTopLevelPrerequisiteGraphRequest,
   ): Observable<GetTopLevelPrerequisiteGraphResponse>;
+
+  getPrerequisiteGraph(request: GetPrerequisiteGraphRequest): Observable<GetPrerequisiteGraphResponse>;
 }
 
 export interface SkillsServiceController {
@@ -216,6 +227,8 @@ export interface SkillsServiceController {
   getTopLevelPrerequisiteGraph(
     request: GetTopLevelPrerequisiteGraphRequest,
   ): Observable<GetTopLevelPrerequisiteGraphResponse>;
+
+  getPrerequisiteGraph(request: GetPrerequisiteGraphRequest): Observable<GetPrerequisiteGraphResponse>;
 }
 
 export function SkillsServiceControllerMethods() {
@@ -235,6 +248,7 @@ export function SkillsServiceControllerMethods() {
       "listCommon",
       "listAlternatives",
       "getTopLevelPrerequisiteGraph",
+      "getPrerequisiteGraph",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

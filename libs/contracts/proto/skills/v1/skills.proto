@@ -42,6 +42,8 @@ service SkillsService {
   rpc ListAlternatives(ListSkillAlternativesRequest) returns (ListSkillAlternativesResponse) {}
 
   rpc GetTopLevelPrerequisiteGraph(GetTopLevelPrerequisiteGraphRequest) returns (GetTopLevelPrerequisiteGraphResponse) {}
+
+  rpc GetPrerequisiteGraph(GetPrerequisiteGraphRequest) returns (GetPrerequisiteGraphResponse) {}
 }
 
 message CreateSkillRequest {
@@ -141,6 +143,14 @@ message ListSkillAlternativesResponse {
 
 message GetTopLevelPrerequisiteGraphRequest {}
 message GetTopLevelPrerequisiteGraphResponse {
+  repeated Skill nodes = 1;
+  repeated SkillRelationship edges = 2;
+}
+
+message GetPrerequisiteGraphRequest {
+  optional string parentSkillId = 1;
+}
+message GetPrerequisiteGraphResponse {
   repeated Skill nodes = 1;
   repeated SkillRelationship edges = 2;
 }

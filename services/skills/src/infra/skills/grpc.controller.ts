@@ -40,6 +40,7 @@ import type {
 	CreateSkillHandler,
 	FindSkillByIdHandler,
 	FindSkillBySlugHandler,
+	GetPrerequisiteGraphHandler,
 	GetTopLevelPrerequisiteGraphHandler,
 	ListCommonSkillsHandler,
 	ListSkillAlternativesHandler,
@@ -57,6 +58,7 @@ import {
 	createSkillSchema,
 	findSkillByIdSchema,
 	findSkillBySlugSchema,
+	getPrerequisiteGraphSchema,
 	listCommonSkillsSchema,
 	listSkillAlternativesSchema,
 	listSkillChildrenSchema,
@@ -98,6 +100,8 @@ export class GrpcSkillsController {
 		private readonly listAlternativesHandler: ListSkillAlternativesHandler,
 		@Inject(DiToken.GET_TOP_LEVEL_PREREQUISITE_GRAPH_HANDLER)
 		private readonly getTopLevelPrerequisiteGraphHandler: GetTopLevelPrerequisiteGraphHandler,
+		@Inject(DiToken.GET_PREREQUISITE_GRAPH_HANDLER)
+		private readonly getPrerequisiteGraphHandler: GetPrerequisiteGraphHandler,
 	) {}
 
 	@GrpcMethod(SKILLS_SERVICE_NAME)
@@ -320,6 +324,30 @@ export class GrpcSkillsController {
 	async getTopLevelPrerequisiteGraph(): Promise<GetTopLevelPrerequisiteGraphResponse> {
 		try {
 			const result = await this.getTopLevelPrerequisiteGraphHandler.execute();
+
+			return {
+				edges: result.edges.map((edge) => ({
+					fromId: edge.fromId,
+					isDirectional: edge.isDirectional,
+					toId: edge.toId,
+					type: skillRelationshipTypeToClient(edge.type),
+				})),
+				nodes: result.nodes,
+			};
+		} catch (err) {
+			this.mapAndThrow(err);
+		}
+	}
+
+	@GrpcMethod(SKILLS_SERVICE_NAME)
+	async getPrerequisiteGraph(
+		@Payload(new RpcValidationPipe(getPrerequisiteGraphSchema))
+		payload: z.infer<typeof getPrerequisiteGraphSchema>,
+	): Promise<GetTopLevelPrerequisiteGraphResponse> {
+		try {
+			const result = await this.getPrerequisiteGraphHandler.execute({
+				parentSkillId: payload.parentSkillid,
+			});
 
 			return {
 				edges: result.edges.map((edge) => ({

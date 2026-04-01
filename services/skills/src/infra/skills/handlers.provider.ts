@@ -8,6 +8,7 @@ import {
 	CreateSkillHandler,
 	FindSkillByIdHandler,
 	FindSkillBySlugHandler,
+	GetPrerequisiteGraphHandler,
 	GetTopLevelPrerequisiteGraphHandler,
 	ListCommonSkillsHandler,
 	ListSkillAlternativesHandler,
@@ -122,6 +123,13 @@ export const skillHandlersProvider: Provider[] = [
 		provide: DiToken.GET_TOP_LEVEL_PREREQUISITE_GRAPH_HANDLER,
 		useFactory(skillGraphService: SkillGraphService) {
 			return new GetTopLevelPrerequisiteGraphHandler(skillGraphService);
+		},
+		inject: [DiToken.SKILL_GRAPH_SERVICE],
+	},
+	{
+		provide: DiToken.GET_PREREQUISITE_GRAPH_HANDLER,
+		useFactory(skillGraphService: SkillGraphService) {
+			return new GetPrerequisiteGraphHandler(skillGraphService);
 		},
 		inject: [DiToken.SKILL_GRAPH_SERVICE],
 	},

@@ -40,6 +40,10 @@ export interface ISkillGraph {
 		nodes: Skill[];
 		edges: SkillRelationship[];
 	}>;
+	getPrerequisiteGraph(parentId: SkillId | null): Promise<{
+		nodes: Skill[];
+		edges: SkillRelationship[];
+	}>;
 	listSkillPrerequisities(id: SkillId): Promise<Skill[]>;
 	listSkillAlternatives(id: SkillId): Promise<Skill[]>;
 	listSkillChildren(id: SkillId): Promise<Skill[]>;

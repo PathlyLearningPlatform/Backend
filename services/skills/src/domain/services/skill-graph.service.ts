@@ -192,6 +192,9 @@ export class SkillGraphService {
 	async getTopLevelPrerequisiteGraph() {
 		return this.skillGraph.getTopLevelPrerequisiteGraph();
 	}
+	async getPrerequisiteGraph(parentId: SkillId | null) {
+		return this.skillGraph.getPrerequisiteGraph(parentId);
+	}
 
 	private async assertSkillsExist(
 		firstId: SkillId,

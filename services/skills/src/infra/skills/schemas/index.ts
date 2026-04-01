@@ -14,3 +14,5 @@ export * from './list-prerequisities.schema';
 export * from './list-children.schema';
 export * from './list-common.schema';
 export * from './list-alternatives.schema';
+
+export * from './get-prerequisite-graph.schema';

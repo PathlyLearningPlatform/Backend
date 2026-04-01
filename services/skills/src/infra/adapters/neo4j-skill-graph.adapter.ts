@@ -230,6 +230,50 @@ export class Neo4jSkillGraphAdapter implements ISkillGraph {
 		}
 	}
 
+	async getPrerequisiteGraph(parentId: SkillId | null) {
+		try {
+			const query = /* cypher */ `
+				MATCH (prerequisite:Skill)
+				WHERE prerequisite.parentId = $parentId 
+					OR (prerequisite.parentId IS NULL AND $parentId IS NULL)
+				OPTIONAL MATCH (prerequisite)<-[r:PREREQUISITE_OF]-(target:Skill)
+				WHERE target.parentId = prerequisite.parentId 
+					OR (target.parentId IS NULL AND prerequisite.parentId IS NULL)
+				RETURN prerequisite, r, target
+			`;
+
+			const { records } = await this.neo4jService.db.executeQuery(query, {
+				parentId: parentId?.toString() ?? null,
+			});
+
+			const nodes: Skill[] = [];
+			const edges: SkillRelationship[] = [];
+
+			records.forEach((record) => {
+				const prerequisite = this.mapSkillNode(record, 'prerequisite');
+
+				nodes.push(prerequisite);
+
+				if (record.get('target')) {
+					const target = this.mapSkillNode(record, 'target');
+					const edge = SkillRelationship.create({
+						fromId: prerequisite.id,
+						toId: target.id,
+						type: SkillRelationshipType.PREREQUISITE_OF,
+					});
+					edges.push(edge);
+				}
+			});
+
+			return {
+				nodes,
+				edges,
+			};
+		} catch (err) {
+			throw new DbException('neo4j error', err);
+		}
+	}
+
 	async listCommonSkills(id: SkillId): Promise<Skill[]> {
 		try {
 			const query = /*cypher*/ `
