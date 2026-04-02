@@ -4,13 +4,13 @@ import { SkillNotFoundException } from '@/domain/exceptions';
 import { SkillGraphService } from '@/domain/services';
 import { SkillCannotReferenceItselfException, SkillId } from '@/domain/skills';
 
-export type AddCommonSkillCommand = {
-	firstSkillId: string;
-	secondSkillId: string;
+export type AddNextStepSkillCommand = {
+	prerequisiteSkillId: string;
+	targetSkillId: string;
 };
 
-export class AddCommonSkillHandler
-	implements ICommandHandler<AddCommonSkillCommand, void>
+export class AddNextStepSkillHandler
+	implements ICommandHandler<AddNextStepSkillCommand, void>
 {
 	constructor(private readonly skillGraphService: SkillGraphService) {}
 
@@ -19,10 +19,12 @@ export class AddCommonSkillHandler
 	 * @throws {SkillCannotReferenceItselfException}
 	 * @throws {ValidationException}
 	 */
-	async execute(command: AddCommonSkillCommand): Promise<void> {
-		const firstId = SkillId.create(UUID.create(command.firstSkillId));
-		const secondId = SkillId.create(UUID.create(command.secondSkillId));
+	async execute(command: AddNextStepSkillCommand): Promise<void> {
+		const prerequisiteId = SkillId.create(
+			UUID.create(command.prerequisiteSkillId),
+		);
+		const targetId = SkillId.create(UUID.create(command.targetSkillId));
 
-		await this.skillGraphService.addCommon(firstId, secondId);
+		await this.skillGraphService.addNextStep(prerequisiteId, targetId);
 	}
 }

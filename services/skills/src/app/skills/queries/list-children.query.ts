@@ -17,7 +17,7 @@ export class ListSkillChildrenHandler
 	async execute(
 		command: ListSkillChildrenQuery,
 	): Promise<ListSkillChildrenResult> {
-		const skills = await this.skillGraphService.listSkillChildren(
+		const skills = await this.skillGraphService.listChildren(
 			SkillId.create(UUID.create(command.skillId)),
 		);
 

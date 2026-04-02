@@ -16,7 +16,7 @@ export class RemoveSkillHandler implements ICommandHandler<RemoveSkillCommand> {
 	 * @throws {ValidationException}
 	 */
 	async execute(command: RemoveSkillCommand): Promise<void> {
-		await this.skillGraphService.removeSkill(
+		await this.skillGraphService.remove(
 			SkillId.create(UUID.create(command.id)),
 		);
 	}

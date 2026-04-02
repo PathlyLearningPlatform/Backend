@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const addPrerequisiteSkillSchema = z
+export const addNextStepSkillSchema = z
 	.object({
 		prerequisiteSkillId: z.uuid(),
 		targetSkillId: z.uuid(),

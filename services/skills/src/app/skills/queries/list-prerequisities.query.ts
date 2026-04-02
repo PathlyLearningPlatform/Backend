@@ -18,7 +18,7 @@ export class ListSkillPrerequisitiesHandler
 	async execute(
 		command: ListSkillPrerequisitiesQuery,
 	): Promise<ListSkillPrerequisitiesResult> {
-		const skills = await this.skillGraphService.listSkillPrerequisities(
+		const skills = await this.skillGraphService.listPrerequisities(
 			SkillId.create(UUID.create(command.skillId)),
 		);
 

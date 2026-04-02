@@ -13,7 +13,7 @@ export class Neo4jSkillGraphAdapter implements ISkillGraph {
 		@Inject(Neo4jService) private readonly neo4jService: Neo4jService,
 	) {}
 
-	private mapSkillNode(record: Record, alias: string = 's'): Skill {
+	private mapNode(record: Record, alias: string = 's'): Skill {
 		const node = record.get(alias) as {
 			properties: {
 				id: string;
@@ -35,7 +35,7 @@ export class Neo4jSkillGraphAdapter implements ISkillGraph {
 		});
 	}
 
-	async saveSkill(aggreagate: Skill): Promise<void> {
+	async save(aggregate: Skill): Promise<void> {
 		try {
 			const query = /*cypher*/ `
 				MERGE (s:Skill {id: $id})
@@ -46,18 +46,17 @@ export class Neo4jSkillGraphAdapter implements ISkillGraph {
 			`;
 
 			await this.neo4jService.db.executeQuery(query, {
-				id: aggreagate.id.toString(),
-				name: aggreagate.name.toString(),
-				isRoot: aggreagate.isRoot,
-				slug: aggreagate.slug.toString(),
-				parentId: aggreagate.parentId?.toString() ?? null,
+				id: aggregate.id.toString(),
+				name: aggregate.name.toString(),
+				isRoot: aggregate.isRoot,
+				slug: aggregate.slug.toString(),
+				parentId: aggregate.parentId?.toString() ?? null,
 			});
 		} catch (err) {
 			throw new DbException('neo4j error', err);
 		}
 	}
-
-	async removeSkill(id: SkillId): Promise<boolean> {
+	async remove(id: SkillId): Promise<boolean> {
 		try {
 			const query = /*cypher*/ `
 				MATCH (s:Skill {id: $id})
@@ -82,66 +81,39 @@ export class Neo4jSkillGraphAdapter implements ISkillGraph {
 			const query = /*cypher*/ `
 				MATCH (fromSkill:Skill {id: $fromId})
 				MATCH (toSkill:Skill {id: $toId})
-				MERGE (fromSkill)-[:\`${relationship.type}\`]->(toSkill)
+				MERGE (fromSkill)-[:$($relType)]->(toSkill)
 			`;
 
 			await this.neo4jService.db.executeQuery(query, {
 				fromId,
 				toId,
+				relType: relationship.type,
 			});
 		} catch (err) {
 			throw new DbException('neo4j error', err);
 		}
 	}
-
-	async unlink(relationship: SkillRelationship): Promise<boolean> {
+	async unlink(relationship: SkillRelationship): Promise<void> {
 		try {
 			const fromId = relationship.fromId.toString();
 			const toId = relationship.toId.toString();
 
-			const query = relationship.isDirectional
-				? /*cypher*/ `
-					MATCH (fromSkill:Skill {id: $fromId})-[r:\`${relationship.type}\`]->(toSkill:Skill {id: $toId})
-					DELETE r
-				`
-				: /*cypher*/ `
-					MATCH (fromSkill:Skill {id: $fromId})-[r:\`${relationship.type}\`]-(toSkill:Skill {id: $toId})
+			const query = /*cypher*/ `
+					MATCH (fromSkill:Skill {id: $fromId})-[r:$($relType)]->(toSkill:Skill {id: $toId})
 					DELETE r
 				`;
 
-			const result = await this.neo4jService.db.executeQuery(query, {
+			await this.neo4jService.db.executeQuery(query, {
 				fromId,
 				toId,
+				relType: relationship.type,
 			});
-
-			return result.summary.counters.containsUpdates();
 		} catch (err) {
 			throw new DbException('neo4j error', err);
 		}
 	}
 
-	async findRootSkill(): Promise<Skill | null> {
-		try {
-			const query = /*cypher*/ `
-				MATCH (s:Skill {isRoot: true})
-				RETURN s
-				LIMIT 1
-			`;
-
-			const result = await this.neo4jService.db.executeQuery(query, {});
-			const record = result.records[0];
-
-			if (!record) {
-				return null;
-			}
-
-			return this.mapSkillNode(record);
-		} catch (err) {
-			throw new DbException('neo4j error', err);
-		}
-	}
-
-	async findSkillById(id: SkillId): Promise<Skill | null> {
+	async findById(id: SkillId): Promise<Skill | null> {
 		try {
 			const query = /*cypher*/ `
 				MATCH (s:Skill {id: $id})
@@ -159,13 +131,12 @@ export class Neo4jSkillGraphAdapter implements ISkillGraph {
 				return null;
 			}
 
-			return this.mapSkillNode(record);
+			return this.mapNode(record);
 		} catch (err) {
 			throw new DbException('neo4j error', err);
 		}
 	}
-
-	async findSkillBySlug(slug: Slug): Promise<Skill | null> {
+	async findBySlug(slug: Slug): Promise<Skill | null> {
 		try {
 			const query = /*cypher*/ `
 				MATCH (s:Skill {slug: $slug})
@@ -183,48 +154,7 @@ export class Neo4jSkillGraphAdapter implements ISkillGraph {
 				return null;
 			}
 
-			return this.mapSkillNode(record);
-		} catch (err) {
-			throw new DbException('neo4j error', err);
-		}
-	}
-
-	async getTopLevelPrerequisiteGraph() {
-		try {
-			const query = /* cypher */ `
-				MATCH (prerequisite:Skill)
-				WHERE prerequisite.parentId IS NULL
-				OPTIONAL MATCH (prerequisite)<-[r:PREREQUISITE_OF]-(target:Skill)
-				WHERE target.parentId IS NULL
-				RETURN prerequisite, r, target
-			`;
-
-			const { records, summary } =
-				await this.neo4jService.db.executeQuery(query);
-
-			const nodes: Skill[] = [];
-			const edges: SkillRelationship[] = [];
-
-			records.forEach((record) => {
-				const prerequisite = this.mapSkillNode(record, 'prerequisite');
-
-				nodes.push(prerequisite);
-
-				if (record.get('target')) {
-					const target = this.mapSkillNode(record, 'target');
-					const edge = SkillRelationship.create({
-						fromId: prerequisite.id,
-						toId: target.id,
-						type: SkillRelationshipType.PREREQUISITE_OF,
-					});
-					edges.push(edge);
-				}
-			});
-
-			return {
-				nodes,
-				edges,
-			};
+			return this.mapNode(record);
 		} catch (err) {
 			throw new DbException('neo4j error', err);
 		}
@@ -236,7 +166,7 @@ export class Neo4jSkillGraphAdapter implements ISkillGraph {
 				MATCH (prerequisite:Skill)
 				WHERE prerequisite.parentId = $parentId 
 					OR (prerequisite.parentId IS NULL AND $parentId IS NULL)
-				OPTIONAL MATCH (prerequisite)<-[r:PREREQUISITE_OF]-(target:Skill)
+				OPTIONAL MATCH (prerequisite)<-[r:NEXT_STEP_OF]-(target:Skill)
 				WHERE target.parentId = prerequisite.parentId 
 					OR (target.parentId IS NULL AND prerequisite.parentId IS NULL)
 				RETURN prerequisite, r, target
@@ -250,16 +180,16 @@ export class Neo4jSkillGraphAdapter implements ISkillGraph {
 			const edges: SkillRelationship[] = [];
 
 			records.forEach((record) => {
-				const prerequisite = this.mapSkillNode(record, 'prerequisite');
+				const prerequisite = this.mapNode(record, 'prerequisite');
 
 				nodes.push(prerequisite);
 
 				if (record.get('target')) {
-					const target = this.mapSkillNode(record, 'target');
+					const target = this.mapNode(record, 'target');
 					const edge = SkillRelationship.create({
-						fromId: prerequisite.id,
-						toId: target.id,
-						type: SkillRelationshipType.PREREQUISITE_OF,
+						fromId: target.id,
+						toId: prerequisite.id,
+						type: SkillRelationshipType.NEXT_STEP_OF,
 					});
 					edges.push(edge);
 				}
@@ -274,71 +204,42 @@ export class Neo4jSkillGraphAdapter implements ISkillGraph {
 		}
 	}
 
-	async listCommonSkills(id: SkillId): Promise<Skill[]> {
+	async listIncoming(
+		id: SkillId,
+		relationshipType: SkillRelationshipType,
+	): Promise<Skill[]> {
 		try {
 			const query = /*cypher*/ `
-				MATCH (s:Skill {id: $id})-[:COMMON_WITH]-(other:Skill)
-				RETURN DISTINCT other
+				MATCH (s:Skill {id: $id})<-[:$($relType)]-(incoming:Skill)
+				RETURN incoming
 			`;
 
 			const result = await this.neo4jService.db.executeQuery(query, {
 				id: id.toString(),
+				relType: relationshipType,
 			});
 
-			return result.records.map((record) => this.mapSkillNode(record, 'other'));
+			return result.records.map((record) => this.mapNode(record, 'incoming'));
 		} catch (err) {
 			throw new DbException('neo4j error', err);
 		}
 	}
-
-	async listSkillAlternatives(id: SkillId): Promise<Skill[]> {
+	async listOutgoing(
+		id: SkillId,
+		relationshipType: SkillRelationshipType,
+	): Promise<Skill[]> {
 		try {
 			const query = /*cypher*/ `
-				MATCH (s:Skill {id: $id})-[:ALTERNATIVE_TO]-(other:Skill)
-				RETURN DISTINCT other
+				MATCH (s:Skill {id: $id})-[:$($relType)]->(outgoing:Skill)
+				RETURN outgoing
 			`;
 
 			const result = await this.neo4jService.db.executeQuery(query, {
 				id: id.toString(),
+				relType: relationshipType,
 			});
 
-			return result.records.map((record) => this.mapSkillNode(record, 'other'));
-		} catch (err) {
-			throw new DbException('neo4j error', err);
-		}
-	}
-
-	async listSkillChildren(id: SkillId): Promise<Skill[]> {
-		try {
-			const query = /*cypher*/ `
-				MATCH (child:Skill)-[:PART_OF]->(parent:Skill {id: $id})
-				RETURN DISTINCT child
-			`;
-
-			const result = await this.neo4jService.db.executeQuery(query, {
-				id: id.toString(),
-			});
-
-			return result.records.map((record) => this.mapSkillNode(record, 'child'));
-		} catch (err) {
-			throw new DbException('neo4j error', err);
-		}
-	}
-
-	async listSkillPrerequisities(id: SkillId): Promise<Skill[]> {
-		try {
-			const query = /*cypher*/ `
-				MATCH (prerequisite:Skill)-[:PREREQUISITE_OF]->(target:Skill {id: $id})
-				RETURN DISTINCT prerequisite
-			`;
-
-			const result = await this.neo4jService.db.executeQuery(query, {
-				id: id.toString(),
-			});
-
-			return result.records.map((record) =>
-				this.mapSkillNode(record, 'prerequisite'),
-			);
+			return result.records.map((record) => this.mapNode(record, 'outgoing'));
 		} catch (err) {
 			throw new DbException('neo4j error', err);
 		}

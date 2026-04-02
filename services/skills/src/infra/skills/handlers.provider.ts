@@ -1,18 +1,14 @@
 import { Provider } from '@nestjs/common';
 import { DiToken } from '../common';
 import {
-	AddAlternativeSkillHandler,
 	AddChildSkillHandler,
-	AddCommonSkillHandler,
-	AddPrerequisiteSkillHandler,
+	AddNextStepSkillHandler,
 	CreateSkillHandler,
 	FindSkillByIdHandler,
 	FindSkillBySlugHandler,
 	GetPrerequisiteGraphHandler,
-	GetTopLevelPrerequisiteGraphHandler,
-	ListCommonSkillsHandler,
-	ListSkillAlternativesHandler,
 	ListSkillChildrenHandler,
+	ListSkillNextStepsHandler,
 	ListSkillPrerequisitiesHandler,
 	RemoveSkillHandler,
 	UpdateSkillHandler,
@@ -50,13 +46,6 @@ export const skillHandlersProvider: Provider[] = [
 		inject: [DiToken.SKILL_GRAPH_SERVICE],
 	},
 	{
-		provide: DiToken.ADD_ALTERNATIVE_SKILL_HANDLER,
-		useFactory(skillGraphService: SkillGraphService) {
-			return new AddAlternativeSkillHandler(skillGraphService);
-		},
-		inject: [DiToken.SKILL_GRAPH_SERVICE],
-	},
-	{
 		provide: DiToken.ADD_CHILD_SKILL_HANDLER,
 		useFactory(skillGraphService: SkillGraphService) {
 			return new AddChildSkillHandler(skillGraphService);
@@ -64,16 +53,9 @@ export const skillHandlersProvider: Provider[] = [
 		inject: [DiToken.SKILL_GRAPH_SERVICE],
 	},
 	{
-		provide: DiToken.ADD_PREREQUISITE_SKILL_HANDLER,
+		provide: DiToken.ADD_NEXT_STEP_SKILL_HANDLER,
 		useFactory(skillGraphService: SkillGraphService) {
-			return new AddPrerequisiteSkillHandler(skillGraphService);
-		},
-		inject: [DiToken.SKILL_GRAPH_SERVICE],
-	},
-	{
-		provide: DiToken.ADD_COMMON_SKILL_HANDLER,
-		useFactory(skillGraphService: SkillGraphService) {
-			return new AddCommonSkillHandler(skillGraphService);
+			return new AddNextStepSkillHandler(skillGraphService);
 		},
 		inject: [DiToken.SKILL_GRAPH_SERVICE],
 	},
@@ -92,20 +74,6 @@ export const skillHandlersProvider: Provider[] = [
 		inject: [DiToken.SKILL_GRAPH_SERVICE],
 	},
 	{
-		provide: DiToken.LIST_COMMON_SKILLS_HANDLER,
-		useFactory(skillGraphService: SkillGraphService) {
-			return new ListCommonSkillsHandler(skillGraphService);
-		},
-		inject: [DiToken.SKILL_GRAPH_SERVICE],
-	},
-	{
-		provide: DiToken.LIST_SKILL_ALTERNATIVES_HANDLER,
-		useFactory(skillGraphService: SkillGraphService) {
-			return new ListSkillAlternativesHandler(skillGraphService);
-		},
-		inject: [DiToken.SKILL_GRAPH_SERVICE],
-	},
-	{
 		provide: DiToken.LIST_SKILL_CHILDREN_HANDLER,
 		useFactory(skillGraphService: SkillGraphService) {
 			return new ListSkillChildrenHandler(skillGraphService);
@@ -120,9 +88,9 @@ export const skillHandlersProvider: Provider[] = [
 		inject: [DiToken.SKILL_GRAPH_SERVICE],
 	},
 	{
-		provide: DiToken.GET_TOP_LEVEL_PREREQUISITE_GRAPH_HANDLER,
+		provide: DiToken.LIST_SKILL_NEXT_STEPS_HANDLER,
 		useFactory(skillGraphService: SkillGraphService) {
-			return new GetTopLevelPrerequisiteGraphHandler(skillGraphService);
+			return new ListSkillNextStepsHandler(skillGraphService);
 		},
 		inject: [DiToken.SKILL_GRAPH_SERVICE],
 	},

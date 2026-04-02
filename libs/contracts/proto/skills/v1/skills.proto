@@ -5,9 +5,7 @@ package skills.v1;
 enum SkillRelationshipType {
   SKILL_RELATIONSHIP_TYPE_UNSPECIFIED = 0;
   SKILL_RELATIONSHIP_TYPE_PART_OF = 1;
-  SKILL_RELATIONSHIP_TYPE_PREREQUISITE_OF = 2;
-  SKILL_RELATIONSHIP_TYPE_ALTERNATIVE_TO = 3;
-  SKILL_RELATIONSHIP_TYPE_COMMON_WITH = 4;
+  SKILL_RELATIONSHIP_TYPE_NEXT_STEP_OF = 2;
 }
 
 message Skill {
@@ -17,44 +15,43 @@ message Skill {
 }
 
 message SkillRelationship {
-  string fromId = 1;
-  string toId = 2;
-  bool isDirectional = 3;
-  SkillRelationshipType type = 4;
+  string from_id = 1;
+  string to_id = 2;
+  SkillRelationshipType type = 3;
+}
+
+message SkillGraphView {
+  repeated Skill nodes = 1;
+  repeated SkillRelationship edges = 2;
 }
 
 service SkillsService {
-  rpc Create(CreateSkillRequest) returns (CreateSkillResponse) {}
-  rpc Update(UpdateSkillRequest) returns (UpdateSkillResponse) {}
-  rpc Remove(RemoveSkillRequest) returns (RemoveSkillResponse) {}
+  rpc Create(SkillsServiceCreateRequest) returns (SkillsServiceCreateResponse) {}
+  rpc Update(SkillsServiceUpdateRequest) returns (SkillsServiceUpdateResponse) {}
+  rpc Remove(SkillsServiceRemoveRequest) returns (SkillsServiceRemoveResponse) {}
 
-  rpc AddPrerequisite(AddPrerequisiteSkillRequest) returns (AddPrerequisiteSkillResponse) {}
-  rpc AddChild(AddChildSkillRequest) returns (AddChildSkillResponse) {}
-  rpc AddCommon(AddCommonSkillRequest) returns (AddCommonSkillResponse) {}
-  rpc AddAlternative(AddAlternativeSkillRequest) returns (AddAlternativeSkillResponse) {}
+  rpc FindById(SkillsServiceFindByIdRequest) returns (SkillsServiceFindByIdResponse) {}
+  rpc FindBySlug(SkillsServiceFindBySlugRequest) returns (SkillsServiceFindBySlugResponse) {}
 
-  rpc FindById(FindSkillByIdRequest) returns (FindSkillByIdResponse) {}
-  rpc FindBySlug(FindSkillBySlugRequest) returns (FindSkillBySlugResponse) {}
+  rpc AddNextStep(SkillsServiceAddNextStepRequest) returns (SkillsServiceAddNextStepResponse) {}
+  rpc ListNextSteps(SkillsServiceListNextStepsRequest) returns (SkillsServiceListNextStepsResponse) {}
+  rpc ListPrerequisities(SkillsServiceListPrerequisitiesRequest) returns (SkillsServiceListPrerequisitiesResponse) {}
 
-  rpc ListPrerequisities(ListSkillPrerequisitiesRequest) returns (ListSkillPrerequisitiesResponse) {}
-  rpc ListChildren(ListSkillChildrenRequest) returns (ListSkillChildrenResponse) {}
-  rpc ListCommon(ListCommonSkillsRequest) returns (ListCommonSkillsResponse) {}
-  rpc ListAlternatives(ListSkillAlternativesRequest) returns (ListSkillAlternativesResponse) {}
+  rpc AddChild(SkillsServiceAddChildRequest) returns (SkillsServiceAddChildResponse) {}
+  rpc ListChildren(SkillsServiceListChildrenRequest) returns (SkillsServiceListChildrenResponse) {}
 
-  rpc GetTopLevelPrerequisiteGraph(GetTopLevelPrerequisiteGraphRequest) returns (GetTopLevelPrerequisiteGraphResponse) {}
-
-  rpc GetPrerequisiteGraph(GetPrerequisiteGraphRequest) returns (GetPrerequisiteGraphResponse) {}
+  rpc GetPrerequisiteGraph(SkillsServiceGetPrerequisiteGraphRequest) returns (SkillsServiceGetPrerequisiteGraphResponse) {}
 }
 
-message CreateSkillRequest {
+message SkillsServiceCreateRequest {
   string name = 1;
   optional string parent_id = 2;
 }
-message CreateSkillResponse {
+message SkillsServiceCreateResponse {
   Skill skill = 1;
 }
 
-message UpdateSkillRequest {
+message SkillsServiceUpdateRequest {
   message Where {
     string id = 1;
   }
@@ -66,91 +63,65 @@ message UpdateSkillRequest {
   Where where = 1;
   Fields fields = 2;
 }
-message UpdateSkillResponse {
+message SkillsServiceUpdateResponse {
   Skill skill = 1;
 }
 
-message RemoveSkillRequest {
+message SkillsServiceRemoveRequest {
   string id = 1;
 }
-message RemoveSkillResponse {}
+message SkillsServiceRemoveResponse {}
 
-message AddPrerequisiteSkillRequest {
+message SkillsServiceAddNextStepRequest {
   string prerequisite_skill_id = 1;
   string target_skill_id = 2;
 }
-message AddPrerequisiteSkillResponse {}
+message SkillsServiceAddNextStepResponse {}
 
-message AddChildSkillRequest {
+message SkillsServiceAddChildRequest {
   string parent_skill_id = 1;
   string child_skill_id = 2;
 }
-message AddChildSkillResponse {}
+message SkillsServiceAddChildResponse {}
 
-message AddCommonSkillRequest {
-  string first_skill_id = 1;
-  string second_skill_id = 2;
-}
-message AddCommonSkillResponse {}
-
-message AddAlternativeSkillRequest {
-  string first_skill_id = 1;
-  string second_skill_id = 2;
-}
-message AddAlternativeSkillResponse {}
-
-message FindSkillByIdRequest {
+message SkillsServiceFindByIdRequest {
   string id = 1;
 }
-message FindSkillByIdResponse {
+message SkillsServiceFindByIdResponse {
   Skill skill = 1;
 }
 
-message FindSkillBySlugRequest {
+message SkillsServiceFindBySlugRequest {
   string slug = 1;
 }
-message FindSkillBySlugResponse {
+message SkillsServiceFindBySlugResponse {
   Skill skill = 1;
 }
 
-message ListSkillPrerequisitiesRequest {
+message SkillsServiceListNextStepsRequest {
   string skill_id = 1;
 }
-message ListSkillPrerequisitiesResponse {
+message SkillsServiceListNextStepsResponse {
   repeated Skill skills = 1;
 }
 
-message ListSkillChildrenRequest {
+message SkillsServiceListPrerequisitiesRequest {
   string skill_id = 1;
 }
-message ListSkillChildrenResponse {
+message SkillsServiceListPrerequisitiesResponse {
   repeated Skill skills = 1;
 }
 
-message ListCommonSkillsRequest {
+message SkillsServiceListChildrenRequest {
   string skill_id = 1;
 }
-message ListCommonSkillsResponse {
+message SkillsServiceListChildrenResponse {
   repeated Skill skills = 1;
 }
 
-message ListSkillAlternativesRequest {
-  string skill_id = 1;
+message SkillsServiceGetPrerequisiteGraphRequest {
+  optional string parent_skill_id = 1;
 }
-message ListSkillAlternativesResponse {
-  repeated Skill skills = 1;
-}
-
-message GetTopLevelPrerequisiteGraphRequest {}
-message GetTopLevelPrerequisiteGraphResponse {
-  repeated Skill nodes = 1;
-  repeated SkillRelationship edges = 2;
-}
-
-message GetPrerequisiteGraphRequest {
-  optional string parentSkillId = 1;
-}
-message GetPrerequisiteGraphResponse {
-  repeated Skill nodes = 1;
-  repeated SkillRelationship edges = 2;
+message SkillsServiceGetPrerequisiteGraphResponse {
+  SkillGraphView graph = 1;
 }

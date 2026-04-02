@@ -18,7 +18,7 @@ export class FindSkillBySlugHandler
 	 */
 	async execute(command: FindSkillBySlugQuery): Promise<SkillDto> {
 		const slug = Slug.create(command.slug);
-		const skill = await this.skillGraphService.findSkillBySlug(slug);
+		const skill = await this.skillGraphService.findBySlug(slug);
 
 		if (!skill) {
 			throw new SkillNotFoundException(slug.toString());

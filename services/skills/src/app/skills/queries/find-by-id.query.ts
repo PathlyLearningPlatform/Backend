@@ -19,7 +19,7 @@ export class FindSkillByIdHandler
 	 */
 	async execute(command: FindSkillByIdQuery): Promise<SkillDto> {
 		const id = SkillId.create(UUID.create(command.id));
-		const skill = await this.skillGraphService.findSkillById(id);
+		const skill = await this.skillGraphService.findById(id);
 
 		if (!skill) {
 			throw new SkillNotFoundException(command.id);

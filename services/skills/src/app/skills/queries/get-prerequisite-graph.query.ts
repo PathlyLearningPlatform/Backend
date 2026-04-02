@@ -37,7 +37,6 @@ export class GetPrerequisiteGraphHandler
 			})),
 			edges: result.edges.map((edge) => ({
 				type: edge.type,
-				isDirectional: edge.isDirectional,
 				fromId: edge.fromId.toString(),
 				toId: edge.toId.toString(),
 			})),

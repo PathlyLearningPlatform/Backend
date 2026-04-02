@@ -13,9 +13,7 @@ export const protobufPackage = "skills.v1";
 export enum SkillRelationshipType {
   UNSPECIFIED = "SKILL_RELATIONSHIP_TYPE_UNSPECIFIED",
   PART_OF = "SKILL_RELATIONSHIP_TYPE_PART_OF",
-  PREREQUISITE_OF = "SKILL_RELATIONSHIP_TYPE_PREREQUISITE_OF",
-  ALTERNATIVE_TO = "SKILL_RELATIONSHIP_TYPE_ALTERNATIVE_TO",
-  COMMON_WITH = "SKILL_RELATIONSHIP_TYPE_COMMON_WITH",
+  NEXT_STEP_OF = "SKILL_RELATIONSHIP_TYPE_NEXT_STEP_OF",
 }
 
 export interface Skill {
@@ -27,208 +25,167 @@ export interface Skill {
 export interface SkillRelationship {
   fromId: string;
   toId: string;
-  isDirectional: boolean;
   type: SkillRelationshipType;
 }
 
-export interface CreateSkillRequest {
+export interface SkillGraphView {
+  nodes: Skill[];
+  edges: SkillRelationship[];
+}
+
+export interface SkillsServiceCreateRequest {
   name: string;
   parentId?: string | undefined;
 }
 
-export interface CreateSkillResponse {
+export interface SkillsServiceCreateResponse {
   skill: Skill | undefined;
 }
 
-export interface UpdateSkillRequest {
-  where: UpdateSkillRequest_Where | undefined;
-  fields: UpdateSkillRequest_Fields | undefined;
+export interface SkillsServiceUpdateRequest {
+  where: SkillsServiceUpdateRequest_Where | undefined;
+  fields: SkillsServiceUpdateRequest_Fields | undefined;
 }
 
-export interface UpdateSkillRequest_Where {
+export interface SkillsServiceUpdateRequest_Where {
   id: string;
 }
 
-export interface UpdateSkillRequest_Fields {
+export interface SkillsServiceUpdateRequest_Fields {
   name?: string | undefined;
 }
 
-export interface UpdateSkillResponse {
+export interface SkillsServiceUpdateResponse {
   skill: Skill | undefined;
 }
 
-export interface RemoveSkillRequest {
+export interface SkillsServiceRemoveRequest {
   id: string;
 }
 
-export interface RemoveSkillResponse {
+export interface SkillsServiceRemoveResponse {
 }
 
-export interface AddPrerequisiteSkillRequest {
+export interface SkillsServiceAddNextStepRequest {
   prerequisiteSkillId: string;
   targetSkillId: string;
 }
 
-export interface AddPrerequisiteSkillResponse {
+export interface SkillsServiceAddNextStepResponse {
 }
 
-export interface AddChildSkillRequest {
+export interface SkillsServiceAddChildRequest {
   parentSkillId: string;
   childSkillId: string;
 }
 
-export interface AddChildSkillResponse {
+export interface SkillsServiceAddChildResponse {
 }
 
-export interface AddCommonSkillRequest {
-  firstSkillId: string;
-  secondSkillId: string;
-}
-
-export interface AddCommonSkillResponse {
-}
-
-export interface AddAlternativeSkillRequest {
-  firstSkillId: string;
-  secondSkillId: string;
-}
-
-export interface AddAlternativeSkillResponse {
-}
-
-export interface FindSkillByIdRequest {
+export interface SkillsServiceFindByIdRequest {
   id: string;
 }
 
-export interface FindSkillByIdResponse {
+export interface SkillsServiceFindByIdResponse {
   skill: Skill | undefined;
 }
 
-export interface FindSkillBySlugRequest {
+export interface SkillsServiceFindBySlugRequest {
   slug: string;
 }
 
-export interface FindSkillBySlugResponse {
+export interface SkillsServiceFindBySlugResponse {
   skill: Skill | undefined;
 }
 
-export interface ListSkillPrerequisitiesRequest {
+export interface SkillsServiceListNextStepsRequest {
   skillId: string;
 }
 
-export interface ListSkillPrerequisitiesResponse {
+export interface SkillsServiceListNextStepsResponse {
   skills: Skill[];
 }
 
-export interface ListSkillChildrenRequest {
+export interface SkillsServiceListPrerequisitiesRequest {
   skillId: string;
 }
 
-export interface ListSkillChildrenResponse {
+export interface SkillsServiceListPrerequisitiesResponse {
   skills: Skill[];
 }
 
-export interface ListCommonSkillsRequest {
+export interface SkillsServiceListChildrenRequest {
   skillId: string;
 }
 
-export interface ListCommonSkillsResponse {
+export interface SkillsServiceListChildrenResponse {
   skills: Skill[];
 }
 
-export interface ListSkillAlternativesRequest {
-  skillId: string;
-}
-
-export interface ListSkillAlternativesResponse {
-  skills: Skill[];
-}
-
-export interface GetTopLevelPrerequisiteGraphRequest {
-}
-
-export interface GetTopLevelPrerequisiteGraphResponse {
-  nodes: Skill[];
-  edges: SkillRelationship[];
-}
-
-export interface GetPrerequisiteGraphRequest {
+export interface SkillsServiceGetPrerequisiteGraphRequest {
   parentSkillId?: string | undefined;
 }
 
-export interface GetPrerequisiteGraphResponse {
-  nodes: Skill[];
-  edges: SkillRelationship[];
+export interface SkillsServiceGetPrerequisiteGraphResponse {
+  graph: SkillGraphView | undefined;
 }
 
 export const SKILLS_V1_PACKAGE_NAME = "skills.v1";
 
 export interface SkillsServiceClient {
-  create(request: CreateSkillRequest): Observable<CreateSkillResponse>;
+  create(request: SkillsServiceCreateRequest): Observable<SkillsServiceCreateResponse>;
 
-  update(request: UpdateSkillRequest): Observable<UpdateSkillResponse>;
+  update(request: SkillsServiceUpdateRequest): Observable<SkillsServiceUpdateResponse>;
 
-  remove(request: RemoveSkillRequest): Observable<RemoveSkillResponse>;
+  remove(request: SkillsServiceRemoveRequest): Observable<SkillsServiceRemoveResponse>;
 
-  addPrerequisite(request: AddPrerequisiteSkillRequest): Observable<AddPrerequisiteSkillResponse>;
+  findById(request: SkillsServiceFindByIdRequest): Observable<SkillsServiceFindByIdResponse>;
 
-  addChild(request: AddChildSkillRequest): Observable<AddChildSkillResponse>;
+  findBySlug(request: SkillsServiceFindBySlugRequest): Observable<SkillsServiceFindBySlugResponse>;
 
-  addCommon(request: AddCommonSkillRequest): Observable<AddCommonSkillResponse>;
+  addNextStep(request: SkillsServiceAddNextStepRequest): Observable<SkillsServiceAddNextStepResponse>;
 
-  addAlternative(request: AddAlternativeSkillRequest): Observable<AddAlternativeSkillResponse>;
+  listNextSteps(request: SkillsServiceListNextStepsRequest): Observable<SkillsServiceListNextStepsResponse>;
 
-  findById(request: FindSkillByIdRequest): Observable<FindSkillByIdResponse>;
+  listPrerequisities(
+    request: SkillsServiceListPrerequisitiesRequest,
+  ): Observable<SkillsServiceListPrerequisitiesResponse>;
 
-  findBySlug(request: FindSkillBySlugRequest): Observable<FindSkillBySlugResponse>;
+  addChild(request: SkillsServiceAddChildRequest): Observable<SkillsServiceAddChildResponse>;
 
-  listPrerequisities(request: ListSkillPrerequisitiesRequest): Observable<ListSkillPrerequisitiesResponse>;
+  listChildren(request: SkillsServiceListChildrenRequest): Observable<SkillsServiceListChildrenResponse>;
 
-  listChildren(request: ListSkillChildrenRequest): Observable<ListSkillChildrenResponse>;
-
-  listCommon(request: ListCommonSkillsRequest): Observable<ListCommonSkillsResponse>;
-
-  listAlternatives(request: ListSkillAlternativesRequest): Observable<ListSkillAlternativesResponse>;
-
-  getTopLevelPrerequisiteGraph(
-    request: GetTopLevelPrerequisiteGraphRequest,
-  ): Observable<GetTopLevelPrerequisiteGraphResponse>;
-
-  getPrerequisiteGraph(request: GetPrerequisiteGraphRequest): Observable<GetPrerequisiteGraphResponse>;
+  getPrerequisiteGraph(
+    request: SkillsServiceGetPrerequisiteGraphRequest,
+  ): Observable<SkillsServiceGetPrerequisiteGraphResponse>;
 }
 
 export interface SkillsServiceController {
-  create(request: CreateSkillRequest): Observable<CreateSkillResponse>;
+  create(request: SkillsServiceCreateRequest): Observable<SkillsServiceCreateResponse>;
 
-  update(request: UpdateSkillRequest): Observable<UpdateSkillResponse>;
+  update(request: SkillsServiceUpdateRequest): Observable<SkillsServiceUpdateResponse>;
 
-  remove(request: RemoveSkillRequest): Observable<RemoveSkillResponse>;
+  remove(request: SkillsServiceRemoveRequest): Observable<SkillsServiceRemoveResponse>;
 
-  addPrerequisite(request: AddPrerequisiteSkillRequest): Observable<AddPrerequisiteSkillResponse>;
+  findById(request: SkillsServiceFindByIdRequest): Observable<SkillsServiceFindByIdResponse>;
 
-  addChild(request: AddChildSkillRequest): Observable<AddChildSkillResponse>;
+  findBySlug(request: SkillsServiceFindBySlugRequest): Observable<SkillsServiceFindBySlugResponse>;
 
-  addCommon(request: AddCommonSkillRequest): Observable<AddCommonSkillResponse>;
+  addNextStep(request: SkillsServiceAddNextStepRequest): Observable<SkillsServiceAddNextStepResponse>;
 
-  addAlternative(request: AddAlternativeSkillRequest): Observable<AddAlternativeSkillResponse>;
+  listNextSteps(request: SkillsServiceListNextStepsRequest): Observable<SkillsServiceListNextStepsResponse>;
 
-  findById(request: FindSkillByIdRequest): Observable<FindSkillByIdResponse>;
+  listPrerequisities(
+    request: SkillsServiceListPrerequisitiesRequest,
+  ): Observable<SkillsServiceListPrerequisitiesResponse>;
 
-  findBySlug(request: FindSkillBySlugRequest): Observable<FindSkillBySlugResponse>;
+  addChild(request: SkillsServiceAddChildRequest): Observable<SkillsServiceAddChildResponse>;
 
-  listPrerequisities(request: ListSkillPrerequisitiesRequest): Observable<ListSkillPrerequisitiesResponse>;
+  listChildren(request: SkillsServiceListChildrenRequest): Observable<SkillsServiceListChildrenResponse>;
 
-  listChildren(request: ListSkillChildrenRequest): Observable<ListSkillChildrenResponse>;
-
-  listCommon(request: ListCommonSkillsRequest): Observable<ListCommonSkillsResponse>;
-
-  listAlternatives(request: ListSkillAlternativesRequest): Observable<ListSkillAlternativesResponse>;
-
-  getTopLevelPrerequisiteGraph(
-    request: GetTopLevelPrerequisiteGraphRequest,
-  ): Observable<GetTopLevelPrerequisiteGraphResponse>;
-
-  getPrerequisiteGraph(request: GetPrerequisiteGraphRequest): Observable<GetPrerequisiteGraphResponse>;
+  getPrerequisiteGraph(
+    request: SkillsServiceGetPrerequisiteGraphRequest,
+  ): Observable<SkillsServiceGetPrerequisiteGraphResponse>;
 }
 
 export function SkillsServiceControllerMethods() {
@@ -237,17 +194,13 @@ export function SkillsServiceControllerMethods() {
       "create",
       "update",
       "remove",
-      "addPrerequisite",
-      "addChild",
-      "addCommon",
-      "addAlternative",
       "findById",
       "findBySlug",
+      "addNextStep",
+      "listNextSteps",
       "listPrerequisities",
+      "addChild",
       "listChildren",
-      "listCommon",
-      "listAlternatives",
-      "getTopLevelPrerequisiteGraph",
       "getPrerequisiteGraph",
     ];
     for (const method of grpcMethods) {

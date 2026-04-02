@@ -66,10 +66,11 @@ export class Skill extends AggregateRoot<SkillId, SkillProps> {
 	update(props?: UpdateSkillProps) {
 		if (props?.name) {
 			this._props.name = props.name;
+			this._props.slug = Slug.create(props.name.toString());
 		}
 
 		if (props?.parentId) {
-			if (this._props.parentId?.equals(props.parentId)) {
+			if (this._id.equals(props.parentId)) {
 				throw new SkillCannotReferenceItselfException();
 			}
 

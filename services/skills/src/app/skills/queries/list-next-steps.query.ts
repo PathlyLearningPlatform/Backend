@@ -4,20 +4,20 @@ import { SkillGraphService } from '@/domain/services';
 import { SkillId } from '@/domain/skills';
 import { UUID } from '@/domain/common';
 
-export type ListCommonSkillsQuery = {
+export type ListSkillNextStepsQuery = {
 	skillId: string;
 };
-export type ListCommonSkillsResult = SkillDto[];
+export type ListSkillNextStepsResult = SkillDto[];
 
-export class ListCommonSkillsHandler
-	implements IQueryHandler<ListCommonSkillsQuery, ListCommonSkillsResult>
+export class ListSkillNextStepsHandler
+	implements IQueryHandler<ListSkillNextStepsQuery, ListSkillNextStepsResult>
 {
 	constructor(private readonly skillGraphService: SkillGraphService) {}
 
 	async execute(
-		command: ListCommonSkillsQuery,
-	): Promise<ListCommonSkillsResult> {
-		const skills = await this.skillGraphService.listCommonSkills(
+		command: ListSkillNextStepsQuery,
+	): Promise<ListSkillNextStepsResult> {
+		const skills = await this.skillGraphService.listNextSteps(
 			SkillId.create(UUID.create(command.skillId)),
 		);
 

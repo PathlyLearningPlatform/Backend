@@ -14,36 +14,29 @@ import {
 	RpcValidationPipe,
 } from '@pathly-backend/common';
 import {
-	type AddAlternativeSkillResponse,
-	type AddChildSkillResponse,
-	type AddCommonSkillResponse,
-	type AddPrerequisiteSkillResponse,
-	type CreateSkillResponse,
-	type FindSkillByIdResponse,
-	type FindSkillBySlugResponse,
-	type ListSkillAlternativesResponse,
-	type ListSkillChildrenResponse,
-	type ListCommonSkillsResponse,
-	type ListSkillPrerequisitiesResponse,
-	type RemoveSkillResponse,
+	type SkillsServiceAddChildResponse,
+	type SkillsServiceAddNextStepResponse,
+	type SkillsServiceCreateResponse,
+	type SkillsServiceFindByIdResponse,
+	type SkillsServiceFindBySlugResponse,
+	type SkillsServiceListChildrenResponse,
+	type SkillsServiceListPrerequisitiesResponse,
+	type SkillsServiceListNextStepsResponse,
+	type SkillsServiceRemoveResponse,
 	SKILLS_SERVICE_NAME,
-	type UpdateSkillResponse,
-	GetTopLevelPrerequisiteGraphResponse,
+	type SkillsServiceUpdateResponse,
+	SkillsServiceGetPrerequisiteGraphResponse,
 } from '@pathly-backend/contracts/skills/v1/skills.js';
 import { SkillsApiErrorCodes } from '@pathly-backend/contracts/skills/v1/api.js';
 import type z from 'zod';
 import type {
-	AddAlternativeSkillHandler,
 	AddChildSkillHandler,
-	AddCommonSkillHandler,
-	AddPrerequisiteSkillHandler,
+	AddNextStepSkillHandler,
 	CreateSkillHandler,
 	FindSkillByIdHandler,
 	FindSkillBySlugHandler,
 	GetPrerequisiteGraphHandler,
-	GetTopLevelPrerequisiteGraphHandler,
-	ListCommonSkillsHandler,
-	ListSkillAlternativesHandler,
+	ListSkillNextStepsHandler,
 	ListSkillChildrenHandler,
 	ListSkillPrerequisitiesHandler,
 	RemoveSkillHandler,
@@ -51,20 +44,17 @@ import type {
 } from '@/app/skills';
 import { DiToken, ExceptionMessage } from '../common';
 import {
-	addAlternativeSkillSchema,
 	addChildSkillSchema,
-	addCommonSkillSchema,
-	addPrerequisiteSkillSchema,
+	addNextStepSkillSchema,
 	createSkillSchema,
 	findSkillByIdSchema,
 	findSkillBySlugSchema,
 	getPrerequisiteGraphSchema,
-	listCommonSkillsSchema,
-	listSkillAlternativesSchema,
 	listSkillChildrenSchema,
 	listSkillPrerequisitiesSchema,
 	removeSkillSchema,
 	updateSkillSchema,
+	listSkillNextStepsSchema,
 } from './schemas';
 import { skillRelationshipTypeToClient } from './helpers/relationship-type-to-client.helper';
 
@@ -78,28 +68,20 @@ export class GrpcSkillsController {
 		private readonly updateHandler: UpdateSkillHandler,
 		@Inject(DiToken.REMOVE_SKILL_HANDLER)
 		private readonly removeHandler: RemoveSkillHandler,
-		@Inject(DiToken.ADD_PREREQUISITE_SKILL_HANDLER)
-		private readonly addPrerequisiteHandler: AddPrerequisiteSkillHandler,
+		@Inject(DiToken.ADD_NEXT_STEP_SKILL_HANDLER)
+		private readonly addPrerequisiteHandler: AddNextStepSkillHandler,
 		@Inject(DiToken.ADD_CHILD_SKILL_HANDLER)
 		private readonly addChildHandler: AddChildSkillHandler,
-		@Inject(DiToken.ADD_COMMON_SKILL_HANDLER)
-		private readonly addCommonHandler: AddCommonSkillHandler,
-		@Inject(DiToken.ADD_ALTERNATIVE_SKILL_HANDLER)
-		private readonly addAlternativeHandler: AddAlternativeSkillHandler,
 		@Inject(DiToken.FIND_SKILL_BY_ID_HANDLER)
 		private readonly findByIdHandler: FindSkillByIdHandler,
 		@Inject(DiToken.FIND_SKILL_BY_SLUG_HANDLER)
 		private readonly findBySlugHandler: FindSkillBySlugHandler,
 		@Inject(DiToken.LIST_SKILL_PREREQUISITIES_HANDLER)
 		private readonly listPrerequisitiesHandler: ListSkillPrerequisitiesHandler,
+		@Inject(DiToken.LIST_SKILL_NEXT_STEPS_HANDLER)
+		private readonly listNextStepsHandler: ListSkillPrerequisitiesHandler,
 		@Inject(DiToken.LIST_SKILL_CHILDREN_HANDLER)
 		private readonly listChildrenHandler: ListSkillChildrenHandler,
-		@Inject(DiToken.LIST_COMMON_SKILLS_HANDLER)
-		private readonly listCommonHandler: ListCommonSkillsHandler,
-		@Inject(DiToken.LIST_SKILL_ALTERNATIVES_HANDLER)
-		private readonly listAlternativesHandler: ListSkillAlternativesHandler,
-		@Inject(DiToken.GET_TOP_LEVEL_PREREQUISITE_GRAPH_HANDLER)
-		private readonly getTopLevelPrerequisiteGraphHandler: GetTopLevelPrerequisiteGraphHandler,
 		@Inject(DiToken.GET_PREREQUISITE_GRAPH_HANDLER)
 		private readonly getPrerequisiteGraphHandler: GetPrerequisiteGraphHandler,
 	) {}
@@ -108,7 +90,7 @@ export class GrpcSkillsController {
 	async create(
 		@Payload(new RpcValidationPipe(createSkillSchema))
 		payload: z.infer<typeof createSkillSchema>,
-	): Promise<CreateSkillResponse> {
+	): Promise<SkillsServiceCreateResponse> {
 		try {
 			const skill = await this.createHandler.execute({
 				name: payload.name,
@@ -120,12 +102,11 @@ export class GrpcSkillsController {
 			this.mapAndThrow(err);
 		}
 	}
-
 	@GrpcMethod(SKILLS_SERVICE_NAME)
 	async update(
 		@Payload(new RpcValidationPipe(updateSkillSchema))
 		payload: z.infer<typeof updateSkillSchema>,
-	): Promise<UpdateSkillResponse> {
+	): Promise<SkillsServiceUpdateResponse> {
 		try {
 			const skill = await this.updateHandler.execute({
 				where: {
@@ -141,82 +122,13 @@ export class GrpcSkillsController {
 			this.mapAndThrow(err);
 		}
 	}
-
 	@GrpcMethod(SKILLS_SERVICE_NAME)
 	async remove(
 		@Payload(new RpcValidationPipe(removeSkillSchema))
 		payload: z.infer<typeof removeSkillSchema>,
-	): Promise<RemoveSkillResponse> {
+	): Promise<SkillsServiceRemoveResponse> {
 		try {
 			await this.removeHandler.execute({ id: payload.id });
-
-			return {};
-		} catch (err) {
-			this.mapAndThrow(err);
-		}
-	}
-
-	@GrpcMethod(SKILLS_SERVICE_NAME)
-	async addPrerequisite(
-		@Payload(new RpcValidationPipe(addPrerequisiteSkillSchema))
-		payload: z.infer<typeof addPrerequisiteSkillSchema>,
-	): Promise<AddPrerequisiteSkillResponse> {
-		try {
-			await this.addPrerequisiteHandler.execute({
-				prerequisiteSkillId: payload.prerequisiteSkillId,
-				targetSkillId: payload.targetSkillId,
-			});
-
-			return {};
-		} catch (err) {
-			this.mapAndThrow(err);
-		}
-	}
-
-	@GrpcMethod(SKILLS_SERVICE_NAME)
-	async addChild(
-		@Payload(new RpcValidationPipe(addChildSkillSchema))
-		payload: z.infer<typeof addChildSkillSchema>,
-	): Promise<AddChildSkillResponse> {
-		try {
-			await this.addChildHandler.execute({
-				parentSkillId: payload.parentSkillId,
-				childSkillId: payload.childSkillId,
-			});
-
-			return {};
-		} catch (err) {
-			this.mapAndThrow(err);
-		}
-	}
-
-	@GrpcMethod(SKILLS_SERVICE_NAME)
-	async addCommon(
-		@Payload(new RpcValidationPipe(addCommonSkillSchema))
-		payload: z.infer<typeof addCommonSkillSchema>,
-	): Promise<AddCommonSkillResponse> {
-		try {
-			await this.addCommonHandler.execute({
-				firstSkillId: payload.firstSkillId,
-				secondSkillId: payload.secondSkillId,
-			});
-
-			return {};
-		} catch (err) {
-			this.mapAndThrow(err);
-		}
-	}
-
-	@GrpcMethod(SKILLS_SERVICE_NAME)
-	async addAlternative(
-		@Payload(new RpcValidationPipe(addAlternativeSkillSchema))
-		payload: z.infer<typeof addAlternativeSkillSchema>,
-	): Promise<AddAlternativeSkillResponse> {
-		try {
-			await this.addAlternativeHandler.execute({
-				firstSkillId: payload.firstSkillId,
-				secondSkillId: payload.secondSkillId,
-			});
 
 			return {};
 		} catch (err) {
@@ -228,7 +140,7 @@ export class GrpcSkillsController {
 	async findById(
 		@Payload(new RpcValidationPipe(findSkillByIdSchema))
 		payload: z.infer<typeof findSkillByIdSchema>,
-	): Promise<FindSkillByIdResponse> {
+	): Promise<SkillsServiceFindByIdResponse> {
 		try {
 			const skill = await this.findByIdHandler.execute({
 				id: payload.id,
@@ -239,12 +151,11 @@ export class GrpcSkillsController {
 			this.mapAndThrow(err);
 		}
 	}
-
 	@GrpcMethod(SKILLS_SERVICE_NAME)
 	async findBySlug(
 		@Payload(new RpcValidationPipe(findSkillBySlugSchema))
 		payload: z.infer<typeof findSkillBySlugSchema>,
-	): Promise<FindSkillBySlugResponse> {
+	): Promise<SkillsServiceFindBySlugResponse> {
 		try {
 			const skill = await this.findBySlugHandler.execute({
 				slug: payload.slug,
@@ -257,10 +168,26 @@ export class GrpcSkillsController {
 	}
 
 	@GrpcMethod(SKILLS_SERVICE_NAME)
+	async addNextStep(
+		@Payload(new RpcValidationPipe(addNextStepSkillSchema))
+		payload: z.infer<typeof addNextStepSkillSchema>,
+	): Promise<SkillsServiceAddNextStepResponse> {
+		try {
+			await this.addPrerequisiteHandler.execute({
+				prerequisiteSkillId: payload.prerequisiteSkillId,
+				targetSkillId: payload.targetSkillId,
+			});
+
+			return {};
+		} catch (err) {
+			this.mapAndThrow(err);
+		}
+	}
+	@GrpcMethod(SKILLS_SERVICE_NAME)
 	async listPrerequisities(
 		@Payload(new RpcValidationPipe(listSkillPrerequisitiesSchema))
 		payload: z.infer<typeof listSkillPrerequisitiesSchema>,
-	): Promise<ListSkillPrerequisitiesResponse> {
+	): Promise<SkillsServiceListPrerequisitiesResponse> {
 		try {
 			const skills = await this.listPrerequisitiesHandler.execute({
 				skillId: payload.skillId,
@@ -271,12 +198,43 @@ export class GrpcSkillsController {
 			this.mapAndThrow(err);
 		}
 	}
+	@GrpcMethod(SKILLS_SERVICE_NAME)
+	async listNextSteps(
+		@Payload(new RpcValidationPipe(listSkillNextStepsSchema))
+		payload: z.infer<typeof listSkillNextStepsSchema>,
+	): Promise<SkillsServiceListNextStepsResponse> {
+		try {
+			const skills = await this.listNextStepsHandler.execute({
+				skillId: payload.skillId,
+			});
 
+			return { skills };
+		} catch (err) {
+			this.mapAndThrow(err);
+		}
+	}
+
+	@GrpcMethod(SKILLS_SERVICE_NAME)
+	async addChild(
+		@Payload(new RpcValidationPipe(addChildSkillSchema))
+		payload: z.infer<typeof addChildSkillSchema>,
+	): Promise<SkillsServiceAddChildResponse> {
+		try {
+			await this.addChildHandler.execute({
+				parentSkillId: payload.parentSkillId,
+				childSkillId: payload.childSkillId,
+			});
+
+			return {};
+		} catch (err) {
+			this.mapAndThrow(err);
+		}
+	}
 	@GrpcMethod(SKILLS_SERVICE_NAME)
 	async listChildren(
 		@Payload(new RpcValidationPipe(listSkillChildrenSchema))
 		payload: z.infer<typeof listSkillChildrenSchema>,
-	): Promise<ListSkillChildrenResponse> {
+	): Promise<SkillsServiceListChildrenResponse> {
 		try {
 			const skills = await this.listChildrenHandler.execute({
 				skillId: payload.skillId,
@@ -289,74 +247,24 @@ export class GrpcSkillsController {
 	}
 
 	@GrpcMethod(SKILLS_SERVICE_NAME)
-	async listCommon(
-		@Payload(new RpcValidationPipe(listCommonSkillsSchema))
-		payload: z.infer<typeof listCommonSkillsSchema>,
-	): Promise<ListCommonSkillsResponse> {
-		try {
-			const skills = await this.listCommonHandler.execute({
-				skillId: payload.skillId,
-			});
-
-			return { skills };
-		} catch (err) {
-			this.mapAndThrow(err);
-		}
-	}
-
-	@GrpcMethod(SKILLS_SERVICE_NAME)
-	async listAlternatives(
-		@Payload(new RpcValidationPipe(listSkillAlternativesSchema))
-		payload: z.infer<typeof listSkillAlternativesSchema>,
-	): Promise<ListSkillAlternativesResponse> {
-		try {
-			const skills = await this.listAlternativesHandler.execute({
-				skillId: payload.skillId,
-			});
-
-			return { skills };
-		} catch (err) {
-			this.mapAndThrow(err);
-		}
-	}
-
-	@GrpcMethod(SKILLS_SERVICE_NAME)
-	async getTopLevelPrerequisiteGraph(): Promise<GetTopLevelPrerequisiteGraphResponse> {
-		try {
-			const result = await this.getTopLevelPrerequisiteGraphHandler.execute();
-
-			return {
-				edges: result.edges.map((edge) => ({
-					fromId: edge.fromId,
-					isDirectional: edge.isDirectional,
-					toId: edge.toId,
-					type: skillRelationshipTypeToClient(edge.type),
-				})),
-				nodes: result.nodes,
-			};
-		} catch (err) {
-			this.mapAndThrow(err);
-		}
-	}
-
-	@GrpcMethod(SKILLS_SERVICE_NAME)
 	async getPrerequisiteGraph(
 		@Payload(new RpcValidationPipe(getPrerequisiteGraphSchema))
 		payload: z.infer<typeof getPrerequisiteGraphSchema>,
-	): Promise<GetTopLevelPrerequisiteGraphResponse> {
+	): Promise<SkillsServiceGetPrerequisiteGraphResponse> {
 		try {
 			const result = await this.getPrerequisiteGraphHandler.execute({
 				parentSkillId: payload.parentSkillId,
 			});
 
 			return {
-				edges: result.edges.map((edge) => ({
-					fromId: edge.fromId,
-					isDirectional: edge.isDirectional,
-					toId: edge.toId,
-					type: skillRelationshipTypeToClient(edge.type),
-				})),
-				nodes: result.nodes,
+				graph: {
+					edges: result.edges.map((edge) => ({
+						fromId: edge.fromId,
+						toId: edge.toId,
+						type: skillRelationshipTypeToClient(edge.type),
+					})),
+					nodes: result.nodes,
+				},
 			};
 		} catch (err) {
 			this.mapAndThrow(err);

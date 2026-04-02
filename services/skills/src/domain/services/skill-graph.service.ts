@@ -2,7 +2,6 @@ import { Slug } from '../common';
 import { SkillNotFoundException } from '../exceptions';
 import { ISkillGraph } from '../interfaces';
 import {
-	RootSkillParentException,
 	Skill,
 	SkillCannotReferenceItselfException,
 	SkillId,
@@ -13,43 +12,14 @@ import {
 
 export class SkillGraphService {
 	constructor(private readonly skillGraph: ISkillGraph) {}
-
-	/**
-	 * @description creates root skill with the given id.
-	 * If root skill already exists id is ignored and it is updated with provided properties.
-	 */
-	async saveRootSkill(id: SkillId, name: SkillName): Promise<Skill> {
-		let rootSkill = await this.skillGraph.findRootSkill();
-
-		if (!rootSkill) {
-			rootSkill = Skill.create(id, {
-				name,
-				isRoot: true,
-				parentId: null,
-			});
-		}
-
-		rootSkill.update({
-			name,
-		});
-
-		await this.skillGraph.saveSkill(rootSkill);
-
-		return rootSkill;
-	}
-
 	/**
 	 * @description creates skill with given id and props.
 	 * If skill already exists it is updated.
 	 * @throws {SkillNotFoundException} if parent skill is not found
 	 */
-	async saveSkill(
-		id: SkillId,
-		name: SkillName,
-		parentId?: SkillId,
-	): Promise<Skill> {
+	async save(id: SkillId, name: SkillName, parentId?: SkillId): Promise<Skill> {
 		if (parentId) {
-			const parentSkill = await this.skillGraph.findSkillById(parentId);
+			const parentSkill = await this.skillGraph.findById(parentId);
 
 			if (!parentSkill) {
 				throw new SkillNotFoundException(parentId.toString());
@@ -58,17 +28,16 @@ export class SkillGraphService {
 
 		const skill = Skill.create(id, { name, isRoot: false, parentId });
 
-		await this.skillGraph.saveSkill(skill);
+		await this.skillGraph.save(skill);
 
 		return skill;
 	}
-
 	/**
 	 * @description removes skill with all it's relationships
 	 * @throws {SkillNotFoundException}
 	 */
-	async removeSkill(id: SkillId) {
-		const wasRemoved = await this.skillGraph.removeSkill(id);
+	async remove(id: SkillId) {
+		const wasRemoved = await this.skillGraph.remove(id);
 
 		if (!wasRemoved) {
 			throw new SkillNotFoundException(id.toString());
@@ -76,38 +45,53 @@ export class SkillGraphService {
 	}
 
 	/**
+	 * @description removes exactly one relationship.
+	 * @throws {SkillNotFoundException} if either of the skills does not exist.
+	 * @throws {SkillCannotReferenceItselfException} if both ids are the same.
+	 */
+	async unlink(
+		fromId: SkillId,
+		toId: SkillId,
+		relationshipType: SkillRelationshipType,
+	) {
+		await this.assertSkillsExist(fromId, toId);
+
+		const relationship = SkillRelationship.create({
+			fromId,
+			toId,
+			type: relationshipType,
+		});
+
+		await this.skillGraph.unlink(relationship);
+	}
+
+	async findById(id: SkillId): Promise<Skill | null> {
+		return this.skillGraph.findById(id);
+	}
+	async findBySlug(slug: Slug): Promise<Skill | null> {
+		return this.skillGraph.findBySlug(slug);
+	}
+
+	/**
 	 * @description adds prerequisite skill to a target skill.
 	 * @throws {SkillNotFoundException} if either of the skills does not exist.
 	 * @throws {SkillCannotReferenceItselfException} if both ids are the same.
 	 */
-	async addPrerequisite(
-		prerequisiteId: SkillId,
-		targetId: SkillId,
-	): Promise<void> {
+	async addNextStep(prerequisiteId: SkillId, targetId: SkillId): Promise<void> {
 		const relationship = SkillRelationship.create({
-			fromId: prerequisiteId,
-			toId: targetId,
-			type: SkillRelationshipType.PREREQUISITE_OF,
+			fromId: targetId,
+			toId: prerequisiteId,
+			type: SkillRelationshipType.NEXT_STEP_OF,
 		});
 
 		await this.assertSkillsExist(prerequisiteId, targetId);
 		await this.skillGraph.link(relationship);
 	}
-
-	/**
-	 * @description adds alternative skill.
-	 * @throws {SkillNotFoundException} if either of the skills does not exist.
-	 * @throws {SkillCannotReferenceItselfException} if both ids are the same.
-	 */
-	async addAlternative(firstId: SkillId, secondId: SkillId): Promise<void> {
-		const relationship = SkillRelationship.create({
-			fromId: firstId,
-			toId: secondId,
-			type: SkillRelationshipType.ALTERNATIVE_TO,
-		});
-
-		await this.assertSkillsExist(firstId, secondId);
-		await this.skillGraph.link(relationship);
+	async listNextSteps(id: SkillId): Promise<Skill[]> {
+		return this.skillGraph.listIncoming(id, SkillRelationshipType.NEXT_STEP_OF);
+	}
+	async listPrerequisities(id: SkillId): Promise<Skill[]> {
+		return this.skillGraph.listOutgoing(id, SkillRelationshipType.NEXT_STEP_OF);
 	}
 
 	/**
@@ -129,69 +113,25 @@ export class SkillGraphService {
 			parentId: parentId,
 		});
 
-		await this.skillGraph.saveSkill(child);
+		await this.skillGraph.save(child);
 	}
-
-	/**
-	 * @description adds common skill.
-	 * @throws {SkillNotFoundException} if either of the skills does not exist.
-	 * @throws {SkillCannotReferenceItselfException} if both ids are the same.
-	 */
-	async addCommon(firstId: SkillId, secondId: SkillId): Promise<void> {
-		const relationship = SkillRelationship.create({
-			fromId: firstId,
-			toId: secondId,
-			type: SkillRelationshipType.COMMON_WITH,
-		});
-
-		await this.assertSkillsExist(firstId, secondId);
-		await this.skillGraph.link(relationship);
+	async listChildren(id: SkillId): Promise<Skill[]> {
+		return this.skillGraph.listOutgoing(id, SkillRelationshipType.PART_OF);
 	}
+	async findParent(id: SkillId): Promise<Skill | null> {
+		const skill = await this.skillGraph.findById(id);
 
-	/**
-	 * @description removes exactly one relationship.
-	 * @throws {SkillNotFoundException} if either of the skills does not exist.
-	 * @throws {SkillCannotReferenceItselfException} if both ids are the same.
-	 */
-	async unlink(
-		fromId: SkillId,
-		toId: SkillId,
-		relationshipType: SkillRelationshipType,
-	) {
-		const relationship = SkillRelationship.create({
-			fromId,
-			toId,
-			type: relationshipType,
-		});
-
-		const wasRemoved = await this.skillGraph.unlink(relationship);
-
-		if (!wasRemoved) {
-			throw new SkillNotFoundException();
+		if (!skill) {
+			return null;
 		}
+
+		if (!skill.parentId) {
+			return null;
+		}
+
+		return this.skillGraph.findById(skill.parentId);
 	}
 
-	async findSkillById(id: SkillId) {
-		return this.skillGraph.findSkillById(id);
-	}
-	async findSkillBySlug(slug: Slug) {
-		return this.skillGraph.findSkillBySlug(slug);
-	}
-	async listSkillPrerequisities(id: SkillId): Promise<Skill[]> {
-		return this.skillGraph.listSkillPrerequisities(id);
-	}
-	async listSkillAlternatives(id: SkillId): Promise<Skill[]> {
-		return this.skillGraph.listSkillAlternatives(id);
-	}
-	async listSkillChildren(id: SkillId): Promise<Skill[]> {
-		return this.skillGraph.listSkillChildren(id);
-	}
-	async listCommonSkills(id: SkillId): Promise<Skill[]> {
-		return this.skillGraph.listCommonSkills(id);
-	}
-	async getTopLevelPrerequisiteGraph() {
-		return this.skillGraph.getTopLevelPrerequisiteGraph();
-	}
 	async getPrerequisiteGraph(parentId: SkillId | null) {
 		return this.skillGraph.getPrerequisiteGraph(parentId);
 	}
@@ -201,8 +141,8 @@ export class SkillGraphService {
 		secondId: SkillId,
 	): Promise<Skill[]> {
 		const [first, second] = await Promise.all([
-			this.skillGraph.findSkillById(firstId),
-			this.skillGraph.findSkillById(secondId),
+			this.skillGraph.findById(firstId),
+			this.skillGraph.findById(secondId),
 		]);
 
 		if (!first || !second) {

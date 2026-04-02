@@ -25,8 +25,7 @@ export class Slug extends ValueObject<Props> {
 			.trim()
 			.toLowerCase()
 			.replace(/[^a-z0-9 -]/g, '')
-			.replace(/\s+/g, '-')
-			.replace(/-+/g, '');
+			.replace(/\s+/g, '-');
 
 		return new Slug({ value: slug });
 	}

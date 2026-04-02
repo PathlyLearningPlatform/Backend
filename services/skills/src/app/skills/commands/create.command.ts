@@ -23,7 +23,7 @@ export class CreateSkillHandler
 	async execute(command: CreateSkillCommand): Promise<SkillDto> {
 		const id = SkillId.create(UUID.create(randomUUID()));
 
-		const skill = await this.skillGraphService.saveSkill(
+		const skill = await this.skillGraphService.save(
 			id,
 			SkillName.create(command.name),
 			command.parentId

@@ -25,7 +25,7 @@ export class UpdateSkillHandler
 	 */
 	async execute(command: UpdateSkillCommand): Promise<SkillDto> {
 		const id = SkillId.create(UUID.create(command.where.id));
-		const skill = await this.skillGraphService.findSkillById(id);
+		const skill = await this.skillGraphService.findById(id);
 
 		if (!skill) {
 			throw new SkillNotFoundException(id.toString());
@@ -37,7 +37,7 @@ export class UpdateSkillHandler
 				: undefined,
 		});
 
-		this.skillGraphService.saveSkill(skill.id, skill.name);
+		this.skillGraphService.save(skill.id, skill.name);
 
 		return {
 			id: skill.id.toString(),
