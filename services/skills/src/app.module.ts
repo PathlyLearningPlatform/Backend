@@ -7,6 +7,7 @@ import {
 import { ConfigModule } from '@nestjs/config';
 import { validateConfig } from './infra/common';
 import { SkillsModule } from './infra/skills/skills.module';
+import { SkillProgressModule } from './infra/skill-progress/skill-progress.module';
 
 @Module({
 	imports: [
@@ -19,6 +20,7 @@ import { SkillsModule } from './infra/skills/skills.module';
 			isGlobal: true,
 		}),
 		SkillsModule,
+		SkillProgressModule,
 	],
 	providers: [
 		{

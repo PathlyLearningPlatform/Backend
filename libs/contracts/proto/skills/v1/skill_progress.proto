@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package skills.v1;
+
+message SkillProgress {
+  string skill_id = 1;
+  string user_id = 2;
+  string unlocked_at = 3;
+}
+
+service SkillProgressService {
+  rpc Unlock(SkillProgressServiceUnlockRequest) returns (SkillProgressServiceUnlockResponse) {}
+
+  rpc FindForUser(SkillProgressServiceFindForUserRequest) returns (SkillProgressServiceFindForUserResponse) {}
+  rpc FindOneForUser(SkillProgressServiceFindOneForUserRequest) returns (SkillProgressServiceFindOneForUserResponse) {}
+}
+
+message SkillProgressServiceUnlockRequest {
+  string skill_id = 1;
+  string user_id = 2;
+}
+message SkillProgressServiceUnlockResponse {}
+
+message SkillProgressServiceFindForUserRequest {
+  string skill_id = 1;
+  string user_id = 2;
+}
+message SkillProgressServiceFindForUserResponse {
+  repeated SkillProgress skill_progress = 1;
+}
+
+message SkillProgressServiceFindOneForUserRequest {
+  string skill_id = 1;
+  string user_id = 2;
+}
+message SkillProgressServiceFindOneForUserResponse {
+  SkillProgress skill_progress = 1;
+}
