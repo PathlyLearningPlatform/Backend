@@ -1,4 +1,4 @@
-import { ValueObject } from './value-object';
+import type { ValueObject } from "./value-object";
 
 export abstract class Entity<ID extends ValueObject<object>, Props> {
 	protected readonly _id: ID;

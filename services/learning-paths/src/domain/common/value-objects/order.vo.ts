@@ -1,5 +1,5 @@
-import { InvalidOrderException } from '../exceptions';
-import { ValueObject } from '../value-object';
+import { InvalidOrderException } from "../exceptions";
+import { ValueObject } from "../value-object";
 
 type Props = {
 	value: number;

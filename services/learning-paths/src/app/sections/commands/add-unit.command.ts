@@ -1,12 +1,12 @@
-import { ICommandHandler, SectionNotFoundException } from '@/app/common';
-import { ISectionRepository } from '@/domain/sections/interfaces';
-import { SectionId } from '@/domain/sections/value-objects/id.vo';
-import { IUnitRepository } from '@/domain/units/interfaces';
-import { Unit } from '@/domain/units/unit.aggregate';
-import { UnitId } from '@/domain/units/value-objects/id.vo';
-import { UnitDescription, UnitName } from '@/domain/units/value-objects';
-import { randomUUID } from 'node:crypto';
-import { UnitDto } from '@/app/units/dtos';
+import { randomUUID } from "node:crypto";
+import { type ICommandHandler, SectionNotFoundException } from "@/app/common";
+import type { UnitDto } from "@/app/units/dtos";
+import type { ISectionRepository } from "@/domain/sections/repositories";
+import { SectionId } from "@/domain/sections/value-objects/id.vo";
+import type { IUnitRepository } from "@/domain/units/repositories";
+import { Unit } from "@/domain/units/unit.aggregate";
+import { UnitDescription, UnitName } from "@/domain/units/value-objects";
+import { UnitId } from "@/domain/units/value-objects/id.vo";
 
 type AddUnitCommand = {
 	sectionId: string;

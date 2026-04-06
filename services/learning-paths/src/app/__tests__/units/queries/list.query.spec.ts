@@ -1,11 +1,11 @@
-import { ListUnitsHandler } from '../../../units/queries/list.query';
-import { UnitDto } from '../../../units/dtos';
-import { mockUnitReadRepo, TEST_IDS, DEFAULT_DATE } from '../../common';
+import type { UnitDto } from "../../../units/dtos";
+import { ListUnitsHandler } from "../../../units/queries/list.query";
+import { DEFAULT_DATE, mockUnitReadRepo, TEST_IDS } from "../../common";
 
 const sampleDto: UnitDto = {
 	id: TEST_IDS.UNIT_ID,
 	sectionId: TEST_IDS.SECTION_ID,
-	name: 'Test Unit',
+	name: "Test Unit",
 	description: null,
 	createdAt: DEFAULT_DATE,
 	updatedAt: null,
@@ -13,8 +13,8 @@ const sampleDto: UnitDto = {
 	lessonCount: 0,
 };
 
-describe('ListUnitsHandler', () => {
-	it('returns a list of units', async () => {
+describe("ListUnitsHandler", () => {
+	it("returns a list of units", async () => {
 		const dtos = [sampleDto];
 		const repo = mockUnitReadRepo({
 			list: jest.fn().mockResolvedValue(dtos),
@@ -26,19 +26,19 @@ describe('ListUnitsHandler', () => {
 		expect(result).toEqual(dtos);
 	});
 
-	it('passes filter and pagination to the repository', async () => {
+	it("passes filter and pagination to the repository", async () => {
 		const repo = mockUnitReadRepo({
 			list: jest.fn().mockResolvedValue([]),
 		});
 		const handler = new ListUnitsHandler(repo);
 
 		await handler.execute({
-			where: { sectionId: '123' },
+			where: { sectionId: "123" },
 			options: { limit: 5, page: 1 },
 		});
 
 		expect(repo.list).toHaveBeenCalledWith({
-			where: { sectionId: '123' },
+			where: { sectionId: "123" },
 			options: { limit: 5, page: 1 },
 		});
 	});

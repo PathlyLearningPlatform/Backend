@@ -1,12 +1,12 @@
 import {
-	ICommandHandler,
+	type ICommandHandler,
 	SectionNotFoundException,
 	UnitNotFoundException,
-} from '@/app/common';
-import { Order } from '@/domain/common';
-import { ISectionRepository } from '@/domain/sections/interfaces';
-import { IUnitRepository } from '@/domain/units/interfaces';
-import { UnitId } from '@/domain/units/value-objects/id.vo';
+} from "@/app/common";
+import { Order } from "@/domain/common";
+import type { ISectionRepository } from "@/domain/sections/repositories";
+import type { IUnitRepository } from "@/domain/units/repositories";
+import { UnitId } from "@/domain/units/value-objects/id.vo";
 
 type ReorderUnitCommand = {
 	unitId: string;

@@ -1,53 +1,53 @@
-import { Lesson } from '../../lessons/lesson.aggregate';
-import { LessonCannotBeRemovedException } from '../../lessons/exceptions/cannot-be-removed.exception';
-import { ActivityAlreadyExistsException } from '../../lessons/exceptions/activity-already-exists.exception';
-import { LessonId } from '../../lessons/value-objects/id.vo';
-import { LessonName } from '../../lessons/value-objects/name.vo';
-import { LessonDescription } from '../../lessons/value-objects/description.vo';
-import { ActivityRef } from '../../lessons/value-objects/activity-ref.vo';
-import { UnitId } from '../../units/value-objects/id.vo';
-import { ActivityId } from '../../activities/value-objects/id.vo';
-import { UUID } from '../../common/value-objects/uuid.vo';
-import { Order } from '../../common/value-objects/order.vo';
+import { ActivityId } from "../../activities/value-objects/id.vo";
+import { Order } from "../../common/value-objects/order.vo";
+import { UUID } from "../../common/value-objects/uuid.vo";
+import { ActivityAlreadyExistsException } from "../../lessons/exceptions/activity-already-exists.exception";
+import { LessonCannotBeRemovedException } from "../../lessons/exceptions/cannot-be-removed.exception";
+import { Lesson } from "../../lessons/lesson.aggregate";
+import { ActivityRef } from "../../lessons/value-objects/activity-ref.vo";
+import { LessonDescription } from "../../lessons/value-objects/description.vo";
+import { LessonId } from "../../lessons/value-objects/id.vo";
+import { LessonName } from "../../lessons/value-objects/name.vo";
+import { UnitId } from "../../units/value-objects/id.vo";
 
 const makeUuid = (value: string) => new UUID({ value });
 
-const makeLessonId = (value = '123e4567-e89b-42d3-a456-426614174000') =>
+const makeLessonId = (value = "123e4567-e89b-42d3-a456-426614174000") =>
 	new LessonId({ value: makeUuid(value) });
 
-const makeUnitId = (value = '223e4567-e89b-42d3-a456-426614174000') =>
+const makeUnitId = (value = "223e4567-e89b-42d3-a456-426614174000") =>
 	new UnitId({ value: makeUuid(value) });
 
 const makeActivityId = (value: string) => ActivityId.create(value);
 
-const A1 = '12345678-1234-4234-a456-426614174001';
-const A2 = '12345678-1234-4234-a456-426614174002';
-const A3 = '12345678-1234-4234-a456-426614174003';
-const A_MISSING = '12345678-1234-4234-a456-426614174999';
+const A1 = "12345678-1234-4234-a456-426614174001";
+const A2 = "12345678-1234-4234-a456-426614174002";
+const A3 = "12345678-1234-4234-a456-426614174003";
+const A_MISSING = "12345678-1234-4234-a456-426614174999";
 
 const getActivityRefs = (lesson: Lesson): ActivityRef[] =>
 	(lesson as unknown as { _props: { activityRefs: ActivityRef[] } })._props
 		.activityRefs;
 
-describe('Lesson aggregate', () => {
-	describe('create', () => {
-		it('creates lesson with 0 activities', () => {
-			const createdAt = new Date('2026-03-10T12:00:00.000Z');
+describe("Lesson aggregate", () => {
+	describe("create", () => {
+		it("creates lesson with 0 activities", () => {
+			const createdAt = new Date("2026-03-10T12:00:00.000Z");
 			const id = makeLessonId();
 			const unitId = makeUnitId();
 
 			const lesson = Lesson.create(id, {
 				unitId,
-				name: LessonName.create('My Lesson'),
-				description: LessonDescription.create('A description'),
+				name: LessonName.create("My Lesson"),
+				description: LessonDescription.create("A description"),
 				createdAt,
 				order: Order.create(0),
 			});
 
 			expect(lesson.id).toBe(id);
 			expect(lesson.unitId).toBe(unitId);
-			expect(lesson.name.value).toBe('My Lesson');
-			expect(lesson.description?.value).toBe('A description');
+			expect(lesson.name.value).toBe("My Lesson");
+			expect(lesson.description?.value).toBe("A description");
 			expect(lesson.createdAt).toBe(createdAt);
 			expect(lesson.updatedAt).toBeNull();
 			expect(lesson.order.value).toBe(0);
@@ -55,11 +55,11 @@ describe('Lesson aggregate', () => {
 			expect(getActivityRefs(lesson)).toHaveLength(0);
 		});
 
-		it('sets description to null when not provided', () => {
+		it("sets description to null when not provided", () => {
 			const lesson = Lesson.create(makeLessonId(), {
 				unitId: makeUnitId(),
-				name: LessonName.create('Lesson'),
-				createdAt: new Date('2026-03-10T12:00:00.000Z'),
+				name: LessonName.create("Lesson"),
+				createdAt: new Date("2026-03-10T12:00:00.000Z"),
 				order: Order.create(0),
 			});
 
@@ -67,10 +67,10 @@ describe('Lesson aggregate', () => {
 		});
 	});
 
-	describe('fromDataSource', () => {
-		it('reconstructs lesson and normalizes activity ref orders', () => {
-			const createdAt = new Date('2026-03-10T12:00:00.000Z');
-			const updatedAt = new Date('2026-03-10T13:00:00.000Z');
+	describe("fromDataSource", () => {
+		it("reconstructs lesson and normalizes activity ref orders", () => {
+			const createdAt = new Date("2026-03-10T12:00:00.000Z");
+			const updatedAt = new Date("2026-03-10T13:00:00.000Z");
 			const id = makeLessonId();
 			const unitId = makeUnitId();
 
@@ -81,8 +81,8 @@ describe('Lesson aggregate', () => {
 			const lesson = Lesson.fromDataSource({
 				id: id.value,
 				unitId: unitId.value,
-				name: 'My Lesson',
-				description: 'Desc',
+				name: "My Lesson",
+				description: "Desc",
 				createdAt,
 				updatedAt,
 				order: 1,
@@ -94,8 +94,8 @@ describe('Lesson aggregate', () => {
 				activityCount: 3,
 			});
 
-			expect(lesson.name.value).toBe('My Lesson');
-			expect(lesson.description?.value).toBe('Desc');
+			expect(lesson.name.value).toBe("My Lesson");
+			expect(lesson.description?.value).toBe("Desc");
 			expect(lesson.order.value).toBe(1);
 			expect(lesson.createdAt).toBe(createdAt);
 			expect(lesson.updatedAt).toBe(updatedAt);
@@ -109,13 +109,13 @@ describe('Lesson aggregate', () => {
 			expect(refs.map((r) => r.order.value)).toEqual([0, 1, 2]);
 		});
 
-		it('sets description to null when null is provided', () => {
+		it("sets description to null when null is provided", () => {
 			const lesson = Lesson.fromDataSource({
 				id: makeLessonId().value,
 				unitId: makeUnitId().value,
-				name: 'Lesson',
+				name: "Lesson",
 				description: null,
-				createdAt: new Date('2026-03-10T12:00:00.000Z'),
+				createdAt: new Date("2026-03-10T12:00:00.000Z"),
 				updatedAt: null,
 				order: 0,
 				activityRefs: [],
@@ -126,34 +126,34 @@ describe('Lesson aggregate', () => {
 		});
 	});
 
-	describe('update', () => {
-		it('updates name, description and sets updatedAt', () => {
-			const now = new Date('2026-03-10T12:05:00.000Z');
+	describe("update", () => {
+		it("updates name, description and sets updatedAt", () => {
+			const now = new Date("2026-03-10T12:05:00.000Z");
 			const lesson = Lesson.create(makeLessonId(), {
 				unitId: makeUnitId(),
-				name: LessonName.create('Old Name'),
-				createdAt: new Date('2026-03-10T12:00:00.000Z'),
+				name: LessonName.create("Old Name"),
+				createdAt: new Date("2026-03-10T12:00:00.000Z"),
 				order: Order.create(0),
 			});
 
 			lesson.update(now, {
-				name: LessonName.create('New Name'),
-				description: LessonDescription.create('New Desc'),
+				name: LessonName.create("New Name"),
+				description: LessonDescription.create("New Desc"),
 			});
 
-			expect(lesson.name.value).toBe('New Name');
-			expect(lesson.description?.value).toBe('New Desc');
+			expect(lesson.name.value).toBe("New Name");
+			expect(lesson.description?.value).toBe("New Desc");
 			expect(lesson.updatedAt).toBe(now);
 		});
 
-		it('sets updatedAt even when no props provided', () => {
+		it("sets updatedAt even when no props provided", () => {
 			const lesson = Lesson.create(makeLessonId(), {
 				unitId: makeUnitId(),
-				name: LessonName.create('Lesson'),
-				createdAt: new Date('2026-03-10T12:00:00.000Z'),
+				name: LessonName.create("Lesson"),
+				createdAt: new Date("2026-03-10T12:00:00.000Z"),
 				order: Order.create(0),
 			});
-			const now = new Date('2026-03-10T12:05:00.000Z');
+			const now = new Date("2026-03-10T12:05:00.000Z");
 
 			lesson.update(now);
 
@@ -161,29 +161,27 @@ describe('Lesson aggregate', () => {
 		});
 	});
 
-	describe('ensureCanRemove', () => {
-		it('does not throw when there are no activities', () => {
+	describe("ensureCanRemove", () => {
+		it("does not throw when there are no activities", () => {
 			const lesson = Lesson.create(makeLessonId(), {
 				unitId: makeUnitId(),
-				name: LessonName.create('Lesson'),
-				createdAt: new Date('2026-03-10T12:00:00.000Z'),
+				name: LessonName.create("Lesson"),
+				createdAt: new Date("2026-03-10T12:00:00.000Z"),
 				order: Order.create(0),
 			});
 
 			expect(() => lesson.ensureCanRemove()).not.toThrow();
 		});
 
-		it('throws when there is at least 1 activity', () => {
+		it("throws when there is at least 1 activity", () => {
 			const lesson = Lesson.create(makeLessonId(), {
 				unitId: makeUnitId(),
-				name: LessonName.create('Lesson'),
-				createdAt: new Date('2026-03-10T12:00:00.000Z'),
+				name: LessonName.create("Lesson"),
+				createdAt: new Date("2026-03-10T12:00:00.000Z"),
 				order: Order.create(0),
 			});
 
-			lesson.addActivity(
-				makeActivityId(A1),
-			);
+			lesson.addActivity(makeActivityId(A1));
 
 			expect(() => lesson.ensureCanRemove()).toThrow(
 				LessonCannotBeRemovedException,
@@ -191,12 +189,12 @@ describe('Lesson aggregate', () => {
 		});
 	});
 
-	describe('addActivity', () => {
-		it('adds an activity and increments activityCount', () => {
+	describe("addActivity", () => {
+		it("adds an activity and increments activityCount", () => {
 			const lesson = Lesson.create(makeLessonId(), {
 				unitId: makeUnitId(),
-				name: LessonName.create('Lesson'),
-				createdAt: new Date('2026-03-10T12:00:00.000Z'),
+				name: LessonName.create("Lesson"),
+				createdAt: new Date("2026-03-10T12:00:00.000Z"),
 				order: Order.create(0),
 			});
 			const activityId = makeActivityId(A1);
@@ -209,11 +207,11 @@ describe('Lesson aggregate', () => {
 			expect(getActivityRefs(lesson)).toHaveLength(1);
 		});
 
-		it('assigns incremental orders for multiple activities', () => {
+		it("assigns incremental orders for multiple activities", () => {
 			const lesson = Lesson.create(makeLessonId(), {
 				unitId: makeUnitId(),
-				name: LessonName.create('Lesson'),
-				createdAt: new Date('2026-03-10T12:00:00.000Z'),
+				name: LessonName.create("Lesson"),
+				createdAt: new Date("2026-03-10T12:00:00.000Z"),
 				order: Order.create(0),
 			});
 			const a1 = makeActivityId(A1);
@@ -227,11 +225,11 @@ describe('Lesson aggregate', () => {
 			expect(lesson.activityCount).toBe(2);
 		});
 
-		it('throws when adding duplicate activityId', () => {
+		it("throws when adding duplicate activityId", () => {
 			const lesson = Lesson.create(makeLessonId(), {
 				unitId: makeUnitId(),
-				name: LessonName.create('Lesson'),
-				createdAt: new Date('2026-03-10T12:00:00.000Z'),
+				name: LessonName.create("Lesson"),
+				createdAt: new Date("2026-03-10T12:00:00.000Z"),
 				order: Order.create(0),
 			});
 			const activityId = makeActivityId(A1);
@@ -244,20 +242,18 @@ describe('Lesson aggregate', () => {
 		});
 	});
 
-	describe('removeActivity', () => {
-		it('does nothing when activity is not found', () => {
+	describe("removeActivity", () => {
+		it("does nothing when activity is not found", () => {
 			const lesson = Lesson.create(makeLessonId(), {
 				unitId: makeUnitId(),
-				name: LessonName.create('Lesson'),
-				createdAt: new Date('2026-03-10T12:00:00.000Z'),
+				name: LessonName.create("Lesson"),
+				createdAt: new Date("2026-03-10T12:00:00.000Z"),
 				order: Order.create(0),
 			});
 			const a1 = makeActivityId(A1);
 			lesson.addActivity(a1);
 
-			lesson.removeActivity(
-				makeActivityId(A_MISSING),
-			);
+			lesson.removeActivity(makeActivityId(A_MISSING));
 
 			expect(lesson.activityCount).toBe(1);
 			expect(getActivityRefs(lesson).map((r) => r.activityId.value)).toEqual([
@@ -265,11 +261,11 @@ describe('Lesson aggregate', () => {
 			]);
 		});
 
-		it('removes activity, rearranges orders, and updates activityCount', () => {
+		it("removes activity, rearranges orders, and updates activityCount", () => {
 			const lesson = Lesson.create(makeLessonId(), {
 				unitId: makeUnitId(),
-				name: LessonName.create('Lesson'),
-				createdAt: new Date('2026-03-10T12:00:00.000Z'),
+				name: LessonName.create("Lesson"),
+				createdAt: new Date("2026-03-10T12:00:00.000Z"),
 				order: Order.create(0),
 			});
 			const a1 = makeActivityId(A1);
@@ -291,12 +287,12 @@ describe('Lesson aggregate', () => {
 		});
 	});
 
-	describe('reorderActivity', () => {
-		it('returns null when activity is not found', () => {
+	describe("reorderActivity", () => {
+		it("returns null when activity is not found", () => {
 			const lesson = Lesson.create(makeLessonId(), {
 				unitId: makeUnitId(),
-				name: LessonName.create('Lesson'),
-				createdAt: new Date('2026-03-10T12:00:00.000Z'),
+				name: LessonName.create("Lesson"),
+				createdAt: new Date("2026-03-10T12:00:00.000Z"),
 				order: Order.create(0),
 			});
 
@@ -308,11 +304,11 @@ describe('Lesson aggregate', () => {
 			expect(result).toBeNull();
 		});
 
-		it('clamps to [0, last] and rearranges orders', () => {
+		it("clamps to [0, last] and rearranges orders", () => {
 			const lesson = Lesson.create(makeLessonId(), {
 				unitId: makeUnitId(),
-				name: LessonName.create('Lesson'),
-				createdAt: new Date('2026-03-10T12:00:00.000Z'),
+				name: LessonName.create("Lesson"),
+				createdAt: new Date("2026-03-10T12:00:00.000Z"),
 				order: Order.create(0),
 			});
 			const a1 = makeActivityId(A1);
@@ -331,14 +327,16 @@ describe('Lesson aggregate', () => {
 				a3.value,
 				a1.value,
 			]);
-			expect(getActivityRefs(lesson).map((r) => r.order.value)).toEqual([0, 1, 2]);
+			expect(getActivityRefs(lesson).map((r) => r.order.value)).toEqual([
+				0, 1, 2,
+			]);
 		});
 
-		it('moves an activity to the beginning', () => {
+		it("moves an activity to the beginning", () => {
 			const lesson = Lesson.create(makeLessonId(), {
 				unitId: makeUnitId(),
-				name: LessonName.create('Lesson'),
-				createdAt: new Date('2026-03-10T12:00:00.000Z'),
+				name: LessonName.create("Lesson"),
+				createdAt: new Date("2026-03-10T12:00:00.000Z"),
 				order: Order.create(0),
 			});
 			const a1 = makeActivityId(A1);
@@ -357,7 +355,9 @@ describe('Lesson aggregate', () => {
 				a1.value,
 				a2.value,
 			]);
-			expect(getActivityRefs(lesson).map((r) => r.order.value)).toEqual([0, 1, 2]);
+			expect(getActivityRefs(lesson).map((r) => r.order.value)).toEqual([
+				0, 1, 2,
+			]);
 		});
 	});
 });

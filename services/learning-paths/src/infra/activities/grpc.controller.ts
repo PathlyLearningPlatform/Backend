@@ -7,84 +7,100 @@ import {
 	GrpcExceptionFilter,
 	RpcValidationPipe,
 } from '@pathly-backend/common';
-import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js';
+import type {
+	ActivitiesServiceCompleteResponse,
+	ActivitiesServiceFindOneProgressForUserResponse,
+	ActivitiesServiceListProgressResponse,
+	ActivitiesServiceRemoveProgressResponse,
+} from '@pathly-backend/contracts/learning_paths/v1/activities.js';
 import {
+	ACTIVITIES_SERVICE_NAME,
+	type CreateArticleResponse,
+	type CreateExerciseResponse,
+	type CreateQuestionResponse,
+	type CreateQuizResponse,
+	type FindActivityByIdResponse,
+	type FindArticleByIdResponse,
+	type FindExerciseByIdResponse,
+	type FindQuestionByIdResponse,
+	type FindQuizByIdResponse,
 	type ListActivitiesResponse,
 	type ListArticlesResponse,
 	type ListExercisesResponse,
 	type ListQuizzesResponse,
-	type FindActivityByIdResponse,
-	type FindArticleByIdResponse,
-	type FindExerciseByIdResponse,
-	type FindQuizByIdResponse,
-	type CreateArticleResponse,
-	type CreateExerciseResponse,
-	type CreateQuizResponse,
 	type UpdateArticleResponse,
 	type UpdateExerciseResponse,
-	type UpdateQuizResponse,
-	type FindQuestionByIdResponse,
-	type CreateQuestionResponse,
 	type UpdateQuestionResponse,
-	ACTIVITIES_SERVICE_NAME,
+	type UpdateQuizResponse,
 } from '@pathly-backend/contracts/learning-paths/v1/activities.js';
+import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js';
 import type z from 'zod';
+import type {
+	AddQuestionHandler,
+	CompleteActivityHandler,
+	RemoveActivityHandler,
+	RemoveActivityProgressHandler,
+	RemoveQuestionHandler,
+	ReorderQuestionHandler,
+	UpdateArticleHandler,
+	UpdateExerciseHandler,
+	UpdateQuestionHandler,
+} from '@/app/activities/commands';
+import { ActivityProgressNotFoundException } from '@/app/activities/exceptions';
+import type {
+	FindActivityByIdHandler,
+	FindActivityProgressForUserHandler,
+	FindArticleByIdHandler,
+	FindExerciseByIdHandler,
+	FindQuizByIdHandler,
+	ListActivitiesHandler,
+	ListActivityProgressHandler,
+	ListArticlesHandler,
+	ListExercisesHandler,
+	ListQuizzesHandler,
+} from '@/app/activities/queries';
+import {
+	ActivityNotFoundException,
+	LessonNotFoundException,
+	QuestionNotFoundException,
+} from '@/app/common';
 import type {
 	AddArticleHandler,
 	AddExerciseHandler,
 	AddQuizHandler,
 	ReorderActivityHandler,
 } from '@/app/lessons/commands';
-import type {
-	UpdateArticleHandler,
-	UpdateExerciseHandler,
-	UpdateQuestionHandler,
-	RemoveActivityHandler,
-	AddQuestionHandler,
-	RemoveQuestionHandler,
-	ReorderQuestionHandler,
-} from '@/app/activities/commands';
-import type {
-	ListActivitiesHandler,
-	ListArticlesHandler,
-	ListExercisesHandler,
-	ListQuizzesHandler,
-	FindActivityByIdHandler,
-	FindArticleByIdHandler,
-	FindExerciseByIdHandler,
-	FindQuizByIdHandler,
-} from '@/app/activities/queries';
-import {
-	LessonNotFoundException,
-	ActivityNotFoundException,
-	QuestionNotFoundException,
-} from '@/app/common';
 import type { ExerciseDifficulty } from '@/domain/activities/exercises/value-objects';
 import { DiToken, ExceptionMessage } from '../common/enums';
 import {
 	activityDtoToClient,
+	activityProgressDtoToClient,
 	articleDtoToClient,
 	exerciseDtoToClient,
+	questionDtoToClient,
 	quizDtoToClient,
 	quizWithoutQuestionsDtoToClient,
-	questionDtoToClient,
 } from './helpers';
 import {
-	listActivitiesSchema,
-	findActivityByIdSchema,
+	completeActivitySchema,
 	createArticleSchema,
 	createExerciseSchema,
+	createQuestionSchema,
 	createQuizSchema,
+	findActivityByIdSchema,
+	findActivityProgressForUserSchema,
+	findQuestionByIdSchema,
+	listActivitiesSchema,
+	listActivityProgressSchema,
+	removeActivityProgressSchema,
+	removeActivitySchema,
+	removeQuestionSchema,
+	reorderActivitySchema,
+	reorderQuestionSchema,
 	updateArticleSchema,
 	updateExerciseSchema,
-	updateQuizSchema,
-	reorderActivitySchema,
-	removeActivitySchema,
-	findQuestionByIdSchema,
-	createQuestionSchema,
 	updateQuestionSchema,
-	reorderQuestionSchema,
-	removeQuestionSchema,
+	updateQuizSchema,
 } from './schemas';
 
 @UseFilters(GrpcExceptionFilter)
@@ -129,6 +145,14 @@ export class GrpcActivitiesController {
 		private readonly reorderQuestionHandler: ReorderQuestionHandler,
 		@Inject(DiToken.REMOVE_QUESTION_HANDLER)
 		private readonly removeQuestionHandler: RemoveQuestionHandler,
+		@Inject(DiToken.COMPLETE_ACTIVITY_HANDLER)
+		private readonly completeActivityHandler: CompleteActivityHandler,
+		@Inject(DiToken.REMOVE_ACTIVITY_PROGRESS_HANDLER)
+		private readonly removeActivityProgressHandler: RemoveActivityProgressHandler,
+		@Inject(DiToken.FIND_ACTIVITY_PROGRESS_FOR_USER_HANDLER)
+		private readonly findActivityProgressForUserHandler: FindActivityProgressForUserHandler,
+		@Inject(DiToken.LIST_ACTIVITY_PROGRESS_HANDLER)
+		private readonly listActivityProgressHandler: ListActivityProgressHandler,
 	) {}
 
 	// ──────────────────────────────────────────────
@@ -566,7 +590,7 @@ export class GrpcActivitiesController {
 	@GrpcMethod(ACTIVITIES_SERVICE_NAME)
 	async updateQuiz(
 		@Payload(new RpcValidationPipe(updateQuizSchema))
-		payload: z.infer<typeof updateQuizSchema>,
+		_payload: z.infer<typeof updateQuizSchema>,
 	): Promise<UpdateQuizResponse> {
 		throw new GrpcException(
 			new GrpcErrorDto(
@@ -633,6 +657,141 @@ export class GrpcActivitiesController {
 				);
 			}
 
+			throw new GrpcException(
+				new GrpcErrorDto(
+					ExceptionMessage.INTERNAL_ERROR,
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
+				err,
+			);
+		}
+	}
+
+	@GrpcMethod(ACTIVITIES_SERVICE_NAME)
+	async complete(
+		@Payload(new RpcValidationPipe(completeActivitySchema))
+		payload: z.infer<typeof completeActivitySchema>,
+	): Promise<ActivitiesServiceCompleteResponse> {
+		try {
+			const progress = await this.completeActivityHandler.execute({
+				activityId: payload.activityId,
+				userId: payload.userId,
+			});
+
+			return {
+				progress: activityProgressDtoToClient(progress),
+			};
+		} catch (err) {
+			if (err instanceof ActivityNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						ExceptionMessage.ACTIVITY_NOT_FOUND,
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND,
+					),
+				);
+			}
+
+			throw new GrpcException(
+				new GrpcErrorDto(
+					ExceptionMessage.INTERNAL_ERROR,
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
+				err,
+			);
+		}
+	}
+
+	@GrpcMethod(ACTIVITIES_SERVICE_NAME)
+	async removeProgress(
+		@Payload(new RpcValidationPipe(removeActivityProgressSchema))
+		payload: z.infer<typeof removeActivityProgressSchema>,
+	): Promise<ActivitiesServiceRemoveProgressResponse> {
+		try {
+			await this.removeActivityProgressHandler.execute({
+				activityId: payload.activityId,
+				userId: payload.userId,
+			});
+
+			return {};
+		} catch (err) {
+			if (err instanceof ActivityProgressNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						ExceptionMessage.ACTIVITY_PROGRESS_NOT_FOUND,
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND,
+					),
+				);
+			}
+
+			throw new GrpcException(
+				new GrpcErrorDto(
+					ExceptionMessage.INTERNAL_ERROR,
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
+				err,
+			);
+		}
+	}
+
+	@GrpcMethod(ACTIVITIES_SERVICE_NAME)
+	async findOneProgressForUser(
+		@Payload(new RpcValidationPipe(findActivityProgressForUserSchema))
+		payload: z.infer<typeof findActivityProgressForUserSchema>,
+	): Promise<ActivitiesServiceFindOneProgressForUserResponse> {
+		try {
+			const progress = await this.findActivityProgressForUserHandler.execute({
+				activityId: payload.activityId,
+				userId: payload.userId,
+			});
+
+			return {
+				progress: activityProgressDtoToClient(progress),
+			};
+		} catch (err) {
+			if (err instanceof ActivityProgressNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						ExceptionMessage.ACTIVITY_PROGRESS_NOT_FOUND,
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND,
+					),
+				);
+			}
+
+			throw new GrpcException(
+				new GrpcErrorDto(
+					ExceptionMessage.INTERNAL_ERROR,
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
+				err,
+			);
+		}
+	}
+
+	@GrpcMethod(ACTIVITIES_SERVICE_NAME)
+	async listProgress(
+		@Payload(new RpcValidationPipe(listActivityProgressSchema))
+		payload: z.infer<typeof listActivityProgressSchema>,
+	): Promise<ActivitiesServiceListProgressResponse> {
+		try {
+			const progress = await this.listActivityProgressHandler.execute({
+				options: payload.options,
+				where: {
+					lessonId: payload.where?.lessonId,
+					userId: payload.where?.userId,
+				},
+			});
+
+			return {
+				progress: progress.map(activityProgressDtoToClient),
+			};
+		} catch (err) {
 			throw new GrpcException(
 				new GrpcErrorDto(
 					ExceptionMessage.INTERNAL_ERROR,

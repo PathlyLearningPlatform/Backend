@@ -1,18 +1,16 @@
-import { status as GrpcStatus } from '@grpc/grpc-js';
-import { GrpcException } from '@pathly-backend/common';
-import { GrpcLearningPathsController } from '@/infra/learning-paths/grpc.controller';
+import { status as GrpcStatus } from "@grpc/grpc-js";
+import { GrpcException } from "@pathly-backend/common";
+import { LearningPathNotFoundException } from "@/app/common";
+import { LearningPathCannotBeRemovedException } from "@/domain/learning-paths/exceptions";
+import { GrpcLearningPathsController } from "@/infra/learning-paths/grpc.controller";
 import {
-	LearningPathNotFoundException,
-} from '@/app/common';
-import { LearningPathCannotBeRemovedException } from '@/domain/learning-paths/exceptions';
-import {
-	mockHandler,
 	type MockHandler,
 	makeLearningPathDto,
+	mockHandler,
 	TEST_IDS,
-} from '../common';
+} from "../common";
 
-describe('GrpcLearningPathsController', () => {
+describe("GrpcLearningPathsController", () => {
 	let controller: GrpcLearningPathsController;
 	let listHandler: MockHandler;
 	let findByIdHandler: MockHandler;
@@ -40,8 +38,8 @@ describe('GrpcLearningPathsController', () => {
 	// list
 	// ──────────────────────────────────────────────
 
-	describe('list', () => {
-		it('should return learning paths', async () => {
+	describe("list", () => {
+		it("should return learning paths", async () => {
 			const dto = makeLearningPathDto();
 			listHandler.execute.mockResolvedValue([dto]);
 
@@ -52,8 +50,8 @@ describe('GrpcLearningPathsController', () => {
 			expect(listHandler.execute).toHaveBeenCalled();
 		});
 
-		it('should throw GrpcException with INTERNAL on unexpected error', async () => {
-			listHandler.execute.mockRejectedValue(new Error('db error'));
+		it("should throw GrpcException with INTERNAL on unexpected error", async () => {
+			listHandler.execute.mockRejectedValue(new Error("db error"));
 
 			await expect(controller.list({ options: {} } as any)).rejects.toThrow(
 				GrpcException,
@@ -65,8 +63,8 @@ describe('GrpcLearningPathsController', () => {
 	// findById
 	// ──────────────────────────────────────────────
 
-	describe('findById', () => {
-		it('should return a learning path', async () => {
+	describe("findById", () => {
+		it("should return a learning path", async () => {
 			const dto = makeLearningPathDto();
 			findByIdHandler.execute.mockResolvedValue(dto);
 
@@ -77,7 +75,7 @@ describe('GrpcLearningPathsController', () => {
 			expect(result.learningPath.id).toBe(dto.id);
 		});
 
-		it('should throw NOT_FOUND when LearningPathNotFoundException', async () => {
+		it("should throw NOT_FOUND when LearningPathNotFoundException", async () => {
 			findByIdHandler.execute.mockRejectedValue(
 				new LearningPathNotFoundException(TEST_IDS.learningPath),
 			);
@@ -86,7 +84,7 @@ describe('GrpcLearningPathsController', () => {
 				await controller.findById({
 					where: { id: TEST_IDS.learningPath },
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -95,8 +93,8 @@ describe('GrpcLearningPathsController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			findByIdHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			findByIdHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.findById({ where: { id: TEST_IDS.learningPath } } as any),
@@ -108,20 +106,20 @@ describe('GrpcLearningPathsController', () => {
 	// create
 	// ──────────────────────────────────────────────
 
-	describe('create', () => {
-		it('should return created learning path', async () => {
+	describe("create", () => {
+		it("should return created learning path", async () => {
 			const dto = makeLearningPathDto();
 			createHandler.execute.mockResolvedValue(dto);
 
-			const result = await controller.create({ name: 'LP' } as any);
+			const result = await controller.create({ name: "LP" } as any);
 
 			expect(result.learningPath.id).toBe(dto.id);
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			createHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			createHandler.execute.mockRejectedValue(new Error("boom"));
 
-			await expect(controller.create({ name: 'LP' } as any)).rejects.toThrow(
+			await expect(controller.create({ name: "LP" } as any)).rejects.toThrow(
 				GrpcException,
 			);
 		});
@@ -131,20 +129,20 @@ describe('GrpcLearningPathsController', () => {
 	// update
 	// ──────────────────────────────────────────────
 
-	describe('update', () => {
-		it('should return updated learning path', async () => {
-			const dto = makeLearningPathDto({ name: 'Updated' });
+	describe("update", () => {
+		it("should return updated learning path", async () => {
+			const dto = makeLearningPathDto({ name: "Updated" });
 			updateHandler.execute.mockResolvedValue(dto);
 
 			const result = await controller.update({
 				where: { id: TEST_IDS.learningPath },
-				fields: { name: 'Updated' },
+				fields: { name: "Updated" },
 			} as any);
 
-			expect(result.learningPath.name).toBe('Updated');
+			expect(result.learningPath.name).toBe("Updated");
 		});
 
-		it('should throw NOT_FOUND when LearningPathNotFoundException', async () => {
+		it("should throw NOT_FOUND when LearningPathNotFoundException", async () => {
 			updateHandler.execute.mockRejectedValue(
 				new LearningPathNotFoundException(TEST_IDS.learningPath),
 			);
@@ -152,9 +150,9 @@ describe('GrpcLearningPathsController', () => {
 			try {
 				await controller.update({
 					where: { id: TEST_IDS.learningPath },
-					fields: { name: 'x' },
+					fields: { name: "x" },
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -163,8 +161,8 @@ describe('GrpcLearningPathsController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			updateHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			updateHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.update({
@@ -179,8 +177,8 @@ describe('GrpcLearningPathsController', () => {
 	// remove
 	// ──────────────────────────────────────────────
 
-	describe('remove', () => {
-		it('should call removeHandler', async () => {
+	describe("remove", () => {
+		it("should call removeHandler", async () => {
 			removeHandler.execute.mockResolvedValue(undefined);
 
 			await controller.remove({
@@ -192,7 +190,7 @@ describe('GrpcLearningPathsController', () => {
 			});
 		});
 
-		it('should throw FAILED_PRECONDITION when cannot be removed', async () => {
+		it("should throw FAILED_PRECONDITION when cannot be removed", async () => {
 			removeHandler.execute.mockRejectedValue(
 				new LearningPathCannotBeRemovedException(TEST_IDS.learningPath),
 			);
@@ -201,7 +199,7 @@ describe('GrpcLearningPathsController', () => {
 				await controller.remove({
 					where: { id: TEST_IDS.learningPath },
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -210,7 +208,7 @@ describe('GrpcLearningPathsController', () => {
 			}
 		});
 
-		it('should throw NOT_FOUND when LearningPathNotFoundException', async () => {
+		it("should throw NOT_FOUND when LearningPathNotFoundException", async () => {
 			removeHandler.execute.mockRejectedValue(
 				new LearningPathNotFoundException(TEST_IDS.learningPath),
 			);
@@ -219,7 +217,7 @@ describe('GrpcLearningPathsController', () => {
 				await controller.remove({
 					where: { id: TEST_IDS.learningPath },
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -228,8 +226,8 @@ describe('GrpcLearningPathsController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			removeHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			removeHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.remove({

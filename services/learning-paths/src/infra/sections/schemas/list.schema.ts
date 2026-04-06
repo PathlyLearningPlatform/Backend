@@ -1,5 +1,5 @@
-import { z } from 'zod';
-import { SectionsApiConstraints } from '../enums';
+import { z } from "zod";
+import { SectionsApiConstraints } from "../enums";
 
 export const listSectionsSchema = z
 	.object({

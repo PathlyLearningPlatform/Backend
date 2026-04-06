@@ -1,6 +1,6 @@
-import { IQueryHandler, LessonNotFoundException } from '@/app/common';
-import { ILessonReadRepository } from '../interfaces';
-import { LessonDto } from '../dtos';
+import { type IQueryHandler, LessonNotFoundException } from "@/app/common";
+import type { LessonDto } from "../dtos";
+import type { ILessonReadRepository } from "../interfaces";
 
 type FindLessonByIdQuery = {
 	where: {

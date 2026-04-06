@@ -1,13 +1,13 @@
-import { ILearningPathRepository } from '@/domain/learning-paths/interfaces';
-import { ISectionRepository } from '@/domain/sections/interfaces';
-import { IUnitRepository } from '@/domain/units/interfaces';
-import { ILessonRepository } from '@/domain/lessons/interfaces';
-import { IActivityRepository } from '@/domain/activities/interfaces';
-import { ILearningPathReadRepository } from '../../learning-paths/interfaces';
-import { ISectionReadRepository } from '../../sections/interfaces';
-import { IUnitReadRepository } from '../../units/interfaces';
-import { ILessonReadRepository } from '../../lessons/interfaces';
-import { IActivityReadRepository } from '../../activities/interfaces';
+import type { IActivityRepository } from "@/domain/activities/repositories";
+import type { ILearningPathRepository } from "@/domain/learning-paths";
+import type { ILessonRepository } from "@/domain/lessons/repositories";
+import type { ISectionRepository } from "@/domain/sections/repositories";
+import type { IUnitRepository } from "@/domain/units/repositories";
+import type { IActivityReadRepository } from "../../activities/interfaces";
+import type { ILearningPathReadRepository } from "../../learning-paths/interfaces";
+import type { ILessonReadRepository } from "../../lessons/interfaces";
+import type { ISectionReadRepository } from "../../sections/interfaces";
+import type { IUnitReadRepository } from "../../units/interfaces";
 
 export function mockLearningPathRepo(
 	overrides: Partial<ILearningPathRepository> = {},

@@ -1,17 +1,17 @@
-import { ICommandHandler, LessonNotFoundException } from '@/app/common';
-import { ILessonRepository } from '@/domain/lessons/interfaces';
-import { IActivityRepository } from '@/domain/activities/interfaces';
-import { LessonId } from '@/domain/lessons/value-objects/id.vo';
-import { ActivityId } from '@/domain/activities/value-objects/id.vo';
+import { randomUUID } from "node:crypto";
+import type { ExerciseDto } from "@/app/activities/dtos";
+import { type ICommandHandler, LessonNotFoundException } from "@/app/common";
+import { Exercise } from "@/domain/activities/exercises/exercise.aggregate";
+import type { ExerciseDifficulty } from "@/domain/activities/exercises/value-objects";
+import type { IActivityRepository } from "@/domain/activities/repositories";
 import {
 	ActivityDescription,
 	ActivityName,
 	ActivityType,
-} from '@/domain/activities/value-objects';
-import { Exercise } from '@/domain/activities/exercises/exercise.aggregate';
-import { ExerciseDifficulty } from '@/domain/activities/exercises/value-objects';
-import { randomUUID } from 'node:crypto';
-import { ExerciseDto } from '@/app/activities/dtos';
+} from "@/domain/activities/value-objects";
+import { ActivityId } from "@/domain/activities/value-objects/id.vo";
+import type { ILessonRepository } from "@/domain/lessons/repositories";
+import { LessonId } from "@/domain/lessons/value-objects/id.vo";
 
 type AddExerciseCommand = {
 	lessonId: string;

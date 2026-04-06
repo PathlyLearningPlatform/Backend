@@ -1,15 +1,15 @@
-import { Order } from '../../../common';
-import { InvalidOrderException } from '../../../common/exceptions';
+import { Order } from "../../../common";
+import { InvalidOrderException } from "../../../common/exceptions";
 
-describe('Order value object', () => {
-	describe('create', () => {
-		it('should return Order value object', () => {
+describe("Order value object", () => {
+	describe("create", () => {
+		it("should return Order value object", () => {
 			const validOrder = 0;
 			const vo = Order.create(validOrder);
 
 			expect(vo.value).toBe(validOrder);
 		});
-		it('should throw InvalidOrderException', () => {
+		it("should throw InvalidOrderException", () => {
 			const invalidOrder = -2;
 
 			expect(() => {
@@ -18,8 +18,8 @@ describe('Order value object', () => {
 		});
 	});
 
-	describe('equals', () => {
-		it('should return true', () => {
+	describe("equals", () => {
+		it("should return true", () => {
 			const order1 = Order.create(0);
 			const order2 = Order.create(0);
 
@@ -27,7 +27,7 @@ describe('Order value object', () => {
 			expect(order2.equals(order1)).toBe(true);
 		});
 
-		it('should return false', () => {
+		it("should return false", () => {
 			const order1 = Order.create(0);
 			const order2 = Order.create(1);
 

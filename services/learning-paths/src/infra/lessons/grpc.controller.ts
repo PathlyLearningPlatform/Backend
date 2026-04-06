@@ -7,37 +7,52 @@ import {
 	GrpcExceptionFilter,
 	RpcValidationPipe,
 } from '@pathly-backend/common';
+import type {
+	LessonsServiceFindOneProgressForUserResponse,
+	LessonsServiceListProgressResponse,
+	LessonsServiceRemoveProgressResponse,
+	LessonsServiceStartResponse,
+} from '@pathly-backend/contracts/learning_paths/v1/lessons.js';
 import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js';
 import {
 	type CreateLessonResponse,
 	type FindLessonByIdResponse,
+	LESSONS_SERVICE_NAME,
 	type ListLessonsResponse,
 	type UpdateLessonResponse,
-	LESSONS_SERVICE_NAME,
 } from '@pathly-backend/contracts/learning-paths/v1/lessons.js';
 import type z from 'zod';
+import { LessonNotFoundException, UnitNotFoundException } from '@/app/common';
+import type {
+	RemoveLessonHandler,
+	RemoveLessonProgressHandler,
+	StartLessonHandler,
+	UpdateLessonHandler,
+} from '@/app/lessons/commands';
+import { LessonProgressNotFoundException } from '@/app/lessons/exceptions';
+import type {
+	FindLessonByIdHandler,
+	FindLessonProgressForUserHandler,
+	ListLessonProgressHandler,
+	ListLessonsHandler,
+} from '@/app/lessons/queries';
 import type {
 	AddLessonHandler,
 	ReorderLessonHandler,
 } from '@/app/units/commands';
-import type {
-	UpdateLessonHandler,
-	RemoveLessonHandler,
-} from '@/app/lessons/commands';
-import type {
-	ListLessonsHandler,
-	FindLessonByIdHandler,
-} from '@/app/lessons/queries';
-import { UnitNotFoundException, LessonNotFoundException } from '@/app/common';
 import { DiToken, ExceptionMessage } from '../common/enums';
-import { lessonDtoToClient } from './helpers';
+import { lessonDtoToClient, lessonProgressDtoToClient } from './helpers';
 import {
 	createLessonSchema,
-	listLessonsSchema,
 	findLessonByIdSchema,
+	findLessonProgressForUserSchema,
+	listLessonProgressSchema,
+	listLessonsSchema,
+	removeLessonProgressSchema,
 	removeLessonSchema,
-	updateLessonSchema,
 	reorderLessonSchema,
+	startLessonSchema,
+	updateLessonSchema,
 } from './schemas';
 
 @UseFilters(GrpcExceptionFilter)
@@ -56,6 +71,14 @@ export class GrpcLessonsController {
 		private readonly reorderLessonHandler: ReorderLessonHandler,
 		@Inject(DiToken.REMOVE_LESSON_HANDLER)
 		private readonly removeLessonHandler: RemoveLessonHandler,
+		@Inject(DiToken.START_LESSON_HANDLER)
+		private readonly startLessonHandler: StartLessonHandler,
+		@Inject(DiToken.REMOVE_LESSON_PROGRESS_HANDLER)
+		private readonly removeLessonProgressHandler: RemoveLessonProgressHandler,
+		@Inject(DiToken.FIND_LESSON_PROGRESS_FOR_USER_HANDLER)
+		private readonly findLessonProgressForUserHandler: FindLessonProgressForUserHandler,
+		@Inject(DiToken.LIST_LESSON_PROGRESS_HANDLER)
+		private readonly listLessonProgressHandler: ListLessonProgressHandler,
 	) {}
 
 	@GrpcMethod(LESSONS_SERVICE_NAME)
@@ -241,6 +264,141 @@ export class GrpcLessonsController {
 				);
 			}
 
+			throw new GrpcException(
+				new GrpcErrorDto(
+					ExceptionMessage.INTERNAL_ERROR,
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
+				err,
+			);
+		}
+	}
+
+	@GrpcMethod(LESSONS_SERVICE_NAME)
+	async start(
+		@Payload(new RpcValidationPipe(startLessonSchema))
+		payload: z.infer<typeof startLessonSchema>,
+	): Promise<LessonsServiceStartResponse> {
+		try {
+			const progress = await this.startLessonHandler.execute({
+				lessonId: payload.lessonId,
+				userId: payload.userId,
+			});
+
+			return {
+				progress: lessonProgressDtoToClient(progress),
+			};
+		} catch (err) {
+			if (err instanceof LessonNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						ExceptionMessage.LESSON_NOT_FOUND,
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.LESSON_NOT_FOUND,
+					),
+				);
+			}
+
+			throw new GrpcException(
+				new GrpcErrorDto(
+					ExceptionMessage.INTERNAL_ERROR,
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
+				err,
+			);
+		}
+	}
+
+	@GrpcMethod(LESSONS_SERVICE_NAME)
+	async removeProgress(
+		@Payload(new RpcValidationPipe(removeLessonProgressSchema))
+		payload: z.infer<typeof removeLessonProgressSchema>,
+	): Promise<LessonsServiceRemoveProgressResponse> {
+		try {
+			await this.removeLessonProgressHandler.execute({
+				lessonId: payload.lessonId,
+				userId: payload.userId,
+			});
+
+			return {};
+		} catch (err) {
+			if (err instanceof LessonProgressNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						ExceptionMessage.LESSON_PROGRESS_NOT_FOUND,
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.LESSON_NOT_FOUND,
+					),
+				);
+			}
+
+			throw new GrpcException(
+				new GrpcErrorDto(
+					ExceptionMessage.INTERNAL_ERROR,
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
+				err,
+			);
+		}
+	}
+
+	@GrpcMethod(LESSONS_SERVICE_NAME)
+	async findOneProgressForUser(
+		@Payload(new RpcValidationPipe(findLessonProgressForUserSchema))
+		payload: z.infer<typeof findLessonProgressForUserSchema>,
+	): Promise<LessonsServiceFindOneProgressForUserResponse> {
+		try {
+			const progress = await this.findLessonProgressForUserHandler.execute({
+				lessonId: payload.lessonId,
+				userId: payload.userId,
+			});
+
+			return {
+				progress: lessonProgressDtoToClient(progress),
+			};
+		} catch (err) {
+			if (err instanceof LessonProgressNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						ExceptionMessage.LESSON_PROGRESS_NOT_FOUND,
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.LESSON_NOT_FOUND,
+					),
+				);
+			}
+
+			throw new GrpcException(
+				new GrpcErrorDto(
+					ExceptionMessage.INTERNAL_ERROR,
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
+				err,
+			);
+		}
+	}
+
+	@GrpcMethod(LESSONS_SERVICE_NAME)
+	async listProgress(
+		@Payload(new RpcValidationPipe(listLessonProgressSchema))
+		payload: z.infer<typeof listLessonProgressSchema>,
+	): Promise<LessonsServiceListProgressResponse> {
+		try {
+			const progress = await this.listLessonProgressHandler.execute({
+				options: payload.options,
+				where: {
+					unitId: payload.where?.unitId,
+					userId: payload.where?.userId,
+				},
+			});
+
+			return {
+				progress: progress.map(lessonProgressDtoToClient),
+			};
+		} catch (err) {
 			throw new GrpcException(
 				new GrpcErrorDto(
 					ExceptionMessage.INTERNAL_ERROR,

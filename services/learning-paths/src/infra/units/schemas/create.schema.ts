@@ -1,10 +1,10 @@
-import { emptyStringToNull } from '@pathly-backend/common/index.js';
-import { z } from 'zod';
+import { emptyStringToNull } from "@pathly-backend/common/index.js";
+import { z } from "zod";
 import {
 	descriptionSchema,
 	nameSchema,
 	sectionIdSchema,
-} from './fields.schema';
+} from "./fields.schema";
 
 export const createUnitSchema = z
 	.object({

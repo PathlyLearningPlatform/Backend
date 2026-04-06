@@ -1,18 +1,18 @@
-import { status as GrpcStatus } from '@grpc/grpc-js';
-import { GrpcException } from '@pathly-backend/common';
-import { GrpcSectionsController } from '@/infra/sections/grpc.controller';
+import { status as GrpcStatus } from "@grpc/grpc-js";
+import { GrpcException } from "@pathly-backend/common";
 import {
 	LearningPathNotFoundException,
 	SectionNotFoundException,
-} from '@/app/common';
+} from "@/app/common";
+import { GrpcSectionsController } from "@/infra/sections/grpc.controller";
 import {
-	mockHandler,
 	type MockHandler,
 	makeSectionDto,
+	mockHandler,
 	TEST_IDS,
-} from '../common';
+} from "../common";
 
-describe('GrpcSectionsController', () => {
+describe("GrpcSectionsController", () => {
 	let controller: GrpcSectionsController;
 	let listHandler: MockHandler;
 	let findByIdHandler: MockHandler;
@@ -43,8 +43,8 @@ describe('GrpcSectionsController', () => {
 	// list
 	// ──────────────────────────────────────────────
 
-	describe('list', () => {
-		it('should return sections', async () => {
+	describe("list", () => {
+		it("should return sections", async () => {
 			const dto = makeSectionDto();
 			listHandler.execute.mockResolvedValue([dto]);
 
@@ -57,8 +57,8 @@ describe('GrpcSectionsController', () => {
 			expect(result.sections[0].id).toBe(dto.id);
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			listHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			listHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.list({ where: {}, options: {} } as any),
@@ -70,8 +70,8 @@ describe('GrpcSectionsController', () => {
 	// findById
 	// ──────────────────────────────────────────────
 
-	describe('findById', () => {
-		it('should return a section', async () => {
+	describe("findById", () => {
+		it("should return a section", async () => {
 			const dto = makeSectionDto();
 			findByIdHandler.execute.mockResolvedValue(dto);
 
@@ -82,7 +82,7 @@ describe('GrpcSectionsController', () => {
 			expect(result.section.id).toBe(dto.id);
 		});
 
-		it('should throw NOT_FOUND when SectionNotFoundException', async () => {
+		it("should throw NOT_FOUND when SectionNotFoundException", async () => {
 			findByIdHandler.execute.mockRejectedValue(
 				new SectionNotFoundException(TEST_IDS.section),
 			);
@@ -91,7 +91,7 @@ describe('GrpcSectionsController', () => {
 				await controller.findById({
 					where: { id: TEST_IDS.section },
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -100,8 +100,8 @@ describe('GrpcSectionsController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			findByIdHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			findByIdHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.findById({ where: { id: TEST_IDS.section } } as any),
@@ -113,20 +113,20 @@ describe('GrpcSectionsController', () => {
 	// create
 	// ──────────────────────────────────────────────
 
-	describe('create', () => {
-		it('should return created section', async () => {
+	describe("create", () => {
+		it("should return created section", async () => {
 			const dto = makeSectionDto();
 			addSectionHandler.execute.mockResolvedValue(dto);
 
 			const result = await controller.create({
 				learningPathId: TEST_IDS.learningPath,
-				name: 'Sec',
+				name: "Sec",
 			} as any);
 
 			expect(result.section.id).toBe(dto.id);
 		});
 
-		it('should throw NOT_FOUND when LearningPathNotFoundException', async () => {
+		it("should throw NOT_FOUND when LearningPathNotFoundException", async () => {
 			addSectionHandler.execute.mockRejectedValue(
 				new LearningPathNotFoundException(TEST_IDS.learningPath),
 			);
@@ -134,9 +134,9 @@ describe('GrpcSectionsController', () => {
 			try {
 				await controller.create({
 					learningPathId: TEST_IDS.learningPath,
-					name: 'x',
+					name: "x",
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -145,13 +145,13 @@ describe('GrpcSectionsController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			addSectionHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			addSectionHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.create({
 					learningPathId: TEST_IDS.learningPath,
-					name: 'x',
+					name: "x",
 				} as any),
 			).rejects.toThrow(GrpcException);
 		});
@@ -161,20 +161,20 @@ describe('GrpcSectionsController', () => {
 	// update
 	// ──────────────────────────────────────────────
 
-	describe('update', () => {
-		it('should return updated section', async () => {
-			const dto = makeSectionDto({ name: 'Updated' });
+	describe("update", () => {
+		it("should return updated section", async () => {
+			const dto = makeSectionDto({ name: "Updated" });
 			updateHandler.execute.mockResolvedValue(dto);
 
 			const result = await controller.update({
 				where: { id: TEST_IDS.section },
-				fields: { name: 'Updated' },
+				fields: { name: "Updated" },
 			} as any);
 
-			expect(result.section.name).toBe('Updated');
+			expect(result.section.name).toBe("Updated");
 		});
 
-		it('should throw NOT_FOUND when SectionNotFoundException', async () => {
+		it("should throw NOT_FOUND when SectionNotFoundException", async () => {
 			updateHandler.execute.mockRejectedValue(
 				new SectionNotFoundException(TEST_IDS.section),
 			);
@@ -182,9 +182,9 @@ describe('GrpcSectionsController', () => {
 			try {
 				await controller.update({
 					where: { id: TEST_IDS.section },
-					fields: { name: 'x' },
+					fields: { name: "x" },
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -193,8 +193,8 @@ describe('GrpcSectionsController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			updateHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			updateHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.update({
@@ -209,8 +209,8 @@ describe('GrpcSectionsController', () => {
 	// reorder
 	// ──────────────────────────────────────────────
 
-	describe('reorder', () => {
-		it('should call reorderHandler', async () => {
+	describe("reorder", () => {
+		it("should call reorderHandler", async () => {
 			reorderHandler.execute.mockResolvedValue(undefined);
 
 			await controller.reorder({
@@ -224,7 +224,7 @@ describe('GrpcSectionsController', () => {
 			});
 		});
 
-		it('should throw NOT_FOUND when SectionNotFoundException', async () => {
+		it("should throw NOT_FOUND when SectionNotFoundException", async () => {
 			reorderHandler.execute.mockRejectedValue(
 				new SectionNotFoundException(TEST_IDS.section),
 			);
@@ -234,7 +234,7 @@ describe('GrpcSectionsController', () => {
 					sectionId: TEST_IDS.section,
 					order: 2,
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -243,8 +243,8 @@ describe('GrpcSectionsController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			reorderHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			reorderHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.reorder({
@@ -259,8 +259,8 @@ describe('GrpcSectionsController', () => {
 	// remove
 	// ──────────────────────────────────────────────
 
-	describe('remove', () => {
-		it('should call removeHandler', async () => {
+	describe("remove", () => {
+		it("should call removeHandler", async () => {
 			removeHandler.execute.mockResolvedValue(undefined);
 
 			await controller.remove({
@@ -272,7 +272,7 @@ describe('GrpcSectionsController', () => {
 			});
 		});
 
-		it('should throw NOT_FOUND when SectionNotFoundException', async () => {
+		it("should throw NOT_FOUND when SectionNotFoundException", async () => {
 			removeHandler.execute.mockRejectedValue(
 				new SectionNotFoundException(TEST_IDS.section),
 			);
@@ -281,7 +281,7 @@ describe('GrpcSectionsController', () => {
 				await controller.remove({
 					where: { id: TEST_IDS.section },
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -290,8 +290,8 @@ describe('GrpcSectionsController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			removeHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			removeHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.remove({ where: { id: TEST_IDS.section } } as any),

@@ -1,5 +1,5 @@
-import { z } from 'zod';
-import { LessonsApiConstraints } from '../enums';
+import { z } from "zod";
+import { LessonsApiConstraints } from "../enums";
 
 export const listLessonsSchema = z
 	.object({

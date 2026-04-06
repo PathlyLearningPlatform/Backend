@@ -1,18 +1,18 @@
-import { Test } from '@nestjs/testing';
-import { PostgresLearningPathRepository } from '@/infra/learning-paths/postgres.repository';
-import { mockedDbService, mockedDrizzle, resetDrizzleMocks } from '../mocks';
-import { DEFAULT_DATE } from '../common';
+import { Test } from "@nestjs/testing";
+import { RepositoryException } from "@pathly-backend/common/index.js";
+import { LearningPath } from "@/domain/learning-paths/learning-path.aggregate";
 import {
 	LearningPathId,
 	LearningPathName,
-} from '@/domain/learning-paths/value-objects';
-import { LearningPath } from '@/domain/learning-paths/learning-path.aggregate';
-import { RepositoryException } from '@pathly-backend/common/index.js';
+} from "@/domain/learning-paths/value-objects";
+import { PostgresLearningPathRepository } from "@/infra/learning-paths/postgres.repository";
+import { DEFAULT_DATE } from "../common";
+import { mockedDbService, mockedDrizzle, resetDrizzleMocks } from "../mocks";
 
-const LP_ID = 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d';
-const SECTION_ID = 'b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e';
+const LP_ID = "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d";
+const SECTION_ID = "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e";
 
-describe('PostgresLearningPathRepository', () => {
+describe("PostgresLearningPathRepository", () => {
 	let repository: PostgresLearningPathRepository;
 
 	beforeEach(async () => {
@@ -25,13 +25,13 @@ describe('PostgresLearningPathRepository', () => {
 		repository = module.get(PostgresLearningPathRepository);
 	});
 
-	describe('load', () => {
+	describe("load", () => {
 		const id = LearningPathId.create(LP_ID);
 
-		it('should return a learning path when found', async () => {
+		it("should return a learning path when found", async () => {
 			const dbRow = {
 				id: LP_ID,
-				name: 'Test LP',
+				name: "Test LP",
 				description: null,
 				createdAt: DEFAULT_DATE,
 				updatedAt: null,
@@ -50,14 +50,14 @@ describe('PostgresLearningPathRepository', () => {
 			expect(mockedDrizzle.where).toHaveBeenCalledTimes(2);
 			expect(result).toBeInstanceOf(LearningPath);
 			expect(result!.id.value).toBe(LP_ID);
-			expect(result!.name.value).toBe('Test LP');
+			expect(result!.name.value).toBe("Test LP");
 		});
 
-		it('should reconstruct section refs', async () => {
+		it("should reconstruct section refs", async () => {
 			const dbRow = {
 				id: LP_ID,
-				name: 'Test LP',
-				description: 'A desc',
+				name: "Test LP",
+				description: "A desc",
 				createdAt: DEFAULT_DATE,
 				updatedAt: DEFAULT_DATE,
 				sectionCount: 1,
@@ -74,7 +74,7 @@ describe('PostgresLearningPathRepository', () => {
 			expect(result!.sectionCount).toBe(1);
 		});
 
-		it('should return null when not found', async () => {
+		it("should return null when not found", async () => {
 			mockedDrizzle.where.mockResolvedValueOnce([]);
 
 			const result = await repository.load(id);
@@ -82,19 +82,19 @@ describe('PostgresLearningPathRepository', () => {
 			expect(result).toBeNull();
 		});
 
-		it('should throw RepositoryException on error', async () => {
-			mockedDrizzle.transaction.mockRejectedValueOnce(new Error('db error'));
+		it("should throw RepositoryException on error", async () => {
+			mockedDrizzle.transaction.mockRejectedValueOnce(new Error("db error"));
 
 			await expect(repository.load(id)).rejects.toThrow(RepositoryException);
 		});
 	});
 
-	describe('save', () => {
-		it('should call insert → values → onConflictDoUpdate', async () => {
+	describe("save", () => {
+		it("should call insert → values → onConflictDoUpdate", async () => {
 			mockedDrizzle.onConflictDoUpdate.mockResolvedValueOnce(undefined);
 
 			const lp = LearningPath.fromDataSource(LearningPathId.create(LP_ID), {
-				name: LearningPathName.create('Test LP'),
+				name: LearningPathName.create("Test LP"),
 				description: null,
 				createdAt: DEFAULT_DATE,
 				updatedAt: null,
@@ -109,13 +109,13 @@ describe('PostgresLearningPathRepository', () => {
 			expect(mockedDrizzle.onConflictDoUpdate).toHaveBeenCalled();
 		});
 
-		it('should throw RepositoryException on error', async () => {
+		it("should throw RepositoryException on error", async () => {
 			mockedDrizzle.onConflictDoUpdate.mockRejectedValueOnce(
-				new Error('db error'),
+				new Error("db error"),
 			);
 
 			const lp = LearningPath.fromDataSource(LearningPathId.create(LP_ID), {
-				name: LearningPathName.create('Test LP'),
+				name: LearningPathName.create("Test LP"),
 				description: null,
 				createdAt: DEFAULT_DATE,
 				updatedAt: null,
@@ -127,10 +127,10 @@ describe('PostgresLearningPathRepository', () => {
 		});
 	});
 
-	describe('remove', () => {
+	describe("remove", () => {
 		const id = LearningPathId.create(LP_ID);
 
-		it('should return true when entity was deleted', async () => {
+		it("should return true when entity was deleted", async () => {
 			mockedDrizzle.where.mockResolvedValueOnce({ rows: [{}] });
 
 			const result = await repository.remove(id);
@@ -140,7 +140,7 @@ describe('PostgresLearningPathRepository', () => {
 			expect(result).toBe(true);
 		});
 
-		it('should return false when entity was not found', async () => {
+		it("should return false when entity was not found", async () => {
 			mockedDrizzle.where.mockResolvedValueOnce({ rows: [] });
 
 			const result = await repository.remove(id);
@@ -148,12 +148,10 @@ describe('PostgresLearningPathRepository', () => {
 			expect(result).toBe(false);
 		});
 
-		it('should throw RepositoryException on error', async () => {
-			mockedDrizzle.where.mockRejectedValueOnce(new Error('db error'));
+		it("should throw RepositoryException on error", async () => {
+			mockedDrizzle.where.mockRejectedValueOnce(new Error("db error"));
 
-			await expect(repository.remove(id)).rejects.toThrow(
-				RepositoryException,
-			);
+			await expect(repository.remove(id)).rejects.toThrow(RepositoryException);
 		});
 	});
 });

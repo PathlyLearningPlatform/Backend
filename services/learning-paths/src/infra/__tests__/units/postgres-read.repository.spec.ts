@@ -1,9 +1,9 @@
-import { Test } from '@nestjs/testing';
-import { PostgresUnitReadRepository } from '@/infra/units/postgres-read.repository';
-import { mockedDbService, mockedDrizzle } from '../mocks';
-import { makeUnitDto, TEST_IDS } from '../common';
+import { Test } from "@nestjs/testing";
+import { PostgresUnitReadRepository } from "@/infra/units/postgres-read.repository";
+import { makeUnitDto, TEST_IDS } from "../common";
+import { mockedDbService, mockedDrizzle } from "../mocks";
 
-describe('PostgresUnitReadRepository', () => {
+describe("PostgresUnitReadRepository", () => {
 	let repository: PostgresUnitReadRepository;
 
 	beforeEach(async () => {
@@ -16,8 +16,8 @@ describe('PostgresUnitReadRepository', () => {
 		repository = module.get(PostgresUnitReadRepository);
 	});
 
-	describe('list', () => {
-		it('should call select chain and return results', async () => {
+	describe("list", () => {
+		it("should call select chain and return results", async () => {
 			const dto = makeUnitDto();
 			mockedDrizzle.offset.mockResolvedValueOnce([dto]);
 
@@ -31,7 +31,7 @@ describe('PostgresUnitReadRepository', () => {
 			expect(result).toEqual([dto]);
 		});
 
-		it('should return empty array when no results', async () => {
+		it("should return empty array when no results", async () => {
 			mockedDrizzle.offset.mockResolvedValueOnce([]);
 
 			const result = await repository.list();
@@ -40,8 +40,8 @@ describe('PostgresUnitReadRepository', () => {
 		});
 	});
 
-	describe('findById', () => {
-		it('should return a unit when found', async () => {
+	describe("findById", () => {
+		it("should return a unit when found", async () => {
 			const dto = makeUnitDto();
 			mockedDrizzle.where.mockResolvedValueOnce([dto]);
 
@@ -50,7 +50,7 @@ describe('PostgresUnitReadRepository', () => {
 			expect(result).toEqual(dto);
 		});
 
-		it('should return null when not found', async () => {
+		it("should return null when not found", async () => {
 			mockedDrizzle.where.mockResolvedValueOnce([]);
 
 			const result = await repository.findById(TEST_IDS.unit);

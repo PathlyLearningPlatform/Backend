@@ -1,19 +1,19 @@
-import { Inject, Injectable } from '@nestjs/common';
-import type { ILearningPathRepository } from '@/domain/learning-paths/interfaces';
-import type { Db } from '@/infra/common/types';
 import { DbService } from '@infra/common/db/db.service';
+import { Inject, Injectable } from '@nestjs/common';
+import { RepositoryException } from '@pathly-backend/common/index.js';
+import { eq } from 'drizzle-orm';
+import { Order } from '@/domain/common';
+import type { ILearningPathRepository } from '@/domain/learning-paths';
 import { LearningPath } from '@/domain/learning-paths/learning-path.aggregate';
 import {
 	LearningPathDescription,
-	LearningPathId,
+	type LearningPathId,
 	LearningPathName,
 	SectionRef,
 } from '@/domain/learning-paths/value-objects';
-import { learningPathsTable, sectionsTable } from '../common/db/schemas';
-import { RepositoryException } from '@pathly-backend/common/index.js';
-import { eq } from 'drizzle-orm';
 import { SectionId } from '@/domain/sections/value-objects';
-import { Order } from '@/domain/common';
+import type { Db } from '@/infra/common/types';
+import { learningPathsTable, sectionsTable } from '../common/db/schemas';
 
 @Injectable()
 export class PostgresLearningPathRepository implements ILearningPathRepository {
@@ -24,7 +24,7 @@ export class PostgresLearningPathRepository implements ILearningPathRepository {
 	}
 
 	async load(id: LearningPathId): Promise<LearningPath | null> {
-		const rawId = id.value;
+		const rawId = id.toString();
 
 		try {
 			const result = await this.db.transaction(async (tx) => {
@@ -71,7 +71,7 @@ export class PostgresLearningPathRepository implements ILearningPathRepository {
 		try {
 			const result = await this.db
 				.delete(learningPathsTable)
-				.where(eq(learningPathsTable.id, id.value));
+				.where(eq(learningPathsTable.id, id.toString()));
 
 			return result.rows.length > 0;
 		} catch (err) {
@@ -84,7 +84,7 @@ export class PostgresLearningPathRepository implements ILearningPathRepository {
 			await this.db
 				.insert(learningPathsTable)
 				.values({
-					id: aggregate.id.value,
+					id: aggregate.id.toString(),
 					name: aggregate.name.value,
 					description: aggregate.description?.value ?? null,
 					createdAt: aggregate.createdAt,

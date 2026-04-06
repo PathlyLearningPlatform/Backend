@@ -1,12 +1,12 @@
-import { emptyStringToNull } from '@pathly-backend/common/index.js';
-import { z } from 'zod';
+import { emptyStringToNull } from "@pathly-backend/common/index.js";
+import { z } from "zod";
+import { clientExerciseDifficultyToDomain } from "../helpers";
 import {
 	descriptionSchema,
-	nameSchema,
-	lessonIdSchema,
 	difficultySchema,
-} from './fields.schema';
-import { clientExerciseDifficultyToDomain } from '../helpers';
+	lessonIdSchema,
+	nameSchema,
+} from "./fields.schema";
 
 export const createExerciseSchema = z
 	.object({

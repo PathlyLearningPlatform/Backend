@@ -1,14 +1,14 @@
-import { ICommandHandler, ActivityNotFoundException } from '@/app/common';
-import { IActivityRepository } from '@/domain/activities/interfaces';
-import { ActivityId } from '@/domain/activities/value-objects/id.vo';
+import { ActivityNotFoundException, type ICommandHandler } from "@/app/common";
+import { Exercise } from "@/domain/activities/exercises/exercise.aggregate";
+import type { ExerciseDifficulty } from "@/domain/activities/exercises/value-objects";
+import type { IActivityRepository } from "@/domain/activities/repositories";
 import {
 	ActivityDescription,
 	ActivityName,
 	ActivityType,
-} from '@/domain/activities/value-objects';
-import { Exercise } from '@/domain/activities/exercises/exercise.aggregate';
-import { ExerciseDifficulty } from '@/domain/activities/exercises/value-objects';
-import { ExerciseDto } from '../dtos';
+} from "@/domain/activities/value-objects";
+import { ActivityId } from "@/domain/activities/value-objects/id.vo";
+import type { ExerciseDto } from "../dtos";
 
 type UpdateExerciseCommand = {
 	where: {

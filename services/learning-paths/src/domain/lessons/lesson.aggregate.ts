@@ -1,17 +1,17 @@
-import { AggregateRoot, Order } from '../common';
-import { UnitId } from '../units/value-objects/id.vo';
-import { ActivityId } from '../activities/value-objects/id.vo';
+import type { ActivityId } from "../activities/value-objects/id.vo";
+import { AggregateRoot, Order } from "../common";
+import { InvalidOrderException } from "../common/exceptions";
+import { UnitId } from "../units/value-objects/id.vo";
+import {
+	ActivityAlreadyExistsException,
+	LessonCannotBeRemovedException,
+} from "./exceptions";
 import {
 	ActivityRef,
 	LessonDescription,
 	LessonId,
 	LessonName,
-} from './value-objects';
-import {
-	LessonCannotBeRemovedException,
-	ActivityAlreadyExistsException,
-} from './exceptions';
-import { InvalidOrderException } from '../common/exceptions';
+} from "./value-objects";
 
 type LessonProps = {
 	unitId: UnitId;
@@ -31,7 +31,7 @@ type CreateLessonProps = {
 	order: Order;
 };
 type UpdateLessonProps = Partial<
-	Pick<LessonProps, 'name' | 'description' | 'order'>
+	Pick<LessonProps, "name" | "description" | "order">
 >;
 type LessonFromDataSourceProps = {
 	id: string;

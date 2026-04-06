@@ -1,12 +1,13 @@
-import { ICommandHandler } from '@/app/common';
-import { ILearningPathRepository } from '@/domain/learning-paths/interfaces';
+import { LearningPathNotFoundException } from "@app/common";
+import type { ICommandHandler } from "@/app/common";
+import { UUID } from "@/domain/common";
 import {
+	type ILearningPathRepository,
 	LearningPathDescription,
 	LearningPathId,
 	LearningPathName,
-} from '@/domain/learning-paths/value-objects';
-import { LearningPathNotFoundException } from '@app/common';
-import { LearningPathDto } from '../dtos';
+} from "@/domain/learning-paths";
+import type { LearningPathDto } from "../dtos";
 
 type UpdateLearningPathCommand = {
 	where: {
@@ -30,11 +31,11 @@ export class UpdateLearningPathHandler
 	async execute(
 		command: UpdateLearningPathCommand,
 	): Promise<UpdateLearningPathResult> {
-		const id = LearningPathId.create(command.where.id);
+		const id = LearningPathId.create(UUID.create(command.where.id));
 		const learningPath = await this.learningPathRepository.load(id);
 
 		if (!learningPath) {
-			throw new LearningPathNotFoundException(id.value);
+			throw new LearningPathNotFoundException(id.toString());
 		}
 
 		const name = command.props?.name
@@ -55,7 +56,7 @@ export class UpdateLearningPathHandler
 		await this.learningPathRepository.save(learningPath);
 
 		return {
-			id: learningPath.id.value,
+			id: learningPath.id.toString(),
 			name: learningPath.name.value,
 			description: learningPath.description?.value ?? null,
 			createdAt: learningPath.createdAt,

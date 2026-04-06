@@ -1,5 +1,5 @@
-import { z } from 'zod';
-import { contentSchema, correctAnswerSchema } from './fields.schema';
+import { z } from "zod";
+import { contentSchema, correctAnswerSchema } from "./fields.schema";
 
 export const updateQuestionSchema = z
 	.object({

@@ -1,31 +1,48 @@
 import type { Provider } from '@nestjs/common';
-import type { IActivityRepository } from '@/domain/activities/interfaces';
-import type { IActivityReadRepository } from '@/app/activities/interfaces';
-import type { ILessonRepository } from '@/domain/lessons/interfaces';
-import { DiToken } from '../common/enums';
-import { PostgresActivityRepository } from './postgres.repository';
-import { PostgresActivityReadRepository } from './postgres-read.repository';
-import { PostgresLessonRepository } from '../lessons/postgres.repository';
 import {
-	ListActivitiesHandler,
-	ListArticlesHandler,
-	ListExercisesHandler,
-	ListQuizzesHandler,
-	FindActivityByIdHandler,
-	FindArticleByIdHandler,
-	FindExerciseByIdHandler,
-	FindQuizByIdHandler,
-} from '@/app/activities/queries';
-import {
+	AddQuestionHandler,
+	CompleteActivityHandler,
 	RemoveActivityHandler,
+	RemoveActivityProgressHandler,
+	RemoveQuestionHandler,
+	ReorderQuestionHandler,
 	UpdateArticleHandler,
 	UpdateExerciseHandler,
 	UpdateQuestionHandler,
-	AddQuestionHandler,
-	RemoveQuestionHandler,
-	ReorderQuestionHandler,
 } from '@/app/activities/commands';
-import { AddArticleHandler, AddExerciseHandler, AddQuizHandler, ReorderActivityHandler } from '@/app/lessons/commands';
+import type {
+	IActivityProgressReadRepository,
+	IActivityReadRepository,
+} from '@/app/activities/interfaces';
+import {
+	FindActivityByIdHandler,
+	FindActivityProgressForUserHandler,
+	FindArticleByIdHandler,
+	FindExerciseByIdHandler,
+	FindQuizByIdHandler,
+	ListActivitiesHandler,
+	ListActivityProgressHandler,
+	ListArticlesHandler,
+	ListExercisesHandler,
+	ListQuizzesHandler,
+} from '@/app/activities/queries';
+import type { IEventBus } from '@/app/common';
+import {
+	AddArticleHandler,
+	AddExerciseHandler,
+	AddQuizHandler,
+	ReorderActivityHandler,
+} from '@/app/lessons/commands';
+import type { IActivityProgressRepository } from '@/domain/activities';
+import type { IActivityRepository } from '@/domain/activities/repositories';
+import type { ILessonRepository } from '@/domain/lessons/repositories';
+import { InMemoryEventBus } from '../common/adapters';
+import { DiToken } from '../common/enums';
+import { PostgresLessonRepository } from '../lessons/postgres.repository';
+import { PostgresActivityRepository } from './postgres.repository';
+import { PostgresActivityProgressRepository } from './postgres-progress.repository';
+import { PostgresActivityProgressReadRepository } from './postgres-progress-read.repository';
+import { PostgresActivityReadRepository } from './postgres-read.repository';
 
 export const activityHandlersProvider: Provider[] = [
 	// ──────────────────────────────────────────────
@@ -182,5 +199,51 @@ export const activityHandlersProvider: Provider[] = [
 			return new ReorderActivityHandler(lessonRepository, activityRepository);
 		},
 		inject: [PostgresLessonRepository, PostgresActivityRepository],
+	},
+	{
+		provide: DiToken.COMPLETE_ACTIVITY_HANDLER,
+		useFactory(
+			activityProgressRepository: IActivityProgressRepository,
+			activityReadRepository: IActivityReadRepository,
+			eventBus: IEventBus,
+		) {
+			return new CompleteActivityHandler(
+				activityProgressRepository,
+				activityReadRepository,
+				eventBus,
+			);
+		},
+		inject: [
+			PostgresActivityProgressRepository,
+			PostgresActivityReadRepository,
+			InMemoryEventBus,
+		],
+	},
+	{
+		provide: DiToken.REMOVE_ACTIVITY_PROGRESS_HANDLER,
+		useFactory(activityProgressRepository: IActivityProgressRepository) {
+			return new RemoveActivityProgressHandler(activityProgressRepository);
+		},
+		inject: [PostgresActivityProgressRepository],
+	},
+	{
+		provide: DiToken.LIST_ACTIVITY_PROGRESS_HANDLER,
+		useFactory(
+			activityProgressReadRepository: IActivityProgressReadRepository,
+		) {
+			return new ListActivityProgressHandler(activityProgressReadRepository);
+		},
+		inject: [PostgresActivityProgressReadRepository],
+	},
+	{
+		provide: DiToken.FIND_ACTIVITY_PROGRESS_FOR_USER_HANDLER,
+		useFactory(
+			activityProgressReadRepository: IActivityProgressReadRepository,
+		) {
+			return new FindActivityProgressForUserHandler(
+				activityProgressReadRepository,
+			);
+		},
+		inject: [PostgresActivityProgressReadRepository],
 	},
 ];

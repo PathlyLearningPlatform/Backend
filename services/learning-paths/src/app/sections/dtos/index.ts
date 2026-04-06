@@ -1,1 +1,3 @@
-export * from './section.dto';
+export * from "./list-progress.dto";
+export * from "./progress.dto";
+export * from "./section.dto";

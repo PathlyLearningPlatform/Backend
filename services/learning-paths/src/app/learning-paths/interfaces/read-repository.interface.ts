@@ -1,7 +1,22 @@
-import { LearningPathDto } from '../dtos';
-import { LearningPathFilter } from './filter.interface';
+import type {
+	LearningPathDto,
+	LearningPathProgressDto,
+	ListLearningPathProgressDto,
+} from '../dtos';
+import type { LearningPathFilter } from './filter.interface';
 
 export interface ILearningPathReadRepository {
 	list(filter?: LearningPathFilter): Promise<LearningPathDto[]>;
 	findById(id: string): Promise<LearningPathDto | null>;
+}
+
+export interface ILearningPathProgressReadRepository {
+	list(dto?: ListLearningPathProgressDto): Promise<LearningPathProgressDto[]>;
+
+	findById(id: string): Promise<LearningPathProgressDto | null>;
+
+	findOneForUser(
+		learningPathId: string,
+		userId: string,
+	): Promise<LearningPathProgressDto | null>;
 }

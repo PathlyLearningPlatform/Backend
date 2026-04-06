@@ -1,12 +1,12 @@
-import { ListActivitiesHandler } from '../../../activities/queries/list.query';
-import { ActivityDto } from '../../../activities/dtos';
-import { ActivityType } from '@/domain/activities/value-objects/type.vo';
-import { mockActivityReadRepo, TEST_IDS, DEFAULT_DATE } from '../../common';
+import { ActivityType } from "@/domain/activities/value-objects/type.vo";
+import type { ActivityDto } from "../../../activities/dtos";
+import { ListActivitiesHandler } from "../../../activities/queries/list.query";
+import { DEFAULT_DATE, mockActivityReadRepo, TEST_IDS } from "../../common";
 
 const sampleDto: ActivityDto = {
 	id: TEST_IDS.ACTIVITY_ID,
 	lessonId: TEST_IDS.LESSON_ID,
-	name: 'Test Activity',
+	name: "Test Activity",
 	description: null,
 	createdAt: DEFAULT_DATE,
 	updatedAt: null,
@@ -14,8 +14,8 @@ const sampleDto: ActivityDto = {
 	order: 0,
 };
 
-describe('ListActivitiesHandler', () => {
-	it('returns a list of activities', async () => {
+describe("ListActivitiesHandler", () => {
+	it("returns a list of activities", async () => {
 		const dtos = [sampleDto];
 		const repo = mockActivityReadRepo({
 			list: jest.fn().mockResolvedValue(dtos),
@@ -27,7 +27,7 @@ describe('ListActivitiesHandler', () => {
 		expect(result).toEqual(dtos);
 	});
 
-	it('passes filter and pagination to the repository', async () => {
+	it("passes filter and pagination to the repository", async () => {
 		const repo = mockActivityReadRepo({
 			list: jest.fn().mockResolvedValue([]),
 		});

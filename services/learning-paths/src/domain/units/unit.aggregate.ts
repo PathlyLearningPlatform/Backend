@@ -1,9 +1,9 @@
-import { AggregateRoot, Order } from '../common';
-import { SectionId } from '../sections/value-objects/id.vo';
-import { UnitCannotBeRemovedException } from './exceptions';
-import { LessonAlreadyExistsException } from './exceptions/lesson-already-exists.exception';
-import { LessonId } from '../lessons/value-objects/id.vo';
-import { LessonRef, UnitDescription, UnitId, UnitName } from './value-objects';
+import { AggregateRoot, Order } from "../common";
+import type { LessonId } from "../lessons/value-objects/id.vo";
+import { SectionId } from "../sections/value-objects/id.vo";
+import { UnitCannotBeRemovedException } from "./exceptions";
+import { LessonAlreadyExistsException } from "./exceptions/lesson-already-exists.exception";
+import { LessonRef, UnitDescription, UnitId, UnitName } from "./value-objects";
 
 type UnitProps = {
 	sectionId: SectionId;
@@ -23,7 +23,7 @@ type CreateUnitProps = {
 	order: Order;
 };
 type UpdateUnitProps = Partial<
-	Pick<UnitProps, 'name' | 'description' | 'order'>
+	Pick<UnitProps, "name" | "description" | "order">
 >;
 type UnitFromDataSourceProps = {
 	id: string;

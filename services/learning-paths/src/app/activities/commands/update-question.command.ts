@@ -1,13 +1,13 @@
 import {
-	ICommandHandler,
 	ActivityNotFoundException,
+	type ICommandHandler,
 	QuestionNotFoundException,
-} from '@/app/common';
-import { IActivityRepository } from '@/domain/activities/interfaces';
-import { ActivityId } from '@/domain/activities/value-objects/id.vo';
-import { Quiz } from '@/domain/activities/quizzes/quiz.aggregate';
-import { QuestionId } from '@/domain/activities/quizzes/value-objects';
-import { QuestionDto } from '../dtos';
+} from "@/app/common";
+import { Quiz } from "@/domain/activities/quizzes/quiz.aggregate";
+import { QuestionId } from "@/domain/activities/quizzes/value-objects";
+import type { IActivityRepository } from "@/domain/activities/repositories";
+import { ActivityId } from "@/domain/activities/value-objects/id.vo";
+import type { QuestionDto } from "../dtos";
 
 type UpdateQuestionCommand = {
 	quizId: string;

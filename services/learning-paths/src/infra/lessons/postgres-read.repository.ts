@@ -1,10 +1,10 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { DbService } from '../common/db/db.service';
-import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import * as schema from '@infra/common/db/schemas';
-import { ILessonReadRepository } from '@/app/lessons/interfaces';
-import { LessonDto } from '@/app/lessons/dtos';
+import { Inject, Injectable } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
+import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import type { LessonDto } from '@/app/lessons/dtos';
+import type { ILessonReadRepository } from '@/app/lessons/interfaces';
+import { DbService } from '../common/db/db.service';
 import { LessonsApiConstraints } from './enums';
 
 @Injectable()

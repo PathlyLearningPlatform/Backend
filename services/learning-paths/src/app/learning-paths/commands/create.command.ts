@@ -1,9 +1,10 @@
-import { ICommandHandler } from '@/app/common';
-import { ILearningPathRepository } from '@/domain/learning-paths/interfaces';
-import { LearningPath } from '@/domain/learning-paths/learning-path.aggregate';
-import { LearningPathId } from '@/domain/learning-paths/value-objects';
-import { randomUUID } from 'crypto';
-import { LearningPathDto } from '../dtos';
+import { randomUUID } from "crypto";
+import type { ICommandHandler } from "@/app/common";
+import { UUID } from "@/domain/common";
+import type { ILearningPathRepository } from "@/domain/learning-paths";
+import { LearningPath } from "@/domain/learning-paths/learning-path.aggregate";
+import { LearningPathId } from "@/domain/learning-paths/value-objects";
+import type { LearningPathDto } from "../dtos";
 
 type CreateLearningPathCommand = {
 	name: string;
@@ -22,7 +23,7 @@ export class CreateLearningPathHandler
 	async execute(
 		command: CreateLearningPathCommand,
 	): Promise<CreateLearningPathResult> {
-		const id = LearningPathId.create(randomUUID());
+		const id = LearningPathId.create(UUID.create(randomUUID()));
 
 		const learningPath = LearningPath.create(id, {
 			name: command.name,
@@ -33,7 +34,7 @@ export class CreateLearningPathHandler
 		await this.learningPathRepository.save(learningPath);
 
 		return {
-			id: learningPath.id.value,
+			id: learningPath.id.toString(),
 			createdAt: learningPath.createdAt,
 			updatedAt: learningPath.updatedAt ?? null,
 			name: learningPath.name.value,

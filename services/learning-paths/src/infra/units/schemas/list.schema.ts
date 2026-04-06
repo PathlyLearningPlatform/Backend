@@ -1,5 +1,5 @@
-import { z } from 'zod';
-import { UnitsApiConstraints } from '../enums';
+import { z } from "zod";
+import { UnitsApiConstraints } from "../enums";
 
 export const listUnitsSchema = z
 	.object({

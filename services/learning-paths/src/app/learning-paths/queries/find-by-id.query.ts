@@ -1,6 +1,9 @@
-import { IQueryHandler, LearningPathNotFoundException } from '@/app/common';
-import { ILearningPathReadRepository } from '../interfaces';
-import { LearningPathDto } from '../dtos';
+import {
+	type IQueryHandler,
+	LearningPathNotFoundException,
+} from "@/app/common";
+import type { LearningPathDto } from "../dtos";
+import type { ILearningPathReadRepository } from "../interfaces";
 
 type FindLearningPathByIdQuery = {
 	where: {

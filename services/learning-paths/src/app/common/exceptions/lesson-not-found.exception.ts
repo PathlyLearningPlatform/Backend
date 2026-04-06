@@ -1,4 +1,4 @@
-import { AppException } from './app.exception';
+import { AppException } from "./app.exception";
 
 export class LessonNotFoundException extends AppException {
 	constructor(public readonly lessonId: string) {

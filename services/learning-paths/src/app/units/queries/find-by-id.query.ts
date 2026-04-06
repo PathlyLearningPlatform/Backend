@@ -1,6 +1,6 @@
-import { IQueryHandler, UnitNotFoundException } from '@/app/common';
-import { IUnitReadRepository } from '../interfaces';
-import { UnitDto } from '../dtos';
+import { type IQueryHandler, UnitNotFoundException } from "@/app/common";
+import type { UnitDto } from "../dtos";
+import type { IUnitReadRepository } from "../interfaces";
 
 type FindUnitByIdQuery = {
 	where: {

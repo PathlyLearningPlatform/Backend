@@ -1,11 +1,11 @@
-import { UUID, ValueObject } from '@/domain/common';
+import { UUID, ValueObject } from "@/domain/common";
 
 type Props = {
 	value: UUID;
 };
 
 export class QuestionId extends ValueObject<Props> {
-	private readonly _brand: 'questionId' = 'questionId';
+	private readonly _brand: "questionId" = "questionId";
 
 	get value(): string {
 		return this._props.value.value;

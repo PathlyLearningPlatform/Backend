@@ -1,24 +1,24 @@
-import { status as GrpcStatus } from '@grpc/grpc-js';
-import { GrpcException } from '@pathly-backend/common';
-import { GrpcActivitiesController } from '@/infra/activities/grpc.controller';
+import { status as GrpcStatus } from "@grpc/grpc-js";
+import { GrpcException } from "@pathly-backend/common";
 import {
-	LessonNotFoundException,
 	ActivityNotFoundException,
+	LessonNotFoundException,
 	QuestionNotFoundException,
-} from '@/app/common';
+} from "@/app/common";
+import { GrpcActivitiesController } from "@/infra/activities/grpc.controller";
 import {
-	mockHandler,
 	type MockHandler,
 	makeActivityDto,
 	makeArticleDto,
 	makeExerciseDto,
+	makeQuestionDto,
 	makeQuizDto,
 	makeQuizWithoutQuestionsDto,
-	makeQuestionDto,
+	mockHandler,
 	TEST_IDS,
-} from '../common';
+} from "../common";
 
-describe('GrpcActivitiesController', () => {
+describe("GrpcActivitiesController", () => {
 	let controller: GrpcActivitiesController;
 	let listActivitiesHandler: MockHandler;
 	let listArticlesHandler: MockHandler;
@@ -88,8 +88,8 @@ describe('GrpcActivitiesController', () => {
 	// List
 	// ══════════════════════════════════════════════
 
-	describe('list', () => {
-		it('should return activities', async () => {
+	describe("list", () => {
+		it("should return activities", async () => {
 			const dto = makeActivityDto();
 			listActivitiesHandler.execute.mockResolvedValue([dto]);
 
@@ -102,8 +102,8 @@ describe('GrpcActivitiesController', () => {
 			expect(result.activities[0].id).toBe(dto.id);
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			listActivitiesHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			listActivitiesHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.list({ where: {}, options: {} } as any),
@@ -111,8 +111,8 @@ describe('GrpcActivitiesController', () => {
 		});
 	});
 
-	describe('listArticles', () => {
-		it('should return articles', async () => {
+	describe("listArticles", () => {
+		it("should return articles", async () => {
 			const dto = makeArticleDto();
 			listArticlesHandler.execute.mockResolvedValue([dto]);
 
@@ -125,8 +125,8 @@ describe('GrpcActivitiesController', () => {
 			expect(result.articles[0].id).toBe(dto.id);
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			listArticlesHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			listArticlesHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.listArticles({ where: {}, options: {} } as any),
@@ -134,8 +134,8 @@ describe('GrpcActivitiesController', () => {
 		});
 	});
 
-	describe('listExercises', () => {
-		it('should return exercises', async () => {
+	describe("listExercises", () => {
+		it("should return exercises", async () => {
 			const dto = makeExerciseDto();
 			listExercisesHandler.execute.mockResolvedValue([dto]);
 
@@ -148,8 +148,8 @@ describe('GrpcActivitiesController', () => {
 			expect(result.exercises[0].id).toBe(dto.id);
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			listExercisesHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			listExercisesHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.listExercises({ where: {}, options: {} } as any),
@@ -157,8 +157,8 @@ describe('GrpcActivitiesController', () => {
 		});
 	});
 
-	describe('listQuizzes', () => {
-		it('should return quizzes', async () => {
+	describe("listQuizzes", () => {
+		it("should return quizzes", async () => {
 			const dto = makeQuizWithoutQuestionsDto();
 			listQuizzesHandler.execute.mockResolvedValue([dto]);
 
@@ -171,8 +171,8 @@ describe('GrpcActivitiesController', () => {
 			expect(result.quizzes[0].id).toBe(dto.id);
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			listQuizzesHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			listQuizzesHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.listQuizzes({ where: {}, options: {} } as any),
@@ -184,8 +184,8 @@ describe('GrpcActivitiesController', () => {
 	// Find by ID
 	// ══════════════════════════════════════════════
 
-	describe('findById', () => {
-		it('should return an activity', async () => {
+	describe("findById", () => {
+		it("should return an activity", async () => {
 			const dto = makeActivityDto();
 			findActivityByIdHandler.execute.mockResolvedValue(dto);
 
@@ -196,7 +196,7 @@ describe('GrpcActivitiesController', () => {
 			expect(result.activity.id).toBe(dto.id);
 		});
 
-		it('should throw NOT_FOUND when ActivityNotFoundException', async () => {
+		it("should throw NOT_FOUND when ActivityNotFoundException", async () => {
 			findActivityByIdHandler.execute.mockRejectedValue(
 				new ActivityNotFoundException(TEST_IDS.activity),
 			);
@@ -205,7 +205,7 @@ describe('GrpcActivitiesController', () => {
 				await controller.findById({
 					where: { id: TEST_IDS.activity },
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -214,8 +214,8 @@ describe('GrpcActivitiesController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			findActivityByIdHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			findActivityByIdHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.findById({ where: { id: TEST_IDS.activity } } as any),
@@ -223,8 +223,8 @@ describe('GrpcActivitiesController', () => {
 		});
 	});
 
-	describe('findArticleById', () => {
-		it('should return an article', async () => {
+	describe("findArticleById", () => {
+		it("should return an article", async () => {
 			const dto = makeArticleDto();
 			findArticleByIdHandler.execute.mockResolvedValue(dto);
 
@@ -235,7 +235,7 @@ describe('GrpcActivitiesController', () => {
 			expect(result.article.id).toBe(dto.id);
 		});
 
-		it('should throw NOT_FOUND when ActivityNotFoundException', async () => {
+		it("should throw NOT_FOUND when ActivityNotFoundException", async () => {
 			findArticleByIdHandler.execute.mockRejectedValue(
 				new ActivityNotFoundException(TEST_IDS.article),
 			);
@@ -244,7 +244,7 @@ describe('GrpcActivitiesController', () => {
 				await controller.findArticleById({
 					where: { id: TEST_IDS.article },
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -253,8 +253,8 @@ describe('GrpcActivitiesController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			findArticleByIdHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			findArticleByIdHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.findArticleById({
@@ -264,8 +264,8 @@ describe('GrpcActivitiesController', () => {
 		});
 	});
 
-	describe('findExerciseById', () => {
-		it('should return an exercise', async () => {
+	describe("findExerciseById", () => {
+		it("should return an exercise", async () => {
 			const dto = makeExerciseDto();
 			findExerciseByIdHandler.execute.mockResolvedValue(dto);
 
@@ -276,7 +276,7 @@ describe('GrpcActivitiesController', () => {
 			expect(result.exercise.id).toBe(dto.id);
 		});
 
-		it('should throw NOT_FOUND when ActivityNotFoundException', async () => {
+		it("should throw NOT_FOUND when ActivityNotFoundException", async () => {
 			findExerciseByIdHandler.execute.mockRejectedValue(
 				new ActivityNotFoundException(TEST_IDS.exercise),
 			);
@@ -285,7 +285,7 @@ describe('GrpcActivitiesController', () => {
 				await controller.findExerciseById({
 					where: { id: TEST_IDS.exercise },
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -294,8 +294,8 @@ describe('GrpcActivitiesController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			findExerciseByIdHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			findExerciseByIdHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.findExerciseById({
@@ -305,8 +305,8 @@ describe('GrpcActivitiesController', () => {
 		});
 	});
 
-	describe('findQuizById', () => {
-		it('should return a quiz', async () => {
+	describe("findQuizById", () => {
+		it("should return a quiz", async () => {
 			const dto = makeQuizDto();
 			findQuizByIdHandler.execute.mockResolvedValue(dto);
 
@@ -317,7 +317,7 @@ describe('GrpcActivitiesController', () => {
 			expect(result.quiz.id).toBe(dto.id);
 		});
 
-		it('should throw NOT_FOUND when ActivityNotFoundException', async () => {
+		it("should throw NOT_FOUND when ActivityNotFoundException", async () => {
 			findQuizByIdHandler.execute.mockRejectedValue(
 				new ActivityNotFoundException(TEST_IDS.quiz),
 			);
@@ -326,7 +326,7 @@ describe('GrpcActivitiesController', () => {
 				await controller.findQuizById({
 					where: { id: TEST_IDS.quiz },
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -335,8 +335,8 @@ describe('GrpcActivitiesController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			findQuizByIdHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			findQuizByIdHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.findQuizById({ where: { id: TEST_IDS.quiz } } as any),
@@ -348,21 +348,21 @@ describe('GrpcActivitiesController', () => {
 	// Create
 	// ══════════════════════════════════════════════
 
-	describe('createArticle', () => {
-		it('should return created article', async () => {
+	describe("createArticle", () => {
+		it("should return created article", async () => {
 			const dto = makeArticleDto();
 			addArticleHandler.execute.mockResolvedValue(dto);
 
 			const result = await controller.createArticle({
 				lessonId: TEST_IDS.lesson,
-				name: 'Art',
-				ref: 'https://example.com',
+				name: "Art",
+				ref: "https://example.com",
 			} as any);
 
 			expect(result.article.id).toBe(dto.id);
 		});
 
-		it('should throw NOT_FOUND when LessonNotFoundException', async () => {
+		it("should throw NOT_FOUND when LessonNotFoundException", async () => {
 			addArticleHandler.execute.mockRejectedValue(
 				new LessonNotFoundException(TEST_IDS.lesson),
 			);
@@ -370,10 +370,10 @@ describe('GrpcActivitiesController', () => {
 			try {
 				await controller.createArticle({
 					lessonId: TEST_IDS.lesson,
-					name: 'x',
-					ref: 'r',
+					name: "x",
+					ref: "r",
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -382,34 +382,34 @@ describe('GrpcActivitiesController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			addArticleHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			addArticleHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.createArticle({
 					lessonId: TEST_IDS.lesson,
-					name: 'x',
-					ref: 'r',
+					name: "x",
+					ref: "r",
 				} as any),
 			).rejects.toThrow(GrpcException);
 		});
 	});
 
-	describe('createExercise', () => {
-		it('should return created exercise', async () => {
+	describe("createExercise", () => {
+		it("should return created exercise", async () => {
 			const dto = makeExerciseDto();
 			addExerciseHandler.execute.mockResolvedValue(dto);
 
 			const result = await controller.createExercise({
 				lessonId: TEST_IDS.lesson,
-				name: 'Ex',
-				difficulty: 'EASY',
+				name: "Ex",
+				difficulty: "EASY",
 			} as any);
 
 			expect(result.exercise.id).toBe(dto.id);
 		});
 
-		it('should throw NOT_FOUND when LessonNotFoundException', async () => {
+		it("should throw NOT_FOUND when LessonNotFoundException", async () => {
 			addExerciseHandler.execute.mockRejectedValue(
 				new LessonNotFoundException(TEST_IDS.lesson),
 			);
@@ -417,10 +417,10 @@ describe('GrpcActivitiesController', () => {
 			try {
 				await controller.createExercise({
 					lessonId: TEST_IDS.lesson,
-					name: 'x',
-					difficulty: 'EASY',
+					name: "x",
+					difficulty: "EASY",
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -429,33 +429,33 @@ describe('GrpcActivitiesController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			addExerciseHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			addExerciseHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.createExercise({
 					lessonId: TEST_IDS.lesson,
-					name: 'x',
-					difficulty: 'EASY',
+					name: "x",
+					difficulty: "EASY",
 				} as any),
 			).rejects.toThrow(GrpcException);
 		});
 	});
 
-	describe('createQuiz', () => {
-		it('should return created quiz', async () => {
+	describe("createQuiz", () => {
+		it("should return created quiz", async () => {
 			const dto = makeQuizWithoutQuestionsDto();
 			addQuizHandler.execute.mockResolvedValue(dto);
 
 			const result = await controller.createQuiz({
 				lessonId: TEST_IDS.lesson,
-				name: 'Quiz',
+				name: "Quiz",
 			} as any);
 
 			expect(result.quiz.id).toBe(dto.id);
 		});
 
-		it('should throw NOT_FOUND when LessonNotFoundException', async () => {
+		it("should throw NOT_FOUND when LessonNotFoundException", async () => {
 			addQuizHandler.execute.mockRejectedValue(
 				new LessonNotFoundException(TEST_IDS.lesson),
 			);
@@ -463,9 +463,9 @@ describe('GrpcActivitiesController', () => {
 			try {
 				await controller.createQuiz({
 					lessonId: TEST_IDS.lesson,
-					name: 'x',
+					name: "x",
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -474,13 +474,13 @@ describe('GrpcActivitiesController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			addQuizHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			addQuizHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.createQuiz({
 					lessonId: TEST_IDS.lesson,
-					name: 'x',
+					name: "x",
 				} as any),
 			).rejects.toThrow(GrpcException);
 		});
@@ -490,20 +490,20 @@ describe('GrpcActivitiesController', () => {
 	// Update
 	// ══════════════════════════════════════════════
 
-	describe('updateArticle', () => {
-		it('should return updated article', async () => {
-			const dto = makeArticleDto({ name: 'Updated' });
+	describe("updateArticle", () => {
+		it("should return updated article", async () => {
+			const dto = makeArticleDto({ name: "Updated" });
 			updateArticleHandler.execute.mockResolvedValue(dto);
 
 			const result = await controller.updateArticle({
 				where: { activityId: TEST_IDS.article },
-				fields: { name: 'Updated' },
+				fields: { name: "Updated" },
 			} as any);
 
-			expect(result.article.name).toBe('Updated');
+			expect(result.article.name).toBe("Updated");
 		});
 
-		it('should throw NOT_FOUND when ActivityNotFoundException', async () => {
+		it("should throw NOT_FOUND when ActivityNotFoundException", async () => {
 			updateArticleHandler.execute.mockRejectedValue(
 				new ActivityNotFoundException(TEST_IDS.article),
 			);
@@ -511,9 +511,9 @@ describe('GrpcActivitiesController', () => {
 			try {
 				await controller.updateArticle({
 					where: { activityId: TEST_IDS.article },
-					fields: { name: 'x' },
+					fields: { name: "x" },
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -522,8 +522,8 @@ describe('GrpcActivitiesController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			updateArticleHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			updateArticleHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.updateArticle({
@@ -534,20 +534,20 @@ describe('GrpcActivitiesController', () => {
 		});
 	});
 
-	describe('updateExercise', () => {
-		it('should return updated exercise', async () => {
-			const dto = makeExerciseDto({ name: 'Updated' });
+	describe("updateExercise", () => {
+		it("should return updated exercise", async () => {
+			const dto = makeExerciseDto({ name: "Updated" });
 			updateExerciseHandler.execute.mockResolvedValue(dto);
 
 			const result = await controller.updateExercise({
 				where: { activityId: TEST_IDS.exercise },
-				fields: { name: 'Updated' },
+				fields: { name: "Updated" },
 			} as any);
 
-			expect(result.exercise.name).toBe('Updated');
+			expect(result.exercise.name).toBe("Updated");
 		});
 
-		it('should throw NOT_FOUND when ActivityNotFoundException', async () => {
+		it("should throw NOT_FOUND when ActivityNotFoundException", async () => {
 			updateExerciseHandler.execute.mockRejectedValue(
 				new ActivityNotFoundException(TEST_IDS.exercise),
 			);
@@ -555,9 +555,9 @@ describe('GrpcActivitiesController', () => {
 			try {
 				await controller.updateExercise({
 					where: { activityId: TEST_IDS.exercise },
-					fields: { name: 'x' },
+					fields: { name: "x" },
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -566,8 +566,8 @@ describe('GrpcActivitiesController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			updateExerciseHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			updateExerciseHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.updateExercise({
@@ -578,14 +578,14 @@ describe('GrpcActivitiesController', () => {
 		});
 	});
 
-	describe('updateQuiz', () => {
-		it('should throw UNIMPLEMENTED', async () => {
+	describe("updateQuiz", () => {
+		it("should throw UNIMPLEMENTED", async () => {
 			try {
 				await controller.updateQuiz({
 					where: { activityId: TEST_IDS.quiz },
-					fields: { name: 'x' },
+					fields: { name: "x" },
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -599,8 +599,8 @@ describe('GrpcActivitiesController', () => {
 	// Reorder / Remove
 	// ══════════════════════════════════════════════
 
-	describe('reorder', () => {
-		it('should call reorderActivityHandler', async () => {
+	describe("reorder", () => {
+		it("should call reorderActivityHandler", async () => {
 			reorderActivityHandler.execute.mockResolvedValue(undefined);
 
 			await controller.reorder({
@@ -614,7 +614,7 @@ describe('GrpcActivitiesController', () => {
 			});
 		});
 
-		it('should throw NOT_FOUND when ActivityNotFoundException', async () => {
+		it("should throw NOT_FOUND when ActivityNotFoundException", async () => {
 			reorderActivityHandler.execute.mockRejectedValue(
 				new ActivityNotFoundException(TEST_IDS.activity),
 			);
@@ -624,7 +624,7 @@ describe('GrpcActivitiesController', () => {
 					activityId: TEST_IDS.activity,
 					order: 2,
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -633,8 +633,8 @@ describe('GrpcActivitiesController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			reorderActivityHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			reorderActivityHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.reorder({
@@ -645,8 +645,8 @@ describe('GrpcActivitiesController', () => {
 		});
 	});
 
-	describe('remove', () => {
-		it('should call removeActivityHandler', async () => {
+	describe("remove", () => {
+		it("should call removeActivityHandler", async () => {
 			removeActivityHandler.execute.mockResolvedValue(undefined);
 
 			await controller.remove({
@@ -658,7 +658,7 @@ describe('GrpcActivitiesController', () => {
 			});
 		});
 
-		it('should throw NOT_FOUND when ActivityNotFoundException', async () => {
+		it("should throw NOT_FOUND when ActivityNotFoundException", async () => {
 			removeActivityHandler.execute.mockRejectedValue(
 				new ActivityNotFoundException(TEST_IDS.activity),
 			);
@@ -667,7 +667,7 @@ describe('GrpcActivitiesController', () => {
 				await controller.remove({
 					where: { id: TEST_IDS.activity },
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -676,8 +676,8 @@ describe('GrpcActivitiesController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			removeActivityHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			removeActivityHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.remove({ where: { id: TEST_IDS.activity } } as any),
@@ -689,8 +689,8 @@ describe('GrpcActivitiesController', () => {
 	// Questions
 	// ══════════════════════════════════════════════
 
-	describe('findQuestionById', () => {
-		it('should return a question', async () => {
+	describe("findQuestionById", () => {
+		it("should return a question", async () => {
 			const questionDto = makeQuestionDto();
 			const quizDto = makeQuizDto({ questions: [questionDto] });
 			findQuizByIdHandler.execute.mockResolvedValue(quizDto);
@@ -702,7 +702,7 @@ describe('GrpcActivitiesController', () => {
 			expect(result.question.id).toBe(questionDto.id);
 		});
 
-		it('should throw NOT_FOUND when question not in quiz', async () => {
+		it("should throw NOT_FOUND when question not in quiz", async () => {
 			const quizDto = makeQuizDto({ questions: [] });
 			findQuizByIdHandler.execute.mockResolvedValue(quizDto);
 
@@ -710,7 +710,7 @@ describe('GrpcActivitiesController', () => {
 				await controller.findQuestionById({
 					where: { quizId: TEST_IDS.quiz, id: TEST_IDS.question },
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -719,7 +719,7 @@ describe('GrpcActivitiesController', () => {
 			}
 		});
 
-		it('should throw NOT_FOUND when ActivityNotFoundException', async () => {
+		it("should throw NOT_FOUND when ActivityNotFoundException", async () => {
 			findQuizByIdHandler.execute.mockRejectedValue(
 				new ActivityNotFoundException(TEST_IDS.quiz),
 			);
@@ -728,7 +728,7 @@ describe('GrpcActivitiesController', () => {
 				await controller.findQuestionById({
 					where: { quizId: TEST_IDS.quiz, id: TEST_IDS.question },
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -737,8 +737,8 @@ describe('GrpcActivitiesController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			findQuizByIdHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			findQuizByIdHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.findQuestionById({
@@ -748,21 +748,21 @@ describe('GrpcActivitiesController', () => {
 		});
 	});
 
-	describe('createQuestion', () => {
-		it('should return created question', async () => {
+	describe("createQuestion", () => {
+		it("should return created question", async () => {
 			const dto = makeQuestionDto();
 			addQuestionHandler.execute.mockResolvedValue(dto);
 
 			const result = await controller.createQuestion({
 				quizId: TEST_IDS.quiz,
-				content: 'Q?',
-				correctAnswer: 'A',
+				content: "Q?",
+				correctAnswer: "A",
 			} as any);
 
 			expect(result.question.id).toBe(dto.id);
 		});
 
-		it('should throw NOT_FOUND when ActivityNotFoundException', async () => {
+		it("should throw NOT_FOUND when ActivityNotFoundException", async () => {
 			addQuestionHandler.execute.mockRejectedValue(
 				new ActivityNotFoundException(TEST_IDS.quiz),
 			);
@@ -770,10 +770,10 @@ describe('GrpcActivitiesController', () => {
 			try {
 				await controller.createQuestion({
 					quizId: TEST_IDS.quiz,
-					content: 'Q?',
-					correctAnswer: 'A',
+					content: "Q?",
+					correctAnswer: "A",
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -782,33 +782,33 @@ describe('GrpcActivitiesController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			addQuestionHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			addQuestionHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.createQuestion({
 					quizId: TEST_IDS.quiz,
-					content: 'Q?',
-					correctAnswer: 'A',
+					content: "Q?",
+					correctAnswer: "A",
 				} as any),
 			).rejects.toThrow(GrpcException);
 		});
 	});
 
-	describe('updateQuestion', () => {
-		it('should return updated question', async () => {
-			const dto = makeQuestionDto({ content: 'Updated?' });
+	describe("updateQuestion", () => {
+		it("should return updated question", async () => {
+			const dto = makeQuestionDto({ content: "Updated?" });
 			updateQuestionHandler.execute.mockResolvedValue(dto);
 
 			const result = await controller.updateQuestion({
 				where: { quizId: TEST_IDS.quiz, id: TEST_IDS.question },
-				fields: { content: 'Updated?' },
+				fields: { content: "Updated?" },
 			} as any);
 
-			expect(result.question.content).toBe('Updated?');
+			expect(result.question.content).toBe("Updated?");
 		});
 
-		it('should throw NOT_FOUND when QuestionNotFoundException', async () => {
+		it("should throw NOT_FOUND when QuestionNotFoundException", async () => {
 			updateQuestionHandler.execute.mockRejectedValue(
 				new QuestionNotFoundException(TEST_IDS.question),
 			);
@@ -816,9 +816,9 @@ describe('GrpcActivitiesController', () => {
 			try {
 				await controller.updateQuestion({
 					where: { quizId: TEST_IDS.quiz, id: TEST_IDS.question },
-					fields: { content: 'x' },
+					fields: { content: "x" },
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -827,7 +827,7 @@ describe('GrpcActivitiesController', () => {
 			}
 		});
 
-		it('should throw NOT_FOUND when ActivityNotFoundException', async () => {
+		it("should throw NOT_FOUND when ActivityNotFoundException", async () => {
 			updateQuestionHandler.execute.mockRejectedValue(
 				new ActivityNotFoundException(TEST_IDS.quiz),
 			);
@@ -835,9 +835,9 @@ describe('GrpcActivitiesController', () => {
 			try {
 				await controller.updateQuestion({
 					where: { quizId: TEST_IDS.quiz, id: TEST_IDS.question },
-					fields: { content: 'x' },
+					fields: { content: "x" },
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -846,8 +846,8 @@ describe('GrpcActivitiesController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			updateQuestionHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			updateQuestionHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.updateQuestion({
@@ -858,8 +858,8 @@ describe('GrpcActivitiesController', () => {
 		});
 	});
 
-	describe('reorderQuestion', () => {
-		it('should call reorderQuestionHandler', async () => {
+	describe("reorderQuestion", () => {
+		it("should call reorderQuestionHandler", async () => {
 			reorderQuestionHandler.execute.mockResolvedValue(undefined);
 
 			await controller.reorderQuestion({
@@ -875,7 +875,7 @@ describe('GrpcActivitiesController', () => {
 			});
 		});
 
-		it('should throw NOT_FOUND when QuestionNotFoundException', async () => {
+		it("should throw NOT_FOUND when QuestionNotFoundException", async () => {
 			reorderQuestionHandler.execute.mockRejectedValue(
 				new QuestionNotFoundException(TEST_IDS.question),
 			);
@@ -886,7 +886,7 @@ describe('GrpcActivitiesController', () => {
 					questionId: TEST_IDS.question,
 					order: 1,
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -895,7 +895,7 @@ describe('GrpcActivitiesController', () => {
 			}
 		});
 
-		it('should throw NOT_FOUND when ActivityNotFoundException', async () => {
+		it("should throw NOT_FOUND when ActivityNotFoundException", async () => {
 			reorderQuestionHandler.execute.mockRejectedValue(
 				new ActivityNotFoundException(TEST_IDS.quiz),
 			);
@@ -906,7 +906,7 @@ describe('GrpcActivitiesController', () => {
 					questionId: TEST_IDS.question,
 					order: 1,
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -915,8 +915,8 @@ describe('GrpcActivitiesController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			reorderQuestionHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			reorderQuestionHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.reorderQuestion({
@@ -928,8 +928,8 @@ describe('GrpcActivitiesController', () => {
 		});
 	});
 
-	describe('removeQuestion', () => {
-		it('should call removeQuestionHandler', async () => {
+	describe("removeQuestion", () => {
+		it("should call removeQuestionHandler", async () => {
 			removeQuestionHandler.execute.mockResolvedValue(undefined);
 
 			await controller.removeQuestion({
@@ -942,7 +942,7 @@ describe('GrpcActivitiesController', () => {
 			});
 		});
 
-		it('should throw NOT_FOUND when QuestionNotFoundException', async () => {
+		it("should throw NOT_FOUND when QuestionNotFoundException", async () => {
 			removeQuestionHandler.execute.mockRejectedValue(
 				new QuestionNotFoundException(TEST_IDS.question),
 			);
@@ -951,7 +951,7 @@ describe('GrpcActivitiesController', () => {
 				await controller.removeQuestion({
 					where: { quizId: TEST_IDS.quiz, id: TEST_IDS.question },
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -960,7 +960,7 @@ describe('GrpcActivitiesController', () => {
 			}
 		});
 
-		it('should throw NOT_FOUND when ActivityNotFoundException', async () => {
+		it("should throw NOT_FOUND when ActivityNotFoundException", async () => {
 			removeQuestionHandler.execute.mockRejectedValue(
 				new ActivityNotFoundException(TEST_IDS.quiz),
 			);
@@ -969,7 +969,7 @@ describe('GrpcActivitiesController', () => {
 				await controller.removeQuestion({
 					where: { quizId: TEST_IDS.quiz, id: TEST_IDS.question },
 				} as any);
-				fail('should have thrown');
+				fail("should have thrown");
 			} catch (err) {
 				expect(err).toBeInstanceOf(GrpcException);
 				expect((err as GrpcException).getError()).toMatchObject({
@@ -978,8 +978,8 @@ describe('GrpcActivitiesController', () => {
 			}
 		});
 
-		it('should throw INTERNAL on unexpected error', async () => {
-			removeQuestionHandler.execute.mockRejectedValue(new Error('boom'));
+		it("should throw INTERNAL on unexpected error", async () => {
+			removeQuestionHandler.execute.mockRejectedValue(new Error("boom"));
 
 			await expect(
 				controller.removeQuestion({

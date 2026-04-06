@@ -1,12 +1,13 @@
-import {
+import type {
 	ActivityDto,
+	ActivityProgressDto,
 	ArticleDto,
 	ExerciseDto,
+	ListActivityProgressDto,
 	QuizDto,
 	QuizWithoutQuestionsDto,
-} from '../dtos';
-import { ActivityFilter } from './filter.interface';
-
+} from "../dtos";
+import type { ActivityFilter } from "./filter.interface";
 
 export interface IActivityReadRepository {
 	list(filter?: ActivityFilter): Promise<ActivityDto[]>;
@@ -18,4 +19,15 @@ export interface IActivityReadRepository {
 	findArticleById(id: string): Promise<ArticleDto | null>;
 	findExerciseById(id: string): Promise<ExerciseDto | null>;
 	findQuizById(id: string): Promise<QuizDto | null>;
+}
+
+export interface IActivityProgressReadRepository {
+	list(dto: ListActivityProgressDto): Promise<ActivityProgressDto[]>;
+
+	findById(id: string): Promise<ActivityProgressDto | null>;
+
+	findOneForUser(
+		activityId: string,
+		userId: string,
+	): Promise<ActivityProgressDto | null>;
 }

@@ -1,1 +1,1 @@
-export * from './client-sort-type-to-domain.helper';
+export * from "./client-sort-type-to-domain.helper";

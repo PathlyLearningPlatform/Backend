@@ -1,12 +1,12 @@
-import { FindLessonByIdHandler } from '../../../lessons/queries/find-by-id.query';
-import { LessonNotFoundException } from '../../../common/exceptions/lesson-not-found.exception';
-import { LessonDto } from '../../../lessons/dtos';
-import { mockLessonReadRepo, TEST_IDS, DEFAULT_DATE } from '../../common';
+import { LessonNotFoundException } from "../../../common/exceptions/lesson-not-found.exception";
+import type { LessonDto } from "../../../lessons/dtos";
+import { FindLessonByIdHandler } from "../../../lessons/queries/find-by-id.query";
+import { DEFAULT_DATE, mockLessonReadRepo, TEST_IDS } from "../../common";
 
 const sampleDto: LessonDto = {
 	id: TEST_IDS.LESSON_ID,
 	unitId: TEST_IDS.UNIT_ID,
-	name: 'Test Lesson',
+	name: "Test Lesson",
 	description: null,
 	createdAt: DEFAULT_DATE,
 	updatedAt: null,
@@ -14,8 +14,8 @@ const sampleDto: LessonDto = {
 	activityCount: 0,
 };
 
-describe('FindLessonByIdHandler', () => {
-	it('returns the lesson when found', async () => {
+describe("FindLessonByIdHandler", () => {
+	it("returns the lesson when found", async () => {
 		const repo = mockLessonReadRepo({
 			findById: jest.fn().mockResolvedValue(sampleDto),
 		});
@@ -27,7 +27,7 @@ describe('FindLessonByIdHandler', () => {
 		expect(repo.findById).toHaveBeenCalledWith(TEST_IDS.LESSON_ID);
 	});
 
-	it('throws LessonNotFoundException when not found', async () => {
+	it("throws LessonNotFoundException when not found", async () => {
 		const repo = mockLessonReadRepo();
 		const handler = new FindLessonByIdHandler(repo);
 

@@ -1,8 +1,8 @@
-import { ICommandHandler, SectionNotFoundException } from '@/app/common';
-import { ILearningPathRepository } from '@/domain/learning-paths/interfaces';
-import { ISectionRepository } from '@/domain/sections/interfaces';
-import { LearningPathNotFoundException } from '@app/common';
-import { SectionId } from '@/domain/sections/value-objects/id.vo';
+import { LearningPathNotFoundException } from "@app/common";
+import { type ICommandHandler, SectionNotFoundException } from "@/app/common";
+import type { ILearningPathRepository } from "@/domain/learning-paths";
+import type { ISectionRepository } from "@/domain/sections/repositories";
+import { SectionId } from "@/domain/sections/value-objects/id.vo";
 
 type RemoveSectionCommand = {
 	sectionId: string;
@@ -31,7 +31,7 @@ export class RemoveSectionHandler
 		// never going to happen
 		// only for type safety
 		if (!learningPath) {
-			throw new LearningPathNotFoundException(section.learningPathId.value);
+			throw new LearningPathNotFoundException(section.learningPathId.toString());
 		}
 
 		section.ensureCanRemove();

@@ -1,11 +1,17 @@
 import type { INestApplication } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
-import request from 'supertest';
-import type { App } from 'supertest/types';
+
+process.env.HOSTNAME ??= 'localhost';
+process.env.PROTO_DIR ??= '/tmp';
+process.env.DB_HOST ??= 'localhost';
+process.env.DB_NAME ??= 'learning_paths';
+process.env.DB_USER ??= 'postgres';
+process.env.DB_PASSWORD ??= 'postgres';
+
 import { AppModule } from '../src/app.module';
 
-describe('AppController (e2e)', () => {
-	let app: INestApplication<App>;
+describe('App bootstrap (e2e)', () => {
+	let app: INestApplication;
 
 	beforeEach(async () => {
 		const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -16,10 +22,13 @@ describe('AppController (e2e)', () => {
 		await app.init();
 	});
 
-	it('/ (GET)', () => {
-		return request(app.getHttpServer())
-			.get('/')
-			.expect(200)
-			.expect('Hello World!');
+	afterEach(async () => {
+		if (app) {
+			await app.close();
+		}
+	});
+
+	it('initializes Nest application', () => {
+		expect(app).toBeDefined();
 	});
 });

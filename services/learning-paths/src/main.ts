@@ -4,7 +4,7 @@ import { NestFactory } from '@nestjs/core';
 import { type MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppLogger } from '@pathly-backend/common/index.js';
 import { COMMON_PACKAGE_NAME } from '@pathly-backend/contracts/common/types.js';
-import { LEARNING_PATHS_V1_PACKAGE_NAME } from '@pathly-backend/contracts/learning-paths/v1/learning-paths.js';
+import { LEARNING_PATHS_V1_PACKAGE_NAME } from '@pathly-backend/contracts/learning_paths/v1/learning_paths.js';
 import {
 	HealthImplementation,
 	protoPath as healthCheckProtoPath,
@@ -13,9 +13,15 @@ import { join } from 'path';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-	const protoDir = process.env.PROTO_DIR!;
-	const hostname = process.env.HOSTNAME!;
-	const port = process.env.PORT!;
+	const protoDir = process.env.PROTO_DIR;
+	const hostname = process.env.HOSTNAME;
+	const port = process.env.PORT;
+
+	if (!protoDir || !hostname || !port) {
+		throw new Error(
+			'Missing required environment variables: PROTO_DIR, HOSTNAME, PORT.',
+		);
+	}
 
 	const app = await NestFactory.createMicroservice<MicroserviceOptions>(
 		AppModule,
@@ -25,11 +31,11 @@ async function bootstrap() {
 				package: [LEARNING_PATHS_V1_PACKAGE_NAME, COMMON_PACKAGE_NAME],
 				protoPath: [
 					healthCheckProtoPath,
-					join(protoDir, 'learning-paths/v1/learning-paths.proto'),
-					join(protoDir, 'learning-paths/v1/sections.proto'),
-					join(protoDir, 'learning-paths/v1/units.proto'),
-					join(protoDir, 'learning-paths/v1/lessons.proto'),
-					join(protoDir, 'learning-paths/v1/activities.proto'),
+					join(protoDir, 'learning_paths/v1/learning_paths.proto'),
+					join(protoDir, 'learning_paths/v1/sections.proto'),
+					join(protoDir, 'learning_paths/v1/units.proto'),
+					join(protoDir, 'learning_paths/v1/lessons.proto'),
+					join(protoDir, 'learning_paths/v1/activities.proto'),
 					join(protoDir, 'common/types.proto'),
 				],
 				url: `${hostname}:${port}`,
@@ -46,7 +52,7 @@ async function bootstrap() {
 				loader: {
 					includeDirs: [
 						join(protoDir),
-						join(protoDir, 'learning-paths/v1'),
+						join(protoDir, 'learning_paths/v1'),
 						join(protoDir, 'common'),
 					],
 					arrays: true,

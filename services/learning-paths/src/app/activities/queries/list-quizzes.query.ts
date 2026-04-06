@@ -1,6 +1,6 @@
-import { IQueryHandler, OffsetPagination } from '@/app/common';
-import { IActivityReadRepository } from '../interfaces';
-import { QuizWithoutQuestionsDto } from '../dtos';
+import type { IQueryHandler, OffsetPagination } from "@/app/common";
+import type { QuizWithoutQuestionsDto } from "../dtos";
+import type { IActivityReadRepository } from "../interfaces";
 
 type ListQuizzesQuery = {
 	where?: {

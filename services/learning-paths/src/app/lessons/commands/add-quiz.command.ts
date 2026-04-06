@@ -1,16 +1,16 @@
-import { ICommandHandler, LessonNotFoundException } from '@/app/common';
-import { ILessonRepository } from '@/domain/lessons/interfaces';
-import { IActivityRepository } from '@/domain/activities/interfaces';
-import { LessonId } from '@/domain/lessons/value-objects/id.vo';
-import { ActivityId } from '@/domain/activities/value-objects/id.vo';
+import { randomUUID } from "node:crypto";
+import type { QuizWithoutQuestionsDto } from "@/app/activities/dtos";
+import { type ICommandHandler, LessonNotFoundException } from "@/app/common";
+import { Quiz } from "@/domain/activities/quizzes/quiz.aggregate";
+import type { IActivityRepository } from "@/domain/activities/repositories";
 import {
 	ActivityDescription,
 	ActivityName,
 	ActivityType,
-} from '@/domain/activities/value-objects';
-import { Quiz } from '@/domain/activities/quizzes/quiz.aggregate';
-import { randomUUID } from 'node:crypto';
-import { QuizWithoutQuestionsDto } from '@/app/activities/dtos';
+} from "@/domain/activities/value-objects";
+import { ActivityId } from "@/domain/activities/value-objects/id.vo";
+import type { ILessonRepository } from "@/domain/lessons/repositories";
+import { LessonId } from "@/domain/lessons/value-objects/id.vo";
 
 type AddQuizCommand = {
 	lessonId: string;

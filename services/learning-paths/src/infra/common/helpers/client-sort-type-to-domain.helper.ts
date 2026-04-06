@@ -1,5 +1,5 @@
-import { SortType } from '@pathly-backend/common';
-import { SortType as ClientSortType } from '@pathly-backend/contracts/common/types.js';
+import { SortType } from "@pathly-backend/common";
+import { SortType as ClientSortType } from "@pathly-backend/contracts/common/types.js";
 
 /**
  * @param client client sort type

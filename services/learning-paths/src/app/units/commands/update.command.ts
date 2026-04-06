@@ -1,8 +1,8 @@
-import { ICommandHandler, UnitNotFoundException } from '@/app/common';
-import { IUnitRepository } from '@/domain/units/interfaces';
-import { UnitId } from '@/domain/units/value-objects/id.vo';
-import { UnitDescription, UnitName } from '@/domain/units/value-objects';
-import { UnitDto } from '../dtos';
+import { type ICommandHandler, UnitNotFoundException } from "@/app/common";
+import type { IUnitRepository } from "@/domain/units/repositories";
+import { UnitDescription, UnitName } from "@/domain/units/value-objects";
+import { UnitId } from "@/domain/units/value-objects/id.vo";
+import type { UnitDto } from "../dtos";
 
 type UpdateUnitCommand = {
 	where: {

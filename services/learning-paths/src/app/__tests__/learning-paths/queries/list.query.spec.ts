@@ -1,18 +1,18 @@
-import { ListLearningPathsHandler } from '../../../learning-paths/queries/list.query';
-import { LearningPathDto } from '../../../learning-paths/dtos';
-import { mockLearningPathReadRepo, TEST_IDS, DEFAULT_DATE } from '../../common';
+import type { LearningPathDto } from "../../../learning-paths/dtos";
+import { ListLearningPathsHandler } from "../../../learning-paths/queries/list.query";
+import { DEFAULT_DATE, mockLearningPathReadRepo, TEST_IDS } from "../../common";
 
 const sampleDto: LearningPathDto = {
 	id: TEST_IDS.LP_ID,
-	name: 'Test Path',
-	description: 'A description',
+	name: "Test Path",
+	description: "A description",
 	createdAt: DEFAULT_DATE,
 	updatedAt: null,
 	sectionCount: 0,
 };
 
-describe('ListLearningPathsHandler', () => {
-	it('returns a list of learning paths', async () => {
+describe("ListLearningPathsHandler", () => {
+	it("returns a list of learning paths", async () => {
 		const dtos = [sampleDto];
 		const repo = mockLearningPathReadRepo({
 			list: jest.fn().mockResolvedValue(dtos),
@@ -24,7 +24,7 @@ describe('ListLearningPathsHandler', () => {
 		expect(result).toEqual(dtos);
 	});
 
-	it('passes pagination options to the repository', async () => {
+	it("passes pagination options to the repository", async () => {
 		const repo = mockLearningPathReadRepo({
 			list: jest.fn().mockResolvedValue([]),
 		});

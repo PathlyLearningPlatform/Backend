@@ -7,37 +7,52 @@ import {
 	GrpcExceptionFilter,
 	RpcValidationPipe,
 } from '@pathly-backend/common';
+import type {
+	UnitsServiceFindOneProgressForUserResponse,
+	UnitsServiceListProgressResponse,
+	UnitsServiceRemoveProgressResponse,
+	UnitsServiceStartResponse,
+} from '@pathly-backend/contracts/learning_paths/v1/units.js';
 import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js';
 import {
 	type CreateUnitResponse,
 	type FindUnitByIdResponse,
 	type ListUnitsResponse,
-	type UpdateUnitResponse,
 	UNITS_SERVICE_NAME,
+	type UpdateUnitResponse,
 } from '@pathly-backend/contracts/learning-paths/v1/units.js';
 import type z from 'zod';
+import { SectionNotFoundException, UnitNotFoundException } from '@/app/common';
 import type {
 	AddUnitHandler,
 	ReorderUnitHandler,
 } from '@/app/sections/commands';
 import type {
-	UpdateUnitHandler,
 	RemoveUnitHandler,
+	RemoveUnitProgressHandler,
+	StartUnitHandler,
+	UpdateUnitHandler,
 } from '@/app/units/commands';
+import { UnitProgressNotFoundException } from '@/app/units/exceptions';
 import type {
-	ListUnitsHandler,
 	FindUnitByIdHandler,
+	FindUnitProgressForUserHandler,
+	ListUnitProgressHandler,
+	ListUnitsHandler,
 } from '@/app/units/queries';
-import { SectionNotFoundException, UnitNotFoundException } from '@/app/common';
 import { DiToken, ExceptionMessage } from '../common/enums';
-import { unitDtoToClient } from './helpers';
+import { unitDtoToClient, unitProgressDtoToClient } from './helpers';
 import {
 	createUnitSchema,
-	listUnitsSchema,
 	findUnitByIdSchema,
+	findUnitProgressForUserSchema,
+	listUnitProgressSchema,
+	listUnitsSchema,
+	removeUnitProgressSchema,
 	removeUnitSchema,
-	updateUnitSchema,
 	reorderUnitSchema,
+	startUnitSchema,
+	updateUnitSchema,
 } from './schemas';
 
 @UseFilters(GrpcExceptionFilter)
@@ -56,6 +71,14 @@ export class GrpcUnitsController {
 		private readonly reorderUnitHandler: ReorderUnitHandler,
 		@Inject(DiToken.REMOVE_UNIT_HANDLER)
 		private readonly removeUnitHandler: RemoveUnitHandler,
+		@Inject(DiToken.START_UNIT_HANDLER)
+		private readonly startUnitHandler: StartUnitHandler,
+		@Inject(DiToken.REMOVE_UNIT_PROGRESS_HANDLER)
+		private readonly removeUnitProgressHandler: RemoveUnitProgressHandler,
+		@Inject(DiToken.FIND_UNIT_PROGRESS_FOR_USER_HANDLER)
+		private readonly findUnitProgressForUserHandler: FindUnitProgressForUserHandler,
+		@Inject(DiToken.LIST_UNIT_PROGRESS_HANDLER)
+		private readonly listUnitProgressHandler: ListUnitProgressHandler,
 	) {}
 
 	@GrpcMethod(UNITS_SERVICE_NAME)
@@ -241,6 +264,141 @@ export class GrpcUnitsController {
 				);
 			}
 
+			throw new GrpcException(
+				new GrpcErrorDto(
+					ExceptionMessage.INTERNAL_ERROR,
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
+				err,
+			);
+		}
+	}
+
+	@GrpcMethod(UNITS_SERVICE_NAME)
+	async start(
+		@Payload(new RpcValidationPipe(startUnitSchema))
+		payload: z.infer<typeof startUnitSchema>,
+	): Promise<UnitsServiceStartResponse> {
+		try {
+			const progress = await this.startUnitHandler.execute({
+				unitId: payload.unitId,
+				userId: payload.userId,
+			});
+
+			return {
+				progress: unitProgressDtoToClient(progress),
+			};
+		} catch (err) {
+			if (err instanceof UnitNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						ExceptionMessage.UNIT_NOT_FOUND,
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.UNIT_NOT_FOUND,
+					),
+				);
+			}
+
+			throw new GrpcException(
+				new GrpcErrorDto(
+					ExceptionMessage.INTERNAL_ERROR,
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
+				err,
+			);
+		}
+	}
+
+	@GrpcMethod(UNITS_SERVICE_NAME)
+	async removeProgress(
+		@Payload(new RpcValidationPipe(removeUnitProgressSchema))
+		payload: z.infer<typeof removeUnitProgressSchema>,
+	): Promise<UnitsServiceRemoveProgressResponse> {
+		try {
+			await this.removeUnitProgressHandler.execute({
+				unitId: payload.unitId,
+				userId: payload.userId,
+			});
+
+			return {};
+		} catch (err) {
+			if (err instanceof UnitProgressNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						ExceptionMessage.UNIT_PROGRESS_NOT_FOUND,
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.UNIT_NOT_FOUND,
+					),
+				);
+			}
+
+			throw new GrpcException(
+				new GrpcErrorDto(
+					ExceptionMessage.INTERNAL_ERROR,
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
+				err,
+			);
+		}
+	}
+
+	@GrpcMethod(UNITS_SERVICE_NAME)
+	async findOneProgressForUser(
+		@Payload(new RpcValidationPipe(findUnitProgressForUserSchema))
+		payload: z.infer<typeof findUnitProgressForUserSchema>,
+	): Promise<UnitsServiceFindOneProgressForUserResponse> {
+		try {
+			const progress = await this.findUnitProgressForUserHandler.execute({
+				unitId: payload.unitId,
+				userId: payload.userId,
+			});
+
+			return {
+				progress: unitProgressDtoToClient(progress),
+			};
+		} catch (err) {
+			if (err instanceof UnitProgressNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						ExceptionMessage.UNIT_PROGRESS_NOT_FOUND,
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.UNIT_NOT_FOUND,
+					),
+				);
+			}
+
+			throw new GrpcException(
+				new GrpcErrorDto(
+					ExceptionMessage.INTERNAL_ERROR,
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
+				err,
+			);
+		}
+	}
+
+	@GrpcMethod(UNITS_SERVICE_NAME)
+	async listProgress(
+		@Payload(new RpcValidationPipe(listUnitProgressSchema))
+		payload: z.infer<typeof listUnitProgressSchema>,
+	): Promise<UnitsServiceListProgressResponse> {
+		try {
+			const progress = await this.listUnitProgressHandler.execute({
+				options: payload.options,
+				where: {
+					sectionId: payload.where?.sectionId,
+					userId: payload.where?.userId,
+				},
+			});
+
+			return {
+				progress: progress.map(unitProgressDtoToClient),
+			};
+		} catch (err) {
 			throw new GrpcException(
 				new GrpcErrorDto(
 					ExceptionMessage.INTERNAL_ERROR,

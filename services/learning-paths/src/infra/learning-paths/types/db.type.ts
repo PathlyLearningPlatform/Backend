@@ -1,3 +1,3 @@
-import { learningPathsTable } from '@/infra/common/db/schemas';
+import type { learningPathsTable } from "@/infra/common/db/schemas";
 
 export type DbLearningPath = typeof learningPathsTable.$inferSelect;

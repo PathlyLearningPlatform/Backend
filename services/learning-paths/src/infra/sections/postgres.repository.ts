@@ -1,13 +1,13 @@
-import { Inject, Injectable } from '@nestjs/common';
-import type { ISectionRepository } from '@/domain/sections/interfaces';
-import type { Db } from '@/infra/common/types';
 import { DbService } from '@infra/common/db/db.service';
-import { Section } from '@/domain/sections/section.aggregate';
-import { SectionId } from '@/domain/sections/value-objects/id.vo';
-import { UnitRef } from '@/domain/sections/value-objects';
-import { sectionsTable, unitsTable } from '../common/db/schemas';
+import { Inject, Injectable } from '@nestjs/common';
 import { RepositoryException } from '@pathly-backend/common/index.js';
 import { eq } from 'drizzle-orm';
+import type { ISectionRepository } from '@/domain/sections/repositories';
+import { Section } from '@/domain/sections/section.aggregate';
+import { UnitRef } from '@/domain/sections/value-objects';
+import type { SectionId } from '@/domain/sections/value-objects/id.vo';
+import type { Db } from '@/infra/common/types';
+import { sectionsTable, unitsTable } from '../common/db/schemas';
 
 @Injectable()
 export class PostgresSectionRepository implements ISectionRepository {
@@ -80,7 +80,7 @@ export class PostgresSectionRepository implements ISectionRepository {
 				.insert(sectionsTable)
 				.values({
 					id: aggregate.id.value,
-					learningPathId: aggregate.learningPathId.value,
+					learningPathId: aggregate.learningPathId.toString(),
 					name: aggregate.name.value,
 					description: aggregate.description?.value ?? null,
 					order: aggregate.order.value,

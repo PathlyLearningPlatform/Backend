@@ -1,6 +1,6 @@
-import { IQueryHandler, ActivityNotFoundException } from '@/app/common';
-import { IActivityReadRepository } from '../interfaces';
-import { ArticleDto } from '../dtos';
+import { ActivityNotFoundException, type IQueryHandler } from "@/app/common";
+import type { ArticleDto } from "../dtos";
+import type { IActivityReadRepository } from "../interfaces";
 
 type FindArticleByIdQuery = {
 	where: {

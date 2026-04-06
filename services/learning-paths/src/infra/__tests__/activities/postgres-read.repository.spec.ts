@@ -1,16 +1,16 @@
-import { Test } from '@nestjs/testing';
-import { PostgresActivityReadRepository } from '@/infra/activities/postgres-read.repository';
-import { mockedDbService, mockedDrizzle } from '../mocks';
+import { Test } from "@nestjs/testing";
+import { ActivityType } from "@/domain/activities/value-objects";
+import { PostgresActivityReadRepository } from "@/infra/activities/postgres-read.repository";
 import {
 	makeActivityDto,
 	makeArticleDto,
 	makeExerciseDto,
 	makeQuestionDto,
 	TEST_IDS,
-} from '../common';
-import { ActivityType } from '@/domain/activities/value-objects';
+} from "../common";
+import { mockedDbService, mockedDrizzle } from "../mocks";
 
-describe('PostgresActivityReadRepository', () => {
+describe("PostgresActivityReadRepository", () => {
 	let repository: PostgresActivityReadRepository;
 
 	beforeEach(async () => {
@@ -23,8 +23,8 @@ describe('PostgresActivityReadRepository', () => {
 		repository = module.get(PostgresActivityReadRepository);
 	});
 
-	describe('list', () => {
-		it('should call select chain and return results', async () => {
+	describe("list", () => {
+		it("should call select chain and return results", async () => {
 			const dto = makeActivityDto();
 			mockedDrizzle.offset.mockResolvedValueOnce([dto]);
 
@@ -38,7 +38,7 @@ describe('PostgresActivityReadRepository', () => {
 			expect(result).toEqual([dto]);
 		});
 
-		it('should return empty array when no results', async () => {
+		it("should return empty array when no results", async () => {
 			mockedDrizzle.offset.mockResolvedValueOnce([]);
 
 			const result = await repository.list();
@@ -47,8 +47,8 @@ describe('PostgresActivityReadRepository', () => {
 		});
 	});
 
-	describe('findById', () => {
-		it('should return an activity when found', async () => {
+	describe("findById", () => {
+		it("should return an activity when found", async () => {
 			const dto = makeActivityDto();
 			mockedDrizzle.where.mockResolvedValueOnce([dto]);
 
@@ -57,7 +57,7 @@ describe('PostgresActivityReadRepository', () => {
 			expect(result).toEqual(dto);
 		});
 
-		it('should return null when not found', async () => {
+		it("should return null when not found", async () => {
 			mockedDrizzle.where.mockResolvedValueOnce([]);
 
 			const result = await repository.findById(TEST_IDS.activity);
@@ -66,8 +66,8 @@ describe('PostgresActivityReadRepository', () => {
 		});
 	});
 
-	describe('findArticleById', () => {
-		it('should return an article when found', async () => {
+	describe("findArticleById", () => {
+		it("should return an article when found", async () => {
 			const dto = makeArticleDto();
 			mockedDrizzle.where.mockResolvedValueOnce([dto]);
 
@@ -76,7 +76,7 @@ describe('PostgresActivityReadRepository', () => {
 			expect(result).toEqual(dto);
 		});
 
-		it('should return null when not found', async () => {
+		it("should return null when not found", async () => {
 			mockedDrizzle.where.mockResolvedValueOnce([]);
 
 			const result = await repository.findArticleById(TEST_IDS.article);
@@ -85,8 +85,8 @@ describe('PostgresActivityReadRepository', () => {
 		});
 	});
 
-	describe('findExerciseById', () => {
-		it('should return an exercise when found', async () => {
+	describe("findExerciseById", () => {
+		it("should return an exercise when found", async () => {
 			const dto = makeExerciseDto();
 			mockedDrizzle.where.mockResolvedValueOnce([dto]);
 
@@ -95,7 +95,7 @@ describe('PostgresActivityReadRepository', () => {
 			expect(result).toEqual(dto);
 		});
 
-		it('should return null when not found', async () => {
+		it("should return null when not found", async () => {
 			mockedDrizzle.where.mockResolvedValueOnce([]);
 
 			const result = await repository.findExerciseById(TEST_IDS.exercise);
@@ -104,12 +104,12 @@ describe('PostgresActivityReadRepository', () => {
 		});
 	});
 
-	describe('findQuizById', () => {
-		it('should return a quiz with questions when found', async () => {
+	describe("findQuizById", () => {
+		it("should return a quiz with questions when found", async () => {
 			const quizRow = {
 				id: TEST_IDS.quiz,
 				lessonId: TEST_IDS.lesson,
-				name: 'Quiz',
+				name: "Quiz",
 				description: null,
 				createdAt: new Date(),
 				updatedAt: null,
@@ -119,8 +119,8 @@ describe('PostgresActivityReadRepository', () => {
 			const questionRow = {
 				id: TEST_IDS.question,
 				quizId: TEST_IDS.quiz,
-				content: 'Q?',
-				correctAnswer: 'A',
+				content: "Q?",
+				correctAnswer: "A",
 			};
 
 			// First where: quiz select
@@ -137,7 +137,7 @@ describe('PostgresActivityReadRepository', () => {
 			expect(result!.questions[0].id).toBe(TEST_IDS.question);
 		});
 
-		it('should return null when quiz not found', async () => {
+		it("should return null when quiz not found", async () => {
 			mockedDrizzle.where.mockResolvedValueOnce([]);
 
 			const result = await repository.findQuizById(TEST_IDS.quiz);

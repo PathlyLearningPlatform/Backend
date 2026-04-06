@@ -1,22 +1,22 @@
-import { Inject, Injectable } from '@nestjs/common';
-import type { IActivityRepository } from '@/domain/activities/interfaces';
-import type { Db } from '@/infra/common/types';
 import { DbService } from '@infra/common/db/db.service';
-import { Activity } from '@/domain/activities/activity.aggregate';
+import { Inject, Injectable } from '@nestjs/common';
+import { RepositoryException } from '@pathly-backend/common/index.js';
+import { eq } from 'drizzle-orm';
+import type { Activity } from '@/domain/activities/activity.aggregate';
 import { Article } from '@/domain/activities/articles/article.aggregate';
 import { Exercise } from '@/domain/activities/exercises/exercise.aggregate';
-import { Quiz } from '@/domain/activities/quizzes/quiz.aggregate';
 import { Question } from '@/domain/activities/quizzes/question.entity';
-import { ActivityId, ActivityType } from '@/domain/activities/value-objects';
+import { Quiz } from '@/domain/activities/quizzes/quiz.aggregate';
+import type { IActivityRepository } from '@/domain/activities/repositories';
+import { type ActivityId, ActivityType } from '@/domain/activities/value-objects';
+import type { Db } from '@/infra/common/types';
 import {
 	activitiesTable,
 	articlesTable,
 	exercisesTable,
-	quizzesTable,
 	questionsTable,
+	quizzesTable,
 } from '../common/db/schemas';
-import { RepositoryException } from '@pathly-backend/common/index.js';
-import { eq } from 'drizzle-orm';
 
 @Injectable()
 export class PostgresActivityRepository implements IActivityRepository {

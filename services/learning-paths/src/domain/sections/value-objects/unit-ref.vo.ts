@@ -1,5 +1,5 @@
-import { Order, ValueObject } from '@/domain/common';
-import { UnitId } from '@/domain/units/value-objects/id.vo';
+import { Order, ValueObject } from "@/domain/common";
+import { UnitId } from "@/domain/units/value-objects/id.vo";
 
 type Props = {
 	unitId: UnitId;

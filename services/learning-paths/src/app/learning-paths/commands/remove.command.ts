@@ -1,7 +1,10 @@
-import { ICommandHandler } from '@/app/common';
-import { ILearningPathRepository } from '@/domain/learning-paths/interfaces';
-import { LearningPathId } from '@/domain/learning-paths/value-objects';
-import { LearningPathNotFoundException } from '@app/common';
+import { LearningPathNotFoundException } from "@app/common";
+import type { ICommandHandler } from "@/app/common";
+import { UUID } from "@/domain/common";
+import {
+	type ILearningPathRepository,
+	LearningPathId,
+} from "@/domain/learning-paths";
 
 type RemoveLearningPathCommand = {
 	where: {
@@ -17,12 +20,12 @@ export class RemoveLearningPathHandler
 	) {}
 
 	async execute(command: RemoveLearningPathCommand): Promise<void> {
-		const id = LearningPathId.create(command.where.id);
+		const id = LearningPathId.create(UUID.create(command.where.id));
 
 		const learningPath = await this.learningPathRepository.load(id);
 
 		if (!learningPath) {
-			throw new LearningPathNotFoundException(id.value);
+			throw new LearningPathNotFoundException(id.toString());
 		}
 
 		learningPath.ensureCanRemove();

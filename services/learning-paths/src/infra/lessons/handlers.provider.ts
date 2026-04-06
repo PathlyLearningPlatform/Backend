@@ -1,26 +1,32 @@
 import type { Provider } from '@nestjs/common';
-import type { ILessonRepository } from '@/domain/lessons/interfaces';
-import type { ILessonReadRepository } from '@/app/lessons/interfaces';
-import type { IUnitRepository } from '@/domain/units/interfaces';
-import type { IActivityRepository } from '@/domain/activities/interfaces';
-import { DiToken } from '../common/enums';
-import { PostgresLessonRepository } from './postgres.repository';
-import { PostgresLessonReadRepository } from './postgres-read.repository';
-import { PostgresUnitRepository } from '../units/postgres.repository';
-import { PostgresActivityRepository } from '../activities/postgres.repository';
+import type { IEventBus } from '@/app/common';
 import {
-	ListLessonsHandler,
-	FindLessonByIdHandler,
-} from '@/app/lessons/queries';
-import {
-	UpdateLessonHandler,
 	RemoveLessonHandler,
-	AddArticleHandler,
-	AddExerciseHandler,
-	AddQuizHandler,
-	ReorderActivityHandler,
+	RemoveLessonProgressHandler,
+	StartLessonHandler,
+	UpdateLessonHandler,
 } from '@/app/lessons/commands';
+import type {
+	ILessonProgressReadRepository,
+	ILessonReadRepository,
+} from '@/app/lessons/interfaces';
+import {
+	FindLessonByIdHandler,
+	FindLessonProgressForUserHandler,
+	ListLessonProgressHandler,
+	ListLessonsHandler,
+} from '@/app/lessons/queries';
 import { AddLessonHandler, ReorderLessonHandler } from '@/app/units/commands';
+import type { ILessonProgressRepository } from '@/domain/lessons';
+import type { ILessonRepository } from '@/domain/lessons/repositories';
+import type { IUnitRepository } from '@/domain/units/repositories';
+import { InMemoryEventBus } from '../common/adapters';
+import { DiToken } from '../common/enums';
+import { PostgresUnitRepository } from '../units/postgres.repository';
+import { PostgresLessonRepository } from './postgres.repository';
+import { PostgresLessonProgressRepository } from './postgres-progress.repository';
+import { PostgresLessonProgressReadRepository } from './postgres-progress-read.repository';
+import { PostgresLessonReadRepository } from './postgres-read.repository';
 
 export const lessonHandlersProvider: Provider[] = [
 	{
@@ -73,5 +79,45 @@ export const lessonHandlersProvider: Provider[] = [
 			return new RemoveLessonHandler(unitRepository, lessonRepository);
 		},
 		inject: [PostgresUnitRepository, PostgresLessonRepository],
+	},
+	{
+		provide: DiToken.START_LESSON_HANDLER,
+		useFactory(
+			lessonProgressRepository: ILessonProgressRepository,
+			lessonReadRepository: ILessonReadRepository,
+			eventBus: IEventBus,
+		) {
+			return new StartLessonHandler(
+				lessonProgressRepository,
+				lessonReadRepository,
+				eventBus,
+			);
+		},
+		inject: [
+			PostgresLessonProgressRepository,
+			PostgresLessonReadRepository,
+			InMemoryEventBus,
+		],
+	},
+	{
+		provide: DiToken.REMOVE_LESSON_PROGRESS_HANDLER,
+		useFactory(lessonProgressRepository: ILessonProgressRepository) {
+			return new RemoveLessonProgressHandler(lessonProgressRepository);
+		},
+		inject: [PostgresLessonProgressRepository],
+	},
+	{
+		provide: DiToken.LIST_LESSON_PROGRESS_HANDLER,
+		useFactory(lessonProgressReadRepository: ILessonProgressReadRepository) {
+			return new ListLessonProgressHandler(lessonProgressReadRepository);
+		},
+		inject: [PostgresLessonProgressReadRepository],
+	},
+	{
+		provide: DiToken.FIND_LESSON_PROGRESS_FOR_USER_HANDLER,
+		useFactory(lessonProgressReadRepository: ILessonProgressReadRepository) {
+			return new FindLessonProgressForUserHandler(lessonProgressReadRepository);
+		},
+		inject: [PostgresLessonProgressReadRepository],
 	},
 ];

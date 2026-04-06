@@ -10,6 +10,7 @@ export const mockedDrizzle = {
 	insert: jest.fn().mockReturnThis(),
 	values: jest.fn().mockReturnThis(),
 	onConflictDoUpdate: jest.fn().mockReturnThis(),
+	onConflictDoNothing: jest.fn().mockReturnThis(),
 	returning: jest.fn().mockReturnThis(),
 	update: jest.fn().mockReturnThis(),
 	set: jest.fn().mockReturnThis(),
@@ -24,7 +25,7 @@ export function resetDrizzleMocks(): void {
 		keyof typeof mockedDrizzle
 	>) {
 		(mockedDrizzle[key] as jest.Mock).mockReset();
-		if (key === 'transaction') {
+		if (key === "transaction") {
 			mockedDrizzle.transaction.mockImplementation((cb: any) =>
 				cb(mockedDrizzle),
 			);

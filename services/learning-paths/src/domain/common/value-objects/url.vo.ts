@@ -1,5 +1,5 @@
-import { InvalidUrlException } from '../exceptions';
-import { ValueObject } from '../value-object';
+import { InvalidUrlException } from "../exceptions";
+import { ValueObject } from "../value-object";
 
 type Props = {
 	value: string;

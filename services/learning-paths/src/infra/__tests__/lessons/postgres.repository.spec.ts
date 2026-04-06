@@ -1,16 +1,16 @@
-import { Test } from '@nestjs/testing';
-import { PostgresLessonRepository } from '@/infra/lessons/postgres.repository';
-import { mockedDbService, mockedDrizzle, resetDrizzleMocks } from '../mocks';
-import { DEFAULT_DATE } from '../common';
-import { LessonId } from '@/domain/lessons/value-objects/id.vo';
-import { Lesson } from '@/domain/lessons/lesson.aggregate';
-import { RepositoryException } from '@pathly-backend/common/index.js';
+import { Test } from "@nestjs/testing";
+import { RepositoryException } from "@pathly-backend/common/index.js";
+import { Lesson } from "@/domain/lessons/lesson.aggregate";
+import { LessonId } from "@/domain/lessons/value-objects/id.vo";
+import { PostgresLessonRepository } from "@/infra/lessons/postgres.repository";
+import { DEFAULT_DATE } from "../common";
+import { mockedDbService, mockedDrizzle, resetDrizzleMocks } from "../mocks";
 
-const LESSON_ID = 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d';
-const UNIT_ID = 'b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e';
-const ACTIVITY_ID = 'e5f6a7b8-c9d0-4e1f-8a2b-3c4d5e6f7a81';
+const LESSON_ID = "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d";
+const UNIT_ID = "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e";
+const ACTIVITY_ID = "e5f6a7b8-c9d0-4e1f-8a2b-3c4d5e6f7a81";
 
-describe('PostgresLessonRepository', () => {
+describe("PostgresLessonRepository", () => {
 	let repository: PostgresLessonRepository;
 
 	beforeEach(async () => {
@@ -23,14 +23,14 @@ describe('PostgresLessonRepository', () => {
 		repository = module.get(PostgresLessonRepository);
 	});
 
-	describe('load', () => {
+	describe("load", () => {
 		const id = LessonId.create(LESSON_ID);
 
-		it('should return a lesson when found', async () => {
+		it("should return a lesson when found", async () => {
 			const dbRow = {
 				id: LESSON_ID,
 				unitId: UNIT_ID,
-				name: 'Test Lesson',
+				name: "Test Lesson",
 				description: null,
 				createdAt: DEFAULT_DATE,
 				updatedAt: null,
@@ -50,15 +50,15 @@ describe('PostgresLessonRepository', () => {
 			expect(mockedDrizzle.where).toHaveBeenCalledTimes(2);
 			expect(result).toBeInstanceOf(Lesson);
 			expect(result!.id.value).toBe(LESSON_ID);
-			expect(result!.name.value).toBe('Test Lesson');
+			expect(result!.name.value).toBe("Test Lesson");
 		});
 
-		it('should reconstruct activity refs', async () => {
+		it("should reconstruct activity refs", async () => {
 			const dbRow = {
 				id: LESSON_ID,
 				unitId: UNIT_ID,
-				name: 'Test Lesson',
-				description: 'A desc',
+				name: "Test Lesson",
+				description: "A desc",
 				createdAt: DEFAULT_DATE,
 				updatedAt: DEFAULT_DATE,
 				order: 0,
@@ -76,7 +76,7 @@ describe('PostgresLessonRepository', () => {
 			expect(result!.activityCount).toBe(1);
 		});
 
-		it('should return null when not found', async () => {
+		it("should return null when not found", async () => {
 			mockedDrizzle.where.mockResolvedValueOnce([]);
 
 			const result = await repository.load(id);
@@ -84,21 +84,21 @@ describe('PostgresLessonRepository', () => {
 			expect(result).toBeNull();
 		});
 
-		it('should throw RepositoryException on error', async () => {
-			mockedDrizzle.transaction.mockRejectedValueOnce(new Error('db error'));
+		it("should throw RepositoryException on error", async () => {
+			mockedDrizzle.transaction.mockRejectedValueOnce(new Error("db error"));
 
 			await expect(repository.load(id)).rejects.toThrow(RepositoryException);
 		});
 	});
 
-	describe('save', () => {
-		it('should call insert → values → onConflictDoUpdate', async () => {
+	describe("save", () => {
+		it("should call insert → values → onConflictDoUpdate", async () => {
 			mockedDrizzle.onConflictDoUpdate.mockResolvedValueOnce(undefined);
 
 			const lesson = Lesson.fromDataSource({
 				id: LESSON_ID,
 				unitId: UNIT_ID,
-				name: 'Test Lesson',
+				name: "Test Lesson",
 				description: null,
 				createdAt: DEFAULT_DATE,
 				updatedAt: null,
@@ -114,15 +114,15 @@ describe('PostgresLessonRepository', () => {
 			expect(mockedDrizzle.onConflictDoUpdate).toHaveBeenCalled();
 		});
 
-		it('should throw RepositoryException on error', async () => {
+		it("should throw RepositoryException on error", async () => {
 			mockedDrizzle.onConflictDoUpdate.mockRejectedValueOnce(
-				new Error('db error'),
+				new Error("db error"),
 			);
 
 			const lesson = Lesson.fromDataSource({
 				id: LESSON_ID,
 				unitId: UNIT_ID,
-				name: 'Test Lesson',
+				name: "Test Lesson",
 				description: null,
 				createdAt: DEFAULT_DATE,
 				updatedAt: null,
@@ -137,10 +137,10 @@ describe('PostgresLessonRepository', () => {
 		});
 	});
 
-	describe('remove', () => {
+	describe("remove", () => {
 		const id = LessonId.create(LESSON_ID);
 
-		it('should return true when entity was deleted', async () => {
+		it("should return true when entity was deleted", async () => {
 			mockedDrizzle.where.mockResolvedValueOnce({ rows: [{}] });
 
 			const result = await repository.remove(id);
@@ -150,7 +150,7 @@ describe('PostgresLessonRepository', () => {
 			expect(result).toBe(true);
 		});
 
-		it('should return false when entity was not found', async () => {
+		it("should return false when entity was not found", async () => {
 			mockedDrizzle.where.mockResolvedValueOnce({ rows: [] });
 
 			const result = await repository.remove(id);
@@ -158,12 +158,10 @@ describe('PostgresLessonRepository', () => {
 			expect(result).toBe(false);
 		});
 
-		it('should throw RepositoryException on error', async () => {
-			mockedDrizzle.where.mockRejectedValueOnce(new Error('db error'));
+		it("should throw RepositoryException on error", async () => {
+			mockedDrizzle.where.mockRejectedValueOnce(new Error("db error"));
 
-			await expect(repository.remove(id)).rejects.toThrow(
-				RepositoryException,
-			);
+			await expect(repository.remove(id)).rejects.toThrow(RepositoryException);
 		});
 	});
 });

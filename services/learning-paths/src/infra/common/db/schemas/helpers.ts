@@ -1,4 +1,4 @@
-import { timestamp } from 'drizzle-orm/pg-core';
+import { timestamp } from "drizzle-orm/pg-core";
 
-export const createdAt = timestamp('created_at').defaultNow().notNull();
-export const updatedAt = timestamp('updated_at').$onUpdateFn(() => new Date());
+export const createdAt = timestamp("created_at").defaultNow().notNull();
+export const updatedAt = timestamp("updated_at").$onUpdateFn(() => new Date());

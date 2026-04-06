@@ -1,22 +1,22 @@
-import { ListArticlesHandler } from '../../../activities/queries/list-articles.query';
-import { ArticleDto } from '../../../activities/dtos';
-import { ActivityType } from '@/domain/activities/value-objects/type.vo';
-import { mockActivityReadRepo, TEST_IDS, DEFAULT_DATE } from '../../common';
+import { ActivityType } from "@/domain/activities/value-objects/type.vo";
+import type { ArticleDto } from "../../../activities/dtos";
+import { ListArticlesHandler } from "../../../activities/queries/list-articles.query";
+import { DEFAULT_DATE, mockActivityReadRepo, TEST_IDS } from "../../common";
 
 const sampleDto: ArticleDto = {
 	id: TEST_IDS.ARTICLE_ID,
 	lessonId: TEST_IDS.LESSON_ID,
-	name: 'Test Article',
+	name: "Test Article",
 	description: null,
 	createdAt: DEFAULT_DATE,
 	updatedAt: null,
 	type: ActivityType.ARTICLE,
 	order: 0,
-	ref: 'https://example.com/article',
+	ref: "https://example.com/article",
 };
 
-describe('ListArticlesHandler', () => {
-	it('returns a list of articles', async () => {
+describe("ListArticlesHandler", () => {
+	it("returns a list of articles", async () => {
 		const dtos = [sampleDto];
 		const repo = mockActivityReadRepo({
 			listArticles: jest.fn().mockResolvedValue(dtos),
@@ -28,7 +28,7 @@ describe('ListArticlesHandler', () => {
 		expect(result).toEqual(dtos);
 	});
 
-	it('passes filter and pagination to the repository', async () => {
+	it("passes filter and pagination to the repository", async () => {
 		const repo = mockActivityReadRepo({
 			listArticles: jest.fn().mockResolvedValue([]),
 		});

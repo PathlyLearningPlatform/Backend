@@ -1,1 +1,1 @@
-export * from './question-id.vo';
+export * from "./question-id.vo";

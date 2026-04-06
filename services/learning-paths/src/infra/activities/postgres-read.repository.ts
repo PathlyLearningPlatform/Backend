@@ -1,22 +1,22 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { DbService } from '../common/db/db.service';
-import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import * as schema from '@infra/common/db/schemas';
-import {
-	IActivityReadRepository,
-	ActivityFilter,
-} from '@/app/activities/interfaces';
-import {
+import { Inject, Injectable } from '@nestjs/common';
+import { eq } from 'drizzle-orm';
+import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import type {
 	ActivityDto,
 	ArticleDto,
 	ExerciseDto,
+	QuestionDto,
 	QuizDto,
 	QuizWithoutQuestionsDto,
-	QuestionDto,
 } from '@/app/activities/dtos';
-import { eq } from 'drizzle-orm';
-import { ActivitiesApiConstraints } from './enums';
+import type {
+	ActivityFilter,
+	IActivityReadRepository,
+} from '@/app/activities/interfaces';
 import { ActivityType } from '@/domain/activities/value-objects';
+import { DbService } from '../common/db/db.service';
+import { ActivitiesApiConstraints } from './enums';
 
 @Injectable()
 export class PostgresActivityReadRepository implements IActivityReadRepository {

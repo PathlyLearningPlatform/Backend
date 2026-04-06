@@ -1,5 +1,5 @@
-import { ExerciseDifficulty } from '@/domain/activities/exercises/value-objects';
-import { z } from 'zod';
+import { z } from "zod";
+import { ExerciseDifficulty } from "@/domain/activities/exercises/value-objects";
 
 export const descriptionSchema = z.string().max(500).nullable();
 export const nameSchema = z.string().max(255);

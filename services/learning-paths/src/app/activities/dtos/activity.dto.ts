@@ -1,4 +1,4 @@
-import { ActivityType } from "@/domain/activities/value-objects";
+import type { ActivityType } from "@/domain/activities/value-objects";
 
 export interface ActivityDto {
 	id: string;
@@ -7,6 +7,6 @@ export interface ActivityDto {
 	description: string | null;
 	createdAt: Date;
 	updatedAt: Date | null;
-	type: ActivityType
+	type: ActivityType;
 	order: number;
 }

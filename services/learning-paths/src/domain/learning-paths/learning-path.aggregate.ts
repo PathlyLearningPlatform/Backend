@@ -1,14 +1,14 @@
-import { Order } from '../common';
-import { AggregateRoot } from '../common/aggregate-root';
-import { SectionId } from '../sections/value-objects/id.vo';
-import { LearningPathCannotBeRemovedException } from './exceptions';
-import { SectionAlreadyExistsException } from './exceptions/section-already-exists.exception';
+import { Order } from "../common";
+import { AggregateRoot } from "../common/aggregate-root";
+import type { SectionId } from "../sections/value-objects/id.vo";
+import { LearningPathCannotBeRemovedException } from "./exceptions";
+import { SectionAlreadyExistsException } from "./exceptions/section-already-exists.exception";
 import {
 	LearningPathDescription,
-	LearningPathId,
+	type LearningPathId,
 	LearningPathName,
 	SectionRef,
-} from './value-objects';
+} from "./value-objects";
 
 type LearningPathProps = {
 	name: LearningPathName;
@@ -24,7 +24,7 @@ type CreateLearningPathProps = {
 	createdAt: Date;
 };
 type UpdateLearningPathProps = Partial<
-	Pick<LearningPathProps, 'name' | 'description'>
+	Pick<LearningPathProps, "name" | "description">
 >;
 
 export class LearningPath extends AggregateRoot<
@@ -105,7 +105,7 @@ export class LearningPath extends AggregateRoot<
 
 	ensureCanRemove() {
 		if (this._props.sectionRefs.length > 0) {
-			throw new LearningPathCannotBeRemovedException(this._id.value);
+			throw new LearningPathCannotBeRemovedException(this._id.toString());
 		}
 	}
 

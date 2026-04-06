@@ -1,17 +1,19 @@
-import { ICommandHandler } from '@/app/common';
-import { ILearningPathRepository } from '@/domain/learning-paths/interfaces';
-import { LearningPathId } from '@/domain/learning-paths/value-objects';
-import { ISectionRepository } from '@/domain/sections/interfaces';
-import { Section } from '@/domain/sections/section.aggregate';
+import { randomUUID } from "node:crypto";
+import { LearningPathNotFoundException } from "@app/common";
+import type { ICommandHandler } from "@/app/common";
+import type { SectionDto } from "@/app/sections/dtos";
+import { UUID } from "@/domain/common";
+import {
+	type ILearningPathRepository,
+	LearningPathId,
+} from "@/domain/learning-paths";
+import type { ISectionRepository } from "@/domain/sections/repositories";
+import { Section } from "@/domain/sections/section.aggregate";
 import {
 	SectionDescription,
 	SectionName,
-} from '@/domain/sections/value-objects';
-import { SectionId } from '@/domain/sections/value-objects/id.vo';
-import { randomUUID } from 'node:crypto';
-import { LearningPathNotFoundException } from '@app/common';
-import { SectionDto } from '@/app/sections/dtos';
-import { Order } from '@/domain/common';
+} from "@/domain/sections/value-objects";
+import { SectionId } from "@/domain/sections/value-objects/id.vo";
 
 type AddSectionCommand = {
 	learningPathId: string;
@@ -29,11 +31,11 @@ export class AddSectionHandler
 	) {}
 
 	async execute(command: AddSectionCommand): Promise<AddSectionResult> {
-		const id = LearningPathId.create(command.learningPathId);
+		const id = LearningPathId.create(UUID.create(command.learningPathId));
 		const learningPath = await this.learningPathRepository.load(id);
 
 		if (!learningPath) {
-			throw new LearningPathNotFoundException(id.value);
+			throw new LearningPathNotFoundException(id.toString());
 		}
 
 		const sectionId = SectionId.create(randomUUID());
@@ -60,7 +62,7 @@ export class AddSectionHandler
 		return {
 			id: section.id.value,
 			createdAt: section.createdAt,
-			learningPathId: section.learningPathId.value,
+			learningPathId: section.learningPathId.toString(),
 			description: section.description?.value ?? null,
 			name: section.name.value,
 			updatedAt: section.updatedAt ?? null,

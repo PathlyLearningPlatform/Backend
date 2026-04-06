@@ -1,12 +1,12 @@
 import {
-	ICommandHandler,
-	UnitNotFoundException,
+	type ICommandHandler,
 	LessonNotFoundException,
-} from '@/app/common';
-import { IUnitRepository } from '@/domain/units/interfaces';
-import { ILessonRepository } from '@/domain/lessons/interfaces';
-import { LessonId } from '@/domain/lessons/value-objects/id.vo';
-import { Order } from '@/domain/common';
+	UnitNotFoundException,
+} from "@/app/common";
+import { Order } from "@/domain/common";
+import type { ILessonRepository } from "@/domain/lessons/repositories";
+import { LessonId } from "@/domain/lessons/value-objects/id.vo";
+import type { IUnitRepository } from "@/domain/units/repositories";
 
 type ReorderLessonCommand = {
 	lessonId: string;

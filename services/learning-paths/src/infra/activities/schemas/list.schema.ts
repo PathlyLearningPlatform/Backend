@@ -1,5 +1,5 @@
-import { z } from 'zod';
-import { ActivitiesApiConstraints } from '../enums';
+import { z } from "zod";
+import { ActivitiesApiConstraints } from "../enums";
 
 export const listActivitiesSchema = z
 	.object({

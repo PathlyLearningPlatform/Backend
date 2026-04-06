@@ -1,16 +1,26 @@
-import { RemoveSectionHandler } from '../../../sections/commands/remove.command';
-import { SectionNotFoundException } from '../../../common/exceptions/section-not-found.exception';
-import { SectionId } from '@/domain/sections/value-objects/id.vo';
-import { mockLearningPathRepo, mockSectionRepo, makeLearningPath, makeSection, TEST_IDS } from '../../common';
+import { SectionId } from "@/domain/sections/value-objects/id.vo";
+import { SectionNotFoundException } from "../../../common/exceptions/section-not-found.exception";
+import { RemoveSectionHandler } from "../../../sections/commands/remove.command";
+import {
+	makeLearningPath,
+	makeSection,
+	mockLearningPathRepo,
+	mockSectionRepo,
+	TEST_IDS,
+} from "../../common";
 
-describe('RemoveSectionHandler', () => {
-	it('removes a section and updates the learning path', async () => {
+describe("RemoveSectionHandler", () => {
+	it("removes a section and updates the learning path", async () => {
 		const section = makeSection();
 		const lp = makeLearningPath();
 		lp.addSection(SectionId.create(TEST_IDS.SECTION_ID));
 
-		const sectionRepo = mockSectionRepo({ load: jest.fn().mockResolvedValue(section) });
-		const lpRepo = mockLearningPathRepo({ load: jest.fn().mockResolvedValue(lp) });
+		const sectionRepo = mockSectionRepo({
+			load: jest.fn().mockResolvedValue(section),
+		});
+		const lpRepo = mockLearningPathRepo({
+			load: jest.fn().mockResolvedValue(lp),
+		});
 		const handler = new RemoveSectionHandler(lpRepo, sectionRepo);
 
 		await handler.execute({ sectionId: TEST_IDS.SECTION_ID });
@@ -19,7 +29,7 @@ describe('RemoveSectionHandler', () => {
 		expect(lpRepo.save).toHaveBeenCalledTimes(1);
 	});
 
-	it('throws SectionNotFoundException when section not found', async () => {
+	it("throws SectionNotFoundException when section not found", async () => {
 		const sectionRepo = mockSectionRepo();
 		const lpRepo = mockLearningPathRepo();
 		const handler = new RemoveSectionHandler(lpRepo, sectionRepo);

@@ -5,23 +5,23 @@ import {
 	unique,
 	uuid,
 	varchar,
-} from 'drizzle-orm/pg-core';
-import { createdAt, updatedAt } from './helpers';
-import { sectionsTable } from './sections.table';
+} from "drizzle-orm/pg-core";
+import { createdAt, updatedAt } from "./helpers";
+import { sectionsTable } from "./sections.table";
 
 export const unitsTable = pgTable(
-	'units',
+	"units",
 	{
-		id: uuid('id').primaryKey(),
-		sectionId: uuid('section_id')
+		id: uuid("id").primaryKey(),
+		sectionId: uuid("section_id")
 			.notNull()
 			.references(() => sectionsTable.id),
 		createdAt,
 		updatedAt,
-		name: varchar('name', { length: 255 }).notNull(),
-		description: text('description'),
-		order: integer('order').notNull(),
-		lessonCount: integer('lesson_count').notNull().default(0),
+		name: varchar("name", { length: 255 }).notNull(),
+		description: text("description"),
+		order: integer("order").notNull(),
+		lessonCount: integer("lesson_count").notNull().default(0),
 	},
-	(t) => [unique('uq_units_section_id_order').on(t.sectionId, t.order)],
+	(t) => [unique("uq_units_section_id_order").on(t.sectionId, t.order)],
 );

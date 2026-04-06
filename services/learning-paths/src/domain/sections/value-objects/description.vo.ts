@@ -1,4 +1,4 @@
-import { ValueObject } from '@/domain/common';
+import { ValueObject } from "@/domain/common";
 
 type Props = {
 	value: string;

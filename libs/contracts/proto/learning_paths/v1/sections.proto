@@ -1,0 +1,145 @@
+syntax = "proto3";
+
+package learning_paths.v1;
+
+message Section {
+  string id = 1;
+  string created_at = 2;
+  string updated_at = 3;
+  string name = 4;
+  string description = 5;
+  int32 order = 6;
+  string learning_path_id = 7;
+  int32 unit_count = 8;
+}
+
+message SectionProgress {
+  string section_id = 1;
+  string user_id = 2;
+  string completed_at = 3;
+  int32 total_unit_count = 4;
+  int32 completed_unit_count = 5;
+  string learning_path_id = 6;
+}
+
+service SectionsService {
+  rpc List(SectionsServiceListRequest) returns (SectionsServiceListResponse) {}
+  rpc FindById(SectionsServiceFindByIdRequest) returns (SectionsServiceFindByIdResponse) {}
+  rpc Create(SectionsServiceCreateRequest) returns (SectionsServiceCreateResponse) {}
+  rpc Update(SectionsServiceUpdateRequest) returns (SectionsServiceUpdateResponse) {}
+  rpc Reorder(SectionsServiceReorderRequest) returns (SectionsServiceReorderResponse) {}
+  rpc Remove(SectionsServiceRemoveRequest) returns (SectionsServiceRemoveResponse) {}
+
+  rpc Start(SectionsServiceStartRequest) returns (SectionsServiceStartResponse) {}
+  rpc RemoveProgress(SectionsServiceRemoveProgressRequest) returns (SectionsServiceRemoveProgressResponse) {}
+  rpc FindOneProgressForUser(SectionsServiceFindOneProgressForUserRequest) returns (SectionsServiceFindOneProgressForUserResponse) {}
+  rpc ListProgress(SectionsServiceListProgressRequest) returns (SectionsServiceListProgressResponse) {}
+}
+
+message SectionsServiceListRequest {
+  message Options {
+    optional int32 limit = 1;
+    optional int32 page = 2;
+  }
+
+  message Where {
+    optional string learning_path_id = 1;
+  }
+
+  optional Options options = 1;
+  optional Where where = 2;
+}
+message SectionsServiceListResponse {
+  repeated Section sections = 1;
+}
+
+message SectionsServiceFindByIdRequest {
+  message Where {
+    string id = 1;
+  }
+
+  Where where = 1;
+}
+message SectionsServiceFindByIdResponse {
+  Section section = 1;
+}
+
+message SectionsServiceCreateRequest {
+  string name = 1;
+  optional string description = 2;
+  string learning_path_id = 3;
+}
+message SectionsServiceCreateResponse {
+  Section section = 1;
+}
+
+message SectionsServiceUpdateRequest {
+  message Fields {
+    optional string name = 1;
+    optional string description = 2;
+  }
+
+  message Where {
+    string id = 1;
+  }
+
+  Where where = 1;
+  optional Fields fields = 2;
+}
+message SectionsServiceUpdateResponse {
+  Section section = 1;
+}
+
+message SectionsServiceReorderRequest {
+  string section_id = 1;
+  int32 order = 2;
+}
+message SectionsServiceReorderResponse {}
+
+message SectionsServiceRemoveRequest {
+  message Where {
+    string id = 1;
+  }
+
+  Where where = 1;
+}
+message SectionsServiceRemoveResponse {}
+
+message SectionsServiceStartRequest {
+  string section_id = 1;
+  string user_id = 2;
+}
+message SectionsServiceStartResponse {
+  SectionProgress progress = 1;
+}
+
+message SectionsServiceRemoveProgressRequest {
+  string section_id = 1;
+  string user_id = 2;
+}
+message SectionsServiceRemoveProgressResponse {}
+
+message SectionsServiceFindOneProgressForUserRequest {
+  string section_id = 1;
+  string user_id = 2;
+}
+message SectionsServiceFindOneProgressForUserResponse {
+  SectionProgress progress = 1;
+}
+
+message SectionsServiceListProgressRequest {
+  message Options {
+    optional int32 limit = 1;
+    optional int32 page = 2;
+  }
+  message Where {
+    optional string user_id = 1;
+    optional string learning_path_id = 2;
+  }
+
+  optional Options options = 1;
+  optional Where where = 2;
+}
+message SectionsServiceListProgressResponse {
+  repeated SectionProgress progress = 1;
+}

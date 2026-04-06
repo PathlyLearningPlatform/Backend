@@ -1,12 +1,12 @@
-import { ICommandHandler, UnitNotFoundException } from '@/app/common';
-import { IUnitRepository } from '@/domain/units/interfaces';
-import { ILessonRepository } from '@/domain/lessons/interfaces';
-import { UnitId } from '@/domain/units/value-objects/id.vo';
-import { Lesson } from '@/domain/lessons/lesson.aggregate';
-import { LessonId } from '@/domain/lessons/value-objects/id.vo';
-import { LessonDescription, LessonName } from '@/domain/lessons/value-objects';
-import { randomUUID } from 'node:crypto';
-import { LessonDto } from '@/app/lessons/dtos';
+import { randomUUID } from "node:crypto";
+import { type ICommandHandler, UnitNotFoundException } from "@/app/common";
+import type { LessonDto } from "@/app/lessons/dtos";
+import { Lesson } from "@/domain/lessons/lesson.aggregate";
+import type { ILessonRepository } from "@/domain/lessons/repositories";
+import { LessonDescription, LessonName } from "@/domain/lessons/value-objects";
+import { LessonId } from "@/domain/lessons/value-objects/id.vo";
+import type { IUnitRepository } from "@/domain/units/repositories";
+import { UnitId } from "@/domain/units/value-objects/id.vo";
 
 type AddLessonCommand = {
 	unitId: string;

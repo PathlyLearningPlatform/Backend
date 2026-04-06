@@ -1,5 +1,5 @@
-import { InvalidUUIDException } from '../exceptions';
-import { ValueObject } from '../value-object';
+import { InvalidUUIDException } from "../exceptions";
+import { ValueObject } from "../value-object";
 
 type Props = {
 	value: string;

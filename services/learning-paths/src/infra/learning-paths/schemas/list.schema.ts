@@ -1,5 +1,5 @@
-import { z } from 'zod';
-import { LearningPathsApiConstraints } from '../enums';
+import { z } from "zod";
+import { LearningPathsApiConstraints } from "../enums";
 
 export const listLearningPathsSchema = z
 	.object({

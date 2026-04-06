@@ -1,9 +1,9 @@
-import { Test } from '@nestjs/testing';
-import { PostgresLessonReadRepository } from '@/infra/lessons/postgres-read.repository';
-import { mockedDbService, mockedDrizzle } from '../mocks';
-import { makeLessonDto, TEST_IDS } from '../common';
+import { Test } from "@nestjs/testing";
+import { PostgresLessonReadRepository } from "@/infra/lessons/postgres-read.repository";
+import { makeLessonDto, TEST_IDS } from "../common";
+import { mockedDbService, mockedDrizzle } from "../mocks";
 
-describe('PostgresLessonReadRepository', () => {
+describe("PostgresLessonReadRepository", () => {
 	let repository: PostgresLessonReadRepository;
 
 	beforeEach(async () => {
@@ -16,8 +16,8 @@ describe('PostgresLessonReadRepository', () => {
 		repository = module.get(PostgresLessonReadRepository);
 	});
 
-	describe('list', () => {
-		it('should call select chain and return results', async () => {
+	describe("list", () => {
+		it("should call select chain and return results", async () => {
 			const dto = makeLessonDto();
 			mockedDrizzle.offset.mockResolvedValueOnce([dto]);
 
@@ -31,7 +31,7 @@ describe('PostgresLessonReadRepository', () => {
 			expect(result).toEqual([dto]);
 		});
 
-		it('should return empty array when no results', async () => {
+		it("should return empty array when no results", async () => {
 			mockedDrizzle.offset.mockResolvedValueOnce([]);
 
 			const result = await repository.list();
@@ -40,8 +40,8 @@ describe('PostgresLessonReadRepository', () => {
 		});
 	});
 
-	describe('findById', () => {
-		it('should return a lesson when found', async () => {
+	describe("findById", () => {
+		it("should return a lesson when found", async () => {
 			const dto = makeLessonDto();
 			mockedDrizzle.where.mockResolvedValueOnce([dto]);
 
@@ -50,7 +50,7 @@ describe('PostgresLessonReadRepository', () => {
 			expect(result).toEqual(dto);
 		});
 
-		it('should return null when not found', async () => {
+		it("should return null when not found", async () => {
 			mockedDrizzle.where.mockResolvedValueOnce([]);
 
 			const result = await repository.findById(TEST_IDS.lesson);

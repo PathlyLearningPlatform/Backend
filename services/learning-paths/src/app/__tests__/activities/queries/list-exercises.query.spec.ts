@@ -1,13 +1,13 @@
-import { ListExercisesHandler } from '../../../activities/queries/list-exercises.query';
-import { ExerciseDto } from '../../../activities/dtos';
-import { ActivityType } from '@/domain/activities/value-objects/type.vo';
-import { ExerciseDifficulty } from '@/domain/activities/exercises/value-objects';
-import { mockActivityReadRepo, TEST_IDS, DEFAULT_DATE } from '../../common';
+import { ExerciseDifficulty } from "@/domain/activities/exercises/value-objects";
+import { ActivityType } from "@/domain/activities/value-objects/type.vo";
+import type { ExerciseDto } from "../../../activities/dtos";
+import { ListExercisesHandler } from "../../../activities/queries/list-exercises.query";
+import { DEFAULT_DATE, mockActivityReadRepo, TEST_IDS } from "../../common";
 
 const sampleDto: ExerciseDto = {
 	id: TEST_IDS.EXERCISE_ID,
 	lessonId: TEST_IDS.LESSON_ID,
-	name: 'Test Exercise',
+	name: "Test Exercise",
 	description: null,
 	createdAt: DEFAULT_DATE,
 	updatedAt: null,
@@ -16,8 +16,8 @@ const sampleDto: ExerciseDto = {
 	difficulty: ExerciseDifficulty.MEDIUM,
 };
 
-describe('ListExercisesHandler', () => {
-	it('returns a list of exercises', async () => {
+describe("ListExercisesHandler", () => {
+	it("returns a list of exercises", async () => {
 		const dtos = [sampleDto];
 		const repo = mockActivityReadRepo({
 			listExercises: jest.fn().mockResolvedValue(dtos),
@@ -29,7 +29,7 @@ describe('ListExercisesHandler', () => {
 		expect(result).toEqual(dtos);
 	});
 
-	it('passes filter and pagination to the repository', async () => {
+	it("passes filter and pagination to the repository", async () => {
 		const repo = mockActivityReadRepo({
 			listExercises: jest.fn().mockResolvedValue([]),
 		});

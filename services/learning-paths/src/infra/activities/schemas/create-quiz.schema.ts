@@ -1,6 +1,6 @@
-import { emptyStringToNull } from '@pathly-backend/common/index.js';
-import { z } from 'zod';
-import { descriptionSchema, nameSchema, lessonIdSchema } from './fields.schema';
+import { emptyStringToNull } from "@pathly-backend/common/index.js";
+import { z } from "zod";
+import { descriptionSchema, lessonIdSchema, nameSchema } from "./fields.schema";
 
 export const createQuizSchema = z
 	.object({

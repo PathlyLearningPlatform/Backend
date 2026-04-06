@@ -1,12 +1,12 @@
 import {
-	ICommandHandler,
-	LessonNotFoundException,
 	ActivityNotFoundException,
-} from '@/app/common';
-import { ILessonRepository } from '@/domain/lessons/interfaces';
-import { IActivityRepository } from '@/domain/activities/interfaces';
-import { ActivityId } from '@/domain/activities/value-objects/id.vo';
-import { Order } from '@/domain/common';
+	type ICommandHandler,
+	LessonNotFoundException,
+} from "@/app/common";
+import type { IActivityRepository } from "@/domain/activities/repositories";
+import { ActivityId } from "@/domain/activities/value-objects/id.vo";
+import { Order } from "@/domain/common";
+import type { ILessonRepository } from "@/domain/lessons/repositories";
 
 type ReorderActivityCommand = {
 	activityId: string;

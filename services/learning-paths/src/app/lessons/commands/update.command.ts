@@ -1,8 +1,8 @@
-import { ICommandHandler, LessonNotFoundException } from '@/app/common';
-import { ILessonRepository } from '@/domain/lessons/interfaces';
-import { LessonId } from '@/domain/lessons/value-objects/id.vo';
-import { LessonDescription, LessonName } from '@/domain/lessons/value-objects';
-import { LessonDto } from '../dtos';
+import { type ICommandHandler, LessonNotFoundException } from "@/app/common";
+import type { ILessonRepository } from "@/domain/lessons/repositories";
+import { LessonDescription, LessonName } from "@/domain/lessons/value-objects";
+import { LessonId } from "@/domain/lessons/value-objects/id.vo";
+import type { LessonDto } from "../dtos";
 
 type UpdateLessonCommand = {
 	where: {

@@ -1,13 +1,13 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { DbService } from '../common/db/db.service';
-import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import * as schema from '@infra/common/db/schemas';
-import {
+import { Inject, Injectable } from '@nestjs/common';
+import { eq } from 'drizzle-orm';
+import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import type { LearningPathDto } from '@/app/learning-paths/dtos';
+import type {
 	ILearningPathReadRepository,
 	LearningPathFilter,
 } from '@/app/learning-paths/interfaces';
-import { LearningPathDto } from '@/app/learning-paths/dtos';
-import { eq } from 'drizzle-orm';
+import { DbService } from '../common/db/db.service';
 import { LearningPathsApiConstraints } from './enums';
 
 @Injectable()

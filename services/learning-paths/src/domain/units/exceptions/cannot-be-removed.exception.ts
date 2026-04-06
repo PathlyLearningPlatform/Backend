@@ -1,4 +1,4 @@
-import { DomainException } from '@/domain/common';
+import { DomainException } from "@/domain/common";
 
 export class UnitCannotBeRemovedException extends DomainException {
 	constructor(public readonly unitId: string) {

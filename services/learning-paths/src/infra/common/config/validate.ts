@@ -1,5 +1,5 @@
-import { appConfigSchema } from '@infra/common/schemas';
-import { ConfigException, parseIntOrReturn } from '@pathly-backend/common';
+import { appConfigSchema } from "@infra/common/schemas";
+import { ConfigException, parseIntOrReturn } from "@pathly-backend/common";
 
 /**
  *

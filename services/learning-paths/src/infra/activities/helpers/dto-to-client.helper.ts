@@ -1,22 +1,24 @@
-import {
-	ActivityDto,
-	ArticleDto,
-	ExerciseDto,
-	QuizDto,
-	QuizWithoutQuestionsDto,
-	QuestionDto,
-} from '@/app/activities/dtos';
+import type { ActivityProgress as ClientActivityProgress } from '@pathly-backend/contracts/learning_paths/v1/activities.js';
 import {
 	type Activity as ClientActivity,
+	ActivityType as ClientActivityType,
 	type Article as ClientArticle,
 	type Exercise as ClientExercise,
-	type Quiz as ClientQuiz,
-	type Question as ClientQuestion,
-	ActivityType as ClientActivityType,
 	ExerciseDifficulty as ClientExerciseDifficulty,
+	type Question as ClientQuestion,
+	type Quiz as ClientQuiz,
 } from '@pathly-backend/contracts/learning-paths/v1/activities.js';
-import { ActivityType } from '@/domain/activities/value-objects';
+import type {
+	ActivityDto,
+	ActivityProgressDto,
+	ArticleDto,
+	ExerciseDto,
+	QuestionDto,
+	QuizDto,
+	QuizWithoutQuestionsDto,
+} from '@/app/activities/dtos';
 import { ExerciseDifficulty } from '@/domain/activities/exercises/value-objects';
+import { ActivityType } from '@/domain/activities/value-objects';
 
 export function domainActivityTypeToClient(
 	domain: ActivityType,
@@ -107,5 +109,16 @@ export function quizWithoutQuestionsDtoToClient(
 	return {
 		...activityDtoToClient(dto),
 		questions: [],
+	};
+}
+
+export function activityProgressDtoToClient(
+	dto: ActivityProgressDto,
+): ClientActivityProgress {
+	return {
+		activityId: dto.activityId,
+		userId: dto.userId,
+		completedAt: dto.completedAt?.toISOString() ?? '',
+		lessonId: dto.lessonId,
 	};
 }

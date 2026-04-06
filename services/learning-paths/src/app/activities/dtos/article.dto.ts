@@ -1,4 +1,4 @@
-import { ActivityDto } from './activity.dto';
+import type { ActivityDto } from "./activity.dto";
 
 export interface ArticleDto extends ActivityDto {
 	ref: string;

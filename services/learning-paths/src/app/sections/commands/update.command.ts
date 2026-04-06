@@ -1,11 +1,11 @@
-import { ICommandHandler, SectionNotFoundException } from '@/app/common';
-import { ISectionRepository } from '@/domain/sections/interfaces';
-import { SectionId } from '@/domain/sections/value-objects/id.vo';
+import { type ICommandHandler, SectionNotFoundException } from "@/app/common";
+import type { ISectionRepository } from "@/domain/sections/repositories";
 import {
 	SectionDescription,
 	SectionName,
-} from '@/domain/sections/value-objects';
-import { SectionDto } from '../dtos';
+} from "@/domain/sections/value-objects";
+import { SectionId } from "@/domain/sections/value-objects/id.vo";
+import type { SectionDto } from "../dtos";
 
 type UpdateSectionCommand = {
 	where: {
@@ -47,7 +47,7 @@ export class UpdateSectionHandler
 
 		return {
 			id: section.id.value,
-			learningPathId: section.learningPathId.value,
+			learningPathId: section.learningPathId.toString(),
 			name: section.name.value,
 			description: section.description?.value ?? null,
 			createdAt: section.createdAt,

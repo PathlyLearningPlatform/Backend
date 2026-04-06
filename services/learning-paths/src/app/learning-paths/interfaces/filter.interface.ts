@@ -1,6 +1,6 @@
-import { OffsetPagination } from '@/app/common';
+import type { OffsetPagination } from "@/app/common";
 
 export type LearningPathFilter = {
-  options?: OffsetPagination;
-  where?: {};
+	options?: OffsetPagination;
+	where?: {};
 };

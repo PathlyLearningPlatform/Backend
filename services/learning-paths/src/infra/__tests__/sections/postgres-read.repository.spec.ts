@@ -1,9 +1,9 @@
-import { Test } from '@nestjs/testing';
-import { PostgresSectionReadRepository } from '@/infra/sections/postgres-read.repository';
-import { mockedDbService, mockedDrizzle } from '../mocks';
-import { makeSectionDto, TEST_IDS } from '../common';
+import { Test } from "@nestjs/testing";
+import { PostgresSectionReadRepository } from "@/infra/sections/postgres-read.repository";
+import { makeSectionDto, TEST_IDS } from "../common";
+import { mockedDbService, mockedDrizzle } from "../mocks";
 
-describe('PostgresSectionReadRepository', () => {
+describe("PostgresSectionReadRepository", () => {
 	let repository: PostgresSectionReadRepository;
 
 	beforeEach(async () => {
@@ -16,8 +16,8 @@ describe('PostgresSectionReadRepository', () => {
 		repository = module.get(PostgresSectionReadRepository);
 	});
 
-	describe('list', () => {
-		it('should call select chain and return results', async () => {
+	describe("list", () => {
+		it("should call select chain and return results", async () => {
 			const dto = makeSectionDto();
 			mockedDrizzle.offset.mockResolvedValueOnce([dto]);
 
@@ -31,7 +31,7 @@ describe('PostgresSectionReadRepository', () => {
 			expect(result).toEqual([dto]);
 		});
 
-		it('should return empty array when no results', async () => {
+		it("should return empty array when no results", async () => {
 			mockedDrizzle.offset.mockResolvedValueOnce([]);
 
 			const result = await repository.list();
@@ -40,8 +40,8 @@ describe('PostgresSectionReadRepository', () => {
 		});
 	});
 
-	describe('findById', () => {
-		it('should return a section when found', async () => {
+	describe("findById", () => {
+		it("should return a section when found", async () => {
 			const dto = makeSectionDto();
 			mockedDrizzle.where.mockResolvedValueOnce([dto]);
 
@@ -50,7 +50,7 @@ describe('PostgresSectionReadRepository', () => {
 			expect(result).toEqual(dto);
 		});
 
-		it('should return null when not found', async () => {
+		it("should return null when not found", async () => {
 			mockedDrizzle.where.mockResolvedValueOnce([]);
 
 			const result = await repository.findById(TEST_IDS.section);

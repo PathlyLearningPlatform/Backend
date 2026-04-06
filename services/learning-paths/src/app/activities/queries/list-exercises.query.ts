@@ -1,6 +1,6 @@
-import { IQueryHandler, OffsetPagination } from '@/app/common';
-import { IActivityReadRepository } from '../interfaces';
-import { ExerciseDto } from '../dtos';
+import type { IQueryHandler, OffsetPagination } from "@/app/common";
+import type { ExerciseDto } from "../dtos";
+import type { IActivityReadRepository } from "../interfaces";
 
 type ListExercisesQuery = {
 	where?: {

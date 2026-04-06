@@ -1,0 +1,138 @@
+syntax = "proto3";
+
+package learning_paths.v1;
+
+import "common/types.proto";
+
+message LearningPath {
+  string id = 1;
+  string created_at = 2;
+  string updated_at = 3;
+  string name = 4;
+  string description = 5;
+  int32 section_count = 6;
+}
+
+message LearningPathProgress {
+  string learning_path_id = 1;
+  string user_id = 2;
+  string completed_at = 3;
+  int32 total_section_count = 4;
+  int32 completed_section_count = 5;
+}
+
+service LearningPathsService {
+  rpc List(LearningPathsServiceListRequest) returns (LearningPathsServiceListResponse) {}
+  rpc FindById(LearningPathsServiceFindByIdRequest) returns (LearningPathsServiceFindByIdResponse) {}
+  rpc Create(LearningPathsServiceCreateRequest) returns (LearningPathsServiceCreateResponse) {}
+  rpc Update(LearningPathsServiceUpdateRequest) returns (LearningPathsServiceUpdateResponse) {}
+  rpc Remove(LearningPathsServiceRemoveRequest) returns (LearningPathsServiceRemoveResponse) {}
+
+  rpc Start(LearningPathsServiceStartRequest) returns (LearningPathsServiceStartResponse) {}
+  rpc RemoveProgress(LearningPathsServiceRemoveProgressRequest) returns (LearningPathsServiceRemoveProgressResponse) {}
+  rpc FindOneProgressForUser(LearningPathsServiceFindOneProgressForUserRequest) returns (LearningPathsServiceFindOneProgressForUserResponse) {}
+  rpc ListProgress(LearningPathsServiceListProgressRequest) returns (LearningPathsServiceListProgressResponse) {}
+}
+
+message LearningPathsServiceStartRequest {
+  string learning_path_id = 1;
+  string user_id = 2;
+}
+message LearningPathsServiceStartResponse {
+  LearningPathProgress progress = 1;
+}
+
+message LearningPathsServiceRemoveProgressRequest {
+  string learning_path_id = 1;
+  string user_id = 2;
+}
+message LearningPathsServiceRemoveProgressResponse {}
+
+message LearningPathsServiceFindOneProgressForUserRequest {
+  string learning_path_id = 1;
+  string user_id = 2;
+}
+message LearningPathsServiceFindOneProgressForUserResponse {
+  LearningPathProgress progress = 1;
+}
+
+message LearningPathsServiceListProgressRequest {
+  message Options {
+    optional int32 limit = 1;
+    optional int32 page = 2;
+  }
+  message Where {
+    optional string user_id = 1;
+  }
+
+  optional Options options = 1;
+  optional Where where = 2;
+}
+message LearningPathsServiceListProgressResponse {
+  repeated LearningPathProgress progress = 1;
+}
+
+message LearningPathsServiceListRequest {
+  enum OrderByFields {
+    ORDER_BY_FIELDS_UNSPECIFIED = 0;
+    ORDER_BY_FIELDS_NAME = 1;
+    ORDER_BY_FIELDS_CREATED_AT = 2;
+    ORDER_BY_FIELDS_UPDATED_AT = 3;
+  }
+
+  message Options {
+    optional int32 limit = 1;
+    optional int32 page = 2;
+    optional common.SortType sort_type = 3;
+    optional OrderByFields order_by = 4;
+  }
+
+  optional Options options = 1;
+}
+message LearningPathsServiceListResponse {
+  repeated LearningPath learning_paths = 1;
+}
+
+message LearningPathsServiceFindByIdRequest {
+  message Where {
+    string id = 1;
+  }
+
+  Where where = 1;
+}
+message LearningPathsServiceFindByIdResponse {
+  LearningPath learning_path = 1;
+}
+
+message LearningPathsServiceCreateRequest {
+  string name = 1;
+  optional string description = 2;
+}
+message LearningPathsServiceCreateResponse {
+  LearningPath learning_path = 1;
+}
+
+message LearningPathsServiceUpdateRequest {
+  message Fields {
+    optional string name = 1;
+    optional string description = 2;
+  }
+  message Where {
+    string id = 1;
+  }
+
+  Where where = 1;
+  optional Fields fields = 2;
+}
+message LearningPathsServiceUpdateResponse {
+  LearningPath learning_path = 1;
+}
+
+message LearningPathsServiceRemoveRequest {
+  message Where {
+    string id = 1;
+  }
+
+  Where where = 1;
+}
+message LearningPathsServiceRemoveResponse {}

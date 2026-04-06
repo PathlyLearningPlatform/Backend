@@ -1,6 +1,6 @@
-import { IQueryHandler, SectionNotFoundException } from '@/app/common';
-import { ISectionReadRepository } from '../interfaces';
-import { SectionDto } from '../dtos';
+import { type IQueryHandler, SectionNotFoundException } from "@/app/common";
+import type { SectionDto } from "../dtos";
+import type { ISectionReadRepository } from "../interfaces";
 
 type FindSectionByIdQuery = {
 	where: {

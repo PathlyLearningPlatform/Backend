@@ -7,40 +7,55 @@ import {
 	GrpcExceptionFilter,
 	RpcValidationPipe,
 } from '@pathly-backend/common';
+import type {
+	SectionsServiceFindOneProgressForUserResponse,
+	SectionsServiceListProgressResponse,
+	SectionsServiceRemoveProgressResponse,
+	SectionsServiceStartResponse,
+} from '@pathly-backend/contracts/learning_paths/v1/sections.js';
 import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js';
 import {
 	type CreateSectionResponse,
 	type FindSectionByIdResponse,
 	type ListSectionsResponse,
-	type UpdateSectionResponse,
 	SECTIONS_SERVICE_NAME,
+	type UpdateSectionResponse,
 } from '@pathly-backend/contracts/learning-paths/v1/sections.js';
 import type z from 'zod';
+import {
+	LearningPathNotFoundException,
+	SectionNotFoundException,
+} from '@/app/common';
 import type {
 	AddSectionHandler,
 	ReorderSectionHandler,
 } from '@/app/learning-paths/commands';
 import type {
-	UpdateSectionHandler,
 	RemoveSectionHandler,
+	RemoveSectionProgressHandler,
+	StartSectionHandler,
+	UpdateSectionHandler,
 } from '@/app/sections/commands';
+import { SectionProgressNotFoundException } from '@/app/sections/exceptions';
 import type {
-	ListSectionsHandler,
 	FindSectionByIdHandler,
+	FindSectionProgressForUserHandler,
+	ListSectionProgressHandler,
+	ListSectionsHandler,
 } from '@/app/sections/queries';
-import {
-	LearningPathNotFoundException,
-	SectionNotFoundException,
-} from '@/app/common';
 import { DiToken, ExceptionMessage } from '../common/enums';
-import { sectionDtoToClient } from './helpers';
+import { sectionDtoToClient, sectionProgressDtoToClient } from './helpers';
 import {
 	createSectionSchema,
-	listSectionsSchema,
 	findSectionByIdSchema,
+	findSectionProgressForUserSchema,
+	listSectionProgressSchema,
+	listSectionsSchema,
+	removeSectionProgressSchema,
 	removeSectionSchema,
-	updateSectionSchema,
 	reorderSectionSchema,
+	startSectionSchema,
+	updateSectionSchema,
 } from './schemas';
 
 @UseFilters(GrpcExceptionFilter)
@@ -59,6 +74,14 @@ export class GrpcSectionsController {
 		private readonly reorderSectionHandler: ReorderSectionHandler,
 		@Inject(DiToken.REMOVE_SECTION_HANDLER)
 		private readonly removeSectionHandler: RemoveSectionHandler,
+		@Inject(DiToken.START_SECTION_HANDLER)
+		private readonly startSectionHandler: StartSectionHandler,
+		@Inject(DiToken.REMOVE_SECTION_PROGRESS_HANDLER)
+		private readonly removeSectionProgressHandler: RemoveSectionProgressHandler,
+		@Inject(DiToken.FIND_SECTION_PROGRESS_FOR_USER_HANDLER)
+		private readonly findSectionProgressForUserHandler: FindSectionProgressForUserHandler,
+		@Inject(DiToken.LIST_SECTION_PROGRESS_HANDLER)
+		private readonly listSectionProgressHandler: ListSectionProgressHandler,
 	) {}
 
 	@GrpcMethod(SECTIONS_SERVICE_NAME)
@@ -244,6 +267,141 @@ export class GrpcSectionsController {
 				);
 			}
 
+			throw new GrpcException(
+				new GrpcErrorDto(
+					ExceptionMessage.INTERNAL_ERROR,
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
+				err,
+			);
+		}
+	}
+
+	@GrpcMethod(SECTIONS_SERVICE_NAME)
+	async start(
+		@Payload(new RpcValidationPipe(startSectionSchema))
+		payload: z.infer<typeof startSectionSchema>,
+	): Promise<SectionsServiceStartResponse> {
+		try {
+			const progress = await this.startSectionHandler.execute({
+				sectionId: payload.sectionId,
+				userId: payload.userId,
+			});
+
+			return {
+				progress: sectionProgressDtoToClient(progress),
+			};
+		} catch (err) {
+			if (err instanceof SectionNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						ExceptionMessage.SECTION_NOT_FOUND,
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.SECTION_NOT_FOUND,
+					),
+				);
+			}
+
+			throw new GrpcException(
+				new GrpcErrorDto(
+					ExceptionMessage.INTERNAL_ERROR,
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
+				err,
+			);
+		}
+	}
+
+	@GrpcMethod(SECTIONS_SERVICE_NAME)
+	async removeProgress(
+		@Payload(new RpcValidationPipe(removeSectionProgressSchema))
+		payload: z.infer<typeof removeSectionProgressSchema>,
+	): Promise<SectionsServiceRemoveProgressResponse> {
+		try {
+			await this.removeSectionProgressHandler.execute({
+				sectionId: payload.sectionId,
+				userId: payload.userId,
+			});
+
+			return {};
+		} catch (err) {
+			if (err instanceof SectionProgressNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						ExceptionMessage.SECTION_PROGRESS_NOT_FOUND,
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.SECTION_NOT_FOUND,
+					),
+				);
+			}
+
+			throw new GrpcException(
+				new GrpcErrorDto(
+					ExceptionMessage.INTERNAL_ERROR,
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
+				err,
+			);
+		}
+	}
+
+	@GrpcMethod(SECTIONS_SERVICE_NAME)
+	async findOneProgressForUser(
+		@Payload(new RpcValidationPipe(findSectionProgressForUserSchema))
+		payload: z.infer<typeof findSectionProgressForUserSchema>,
+	): Promise<SectionsServiceFindOneProgressForUserResponse> {
+		try {
+			const progress = await this.findSectionProgressForUserHandler.execute({
+				sectionId: payload.sectionId,
+				userId: payload.userId,
+			});
+
+			return {
+				progress: sectionProgressDtoToClient(progress),
+			};
+		} catch (err) {
+			if (err instanceof SectionProgressNotFoundException) {
+				throw new GrpcException(
+					new GrpcErrorDto(
+						ExceptionMessage.SECTION_PROGRESS_NOT_FOUND,
+						GrpcStatus.NOT_FOUND,
+						LearningPathsApiErrorCodes.SECTION_NOT_FOUND,
+					),
+				);
+			}
+
+			throw new GrpcException(
+				new GrpcErrorDto(
+					ExceptionMessage.INTERNAL_ERROR,
+					GrpcStatus.INTERNAL,
+					LearningPathsApiErrorCodes.INTERNAL_ERROR,
+				),
+				err,
+			);
+		}
+	}
+
+	@GrpcMethod(SECTIONS_SERVICE_NAME)
+	async listProgress(
+		@Payload(new RpcValidationPipe(listSectionProgressSchema))
+		payload: z.infer<typeof listSectionProgressSchema>,
+	): Promise<SectionsServiceListProgressResponse> {
+		try {
+			const progress = await this.listSectionProgressHandler.execute({
+				options: payload.options,
+				where: {
+					learningPathId: payload.where?.learningPathId,
+					userId: payload.where?.userId,
+				},
+			});
+
+			return {
+				progress: progress.map(sectionProgressDtoToClient),
+			};
+		} catch (err) {
 			throw new GrpcException(
 				new GrpcErrorDto(
 					ExceptionMessage.INTERNAL_ERROR,

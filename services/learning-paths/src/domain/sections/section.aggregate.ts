@@ -1,10 +1,10 @@
-import { AggregateRoot, Order } from '../common';
-import { SectionDescription, SectionName, UnitRef } from './value-objects';
-import { SectionId } from './value-objects/id.vo';
-import { LearningPathId } from '../learning-paths/value-objects';
-import { UnitId } from '../units/value-objects/id.vo';
-import { SectionCannotBeRemovedException } from './exceptions';
-import { UnitAlreadyExistsException } from './exceptions/unit-already-exists.exception';
+import { AggregateRoot, Order, UUID } from "../common";
+import { LearningPathId } from "../learning-paths/value-objects";
+import type { UnitId } from "../units/value-objects/id.vo";
+import { SectionCannotBeRemovedException } from "./exceptions";
+import { UnitAlreadyExistsException } from "./exceptions/unit-already-exists.exception";
+import { SectionDescription, SectionName, UnitRef } from "./value-objects";
+import { SectionId } from "./value-objects/id.vo";
 
 type SectionProps = {
 	learningPathId: LearningPathId;
@@ -24,7 +24,7 @@ type CreateSectionProps = {
 	order: Order;
 };
 type UpdateSectionProps = Partial<
-	Pick<SectionProps, 'name' | 'description' | 'order'>
+	Pick<SectionProps, "name" | "description" | "order">
 >;
 type SectionFromDataSourceProps = {
 	id: string;
@@ -48,7 +48,9 @@ export class Section extends AggregateRoot<SectionId, SectionProps> {
 
 	static fromDataSource(props: SectionFromDataSourceProps) {
 		const id = SectionId.create(props.id);
-		const learningPathId = LearningPathId.create(props.learningPathId);
+		const learningPathId = LearningPathId.create(
+			UUID.create(props.learningPathId),
+		);
 		const name = SectionName.create(props.name);
 		const description = props.description
 			? SectionDescription.create(props.description)
@@ -191,9 +193,7 @@ export class Section extends AggregateRoot<SectionId, SectionProps> {
 	}
 
 	private _findUnit(unitId: UnitId): UnitRef | null {
-		const ref = this._props.unitRefs.find((ref) =>
-			ref.unitId.equals(unitId),
-		);
+		const ref = this._props.unitRefs.find((ref) => ref.unitId.equals(unitId));
 
 		return ref === undefined ? null : ref;
 	}

@@ -1,11 +1,11 @@
-import { AggregateRoot, Order } from '../common';
-import { LessonId } from '../lessons/value-objects';
-import {
+import { AggregateRoot, type Order } from "../common";
+import type { LessonId } from "../lessons/value-objects";
+import type {
 	ActivityDescription,
 	ActivityId,
 	ActivityName,
 	ActivityType,
-} from './value-objects';
+} from "./value-objects";
 
 export type ActivityProps = {
 	lessonId: LessonId;

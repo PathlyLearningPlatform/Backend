@@ -1,13 +1,13 @@
-import { Inject, Injectable } from '@nestjs/common';
-import type { IUnitRepository } from '@/domain/units/interfaces';
-import type { Db } from '@/infra/common/types';
 import { DbService } from '@infra/common/db/db.service';
-import { Unit } from '@/domain/units/unit.aggregate';
-import { UnitId } from '@/domain/units/value-objects/id.vo';
-import { LessonRef } from '@/domain/units/value-objects';
-import { unitsTable, lessonsTable } from '../common/db/schemas';
+import { Inject, Injectable } from '@nestjs/common';
 import { RepositoryException } from '@pathly-backend/common/index.js';
 import { eq } from 'drizzle-orm';
+import type { IUnitRepository } from '@/domain/units/repositories';
+import { Unit } from '@/domain/units/unit.aggregate';
+import { LessonRef } from '@/domain/units/value-objects';
+import type { UnitId } from '@/domain/units/value-objects/id.vo';
+import type { Db } from '@/infra/common/types';
+import { lessonsTable, unitsTable } from '../common/db/schemas';
 
 @Injectable()
 export class PostgresUnitRepository implements IUnitRepository {

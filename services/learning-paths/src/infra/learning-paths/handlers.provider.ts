@@ -1,18 +1,32 @@
 import type { Provider } from '@nestjs/common';
-import type { ILearningPathRepository } from '@/domain/learning-paths/interfaces';
-import { ILearningPathReadRepository } from '@/app/learning-paths/interfaces';
-import { DiToken } from '../common/enums';
-import { PostgresLearningPathRepository } from './postgres.repository';
-import { PostgresLearningPathReadRepository } from './postgres-read.repository';
-import {
-	FindLearningPathByIdHandler,
-	ListLearningPathsHandler,
-} from '@/app/learning-paths/queries';
+import type { IEventBus } from '@/app/common';
 import {
 	CreateLearningPathHandler,
 	RemoveLearningPathHandler,
+	RemoveLearningPathProgressHandler,
+	StartLearningPathHandler,
 	UpdateLearningPathHandler,
 } from '@/app/learning-paths/commands';
+import type {
+	ILearningPathProgressReadRepository,
+	ILearningPathReadRepository,
+} from '@/app/learning-paths/interfaces';
+import {
+	FindLearningPathByIdHandler,
+	FindLearningPathProgressForUserHandler,
+	ListLearningPathProgressHandler,
+	ListLearningPathsHandler,
+} from '@/app/learning-paths/queries';
+import type {
+	ILearningPathProgressRepository,
+	ILearningPathRepository,
+} from '@/domain/learning-paths';
+import { InMemoryEventBus } from '../common/adapters';
+import { DiToken } from '../common/enums';
+import { PostgresLearningPathRepository } from './postgres.repository';
+import { PostgresLearningPathProgressRepository } from './postgres-progress.repository';
+import { PostgresLearningPathProgressReadRepository } from './postgres-progress-read.repository';
+import { PostgresLearningPathReadRepository } from './postgres-read.repository';
 
 export const learningPathHandlersProvider: Provider[] = [
 	{
@@ -49,5 +63,57 @@ export const learningPathHandlersProvider: Provider[] = [
 			return new RemoveLearningPathHandler(learningPathRepository);
 		},
 		inject: [PostgresLearningPathRepository],
+	},
+	{
+		provide: DiToken.START_LEARNING_PATH_HANDLER,
+		useFactory(
+			learningPathProgressRepository: ILearningPathProgressRepository,
+			learningPathReadRepository: ILearningPathReadRepository,
+			eventBus: IEventBus,
+		) {
+			return new StartLearningPathHandler(
+				learningPathProgressRepository,
+				learningPathReadRepository,
+				eventBus,
+			);
+		},
+		inject: [
+			PostgresLearningPathProgressRepository,
+			PostgresLearningPathReadRepository,
+			InMemoryEventBus,
+		],
+	},
+	{
+		provide: DiToken.REMOVE_LEARNING_PATH_PROGRESS_HANDLER,
+		useFactory(
+			learningPathProgressRepository: ILearningPathProgressRepository,
+		) {
+			return new RemoveLearningPathProgressHandler(
+				learningPathProgressRepository,
+			);
+		},
+		inject: [PostgresLearningPathProgressRepository],
+	},
+	{
+		provide: DiToken.LIST_LEARNING_PATH_PROGRESS_HANDLER,
+		useFactory(
+			learningPathProgressReadRepository: ILearningPathProgressReadRepository,
+		) {
+			return new ListLearningPathProgressHandler(
+				learningPathProgressReadRepository,
+			);
+		},
+		inject: [PostgresLearningPathProgressReadRepository],
+	},
+	{
+		provide: DiToken.FIND_LEARNING_PATH_PROGRESS_FOR_USER_HANDLER,
+		useFactory(
+			learningPathProgressReadRepository: ILearningPathProgressReadRepository,
+		) {
+			return new FindLearningPathProgressForUserHandler(
+				learningPathProgressReadRepository,
+			);
+		},
+		inject: [PostgresLearningPathProgressReadRepository],
 	},
 ];

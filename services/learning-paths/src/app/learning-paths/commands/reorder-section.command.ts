@@ -1,12 +1,11 @@
 import {
-	ICommandHandler,
+	type ICommandHandler,
 	LearningPathNotFoundException,
 	SectionNotFoundException,
 } from '@/app/common';
 import { Order } from '@/domain/common';
-import { ILearningPathRepository } from '@/domain/learning-paths/interfaces';
-import { LearningPathId } from '@/domain/learning-paths/value-objects';
-import { ISectionRepository } from '@/domain/sections/interfaces';
+import type { ILearningPathRepository } from '@/domain/learning-paths';
+import type { ISectionRepository } from '@/domain/sections/repositories';
 import { SectionId } from '@/domain/sections/value-objects/id.vo';
 
 type ReorderSectionCommand = {
@@ -37,7 +36,9 @@ export class ReorderSectionHandler
 		// never going to happen
 		// only for type safety
 		if (!learningPath) {
-			throw new LearningPathNotFoundException(section.learningPathId.value);
+			throw new LearningPathNotFoundException(
+				section.learningPathId.toString(),
+			);
 		}
 
 		const order = Order.create(command.order);

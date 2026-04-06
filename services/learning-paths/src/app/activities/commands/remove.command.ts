@@ -1,11 +1,11 @@
 import {
 	ActivityNotFoundException,
-	ICommandHandler,
+	type ICommandHandler,
 	LessonNotFoundException,
-} from '@/app/common';
-import { IActivityRepository } from '@/domain/activities/interfaces';
-import { ActivityId } from '@/domain/activities/value-objects';
-import { ILessonRepository } from '@/domain/lessons/interfaces';
+} from "@/app/common";
+import type { IActivityRepository } from "@/domain/activities/repositories";
+import { ActivityId } from "@/domain/activities/value-objects";
+import type { ILessonRepository } from "@/domain/lessons/repositories";
 
 type RemoveActivityCommand = {
 	activityId: string;

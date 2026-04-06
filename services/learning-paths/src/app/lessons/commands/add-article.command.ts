@@ -1,17 +1,17 @@
-import { ICommandHandler, LessonNotFoundException } from '@/app/common';
-import { ILessonRepository } from '@/domain/lessons/interfaces';
-import { IActivityRepository } from '@/domain/activities/interfaces';
-import { LessonId } from '@/domain/lessons/value-objects/id.vo';
-import { ActivityId } from '@/domain/activities/value-objects/id.vo';
+import { randomUUID } from "node:crypto";
+import type { ArticleDto } from "@/app/activities/dtos";
+import { type ICommandHandler, LessonNotFoundException } from "@/app/common";
+import { Article } from "@/domain/activities/articles/article.aggregate";
+import type { IActivityRepository } from "@/domain/activities/repositories";
 import {
 	ActivityDescription,
 	ActivityName,
 	ActivityType,
-} from '@/domain/activities/value-objects';
-import { Article } from '@/domain/activities/articles/article.aggregate';
-import { randomUUID } from 'node:crypto';
-import { ArticleDto } from '@/app/activities/dtos';
-import { Url } from '@/domain/common';
+} from "@/domain/activities/value-objects";
+import { ActivityId } from "@/domain/activities/value-objects/id.vo";
+import { Url } from "@/domain/common";
+import type { ILessonRepository } from "@/domain/lessons/repositories";
+import { LessonId } from "@/domain/lessons/value-objects/id.vo";
 
 type AddArticleCommand = {
 	lessonId: string;

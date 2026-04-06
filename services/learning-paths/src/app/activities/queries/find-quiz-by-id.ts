@@ -1,6 +1,6 @@
-import { IQueryHandler, ActivityNotFoundException } from '@/app/common';
-import { IActivityReadRepository } from '../interfaces';
-import { QuizDto } from '../dtos';
+import { ActivityNotFoundException, type IQueryHandler } from "@/app/common";
+import type { QuizDto } from "../dtos";
+import type { IActivityReadRepository } from "../interfaces";
 
 type FindQuizByIdQuery = {
 	where: {
