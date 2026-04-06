@@ -33,6 +33,7 @@ services:
       - PORT=3000
       - HOSTNAME=api-gateway
       - LEARNING_PATHS_SERVICE_URL=learning-paths:3000
+      - SKILLS_SERVICE_URL=skills:3000
       - PROGRESS_SERVICE_URL=progress:3000
       - PROTO_DIR=/usr/src/app/libs/contracts/proto
       - JWT_AUDIENCE=api

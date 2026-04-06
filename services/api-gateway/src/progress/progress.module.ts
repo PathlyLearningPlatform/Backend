@@ -5,6 +5,7 @@ import { LessonProgressModule } from './lessons/lessons.module'
 import { UnitProgressModule } from './units/units.module'
 import { SectionProgressModule } from './sections/sections.module'
 import { LearningPathProgressModule } from './learning-paths/learning-paths.module'
+import { SkillProgressModule } from './skills/skills.module'
 
 @Module({
 	imports: [
@@ -13,6 +14,7 @@ import { LearningPathProgressModule } from './learning-paths/learning-paths.modu
 		UnitProgressModule,
 		SectionProgressModule,
 		LearningPathProgressModule,
+		SkillProgressModule,
 		RouterModule.register([
 			{
 				path: 'v1/progress',
@@ -33,6 +35,10 @@ import { LearningPathProgressModule } from './learning-paths/learning-paths.modu
 			{
 				path: 'v1/progress',
 				module: LearningPathProgressModule,
+			},
+			{
+				path: 'v1/progress',
+				module: SkillProgressModule,
 			},
 		]),
 	],

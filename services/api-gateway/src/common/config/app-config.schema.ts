@@ -12,6 +12,7 @@ export const appConfigSchema = z
 				jwtAudience: z.string(),
 				jwtIssuer: z.string(),
 				jwtPublicKeyPath: z.string(),
+				skillsServiceUrl: z.url(),
 			})
 			.strict(),
 	})

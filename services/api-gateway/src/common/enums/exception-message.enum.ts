@@ -11,8 +11,12 @@ export enum ExceptionMessage {
 	LESSON_NOT_FOUND = 'Lesson was not found.',
 	LESSON_CANNOT_BE_REMOVED = 'Lesson cannot be removed.',
 	ACTIVITY_NOT_FOUND = 'Activity was not found.',
+	SKILL_NOT_FOUND = 'Skill was not found.',
+	SKILL_CANNOT_REFERENCE_ITSELF = 'Skill cannot reference itself.',
+	ROOT_SKILL_PARENT = 'Root skill cannot have a parent.',
 
 	ACTIVITY_PROGRESS_NOT_FOUND = 'Progress entry for that activity was not found.',
+	SKILL_PROGRESS_NOT_FOUND = 'Skill progress was not found.',
 	LESSON_NOT_STARTED = 'Lesson not started',
 
 	LESSON_PROGRESS_NOT_FOUND = 'Progress entry for that lesson was not found.',
@@ -21,6 +25,5 @@ export enum ExceptionMessage {
 	SECTION_NOT_STARTED = 'Section not started',
 	SECTION_PROGRESS_NOT_FOUND = 'Progress entry for that section was not found.',
 	LEARNING_PATH_NOT_STARTED = 'Learning path not started',
-	LEARNING_PATH_PROGRESS_NOT_FOUND =
-		'Progress entry for that learning path was not found.',
+	LEARNING_PATH_PROGRESS_NOT_FOUND = 'Progress entry for that learning path was not found.',
 }

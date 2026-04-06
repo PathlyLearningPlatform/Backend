@@ -14,6 +14,8 @@ import { LessonsModule } from './lessons/lessons.module'
 import { SectionsModule } from './sections/sections.module'
 import { UnitsModule } from './units/units.module'
 import { ProgressModule } from './progress/progress.module'
+import { SkillsController } from './skills/skills.controller'
+import { SkillsModule } from './skills/skills.module'
 
 @Module({
 	imports: [
@@ -31,6 +33,7 @@ import { ProgressModule } from './progress/progress.module'
 		LessonsModule,
 		ActivitiesModule,
 		ProgressModule,
+		SkillsModule,
 	],
 	providers: [
 		{

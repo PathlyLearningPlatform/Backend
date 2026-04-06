@@ -1,4 +1,5 @@
 import { LearningPathsApiErrorCodes } from '@pathly-backend/contracts/learning-paths/v1/api.js'
+import { SkillsApiErrorCodes } from '@pathly-backend/contracts/skills/v1/api.js'
 import { ExceptionMessage } from '../enums/exception-message.enum'
 
 export const exceptionCodeToMessage = {
@@ -20,4 +21,12 @@ export const exceptionCodeToMessage = {
 	[LearningPathsApiErrorCodes.ACTIVITY_NOT_FOUND]:
 		ExceptionMessage.ACTIVITY_NOT_FOUND,
 	[LearningPathsApiErrorCodes.INTERNAL_ERROR]: ExceptionMessage.INTERNAL_ERROR,
+	[SkillsApiErrorCodes.SKILL_NOT_FOUND]: ExceptionMessage.SKILL_NOT_FOUND,
+	[SkillsApiErrorCodes.SKILL_CANNOT_REFERENCE_ITSELF]:
+		ExceptionMessage.SKILL_CANNOT_REFERENCE_ITSELF,
+	[SkillsApiErrorCodes.ROOT_SKILL_PARENT]: ExceptionMessage.ROOT_SKILL_PARENT,
+	[SkillsApiErrorCodes.VALIDATION_ERROR]: ExceptionMessage.VALIDATION_ERROR,
+	[SkillsApiErrorCodes.SKILL_PROGRESS_NOT_FOUND]:
+		ExceptionMessage.SKILL_PROGRESS_NOT_FOUND,
+	[SkillsApiErrorCodes.INTERNAL_ERROR]: ExceptionMessage.INTERNAL_ERROR,
 }

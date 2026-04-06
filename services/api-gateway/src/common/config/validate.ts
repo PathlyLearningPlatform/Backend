@@ -11,7 +11,8 @@ export function validateConfig(config: Record<string, unknown>) {
 			protoDir: config.PROTO_DIR,
 			jwtAudience: config.JWT_AUDIENCE,
 			jwtIssuer: config.JWT_ISSUER,
-			jwtPublicKeyPath: config.JWT_PUBLIC_KEY_PATH
+			jwtPublicKeyPath: config.JWT_PUBLIC_KEY_PATH,
+			skillsServiceUrl: config.SKILLS_SERVICE_URL,
 		},
 	}
 
