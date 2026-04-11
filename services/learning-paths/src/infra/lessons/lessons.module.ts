@@ -1,17 +1,19 @@
-import { DbModule } from '@infra/common/db/db.module';
+import { DbModule } from '@/infra/db/db.module';
 import { Module } from '@nestjs/common';
+import { AuthModule } from '../auth/auth.module';
 import { UnitsModule } from '../units/units.module';
-import { GrpcLessonsController } from './grpc.controller';
 import { lessonHandlersProvider } from './handlers.provider';
+import { LessonsController } from './lessons.controller';
+import { LessonProgressController } from './progress/lessons.controller';
 import { PostgresLessonRepository } from './postgres.repository';
 import { PostgresLessonProgressRepository } from './postgres-progress.repository';
 import { PostgresLessonProgressReadRepository } from './postgres-progress-read.repository';
 import { PostgresLessonReadRepository } from './postgres-read.repository';
-import { InMemoryEventBus } from '../common/adapters';
+import { InMemoryEventBus } from '@infra/common';
 
 @Module({
-	imports: [DbModule, UnitsModule],
-	controllers: [GrpcLessonsController],
+	imports: [DbModule, UnitsModule, AuthModule],
+	controllers: [LessonsController, LessonProgressController],
 	providers: [
 		InMemoryEventBus,
 		PostgresLessonRepository,

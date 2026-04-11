@@ -1,12 +1,12 @@
-import { randomUUID } from "node:crypto";
-import { ActivityNotFoundException, type ICommandHandler } from "@/app/common";
-import { Question } from "@/domain/activities/quizzes/question.entity";
-import { Quiz } from "@/domain/activities/quizzes/quiz.aggregate";
-import { QuestionId } from "@/domain/activities/quizzes/value-objects";
-import type { IActivityRepository } from "@/domain/activities/repositories";
-import { ActivityId } from "@/domain/activities/value-objects/id.vo";
-import { Order } from "@/domain/common";
-import type { QuestionDto } from "../dtos";
+import { randomUUID } from 'node:crypto';
+import { ActivityNotFoundException, type ICommandHandler } from '@/app/common';
+import { Question } from '@/domain/activities/quizzes/question.entity';
+import { Quiz } from '@/domain/activities/quizzes/quiz.aggregate';
+import { QuestionId } from '@/domain/activities/quizzes/value-objects';
+import type { IActivityRepository } from '@/domain/activities/repositories';
+import { ActivityId } from '@/domain/activities/value-objects/id.vo';
+import { Order } from '@/domain/common';
+import type { QuestionDto } from '../dtos';
 
 type AddQuestionCommand = {
 	quizId: string;
@@ -46,6 +46,7 @@ export class AddQuestionHandler
 			quizId: question.quizId.value,
 			content: question.content,
 			correctAnswer: question.correctAnswer,
+			order: question.order.value,
 		};
 	}
 }

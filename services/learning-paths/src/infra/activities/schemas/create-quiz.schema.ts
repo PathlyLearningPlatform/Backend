@@ -1,13 +1,13 @@
-import { emptyStringToNull } from "@pathly-backend/common/index.js";
-import { z } from "zod";
-import { descriptionSchema, lessonIdSchema, nameSchema } from "./fields.schema";
+import { emptyStringToNull } from '@infra/common';
+import { z } from 'zod';
+import { descriptionSchema, lessonIdSchema, nameSchema } from './fields.schema';
 
 export const createQuizSchema = z
 	.object({
 		name: nameSchema,
 		description: z.preprocess(
 			emptyStringToNull,
-			descriptionSchema.optional().default(null),
+			descriptionSchema.nullable().optional().default(null),
 		),
 		lessonId: lessonIdSchema,
 	})

@@ -1,8 +1,0 @@
-import z from 'zod';
-import { lessonProgressIdSchema } from './fields';
-
-export const findLessonProgressByIdSchema = z
-	.object({
-		id: lessonProgressIdSchema,
-	})
-	.strict();

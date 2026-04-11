@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { RepositoryException } from '@pathly-backend/common/index.js';
+import { RepositoryException } from '@infra/common';
 import { and, eq } from 'drizzle-orm';
 import {
 	type ISectionProgressRepository,
 	SectionProgress,
 	type SectionProgressId,
 } from '@/domain/sections';
-import type { Db } from '@/infra/common/types';
-import { DbService } from '../common/db/db.service';
-import { sectionProgressTable } from '../common/db/schemas';
+import type { Db } from '@/infra/db/type';
+import { DbService } from '../db/db.service';
+import { sectionProgressTable } from '../db/schemas';
 
 function createProgressId(sectionId: string, userId: string): string {
 	return `${sectionId}:${userId}`;

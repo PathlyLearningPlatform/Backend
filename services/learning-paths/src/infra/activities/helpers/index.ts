@@ -1,1 +1,1 @@
-export * from "./dto-to-client.helper";
+export * from './client-to-response-dto.helper';

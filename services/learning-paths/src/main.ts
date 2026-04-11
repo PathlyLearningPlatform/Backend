@@ -1,70 +1,57 @@
-import type { Options } from '@grpc/proto-loader';
-import { ReflectionService } from '@grpc/reflection';
+import { HttpStatus } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { type MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { AppLogger } from '@pathly-backend/common/index.js';
-import { COMMON_PACKAGE_NAME } from '@pathly-backend/contracts/common/types.js';
-import { LEARNING_PATHS_V1_PACKAGE_NAME } from '@pathly-backend/contracts/learning_paths/v1/learning_paths.js';
+import { AppLogger } from './infra/logger';
+import { HttpErrorResponse } from './infra/swagger';
 import {
-	HealthImplementation,
-	protoPath as healthCheckProtoPath,
-} from 'grpc-health-check';
-import { join } from 'path';
+	DocumentBuilder,
+	type SwaggerDocumentOptions,
+	SwaggerModule,
+} from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import type { AppConfig } from './infra/config/type';
 
 async function bootstrap() {
-	const protoDir = process.env.PROTO_DIR;
-	const hostname = process.env.HOSTNAME;
-	const port = process.env.PORT;
+	const app = await NestFactory.create(AppModule, {
+		bufferLogs: true,
+	});
 
-	if (!protoDir || !hostname || !port) {
-		throw new Error(
-			'Missing required environment variables: PROTO_DIR, HOSTNAME, PORT.',
-		);
+	const configService = app.get(ConfigService);
+	const appConfig = configService.get<AppConfig['app']>('app');
+
+	if (!appConfig) {
+		throw new Error('Missing app config.');
 	}
 
-	const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-		AppModule,
-		{
-			transport: Transport.GRPC,
-			options: {
-				package: [LEARNING_PATHS_V1_PACKAGE_NAME, COMMON_PACKAGE_NAME],
-				protoPath: [
-					healthCheckProtoPath,
-					join(protoDir, 'learning_paths/v1/learning_paths.proto'),
-					join(protoDir, 'learning_paths/v1/sections.proto'),
-					join(protoDir, 'learning_paths/v1/units.proto'),
-					join(protoDir, 'learning_paths/v1/lessons.proto'),
-					join(protoDir, 'learning_paths/v1/activities.proto'),
-					join(protoDir, 'common/types.proto'),
-				],
-				url: `${hostname}:${port}`,
-				onLoadPackageDefinition: (pkg, server) => {
-					const healthImpl = new HealthImplementation({
-						'': 'UNKNOWN',
-					});
+	const swaggerOptions: SwaggerDocumentOptions = {
+		operationIdFactory: (_controllerKey: string, methodKey: string) =>
+			methodKey,
+	};
+	const swaggerConfig = new DocumentBuilder()
+		.setTitle('Pathly Learning Paths API')
+		.setVersion('1.0')
+		.addGlobalResponse({
+			status: HttpStatus.INTERNAL_SERVER_ERROR,
+			type: HttpErrorResponse,
+		})
+		.addGlobalResponse({
+			status: HttpStatus.BAD_REQUEST,
+			type: HttpErrorResponse,
+		})
+		.build();
 
-					healthImpl.addToServer(server);
-					healthImpl.setStatus('', 'SERVING');
+	const documentFactory = () =>
+		SwaggerModule.createDocument(app, swaggerConfig, swaggerOptions);
+	SwaggerModule.setup('docs', app, documentFactory, {
+		jsonDocumentUrl: 'docs/json',
+		yamlDocumentUrl: 'docs/yaml',
+		raw: ['json', 'yaml'],
+	});
 
-					new ReflectionService(pkg).addToServer(server);
-				},
-				loader: {
-					includeDirs: [
-						join(protoDir),
-						join(protoDir, 'learning_paths/v1'),
-						join(protoDir, 'common'),
-					],
-					arrays: true,
-					defaults: true,
-					enums: String,
-				} as Options,
-			},
-			bufferLogs: true,
-		},
-	);
+	app.enableVersioning();
+
 	app.useLogger(new AppLogger());
-	await app.listen();
+	await app.listen(appConfig.port);
 }
 
 bootstrap();

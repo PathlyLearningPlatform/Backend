@@ -21,8 +21,8 @@ import type {
 	ILearningPathProgressRepository,
 	ILearningPathRepository,
 } from '@/domain/learning-paths';
-import { InMemoryEventBus } from '../common/adapters';
-import { DiToken } from '../common/enums';
+import { InMemoryEventBus } from '@infra/common';
+import { DiToken } from '@infra/common';
 import { PostgresLearningPathRepository } from './postgres.repository';
 import { PostgresLearningPathProgressRepository } from './postgres-progress.repository';
 import { PostgresLearningPathProgressReadRepository } from './postgres-progress-read.repository';

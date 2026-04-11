@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { RepositoryException } from '@pathly-backend/common/index.js';
+import { RepositoryException } from '@infra/common';
 import { and, eq } from 'drizzle-orm';
 import {
 	type ILearningPathProgressRepository,
 	LearningPathProgress,
 	type LearningPathProgressId,
 } from '@/domain/learning-paths';
-import type { Db } from '@/infra/common/types';
-import { DbService } from '../common/db/db.service';
-import { learningPathProgressTable } from '../common/db/schemas';
+import type { Db } from '@/infra/db/type';
+import { DbService } from '../db/db.service';
+import { learningPathProgressTable } from '../db/schemas';
 
 function createProgressId(learningPathId: string, userId: string): string {
 	return `${learningPathId}:${userId}`;

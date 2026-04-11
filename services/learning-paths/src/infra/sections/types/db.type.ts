@@ -1,3 +1,3 @@
-import type { sectionsTable } from "@/infra/common/db/schemas";
+import type { sectionsTable } from '@/infra/db/schemas';
 
 export type DbSection = typeof sectionsTable.$inferSelect;

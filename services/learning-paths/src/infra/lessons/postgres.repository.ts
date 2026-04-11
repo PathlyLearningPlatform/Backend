@@ -1,13 +1,13 @@
-import { DbService } from '@infra/common/db/db.service';
+import { DbService } from '@/infra/db/db.service';
 import { Inject, Injectable } from '@nestjs/common';
-import { RepositoryException } from '@pathly-backend/common/index.js';
+import { RepositoryException } from '@infra/common';
 import { eq } from 'drizzle-orm';
 import { Lesson } from '@/domain/lessons/lesson.aggregate';
 import type { ILessonRepository } from '@/domain/lessons/repositories';
 import { ActivityRef } from '@/domain/lessons/value-objects';
 import type { LessonId } from '@/domain/lessons/value-objects/id.vo';
-import type { Db } from '@/infra/common/types';
-import { activitiesTable, lessonsTable } from '../common/db/schemas';
+import type { Db } from '@/infra/db/type';
+import { activitiesTable, lessonsTable } from '../db/schemas';
 
 @Injectable()
 export class PostgresLessonRepository implements ILessonRepository {

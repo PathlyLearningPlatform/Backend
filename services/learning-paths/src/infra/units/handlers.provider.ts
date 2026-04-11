@@ -20,8 +20,8 @@ import {
 import type { ISectionRepository } from '@/domain/sections/repositories';
 import type { IUnitProgressRepository } from '@/domain/units';
 import type { IUnitRepository } from '@/domain/units/repositories';
-import { InMemoryEventBus } from '../common/adapters';
-import { DiToken } from '../common/enums';
+import { InMemoryEventBus } from '@infra/common';
+import { DiToken } from '@infra/common';
 import { PostgresSectionRepository } from '../sections/postgres.repository';
 import { PostgresUnitRepository } from './postgres.repository';
 import { PostgresUnitProgressRepository } from './postgres-progress.repository';

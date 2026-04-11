@@ -1,11 +1,29 @@
-import { z } from "zod";
-import { ExerciseDifficulty } from "@/domain/activities/exercises/value-objects";
+import { ExerciseDifficulty } from '../enums'
+import { z } from 'zod'
+import { ActivitiesApiConstraints } from '../enums'
 
-export const descriptionSchema = z.string().max(500).nullable();
-export const nameSchema = z.string().max(255);
-export const orderSchema = z.int32().nonnegative();
-export const lessonIdSchema = z.uuid();
-export const refSchema = z.url();
-export const difficultySchema = z.enum(ExerciseDifficulty);
-export const contentSchema = z.string().min(1);
-export const correctAnswerSchema = z.string().min(1);
+export const idSchema = z.uuid()
+export const nameSchema = z
+	.string()
+	.min(1)
+	.max(ActivitiesApiConstraints.MAX_NAME_LENGTH)
+export const descriptionSchema = z
+	.string()
+	.max(ActivitiesApiConstraints.MAX_DESCRIPTION_LENGTH)
+export const lessonIdSchema = z.uuid()
+export const refSchema = z.url()
+export const difficultySchema = z.enum(ExerciseDifficulty)
+
+export const limitSchema = z.coerce
+	.number()
+	.int()
+	.min(ActivitiesApiConstraints.MIN_LIMIT)
+	.max(ActivitiesApiConstraints.MAX_LIMIT)
+export const pageSchema = z.coerce
+	.number()
+	.int()
+	.min(ActivitiesApiConstraints.MIN_PAGE)
+
+export const questionIdSchema = z.uuid()
+export const questionContentSchema = z.string()
+export const questionCorrectAnswerSchema = z.string()

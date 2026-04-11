@@ -1,6 +1,6 @@
-import { DbService } from '@infra/common/db/db.service';
+import { DbService } from '@/infra/db/db.service';
 import { Inject, Injectable } from '@nestjs/common';
-import { RepositoryException } from '@pathly-backend/common/index.js';
+import { RepositoryException } from '@infra/common';
 import { eq } from 'drizzle-orm';
 import type { Activity } from '@/domain/activities/activity.aggregate';
 import { Article } from '@/domain/activities/articles/article.aggregate';
@@ -8,15 +8,18 @@ import { Exercise } from '@/domain/activities/exercises/exercise.aggregate';
 import { Question } from '@/domain/activities/quizzes/question.entity';
 import { Quiz } from '@/domain/activities/quizzes/quiz.aggregate';
 import type { IActivityRepository } from '@/domain/activities/repositories';
-import { type ActivityId, ActivityType } from '@/domain/activities/value-objects';
-import type { Db } from '@/infra/common/types';
+import {
+	type ActivityId,
+	ActivityType,
+} from '@/domain/activities/value-objects';
+import type { Db } from '@/infra/db/type';
 import {
 	activitiesTable,
 	articlesTable,
 	exercisesTable,
 	questionsTable,
 	quizzesTable,
-} from '../common/db/schemas';
+} from '../db/schemas';
 
 @Injectable()
 export class PostgresActivityRepository implements IActivityRepository {

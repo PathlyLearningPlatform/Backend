@@ -1,6 +1,9 @@
-import { z } from "zod";
+import z from 'zod'
+import { SectionsApiConstraints } from '@infra/sections/enums'
 
-export const descriptionSchema = z.string().max(500).nullable();
-export const nameSchema = z.string().max(255);
-export const orderSchema = z.int32().nonnegative();
-export const learningPathIdSchema = z.uuid();
+export const nameSchema = z.string().max(SectionsApiConstraints.MAX_NAME_LENGTH)
+export const descriptionSchema = z
+	.string()
+	.max(SectionsApiConstraints.MAX_DESCRIPTION_LENGTH)
+	.nullable()
+export const learningPathIdSchema = z.uuid()

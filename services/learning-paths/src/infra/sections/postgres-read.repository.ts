@@ -1,10 +1,10 @@
-import * as schema from '@infra/common/db/schemas';
+import * as schema from '@/infra/db/schemas';
 import { Inject, Injectable } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import type { SectionDto } from '@/app/sections/dtos';
 import type { ISectionReadRepository } from '@/app/sections/interfaces';
-import { DbService } from '../common/db/db.service';
+import { DbService } from '../db/db.service';
 import { SectionsApiConstraints } from './enums';
 
 @Injectable()

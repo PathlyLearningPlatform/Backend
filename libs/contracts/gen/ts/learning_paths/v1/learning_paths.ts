@@ -7,7 +7,6 @@
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
-import { SortType } from "../../common/types.js";
 
 export const protobufPackage = "learning_paths.v1";
 
@@ -76,18 +75,9 @@ export interface LearningPathsServiceListRequest {
   options?: LearningPathsServiceListRequest_Options | undefined;
 }
 
-export enum LearningPathsServiceListRequest_OrderByFields {
-  UNSPECIFIED = "ORDER_BY_FIELDS_UNSPECIFIED",
-  NAME = "ORDER_BY_FIELDS_NAME",
-  CREATED_AT = "ORDER_BY_FIELDS_CREATED_AT",
-  UPDATED_AT = "ORDER_BY_FIELDS_UPDATED_AT",
-}
-
 export interface LearningPathsServiceListRequest_Options {
   limit?: number | undefined;
   page?: number | undefined;
-  sortType?: SortType | undefined;
-  orderBy?: LearningPathsServiceListRequest_OrderByFields | undefined;
 }
 
 export interface LearningPathsServiceListResponse {

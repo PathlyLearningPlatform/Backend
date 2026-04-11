@@ -12,8 +12,8 @@ import { PostgresSectionProgressRepository } from '@/infra/sections/postgres-pro
 import { PostgresSectionProgressReadRepository } from '@/infra/sections/postgres-progress-read.repository';
 import { PostgresUnitProgressRepository } from '@/infra/units/postgres-progress.repository';
 import { PostgresUnitProgressReadRepository } from '@/infra/units/postgres-progress-read.repository';
-import { InMemoryEventBus } from './common/adapters';
-import { DiToken } from './common/enums';
+import { InMemoryEventBus } from '@infra/common';
+import { DiToken } from '@infra/common';
 
 export const eventHandlersProvider: Provider[] = [
 	{

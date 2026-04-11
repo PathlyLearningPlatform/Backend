@@ -36,8 +36,8 @@ import {
 import type { IActivityProgressRepository } from '@/domain/activities';
 import type { IActivityRepository } from '@/domain/activities/repositories';
 import type { ILessonRepository } from '@/domain/lessons/repositories';
-import { InMemoryEventBus } from '../common/adapters';
-import { DiToken } from '../common/enums';
+import { InMemoryEventBus } from '@infra/common';
+import { DiToken } from '@infra/common';
 import { PostgresLessonRepository } from '../lessons/postgres.repository';
 import { PostgresActivityRepository } from './postgres.repository';
 import { PostgresActivityProgressRepository } from './postgres-progress.repository';

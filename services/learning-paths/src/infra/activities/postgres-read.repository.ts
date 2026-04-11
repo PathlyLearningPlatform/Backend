@@ -1,4 +1,4 @@
-import * as schema from '@infra/common/db/schemas';
+import * as schema from '@/infra/db/schemas';
 import { Inject, Injectable } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
@@ -14,8 +14,7 @@ import type {
 	ActivityFilter,
 	IActivityReadRepository,
 } from '@/app/activities/interfaces';
-import { ActivityType } from '@/domain/activities/value-objects';
-import { DbService } from '../common/db/db.service';
+import { DbService } from '../db/db.service';
 import { ActivitiesApiConstraints } from './enums';
 
 @Injectable()
@@ -141,11 +140,6 @@ export class PostgresActivityReadRepository implements IActivityReadRepository {
 		// Need to get question counts
 		const result: QuizWithoutQuestionsDto[] = [];
 		for (const row of rows) {
-			const [countRow] = await this.db
-				.select({ id: schema.questionsTable.id })
-				.from(schema.questionsTable)
-				.where(eq(schema.questionsTable.quizId, row.id));
-
 			const questionCountRows = await this.db
 				.select({ id: schema.questionsTable.id })
 				.from(schema.questionsTable)
@@ -248,6 +242,7 @@ export class PostgresActivityReadRepository implements IActivityReadRepository {
 			quizId: q.quizId,
 			content: q.content,
 			correctAnswer: q.correctAnswer,
+			order: q.order,
 		}));
 
 		return {

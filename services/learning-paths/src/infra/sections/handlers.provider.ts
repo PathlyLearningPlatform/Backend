@@ -23,8 +23,8 @@ import {
 import type { ILearningPathRepository } from '@/domain/learning-paths';
 import type { ISectionProgressRepository } from '@/domain/sections';
 import type { ISectionRepository } from '@/domain/sections/repositories';
-import { InMemoryEventBus } from '../common/adapters';
-import { DiToken } from '../common/enums';
+import { InMemoryEventBus } from '@infra/common';
+import { DiToken } from '@infra/common';
 import { PostgresLearningPathRepository } from '../learning-paths/postgres.repository';
 import { PostgresSectionRepository } from './postgres.repository';
 import { PostgresSectionProgressRepository } from './postgres-progress.repository';

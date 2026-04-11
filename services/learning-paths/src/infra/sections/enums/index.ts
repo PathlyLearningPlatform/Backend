@@ -1,1 +1,1 @@
-export * from "./api-constraints.enum";
+export * from './api-constraints.enum'

@@ -1,10 +1,10 @@
-import * as schema from '@infra/common/db/schemas';
+import * as schema from '@/infra/db/schemas';
 import { Inject, Injectable } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import type { UnitDto } from '@/app/units/dtos';
 import type { IUnitReadRepository } from '@/app/units/interfaces';
-import { DbService } from '../common/db/db.service';
+import { DbService } from '../db/db.service';
 import { UnitsApiConstraints } from './enums';
 
 @Injectable()

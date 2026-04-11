@@ -1,13 +1,6 @@
 import type { INestApplication } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
 
-process.env.HOSTNAME ??= 'localhost';
-process.env.PROTO_DIR ??= '/tmp';
-process.env.DB_HOST ??= 'localhost';
-process.env.DB_NAME ??= 'learning_paths';
-process.env.DB_USER ??= 'postgres';
-process.env.DB_PASSWORD ??= 'postgres';
-
 import { AppModule } from '../src/app.module';
 
 describe('App bootstrap (e2e)', () => {

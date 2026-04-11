@@ -1,10 +1,11 @@
-import type { ActivityDto } from "./activity.dto";
+import type { ActivityDto } from './activity.dto';
 
 export interface QuestionDto {
 	id: string;
 	content: string;
 	correctAnswer: string;
 	quizId: string;
+	order: number;
 }
 
 export interface QuizDto extends ActivityDto {

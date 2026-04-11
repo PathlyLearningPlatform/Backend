@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { RepositoryException } from '@pathly-backend/common/index.js';
+import { RepositoryException } from '@infra/common';
 import { and, eq } from 'drizzle-orm';
 import type {
 	ActivityProgressDto,
 	ListActivityProgressDto,
 } from '@/app/activities/dtos';
 import type { IActivityProgressReadRepository } from '@/app/activities/interfaces';
-import type { Db } from '@/infra/common/types';
-import { DbService } from '../common/db/db.service';
-import { activityProgressTable } from '../common/db/schemas';
+import type { Db } from '@/infra/db/type';
+import { DbService } from '../db/db.service';
+import { activityProgressTable } from '../db/schemas';
 import { ActivitiesApiConstraints } from './enums';
 
 @Injectable()

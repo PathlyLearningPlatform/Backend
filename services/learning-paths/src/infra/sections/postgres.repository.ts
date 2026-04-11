@@ -1,13 +1,13 @@
-import { DbService } from '@infra/common/db/db.service';
+import { DbService } from '@/infra/db/db.service';
 import { Inject, Injectable } from '@nestjs/common';
-import { RepositoryException } from '@pathly-backend/common/index.js';
+import { RepositoryException } from '@infra/common';
 import { eq } from 'drizzle-orm';
 import type { ISectionRepository } from '@/domain/sections/repositories';
 import { Section } from '@/domain/sections/section.aggregate';
 import { UnitRef } from '@/domain/sections/value-objects';
 import type { SectionId } from '@/domain/sections/value-objects/id.vo';
-import type { Db } from '@/infra/common/types';
-import { sectionsTable, unitsTable } from '../common/db/schemas';
+import type { Db } from '@/infra/db/type';
+import { sectionsTable, unitsTable } from '../db/schemas';
 
 @Injectable()
 export class PostgresSectionRepository implements ISectionRepository {
