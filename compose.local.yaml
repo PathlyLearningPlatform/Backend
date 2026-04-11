@@ -1,10 +1,98 @@
-name: pathly-backend
-
-include:
-  - ./services/auth/compose.local.yaml
-  - ./services/learning-paths/compose.local.yaml
+name: pathly
 
 services:
+  db:
+    image: postgres:18-alpine
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=db
+    volumes:
+      - db-data:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD', 'pg_isready']
+      timeout: 30s
+      retries: 5
+      start_period: 20s
+    ports:
+      - 5432:5432
+  graph-db:
+    image: neo4j:latest
+    volumes:
+      - graph-db-data:/data
+    environment:
+      - NEO4J_AUTH=neo4j/zaq1@WSX
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p zaq1@WSX 'RETURN 1;'"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+  auth:
+      build:
+        context: ./services/auth
+        target: dev
+      environment:
+        - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+        - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+      volumes:
+        - type: bind
+          source: ./services/auth/realm-export.json
+          target: /opt/keycloak/data/import/realm-export.json
+      healthcheck:
+        test:
+          - CMD-SHELL
+          - > 
+            bash -c '
+              exec 3<>/dev/tcp/localhost/9000;
+              printf "GET /health/ready HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n" >&3;
+              read -r data <&3;
+              status=$${data:8:4};
+              [ "$$status" -lt 400 ]
+            '
+        interval: 10s
+        timeout: 15s
+        retries: 3
+        start_period: 40s
+      ports:
+        - 8080:8080
+  api:
+    build:
+      context: .
+      dockerfile: ./services/api/Dockerfile
+      target: dev
+    environment:
+      - PORT=3000
+      - JWT_AUDIENCE=api
+      - JWT_ISSUER=http://localhost:8080/realms/pathly
+      - JWT_PUBLIC_KEY_PATH=jwt-public-key.pem
+      - DB_HOST=db
+      - DB_NAME=db
+      - DB_PORT=5432
+      - DB_USER=admin
+      - DB_PASSWORD=admin
+    volumes:
+      - ./services/api/src:/usr/src/app/services/api/src
+      - ./services/api/test:/usr/src/app/services/api/test
+      - type: bind
+        source: ./services/api/tsconfig.json
+        target: /usr/src/app/services/api/tsconfig.json
+      - type: bind
+        source: ./services/api/jest.config.ts
+        target: /usr/src/app/services/api/jest.config.ts
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'node', 'healthcheck.js']
+      timeout: 10s
+      start_period: 15s
+    ports:
+      - 3001:3000
   reverse-proxy:
     build:
       context: ./services/reverse-proxy
@@ -16,9 +104,12 @@ services:
     ports:
       - 4000:80
     depends_on:
-      learning-paths:
+      api:
         condition: service_healthy
       auth:
         condition: service_healthy
         restart: true
     restart: always
+volumes:
+  db-data:
+  graph-db-data:
