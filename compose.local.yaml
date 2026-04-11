@@ -3,7 +3,6 @@ name: pathly-backend
 include:
   - ./services/auth/compose.local.yaml
   - ./services/learning-paths/compose.local.yaml
-  - ./services/progress/compose.local.yaml
   - ./services/skills/compose.local.yaml
 
 services:
@@ -24,43 +23,3 @@ services:
         condition: service_healthy
         restart: true
     restart: always
-  api-gateway:
-    build:
-      context: .
-      target: dev
-      dockerfile: ./services/api-gateway/Dockerfile
-    environment:
-      - PORT=3000
-      - HOSTNAME=api-gateway
-      - LEARNING_PATHS_SERVICE_URL=learning-paths:3000
-      - SKILLS_SERVICE_URL=skills:3000
-      - PROGRESS_SERVICE_URL=progress:3000
-      - PROTO_DIR=/usr/src/app/libs/contracts/proto
-      - JWT_AUDIENCE=api
-      - JWT_ISSUER=http://localhost:8080/realms/pathly
-      - JWT_PUBLIC_KEY_PATH=jwt-public-key.pem
-    volumes:
-      - ./services/api-gateway/src:/usr/src/app/services/api-gateway/src
-      - ./services/api-gateway/test:/usr/src/app/services/api-gateway/test
-      - ./services/api-gateway/@types:/usr/src/app/services/api-gateway/@types
-      - ./libs/ts/common/src:/usr/src/app/libs/ts/common/src
-      - ./libs/contracts/proto:/usr/src/app/libs/contracts/proto
-      - type: bind
-        source: ./services/api-gateway/tsconfig.json
-        target: /usr/src/app/services/api-gateway/tsconfig.json
-      - type: bind
-        source: ./services/api-gateway/jest.config.ts
-        target: /usr/src/app/services/api-gateway/jest.config.ts
-    ports:
-      - 3000:3000
-    healthcheck:
-      test: node ./healthcheck.js
-      timeout: 10s
-      start_period: 15s
-    depends_on:
-      learning-paths:
-        condition: service_healthy
-      progress:
-        condition: service_healthy
-      skills:
-        condition: service_healthy
