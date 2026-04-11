@@ -92,11 +92,10 @@ services:
       timeout: 10s
       start_period: 15s
     ports:
-      - 3001:3000
+      - 3000:3000
   reverse-proxy:
     build:
       context: ./services/reverse-proxy
-      target: dev
     volumes:
       - type: bind
         source: ./services/reverse-proxy/nginx.conf
