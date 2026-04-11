@@ -100,6 +100,7 @@ services:
       - type: bind
         source: ./services/reverse-proxy/nginx.conf
         target: /etc/nginx/nginx.conf
+        read_only: true
     ports:
       - 4000:80
     depends_on:
