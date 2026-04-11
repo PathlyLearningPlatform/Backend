@@ -3,7 +3,6 @@ name: pathly-backend
 include:
   - ./services/auth/compose.local.yaml
   - ./services/learning-paths/compose.local.yaml
-  - ./services/skills/compose.local.yaml
 
 services:
   reverse-proxy:
