@@ -15,6 +15,7 @@ import { SectionsModule } from './infra/sections/sections.module';
 import { UnitsModule } from './infra/units/units.module';
 import { AppController } from './app.controller';
 import { AppLoggerModule } from './infra/logger';
+import { SkillsModule } from './infra/skills/skills.module';
 
 @Module({
 	imports: [

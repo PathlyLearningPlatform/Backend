@@ -23,6 +23,13 @@ export function validateConfig(config: Record<string, unknown>) {
 			user: config.DB_USER,
 			password: config.DB_PASSWORD,
 		},
+		graphDb: {
+			host: config.GRAPH_DB_HOST,
+			name: config.GRAPH_DB_NAME,
+			port: parseIntOrReturn(config.GRAPH_DB_PORT),
+			user: config.GRAPH_DB_USER,
+			password: config.GRAPH_DB_PASSWORD,
+		},
 	};
 
 	const result = appConfigSchema.safeParse(transformedConfig);

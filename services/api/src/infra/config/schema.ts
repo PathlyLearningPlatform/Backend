@@ -22,5 +22,12 @@ export const appConfigSchema = z
 				password: z.string(),
 			})
 			.strict(),
+		graphDb: z.object({
+			host: z.hostname(),
+			name: z.string(),
+			password: z.string(),
+			port: z.coerce.number().int(),
+			user: z.string(),
+		}),
 	})
 	.strict();
