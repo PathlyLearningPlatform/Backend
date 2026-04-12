@@ -1,4 +1,3 @@
-import { emptyStringToNull } from '@infra/common';
 import { z } from 'zod';
 import {
 	descriptionSchema,
@@ -10,10 +9,7 @@ import {
 export const createArticleSchema = z
 	.object({
 		name: nameSchema,
-		description: z.preprocess(
-			emptyStringToNull,
-			descriptionSchema.nullable().optional().default(null),
-		),
+		description: descriptionSchema.nullable().optional().default(null),
 		lessonId: lessonIdSchema,
 		ref: refSchema,
 	})

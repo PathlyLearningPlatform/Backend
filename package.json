@@ -6,17 +6,11 @@
   "author": "Kamil Abbasi",
   "main": "index.js",
   "scripts": {
-    "gen:contracts": "chmod u+x ./scripts/linux/gen-contracts.sh && ./scripts/linux/gen-contracts.sh",
-    "build:libs:ts": "chmod u+x ./scripts/linux/build-ts-libs.sh && ./scripts/linux/build-ts-libs.sh",
     "start:local": "chmod u+x ./scripts/linux/start.local.sh && ./scripts/linux/start.local.sh",
     "start": "chmod u+x ./scripts/linux/start.sh && ./scripts/linux/start.sh",
     "stop": "docker compose down"
   },
   "workspaces": [
-    "services/api",
-    "services/api-gateway",
-    "libs/contracts",
-    "libs/ts/common",
-    "services/skills"
+    "services/api"
   ]
 }

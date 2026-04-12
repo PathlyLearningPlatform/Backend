@@ -1,5 +1,11 @@
-import type { LearningPathDto } from '@/app/learning-paths/dtos';
-import type { LearningPathResponseDto } from '../dtos';
+import type {
+	LearningPathDto,
+	LearningPathProgressDto,
+} from '@/app/learning-paths/dtos';
+import type {
+	LearningPathProgressResponseDto,
+	LearningPathResponseDto,
+} from '../dtos';
 
 export function clientLearningPathToResponseDto(
 	path: LearningPathDto,
@@ -11,5 +17,18 @@ export function clientLearningPathToResponseDto(
 		sectionCount: path.sectionCount,
 		description: path.description,
 		updatedAt: path.updatedAt ? path.updatedAt.toISOString() : null,
+	};
+}
+
+export function clientLearningPathProgressToResponseDto(
+	progress: LearningPathProgressDto,
+): LearningPathProgressResponseDto {
+	return {
+		completedAt: progress.completedAt?.toISOString() ?? null,
+		completedSectionCount: progress.completedSectionCount,
+		id: progress.id,
+		learningPathId: progress.learningPathId,
+		totalSectionCount: progress.totalSectionCount,
+		userId: progress.userId,
 	};
 }

@@ -1,5 +1,5 @@
-import type { LessonDto } from '@/app/lessons/dtos';
-import type { LessonResponseDto } from '../dtos';
+import type { LessonDto, LessonProgressDto } from '@/app/lessons/dtos';
+import type { LessonProgressResponseDto, LessonResponseDto } from '../dtos';
 
 export function clientLessonToResponseDto(
 	lesson: LessonDto,
@@ -13,5 +13,19 @@ export function clientLessonToResponseDto(
 		unitId: lesson.unitId,
 		description: lesson.description,
 		updatedAt: lesson.updatedAt ? lesson.updatedAt.toISOString() : null,
+	};
+}
+
+export function clientLessonProgressToResponseDto(
+	progress: LessonProgressDto,
+): LessonProgressResponseDto {
+	return {
+		id: progress.id,
+		lessonId: progress.lessonId,
+		unitId: progress.unitId,
+		userId: progress.userId,
+		completedAt: progress.completedAt?.toISOString() ?? null,
+		totalActivityCount: progress.totalActivityCount,
+		completedActivityCount: progress.completedActivityCount,
 	};
 }

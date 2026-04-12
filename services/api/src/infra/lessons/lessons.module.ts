@@ -4,7 +4,7 @@ import { AuthModule } from '../auth/auth.module';
 import { UnitsModule } from '../units/units.module';
 import { lessonHandlersProvider } from './handlers.provider';
 import { LessonsController } from './lessons.controller';
-import { LessonProgressController } from './progress/lessons.controller';
+import { LessonProgressController } from './progress.controller';
 import { PostgresLessonRepository } from './postgres.repository';
 import { PostgresLessonProgressRepository } from './postgres-progress.repository';
 import { PostgresLessonProgressReadRepository } from './postgres-progress-read.repository';

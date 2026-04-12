@@ -16,12 +16,7 @@ import {
 	ApiNotFoundResponse,
 	ApiOkResponse,
 } from '@nestjs/swagger';
-import { HttpErrorResponse } from '@infra/swagger';
-import {
-	HttpErrorDto,
-	HttpValidationPipe,
-	nullToEmptyString,
-} from '@infra/common';
+import { HttpErrorDto, HttpValidationPipe } from '@infra/common';
 import type { UpdateArticleHandler } from '@/app/activities/commands';
 import type { FindArticleByIdHandler } from '@/app/activities/queries';
 import {
@@ -55,7 +50,7 @@ export class ArticlesController {
 	) {}
 
 	@ApiOkResponse({ type: FindArticleByIdResponseDto })
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
 	@Get(':id')
 	async findById(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -85,7 +80,7 @@ export class ArticlesController {
 	}
 
 	@ApiBody({ type: CreateArticleDto })
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
 	@ApiCreatedResponse({ type: CreateArticleResponseDto })
 	@Post()
 	async create(
@@ -95,7 +90,7 @@ export class ArticlesController {
 		try {
 			const result = await this.addArticleHandler.execute({
 				name: body.name,
-				description: nullToEmptyString(body.description),
+				description: body.description,
 				lessonId: body.lessonId,
 				ref: body.ref,
 			});
@@ -121,7 +116,7 @@ export class ArticlesController {
 
 	@ApiBody({ type: UpdateArticleDto })
 	@ApiOkResponse({ type: UpdateArticleResponseDto })
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
 	@Patch(':id')
 	async update(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -133,7 +128,7 @@ export class ArticlesController {
 				where: { id },
 				props: {
 					name: body.name,
-					description: nullToEmptyString(body.description),
+					description: body.description,
 					ref: body.ref,
 				},
 			});

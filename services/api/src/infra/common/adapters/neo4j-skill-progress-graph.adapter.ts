@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Neo4jService } from '@infra/neo4j/neo4j.service';
+import { Neo4jService } from '@/infra/neo4j/neo4j.service';
 import { ISkillProgressGraph } from '@/domain/interfaces';
 import { SkillProgress, SkillProgressId } from '@/domain/skills';
 import { DbException } from '../exceptions/db.exception';

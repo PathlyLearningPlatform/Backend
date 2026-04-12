@@ -1,6 +1,6 @@
 import { DbService } from '@/infra/db/db.service';
 import { Inject, Injectable } from '@nestjs/common';
-import { RepositoryException } from '@infra/common';
+import { DbException } from '@infra/common';
 import { eq } from 'drizzle-orm';
 import { Lesson } from '@/domain/lessons/lesson.aggregate';
 import type { ILessonRepository } from '@/domain/lessons/repositories';
@@ -61,7 +61,7 @@ export class PostgresLessonRepository implements ILessonRepository {
 
 			return result;
 		} catch (err) {
-			throw new RepositoryException('postgres exception', err);
+			throw new DbException('postgres exception', err);
 		}
 	}
 
@@ -73,7 +73,7 @@ export class PostgresLessonRepository implements ILessonRepository {
 
 			return result.rows.length > 0;
 		} catch (err) {
-			throw new RepositoryException('postgres exception', err);
+			throw new DbException('postgres exception', err);
 		}
 	}
 
@@ -102,7 +102,7 @@ export class PostgresLessonRepository implements ILessonRepository {
 					},
 				});
 		} catch (err) {
-			throw new RepositoryException('postgres exception', err);
+			throw new DbException('postgres exception', err);
 		}
 	}
 }

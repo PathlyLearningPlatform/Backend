@@ -17,12 +17,7 @@ import {
 	ApiNotFoundResponse,
 	ApiOkResponse,
 } from '@nestjs/swagger';
-import { HttpErrorResponse } from '@infra/swagger';
-import {
-	HttpErrorDto,
-	HttpValidationPipe,
-	nullToEmptyString,
-} from '@infra/common';
+import { HttpErrorDto, HttpValidationPipe } from '@infra/common';
 import type {
 	AddQuestionHandler,
 	RemoveQuestionHandler,
@@ -45,7 +40,7 @@ import {
 	CreateQuizResponseDto,
 	FindQuestionByIdResponseDto,
 	FindQuizByIdResponseDto,
-	FindQuestionsResponseDto,
+	ListQuestionsResponseDto,
 	RemoveQuestionResponseDto,
 	UpdateQuestionResponseDto,
 	UpdateQuizResponseDto,
@@ -80,7 +75,7 @@ export class QuizzesController {
 	) {}
 
 	@ApiOkResponse({ type: FindQuizByIdResponseDto })
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
 	@Get(':id')
 	async findById(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -110,7 +105,7 @@ export class QuizzesController {
 	}
 
 	@ApiBody({ type: CreateQuizDto })
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
 	@ApiCreatedResponse({ type: CreateQuizResponseDto })
 	@Post()
 	async create(
@@ -120,7 +115,7 @@ export class QuizzesController {
 		try {
 			const result = await this.addQuizHandler.execute({
 				name: body.name,
-				description: nullToEmptyString(body.description),
+				description: body.description,
 				lessonId: body.lessonId,
 			});
 
@@ -145,7 +140,7 @@ export class QuizzesController {
 
 	@ApiBody({ type: UpdateQuizDto })
 	@ApiOkResponse({ type: UpdateQuizResponseDto })
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
 	@Patch(':id')
 	async update(
 		@Param('id', ParseUUIDPipe) _id: string,
@@ -158,7 +153,7 @@ export class QuizzesController {
 	}
 
 	@ApiOkResponse({
-		type: FindQuestionsResponseDto,
+		type: ListQuestionsResponseDto,
 	})
 	@ApiNotFoundResponse({
 		type: HttpErrorDto,
@@ -166,7 +161,7 @@ export class QuizzesController {
 	@Get(':id/questions')
 	async listQuestions(
 		@Param('id', ParseUUIDPipe) id: string,
-	): Promise<FindQuestionsResponseDto> {
+	): Promise<ListQuestionsResponseDto> {
 		try {
 			const result = await this.findQuizByIdHandler.execute({
 				where: { id },

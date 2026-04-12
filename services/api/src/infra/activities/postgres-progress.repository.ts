@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { RepositoryException } from '@infra/common';
+import { DbException } from '@infra/common';
 import { and, eq } from 'drizzle-orm';
 import {
 	ActivityProgress,
@@ -47,7 +47,7 @@ export class PostgresActivityProgressRepository
 				completedAt: activityProgress.completedAt,
 			});
 		} catch (err) {
-			throw new RepositoryException('drizzle err', err);
+			throw new DbException('drizzle err', err);
 		}
 	}
 
@@ -75,7 +75,7 @@ export class PostgresActivityProgressRepository
 					},
 				});
 		} catch (err) {
-			throw new RepositoryException('drizzle err', err);
+			throw new DbException('drizzle err', err);
 		}
 	}
 
@@ -92,7 +92,7 @@ export class PostgresActivityProgressRepository
 
 			return result.rows.length > 0;
 		} catch (err) {
-			throw new RepositoryException('drizzle err', err);
+			throw new DbException('drizzle err', err);
 		}
 	}
 }

@@ -1,50 +1,73 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { UnitsApiConstraints } from '@infra/units/enums'
+import { ApiProperty } from '@nestjs/swagger';
+import { UnitsApiConstraints } from '@infra/units/enums';
 
 export class UnitResponseDto {
 	@ApiProperty({
 		type: 'string',
 		format: 'uuid',
 	})
-	id: string
+	id: string;
 
 	@ApiProperty({
 		type: 'string',
 		format: 'uuid',
 	})
-	sectionId: string
+	sectionId: string;
 
 	@ApiProperty({
 		type: 'string',
 		format: 'date-time',
 	})
-	createdAt: string
+	createdAt: string;
 
 	@ApiProperty({
 		type: 'string',
 		format: 'date-time',
 		nullable: true,
 	})
-	updatedAt: string | null
+	updatedAt: string | null;
 
 	@ApiProperty({
 		type: 'string',
 		maxLength: UnitsApiConstraints.MAX_NAME_LENGTH,
 	})
-	name: string
+	name: string;
 
 	@ApiProperty({
 		type: 'string',
 		maxLength: UnitsApiConstraints.MAX_DESCRIPTION_LENGTH,
 		nullable: true,
 	})
-	description: string | null
+	description: string | null;
 
 	@ApiProperty({
 		type: 'number',
 	})
-	order: number
+	order: number;
 
 	@ApiProperty()
-	lessonCount: number
+	lessonCount: number;
+}
+
+export class UnitProgressResponseDto {
+	@ApiProperty()
+	id: string;
+
+	@ApiProperty()
+	unitId: string;
+
+	@ApiProperty()
+	sectionId: string;
+
+	@ApiProperty()
+	userId: string;
+
+	@ApiProperty({ nullable: true })
+	completedAt: string | null;
+
+	@ApiProperty()
+	totalLessonCount: number;
+
+	@ApiProperty()
+	completedLessonCount: number;
 }

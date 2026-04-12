@@ -7,7 +7,7 @@ export const appConfigSchema = z
 	.object({
 		app: z
 			.object({
-				port: z.int32().default(3000),
+				port: z.coerce.number().int().default(3000),
 				jwtAudience: z.string(),
 				jwtIssuer: z.string(),
 				jwtPublicKeyPath: z.string(),
@@ -17,7 +17,7 @@ export const appConfigSchema = z
 			.object({
 				host: z.string(),
 				name: z.string(),
-				port: z.int32().default(5432),
+				port: z.coerce.number().int().default(5432),
 				user: z.string(),
 				password: z.string(),
 			})

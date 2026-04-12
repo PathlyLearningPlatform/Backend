@@ -10,7 +10,6 @@ import {
 	Query,
 } from '@nestjs/common';
 import { ApiNotFoundResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
-import { HttpErrorResponse } from '@infra/swagger';
 import { HttpErrorDto, HttpValidationPipe } from '@infra/common';
 import type { RemoveActivityHandler } from '@/app/activities/commands';
 import type {
@@ -20,13 +19,13 @@ import type {
 import { ActivityNotFoundException } from '@/app/common';
 import { DiToken } from '@infra/common';
 import { ExceptionMessage } from '@infra/common';
-import { FindActivitiesQueryDto } from './dtos';
+import { ListActivitiesQueryDto } from './dtos';
 import {
-	FindActivitiesResponseDto,
+	ListActivitiesResponseDto,
 	FindActivityByIdResponseDto,
 } from './dtos/responses';
 import { clientActivityToResponseDto } from './helpers';
-import { findActivitiesSchema } from './schemas';
+import { listActivitiesQuerySchema } from './schemas';
 
 @Controller({
 	path: 'activities',
@@ -42,13 +41,13 @@ export class ActivitiesController {
 		private readonly removeActivityHandler: RemoveActivityHandler,
 	) {}
 
-	@ApiQuery({ type: FindActivitiesQueryDto })
-	@ApiOkResponse({ type: FindActivitiesResponseDto })
+	@ApiQuery({ type: ListActivitiesQueryDto })
+	@ApiOkResponse({ type: ListActivitiesResponseDto })
 	@Get()
 	async list(
-		@Query(new HttpValidationPipe(findActivitiesSchema))
-		query: FindActivitiesQueryDto,
-	): Promise<FindActivitiesResponseDto> {
+		@Query(new HttpValidationPipe(listActivitiesQuerySchema))
+		query: ListActivitiesQueryDto,
+	): Promise<ListActivitiesResponseDto> {
 		try {
 			const result = await this.listActivitiesHandler.execute({
 				options: { limit: query.limit, page: query.page },
@@ -68,7 +67,7 @@ export class ActivitiesController {
 	}
 
 	@ApiOkResponse({ type: FindActivityByIdResponseDto })
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
 	@Get(':id')
 	async findById(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -98,7 +97,7 @@ export class ActivitiesController {
 	}
 
 	@ApiOkResponse()
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
 	@Delete(':id')
 	async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
 		try {

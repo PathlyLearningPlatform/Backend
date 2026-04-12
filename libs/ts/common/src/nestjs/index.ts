@@ -1,7 +1,0 @@
-export * from './filters/index.js'
-export * from './interceptors/index.js'
-export * from './modules/index.js'
-export * from './pipes/index.js'
-export * from './exceptions/index.js'
-export * from './swagger/index.js'
-export * from './helpers/index.js'

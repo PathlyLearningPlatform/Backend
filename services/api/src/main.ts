@@ -2,7 +2,6 @@ import { HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { AppLogger } from './infra/logger';
-import { HttpErrorResponse } from './infra/swagger';
 import {
 	DocumentBuilder,
 	type SwaggerDocumentOptions,
@@ -10,6 +9,7 @@ import {
 } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import type { AppConfig } from './infra/config/type';
+import { HttpErrorDto } from './infra/common';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule, {
@@ -32,11 +32,11 @@ async function bootstrap() {
 		.setVersion('1.0')
 		.addGlobalResponse({
 			status: HttpStatus.INTERNAL_SERVER_ERROR,
-			type: HttpErrorResponse,
+			type: HttpErrorDto,
 		})
 		.addGlobalResponse({
 			status: HttpStatus.BAD_REQUEST,
-			type: HttpErrorResponse,
+			type: HttpErrorDto,
 		})
 		.build();
 

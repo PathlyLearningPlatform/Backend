@@ -1,94 +1,111 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty } from '@nestjs/swagger';
 import {
 	ActivitiesApiConstraints,
 	ActivityType,
 	ExerciseDifficulty,
-} from '../enums'
+} from '../enums';
 
 export class ActivityResponseDto {
 	@ApiProperty({
 		type: 'string',
 		format: 'uuid',
 	})
-	id: string
+	id: string;
 
 	@ApiProperty({
 		type: 'string',
 		format: 'uuid',
 	})
-	lessonId: string
+	lessonId: string;
 
 	@ApiProperty({
 		type: 'string',
 		format: 'date-time',
 	})
-	createdAt: string
+	createdAt: string;
 
 	@ApiProperty({
 		type: 'string',
 		format: 'date-time',
 		nullable: true,
 	})
-	updatedAt: string | null
+	updatedAt: string | null;
 
 	@ApiProperty({
 		type: 'string',
 		maxLength: ActivitiesApiConstraints.MAX_NAME_LENGTH,
 	})
-	name: string
+	name: string;
 
 	@ApiProperty({
 		type: 'string',
 		maxLength: ActivitiesApiConstraints.MAX_DESCRIPTION_LENGTH,
 		nullable: true,
 	})
-	description: string | null
+	description: string | null;
 
 	@ApiProperty({
 		type: 'number',
 	})
-	order: number
+	order: number;
 
 	@ApiProperty({
 		enum: ActivityType,
 	})
-	type: ActivityType
+	type: ActivityType;
 }
 
 export class ArticleResponseDto extends ActivityResponseDto {
 	@ApiProperty({
 		type: 'string',
 	})
-	ref: string
+	ref: string;
 }
 
 export class QuestionResponseDto {
 	@ApiProperty()
-	id: string
+	id: string;
 
 	@ApiProperty()
-	quizId: string
+	quizId: string;
 
 	@ApiProperty()
-	order: number
+	order: number;
 
 	@ApiProperty()
-	content: string
+	content: string;
 
 	@ApiProperty()
-	correctAnswer: string
+	correctAnswer: string;
 }
 
 export class QuizResponseDto extends ActivityResponseDto {
 	@ApiProperty({
 		type: [QuestionResponseDto],
 	})
-	questions: QuestionResponseDto[]
+	questions: QuestionResponseDto[];
 }
 
 export class ExerciseResponseDto extends ActivityResponseDto {
 	@ApiProperty({
 		enum: ExerciseDifficulty,
 	})
-	difficulty: ExerciseDifficulty
+	difficulty: ExerciseDifficulty;
+}
+
+export class ActivityProgressResponseDto {
+	@ApiProperty()
+	id: string;
+
+	@ApiProperty()
+	activityId: string;
+
+	@ApiProperty()
+	lessonId: string;
+
+	@ApiProperty()
+	userId: string;
+
+	@ApiProperty({ nullable: true })
+	completedAt: string | null;
 }

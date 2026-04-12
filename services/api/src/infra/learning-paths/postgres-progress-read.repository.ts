@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { RepositoryException } from '@infra/common';
+import { DbException } from '@infra/common';
 import { and, eq } from 'drizzle-orm';
 import type {
 	LearningPathProgressDto,
@@ -41,7 +41,7 @@ export class PostgresLearningPathProgressReadRepository
 				.limit(limit)
 				.offset(limit * page);
 		} catch (err) {
-			throw new RepositoryException('drizzle err', err);
+			throw new DbException('drizzle err', err);
 		}
 	}
 
@@ -54,7 +54,7 @@ export class PostgresLearningPathProgressReadRepository
 
 			return learningPathProgress ?? null;
 		} catch (err) {
-			throw new RepositoryException('drizzle err', err);
+			throw new DbException('drizzle err', err);
 		}
 	}
 
@@ -75,7 +75,7 @@ export class PostgresLearningPathProgressReadRepository
 
 			return learningPathProgress ?? null;
 		} catch (err) {
-			throw new RepositoryException('drizzle err', err);
+			throw new DbException('drizzle err', err);
 		}
 	}
 }

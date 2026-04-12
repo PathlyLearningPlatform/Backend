@@ -16,12 +16,7 @@ import {
 	ApiNotFoundResponse,
 	ApiOkResponse,
 } from '@nestjs/swagger';
-import { HttpErrorResponse } from '@infra/swagger';
-import {
-	HttpErrorDto,
-	HttpValidationPipe,
-	nullToEmptyString,
-} from '@infra/common';
+import { HttpErrorDto, HttpValidationPipe } from '@infra/common';
 import type { UpdateExerciseHandler } from '@/app/activities/commands';
 import type { FindExerciseByIdHandler } from '@/app/activities/queries';
 import {
@@ -74,7 +69,7 @@ export class ExercisesController {
 	}
 
 	@ApiOkResponse({ type: FindExerciseByIdResponseDto })
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
 	@Get(':id')
 	async findById(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -104,7 +99,7 @@ export class ExercisesController {
 	}
 
 	@ApiBody({ type: CreateExerciseDto })
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
 	@ApiCreatedResponse({ type: CreateExerciseResponseDto })
 	@Post()
 	async create(
@@ -122,7 +117,7 @@ export class ExercisesController {
 
 			const result = await this.addExerciseHandler.execute({
 				name: body.name,
-				description: nullToEmptyString(body.description),
+				description: body.description,
 				lessonId: body.lessonId,
 				difficulty,
 			});
@@ -148,7 +143,7 @@ export class ExercisesController {
 
 	@ApiBody({ type: UpdateExerciseDto })
 	@ApiOkResponse({ type: UpdateExerciseResponseDto })
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
 	@Patch(':id')
 	async update(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -160,7 +155,7 @@ export class ExercisesController {
 				where: { id },
 				props: {
 					name: body.name,
-					description: nullToEmptyString(body.description),
+					description: body.description,
 					difficulty: this.toDomainDifficulty(body.difficulty),
 				},
 			});

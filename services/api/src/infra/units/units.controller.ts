@@ -21,12 +21,7 @@ import {
 	ApiOkResponse,
 	ApiQuery,
 } from '@nestjs/swagger';
-import { HttpErrorResponse } from '@infra/swagger';
-import {
-	HttpErrorDto,
-	HttpValidationPipe,
-	nullToEmptyString,
-} from '@infra/common';
+import { HttpErrorDto, HttpValidationPipe } from '@infra/common';
 import { SectionNotFoundException, UnitNotFoundException } from '@/app/common';
 import type { AddUnitHandler } from '@/app/sections/commands';
 import type {
@@ -44,15 +39,15 @@ import {
 	CreateUnitBodyDto,
 	CreateUnitResponseDto,
 	FindUnitByIdResponseDto,
-	FindUnitsQueryDto,
-	FindUnitsResponseDto,
+	ListUnitsQueryDto,
+	ListUnitsResponseDto,
 	UpdateUnitBodyDto,
 	UpdateUnitResponseDto,
 } from './dtos';
 import { clientUnitToResponseDto } from './helpers';
 import {
 	createUnitBodySchema,
-	findUnitsQuerySchema,
+	listUnitsQuerySchema,
 	updateUnitBodySchema,
 } from './schemas';
 
@@ -74,13 +69,13 @@ export class UnitsController {
 		private readonly removeUnitHandler: RemoveUnitHandler,
 	) {}
 
-	@ApiQuery({ type: FindUnitsQueryDto })
-	@ApiOkResponse({ type: FindUnitsResponseDto })
+	@ApiQuery({ type: ListUnitsQueryDto })
+	@ApiOkResponse({ type: ListUnitsResponseDto })
 	@Get()
 	async list(
-		@Query(new HttpValidationPipe(findUnitsQuerySchema))
-		query: FindUnitsQueryDto,
-	): Promise<FindUnitsResponseDto> {
+		@Query(new HttpValidationPipe(listUnitsQuerySchema))
+		query: ListUnitsQueryDto,
+	): Promise<ListUnitsResponseDto> {
 		try {
 			const result = await this.listUnitsHandler.execute({
 				options: query,
@@ -98,7 +93,7 @@ export class UnitsController {
 	}
 
 	@ApiOkResponse({ type: FindUnitByIdResponseDto })
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
 	@Get(':id')
 	async findById(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -124,8 +119,8 @@ export class UnitsController {
 	}
 
 	@ApiBody({ type: CreateUnitBodyDto })
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
-	@ApiConflictResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
+	@ApiConflictResponse({ type: HttpErrorDto })
 	@ApiCreatedResponse({ type: CreateUnitResponseDto })
 	@Post()
 	async create(
@@ -135,7 +130,7 @@ export class UnitsController {
 		try {
 			const result = await this.addUnitHandler.execute({
 				name: body.name,
-				description: nullToEmptyString(body.description),
+				description: body.description,
 				sectionId: body.sectionId,
 			});
 
@@ -158,8 +153,8 @@ export class UnitsController {
 
 	@ApiBody({ type: UpdateUnitBodyDto })
 	@ApiOkResponse({ type: UpdateUnitResponseDto })
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
-	@ApiConflictResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
+	@ApiConflictResponse({ type: HttpErrorDto })
 	@Patch(':id')
 	async update(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -171,7 +166,7 @@ export class UnitsController {
 				where: { id },
 				props: {
 					name: body.name,
-					description: nullToEmptyString(body.description),
+					description: body.description,
 				},
 			});
 
@@ -193,8 +188,8 @@ export class UnitsController {
 	}
 
 	@ApiOkResponse()
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
-	@ApiConflictResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
+	@ApiConflictResponse({ type: HttpErrorDto })
 	@Delete(':id')
 	async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
 		try {

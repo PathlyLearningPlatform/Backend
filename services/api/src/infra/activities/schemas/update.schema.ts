@@ -1,4 +1,3 @@
-import { emptyStringToNull } from '@infra/common';
 import { z } from 'zod';
 import {
 	descriptionSchema,
@@ -12,10 +11,7 @@ import {
 
 export const updateActivitySchema = z.object({
 	name: nameSchema.optional(),
-	description: z.preprocess(
-		emptyStringToNull,
-		descriptionSchema.optional().nullable(),
-	),
+	description: descriptionSchema.optional().nullable(),
 	lessonId: lessonIdSchema.optional(),
 });
 

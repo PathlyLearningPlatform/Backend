@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { RepositoryException } from '@infra/common';
+import { DbException } from '@infra/common';
 import { and, eq } from 'drizzle-orm';
 import type { ListUnitProgressDto, UnitProgressDto } from '@/app/units/dtos';
 import type { IUnitProgressReadRepository } from '@/app/units/interfaces';
@@ -37,7 +37,7 @@ export class PostgresUnitProgressReadRepository
 				.limit(limit)
 				.offset(limit * page);
 		} catch (err) {
-			throw new RepositoryException('drizzle err', err);
+			throw new DbException('drizzle err', err);
 		}
 	}
 
@@ -50,7 +50,7 @@ export class PostgresUnitProgressReadRepository
 
 			return unitProgress ?? null;
 		} catch (err) {
-			throw new RepositoryException('drizzle err', err);
+			throw new DbException('drizzle err', err);
 		}
 	}
 
@@ -71,7 +71,7 @@ export class PostgresUnitProgressReadRepository
 
 			return unitProgress ?? null;
 		} catch (err) {
-			throw new RepositoryException('drizzle err', err);
+			throw new DbException('drizzle err', err);
 		}
 	}
 }

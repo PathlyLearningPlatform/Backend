@@ -1,6 +1,6 @@
 import { DbService } from '@/infra/db/db.service';
 import { Inject, Injectable } from '@nestjs/common';
-import { RepositoryException } from '@infra/common';
+import { DbException } from '@infra/common';
 import { eq } from 'drizzle-orm';
 import { Order } from '@/domain/common';
 import type { ILearningPathRepository } from '@/domain/learning-paths';
@@ -63,7 +63,7 @@ export class PostgresLearningPathRepository implements ILearningPathRepository {
 
 			return result;
 		} catch (err) {
-			throw new RepositoryException('postgres exception', err);
+			throw new DbException('postgres exception', err);
 		}
 	}
 
@@ -75,7 +75,7 @@ export class PostgresLearningPathRepository implements ILearningPathRepository {
 
 			return result.rows.length > 0;
 		} catch (err) {
-			throw new RepositoryException('postgres exception', err);
+			throw new DbException('postgres exception', err);
 		}
 	}
 
@@ -101,7 +101,7 @@ export class PostgresLearningPathRepository implements ILearningPathRepository {
 					},
 				});
 		} catch (err) {
-			throw new RepositoryException('postgres exception', err);
+			throw new DbException('postgres exception', err);
 		}
 	}
 }

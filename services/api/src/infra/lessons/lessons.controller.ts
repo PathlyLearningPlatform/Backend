@@ -21,12 +21,7 @@ import {
 	ApiOkResponse,
 	ApiQuery,
 } from '@nestjs/swagger';
-import { HttpErrorResponse } from '@infra/swagger';
-import {
-	HttpErrorDto,
-	HttpValidationPipe,
-	nullToEmptyString,
-} from '@infra/common';
+import { HttpErrorDto, HttpValidationPipe } from '@infra/common';
 import { LessonNotFoundException, UnitNotFoundException } from '@/app/common';
 import type {
 	RemoveLessonHandler,
@@ -43,8 +38,8 @@ import { ExceptionMessage } from '@infra/common';
 import {
 	CreateLessonBodyDto,
 	CreateLessonResponseDto,
-	FindLessonsQueryDto,
-	FindLessonsResponseDto,
+	ListLessonsQueryDto,
+	ListLessonsResponseDto,
 	FindLessonByIdResponseDto,
 	UpdateLessonBodyDto,
 	UpdateLessonResponseDto,
@@ -52,7 +47,7 @@ import {
 import { clientLessonToResponseDto } from './helpers';
 import {
 	createLessonBodySchema,
-	findLessonsQuerySchema,
+	listLessonsQuerySchema,
 	updateLessonBodySchema,
 } from './schemas';
 
@@ -74,13 +69,13 @@ export class LessonsController {
 		private readonly removeLessonHandler: RemoveLessonHandler,
 	) {}
 
-	@ApiQuery({ type: FindLessonsQueryDto })
-	@ApiOkResponse({ type: FindLessonsResponseDto })
+	@ApiQuery({ type: ListLessonsQueryDto })
+	@ApiOkResponse({ type: ListLessonsResponseDto })
 	@Get()
 	async list(
-		@Query(new HttpValidationPipe(findLessonsQuerySchema))
-		query: FindLessonsQueryDto,
-	): Promise<FindLessonsResponseDto> {
+		@Query(new HttpValidationPipe(listLessonsQuerySchema))
+		query: ListLessonsQueryDto,
+	): Promise<ListLessonsResponseDto> {
 		try {
 			const result = await this.listLessonsHandler.execute({
 				options: query,
@@ -98,7 +93,7 @@ export class LessonsController {
 	}
 
 	@ApiOkResponse({ type: FindLessonByIdResponseDto })
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
 	@Get(':id')
 	async findById(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -126,8 +121,8 @@ export class LessonsController {
 	}
 
 	@ApiBody({ type: CreateLessonBodyDto })
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
-	@ApiConflictResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
+	@ApiConflictResponse({ type: HttpErrorDto })
 	@ApiCreatedResponse({ type: CreateLessonResponseDto })
 	@Post()
 	async create(
@@ -137,7 +132,7 @@ export class LessonsController {
 		try {
 			const result = await this.addLessonHandler.execute({
 				name: body.name,
-				description: nullToEmptyString(body.description),
+				description: body.description,
 				unitId: body.unitId,
 			});
 
@@ -160,8 +155,8 @@ export class LessonsController {
 
 	@ApiBody({ type: UpdateLessonBodyDto })
 	@ApiOkResponse({ type: UpdateLessonResponseDto })
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
-	@ApiConflictResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
+	@ApiConflictResponse({ type: HttpErrorDto })
 	@Patch(':id')
 	async update(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -173,7 +168,7 @@ export class LessonsController {
 				where: { id },
 				props: {
 					name: body.name,
-					description: nullToEmptyString(body.description),
+					description: body.description,
 				},
 			});
 
@@ -195,8 +190,8 @@ export class LessonsController {
 	}
 
 	@ApiOkResponse()
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
-	@ApiConflictResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
+	@ApiConflictResponse({ type: HttpErrorDto })
 	@Delete(':id')
 	async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
 		try {

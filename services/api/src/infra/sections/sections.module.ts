@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
 import { LearningPathsModule } from '../learning-paths/learning-paths.module';
 import { sectionHandlersProvider } from './handlers.provider';
-import { SectionProgressController } from './progress/sections.controller';
+import { SectionProgressController } from './progress.controller';
 import { SectionsController } from './sections.controller';
 import { PostgresSectionRepository } from './postgres.repository';
 import { PostgresSectionProgressRepository } from './postgres-progress.repository';

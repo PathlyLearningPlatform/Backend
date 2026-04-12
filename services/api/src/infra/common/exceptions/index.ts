@@ -1,3 +1,3 @@
-export * from './app.exception';
 export * from './config.exception';
-export * from './repository';
+export * from './infra.exception';
+export * from './db.exception';

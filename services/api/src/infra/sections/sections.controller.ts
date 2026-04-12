@@ -21,12 +21,7 @@ import {
 	ApiOkResponse,
 	ApiQuery,
 } from '@nestjs/swagger';
-import { HttpErrorResponse } from '@infra/swagger';
-import {
-	HttpErrorDto,
-	HttpValidationPipe,
-	nullToEmptyString,
-} from '@infra/common';
+import { HttpErrorDto, HttpValidationPipe } from '@infra/common';
 import type { AddSectionHandler } from '@/app/learning-paths/commands';
 import {
 	LearningPathNotFoundException,
@@ -47,15 +42,15 @@ import {
 	CreateSectionBodyDto,
 	CreateSectionResponseDto,
 	FindSectionByIdResponseDto,
-	FindSectionsQueryDto,
-	FindSectionsResponseDto,
+	ListSectionsQueryDto,
+	ListSectionsResponseDto,
 	UpdateSectionBodyDto,
 	UpdateSectionResponseDto,
 } from './dtos';
 import { clientSectionToResponseDto } from './helpers';
 import {
 	createSectionBodySchema,
-	findSectionsQuerySchema,
+	listSectionsQuerySchema,
 	updateSectionBodySchema,
 } from './schemas';
 
@@ -77,13 +72,13 @@ export class SectionsController {
 		private readonly removeSectionHandler: RemoveSectionHandler,
 	) {}
 
-	@ApiQuery({ type: FindSectionsQueryDto })
-	@ApiOkResponse({ type: FindSectionsResponseDto })
+	@ApiQuery({ type: ListSectionsQueryDto })
+	@ApiOkResponse({ type: ListSectionsResponseDto })
 	@Get()
 	async list(
-		@Query(new HttpValidationPipe(findSectionsQuerySchema))
-		query: FindSectionsQueryDto,
-	): Promise<FindSectionsResponseDto> {
+		@Query(new HttpValidationPipe(listSectionsQuerySchema))
+		query: ListSectionsQueryDto,
+	): Promise<ListSectionsResponseDto> {
 		try {
 			const result = await this.listSectionsHandler.execute({
 				options: query,
@@ -101,7 +96,7 @@ export class SectionsController {
 	}
 
 	@ApiOkResponse({ type: FindSectionByIdResponseDto })
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
 	@Get(':id')
 	async findById(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -129,8 +124,8 @@ export class SectionsController {
 	}
 
 	@ApiBody({ type: CreateSectionBodyDto })
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
-	@ApiConflictResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
+	@ApiConflictResponse({ type: HttpErrorDto })
 	@ApiCreatedResponse({ type: CreateSectionResponseDto })
 	@Post()
 	async create(
@@ -140,7 +135,7 @@ export class SectionsController {
 		try {
 			const result = await this.addSectionHandler.execute({
 				name: body.name,
-				description: nullToEmptyString(body.description),
+				description: body.description,
 				learningPathId: body.learningPathId,
 			});
 
@@ -163,8 +158,8 @@ export class SectionsController {
 
 	@ApiBody({ type: UpdateSectionBodyDto })
 	@ApiOkResponse({ type: UpdateSectionResponseDto })
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
-	@ApiConflictResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
+	@ApiConflictResponse({ type: HttpErrorDto })
 	@Patch(':id')
 	async update(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -176,7 +171,7 @@ export class SectionsController {
 				where: { id },
 				props: {
 					name: body.name,
-					description: nullToEmptyString(body.description),
+					description: body.description,
 				},
 			});
 
@@ -198,8 +193,8 @@ export class SectionsController {
 	}
 
 	@ApiOkResponse()
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
-	@ApiConflictResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
+	@ApiConflictResponse({ type: HttpErrorDto })
 	@Delete(':id')
 	async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
 		try {

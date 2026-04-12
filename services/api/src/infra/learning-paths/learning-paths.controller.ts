@@ -21,12 +21,7 @@ import {
 	ApiOkResponse,
 	ApiQuery,
 } from '@nestjs/swagger';
-import { HttpErrorResponse } from '@infra/swagger';
-import {
-	HttpErrorDto,
-	HttpValidationPipe,
-	nullToEmptyString,
-} from '@infra/common';
+import { HttpErrorDto, HttpValidationPipe } from '@infra/common';
 import type {
 	CreateLearningPathHandler,
 	RemoveLearningPathHandler,
@@ -43,16 +38,16 @@ import { ExceptionMessage } from '@infra/common';
 import {
 	CreateLearningPathBodyDto,
 	CreateLearningPathResponseDto,
-	FindLearningPathsQueryDto,
-	FindLearningPathsResponseDto,
 	FindLearningPathByIdResponseDto,
 	UpdateLearningPathBodyDto,
 	UpdateLearningPathResponseDto,
+	ListLearningPathsQueryDto,
+	ListLearningPathsResponseDto,
 } from './dtos';
 import { clientLearningPathToResponseDto } from './helpers';
 import {
 	createLearningPathBodySchema,
-	findLearningPathsQuerySchema,
+	listLearningPathsQuerySchema,
 	updateLearningPathBodySchema,
 } from './schemas';
 
@@ -74,13 +69,13 @@ export class LearningPathsController {
 		private readonly removeLearningPathHandler: RemoveLearningPathHandler,
 	) {}
 
-	@ApiQuery({ type: FindLearningPathsQueryDto })
-	@ApiOkResponse({ type: FindLearningPathsResponseDto })
+	@ApiQuery({ type: ListLearningPathsQueryDto })
+	@ApiOkResponse({ type: ListLearningPathsResponseDto })
 	@Get()
 	async list(
-		@Query(new HttpValidationPipe(findLearningPathsQuerySchema))
-		query: FindLearningPathsQueryDto,
-	): Promise<FindLearningPathsResponseDto> {
+		@Query(new HttpValidationPipe(listLearningPathsQuerySchema))
+		query: ListLearningPathsQueryDto,
+	): Promise<ListLearningPathsResponseDto> {
 		try {
 			const result = await this.listLearningPathsHandler.execute({
 				options: {
@@ -103,7 +98,7 @@ export class LearningPathsController {
 	}
 
 	@ApiOkResponse({ type: FindLearningPathByIdResponseDto })
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
 	@Get(':id')
 	async findById(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -142,7 +137,7 @@ export class LearningPathsController {
 		try {
 			const result = await this.createLearningPathHandler.execute({
 				name: body.name,
-				description: nullToEmptyString(body.description),
+				description: body.description,
 			});
 
 			return {
@@ -160,7 +155,7 @@ export class LearningPathsController {
 
 	@ApiBody({ type: UpdateLearningPathBodyDto })
 	@ApiOkResponse({ type: UpdateLearningPathResponseDto })
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
 	@Patch(':id')
 	async update(
 		@Param('id', ParseUUIDPipe) id: string,
@@ -172,7 +167,7 @@ export class LearningPathsController {
 				where: { id },
 				props: {
 					name: body.name,
-					description: nullToEmptyString(body.description),
+					description: body.description,
 				},
 			});
 
@@ -196,8 +191,8 @@ export class LearningPathsController {
 	}
 
 	@ApiOkResponse()
-	@ApiNotFoundResponse({ type: HttpErrorResponse })
-	@ApiConflictResponse({ type: HttpErrorResponse })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
+	@ApiConflictResponse({ type: HttpErrorDto })
 	@Delete(':id')
 	async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
 		try {

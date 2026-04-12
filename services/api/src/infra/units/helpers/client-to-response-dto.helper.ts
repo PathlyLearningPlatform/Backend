@@ -1,5 +1,5 @@
-import type { UnitDto } from '@/app/units/dtos';
-import type { UnitResponseDto } from '../dtos';
+import type { UnitDto, UnitProgressDto } from '@/app/units/dtos';
+import type { UnitProgressResponseDto, UnitResponseDto } from '../dtos';
 
 export function clientUnitToResponseDto(unit: UnitDto): UnitResponseDto {
 	return {
@@ -11,5 +11,19 @@ export function clientUnitToResponseDto(unit: UnitDto): UnitResponseDto {
 		sectionId: unit.sectionId,
 		description: unit.description,
 		updatedAt: unit.updatedAt ? unit.updatedAt.toISOString() : null,
+	};
+}
+
+export function clientUnitProgressToResponseDto(
+	progress: UnitProgressDto,
+): UnitProgressResponseDto {
+	return {
+		id: progress.id,
+		unitId: progress.unitId,
+		sectionId: progress.sectionId,
+		userId: progress.userId,
+		completedAt: progress.completedAt?.toISOString() ?? null,
+		totalLessonCount: progress.totalLessonCount,
+		completedLessonCount: progress.completedLessonCount,
 	};
 }

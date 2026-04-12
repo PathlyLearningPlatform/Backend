@@ -1,6 +1,6 @@
 import { Module, type DynamicModule } from '@nestjs/common';
 import { AppLogger } from './logger.service';
-import type { AppLoggerModuleOptions } from './types/config.type';
+import type { AppLoggerModuleOptions } from './config.type';
 
 @Module({
 	providers: [AppLogger],

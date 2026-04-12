@@ -1,5 +1,6 @@
 import type {
 	ActivityDto,
+	ActivityProgressDto,
 	ArticleDto,
 	ExerciseDto,
 	QuizDto,
@@ -8,6 +9,7 @@ import type {
 } from '@/app/activities/dtos';
 import type {
 	ActivityResponseDto,
+	ActivityProgressResponseDto,
 	ArticleResponseDto,
 	ExerciseResponseDto,
 	QuestionResponseDto,
@@ -89,5 +91,17 @@ export function clientQuizToResponseDto(
 		type: quiz.type as ActivityType,
 		description: quiz.description,
 		updatedAt: quiz.updatedAt ? quiz.updatedAt.toISOString() : null,
+	};
+}
+
+export function clientActivityProgressToResponseDto(
+	progress: ActivityProgressDto,
+): ActivityProgressResponseDto {
+	return {
+		id: progress.id,
+		activityId: progress.activityId,
+		lessonId: progress.lessonId,
+		userId: progress.userId,
+		completedAt: progress.completedAt?.toISOString() ?? null,
 	};
 }

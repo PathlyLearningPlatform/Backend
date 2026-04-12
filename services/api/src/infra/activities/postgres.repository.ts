@@ -1,6 +1,6 @@
 import { DbService } from '@/infra/db/db.service';
 import { Inject, Injectable } from '@nestjs/common';
-import { RepositoryException } from '@infra/common';
+import { DbException } from '@infra/common';
 import { eq } from 'drizzle-orm';
 import type { Activity } from '@/domain/activities/activity.aggregate';
 import { Article } from '@/domain/activities/articles/article.aggregate';
@@ -135,7 +135,7 @@ export class PostgresActivityRepository implements IActivityRepository {
 
 			return result;
 		} catch (err) {
-			throw new RepositoryException('postgres exception', err);
+			throw new DbException('postgres exception', err);
 		}
 	}
 
@@ -147,7 +147,7 @@ export class PostgresActivityRepository implements IActivityRepository {
 
 			return result.rows.length > 0;
 		} catch (err) {
-			throw new RepositoryException('postgres exception', err);
+			throw new DbException('postgres exception', err);
 		}
 	}
 
@@ -258,7 +258,7 @@ export class PostgresActivityRepository implements IActivityRepository {
 				}
 			});
 		} catch (err) {
-			throw new RepositoryException('postgres exception', err);
+			throw new DbException('postgres exception', err);
 		}
 	}
 }

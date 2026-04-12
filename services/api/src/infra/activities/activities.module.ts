@@ -7,7 +7,7 @@ import { ActivitiesController } from './activities.controller';
 import { ArticlesController } from './articles.controller';
 import { ExercisesController } from './exercises.controller';
 import { QuizzesController } from './quizzes.controller';
-import { ActivityProgressController } from './progress/activities.controller';
+import { ActivityProgressController } from './progress.controller';
 import { PostgresActivityRepository } from './postgres.repository';
 import { PostgresActivityProgressRepository } from './postgres-progress.repository';
 import { PostgresActivityProgressReadRepository } from './postgres-progress-read.repository';
