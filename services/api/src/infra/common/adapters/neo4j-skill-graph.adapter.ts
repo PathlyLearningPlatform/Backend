@@ -166,9 +166,11 @@ export class Neo4jSkillGraphAdapter implements ISkillGraph {
 				MATCH (prerequisite:Skill)
 				WHERE prerequisite.parentId = $parentId 
 					OR (prerequisite.parentId IS NULL AND $parentId IS NULL)
-				OPTIONAL MATCH (prerequisite)<-[r:NEXT_STEP_OF]-(target:Skill)
+
+				MATCH (prerequisite)<-[r:NEXT_STEP_OF]-(target:Skill)
 				WHERE target.parentId = prerequisite.parentId 
 					OR (target.parentId IS NULL AND prerequisite.parentId IS NULL)
+
 				RETURN prerequisite, r, target
 			`;
 
@@ -176,27 +178,29 @@ export class Neo4jSkillGraphAdapter implements ISkillGraph {
 				parentId: parentId?.toString() ?? null,
 			});
 
-			const nodes: Skill[] = [];
+			const nodes = new Map<string, Skill>();
 			const edges: SkillRelationship[] = [];
 
 			records.forEach((record) => {
 				const prerequisite = this.mapNode(record, 'prerequisite');
+				const target = this.mapNode(record, 'target');
 
-				nodes.push(prerequisite);
+				nodes.set(prerequisite.id.toString(), prerequisite);
+				nodes.set(target.id.toString(), target);
 
-				if (record.get('target')) {
-					const target = this.mapNode(record, 'target');
-					const edge = SkillRelationship.create({
-						fromId: target.id,
-						toId: prerequisite.id,
-						type: SkillRelationshipType.NEXT_STEP_OF,
-					});
-					edges.push(edge);
-				}
+				const edge = SkillRelationship.create({
+					fromId: target.id,
+					toId: prerequisite.id,
+					type: SkillRelationshipType.NEXT_STEP_OF,
+				});
+
+				edges.push(edge);
 			});
 
+			const nodesArr = Array.from(nodes.values());
+
 			return {
-				nodes,
+				nodes: nodesArr,
 				edges,
 			};
 		} catch (err) {

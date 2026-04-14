@@ -4,5 +4,8 @@ export * from './graph.dto';
 export * from './update.dto';
 export * from './find-progress-for-user.dto';
 export * from './list-progress.dto';
+export * from './list-prerequisities.dto';
+export * from './list-next-steps.dto';
+export * from './list-children.dto';
 export * from './remove-progress.dto';
 export * from './unlock.dto';

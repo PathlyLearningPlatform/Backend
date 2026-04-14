@@ -12,7 +12,7 @@ export class SkillId extends ValueObject<Props> {
 	}
 
 	toString(): string {
-		return this._props.value.toString();
+		return this._props.value.value;
 	}
 
 	static create(value: UUID): SkillId {

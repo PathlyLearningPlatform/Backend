@@ -38,6 +38,7 @@ import { SkillsModule } from './infra/skills/skills.module';
 		UnitsModule,
 		LessonsModule,
 		ActivitiesModule,
+		SkillsModule,
 	],
 	providers: [
 		{

@@ -116,7 +116,7 @@ export class SkillGraphService {
 		await this.skillGraph.save(child);
 	}
 	async listChildren(id: SkillId): Promise<Skill[]> {
-		return this.skillGraph.listOutgoing(id, SkillRelationshipType.PART_OF);
+		return this.skillGraph.listIncoming(id, SkillRelationshipType.PART_OF);
 	}
 	async findParent(id: SkillId): Promise<Skill | null> {
 		const skill = await this.skillGraph.findById(id);
