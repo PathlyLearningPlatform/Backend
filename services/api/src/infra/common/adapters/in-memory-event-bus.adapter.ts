@@ -13,6 +13,7 @@ export class InMemoryEventBus implements IEventBus {
 	async publish(events: DomainEvent[]): Promise<void> {
 		for (const event of events) {
 			this.eventEmitter.emit(event.eventName, event);
+			console.log(event);
 		}
 	}
 }

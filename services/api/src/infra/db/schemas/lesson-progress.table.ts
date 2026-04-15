@@ -2,9 +2,8 @@ import {
 	integer,
 	pgTable,
 	timestamp,
-	unique,
 	uuid,
-	varchar,
+	primaryKey,
 } from 'drizzle-orm/pg-core';
 import { lessonsTable } from './lessons.table';
 import { unitsTable } from './units.table';
@@ -12,7 +11,6 @@ import { unitsTable } from './units.table';
 export const lessonProgressTable = pgTable(
 	'lesson_progress',
 	{
-		id: varchar('id', { length: 73 }).primaryKey(),
 		lessonId: uuid('lesson_id')
 			.notNull()
 			.references(() => lessonsTable.id),
@@ -26,7 +24,5 @@ export const lessonProgressTable = pgTable(
 			.default(0),
 		totalActivityCount: integer('total_activity_count').notNull(),
 	},
-	(t) => [
-		unique('uq_lesson_progress_lesson_id_user_id').on(t.lessonId, t.userId),
-	],
+	(t) => [primaryKey({ columns: [t.lessonId, t.userId] })],
 );

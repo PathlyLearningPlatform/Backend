@@ -1,12 +1,12 @@
-import type { IEventBus, IEventHandler } from "@/app/common";
-import type { ILearningPathProgressReadRepository } from "@/app/learning-paths/interfaces";
-import { UserId, UUID } from "@/domain/common";
+import type { IEventBus, IEventHandler } from '@/app/common';
+import type { ILearningPathProgressReadRepository } from '@/app/learning-paths/interfaces';
+import { UserId, UUID } from '@/domain/common';
 import {
 	type ILearningPathProgressRepository,
 	LearningPathId,
 	LearningPathProgressId,
-} from "@/domain/learning-paths";
-import type { SectionCompletedEvent } from "@/domain/sections";
+} from '@/domain/learning-paths';
+import type { SectionCompletedEvent } from '@/domain/sections';
 
 export class OnSectionCompletedHandler
 	implements IEventHandler<SectionCompletedEvent>
@@ -40,6 +40,8 @@ export class OnSectionCompletedHandler
 		}
 
 		learningPathProgress.completeSection(event.occuredAt);
+
+		await this.learningPathProgressRepository.save(learningPathProgress);
 
 		const events = learningPathProgress.pullEvents();
 		await this.eventBus.publish(events);

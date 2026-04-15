@@ -1,9 +1,9 @@
-import type { OffsetPagination } from "@/app/common";
+import type { OffsetPagination } from '@/app/common';
 import type {
 	LessonDto,
 	LessonProgressDto,
 	ListLessonProgressDto,
-} from "../dtos";
+} from '../dtos';
 
 type LessonFilter = {
 	options?: OffsetPagination;
@@ -19,8 +19,6 @@ export interface ILessonReadRepository {
 
 export interface ILessonProgressReadRepository {
 	list(dto?: ListLessonProgressDto): Promise<LessonProgressDto[]>;
-
-	findById(id: string): Promise<LessonProgressDto | null>;
 
 	findOneForUser(
 		lessonId: string,

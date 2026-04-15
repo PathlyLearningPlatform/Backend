@@ -20,7 +20,6 @@ export function clientLessonProgressToResponseDto(
 	progress: LessonProgressDto,
 ): LessonProgressResponseDto {
 	return {
-		id: progress.id,
 		lessonId: progress.lessonId,
 		unitId: progress.unitId,
 		userId: progress.userId,

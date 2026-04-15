@@ -44,19 +44,6 @@ export class PostgresActivityProgressReadRepository
 		}
 	}
 
-	async findById(id: string): Promise<ActivityProgressDto | null> {
-		try {
-			const [activityProgress] = await this.db
-				.select()
-				.from(activityProgressTable)
-				.where(eq(activityProgressTable.id, id));
-
-			return activityProgress ?? null;
-		} catch (err) {
-			throw new DbException('drizzle err', err);
-		}
-	}
-
 	async findOneForUser(
 		activityId: string,
 		userId: string,

@@ -2,17 +2,17 @@ import {
 	type ICommandHandler,
 	type IEventBus,
 	UnitNotFoundException,
-} from "@/app/common";
-import { UserId, UUID } from "@/domain/common";
-import { SectionId } from "@/domain/sections";
+} from '@/app/common';
+import { UserId, UUID } from '@/domain/common';
+import { SectionId } from '@/domain/sections';
 import {
 	type IUnitProgressRepository,
 	UnitId,
 	UnitProgress,
 	UnitProgressId,
-} from "@/domain/units";
-import type { UnitProgressDto } from "../dtos";
-import type { IUnitReadRepository } from "../interfaces";
+} from '@/domain/units';
+import type { UnitProgressDto } from '../dtos';
+import type { IUnitReadRepository } from '../interfaces';
 
 export type StartUnitCommand = {
 	unitId: string;
@@ -50,7 +50,6 @@ export class StartUnitHandler
 		await this.eventBus.publish(events);
 
 		return {
-			id: unitProgress.id.toString(),
 			completedAt: unitProgress.completedAt,
 			unitId: unitProgress.unitId.value,
 			sectionId: unitProgress.sectionId.value,

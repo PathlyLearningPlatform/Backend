@@ -18,7 +18,6 @@ export function clientUnitProgressToResponseDto(
 	progress: UnitProgressDto,
 ): UnitProgressResponseDto {
 	return {
-		id: progress.id,
 		unitId: progress.unitId,
 		sectionId: progress.sectionId,
 		userId: progress.userId,

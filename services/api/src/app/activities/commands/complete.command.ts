@@ -2,17 +2,17 @@ import {
 	ActivityNotFoundException,
 	type ICommandHandler,
 	type IEventBus,
-} from "@/app/common";
+} from '@/app/common';
 import {
 	ActivityId,
 	ActivityProgress,
 	ActivityProgressId,
 	type IActivityProgressRepository,
-} from "@/domain/activities";
-import { UserId, UUID } from "@/domain/common";
-import { LessonId } from "@/domain/lessons";
-import type { ActivityProgressDto } from "../dtos";
-import type { IActivityReadRepository } from "../interfaces";
+} from '@/domain/activities';
+import { UserId, UUID } from '@/domain/common';
+import { LessonId } from '@/domain/lessons';
+import type { ActivityProgressDto } from '../dtos';
+import type { IActivityReadRepository } from '../interfaces';
 
 export type CompleteActivityCommand = {
 	activityId: string;
@@ -55,7 +55,6 @@ export class CompleteActivityHandler
 		await this.eventBus.publish(events);
 
 		return {
-			id: activityProgress.id.toString(),
 			activityId: activityProgress.activityId.value,
 			userId: activityProgress.userId.toString(),
 			lessonId: activityProgress.lessonId.value,

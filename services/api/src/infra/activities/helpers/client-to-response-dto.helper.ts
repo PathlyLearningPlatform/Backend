@@ -98,7 +98,6 @@ export function clientActivityProgressToResponseDto(
 	progress: ActivityProgressDto,
 ): ActivityProgressResponseDto {
 	return {
-		id: progress.id,
 		activityId: progress.activityId,
 		lessonId: progress.lessonId,
 		userId: progress.userId,

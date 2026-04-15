@@ -10,10 +10,6 @@ import type { Db } from '@/infra/db/type';
 import { DbService } from '../db/db.service';
 import { activityProgressTable } from '../db/schemas';
 
-function createProgressId(activityId: string, userId: string): string {
-	return `${activityId}:${userId}`;
-}
-
 @Injectable()
 export class PostgresActivityProgressRepository
 	implements IActivityProgressRepository
@@ -56,13 +52,9 @@ export class PostgresActivityProgressRepository
 			await this.db
 				.insert(activityProgressTable)
 				.values({
-					id: createProgressId(
-						aggregate.activityId.value,
-						aggregate.userId.toString(),
-					),
 					activityId: aggregate.activityId.value,
 					lessonId: aggregate.lessonId.value,
-					userId: aggregate.userId.toString(),
+					userId: aggregate.userId.value.value,
 					completedAt: aggregate.completedAt,
 				})
 				.onConflictDoUpdate({

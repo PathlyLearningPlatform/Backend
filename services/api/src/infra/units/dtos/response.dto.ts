@@ -51,9 +51,6 @@ export class UnitResponseDto {
 
 export class UnitProgressResponseDto {
 	@ApiProperty()
-	id: string;
-
-	@ApiProperty()
 	unitId: string;
 
 	@ApiProperty()

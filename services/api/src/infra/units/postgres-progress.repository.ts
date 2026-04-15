@@ -10,10 +10,6 @@ import type { Db } from '@/infra/db/type';
 import { DbService } from '../db/db.service';
 import { unitProgressTable } from '../db/schemas';
 
-function createProgressId(unitId: string, userId: string): string {
-	return `${unitId}:${userId}`;
-}
-
 @Injectable()
 export class PostgresUnitProgressRepository implements IUnitProgressRepository {
 	private readonly db: Db;
@@ -56,10 +52,6 @@ export class PostgresUnitProgressRepository implements IUnitProgressRepository {
 			await this.db
 				.insert(unitProgressTable)
 				.values({
-					id: createProgressId(
-						aggregate.unitId.value,
-						aggregate.userId.toString(),
-					),
 					unitId: aggregate.unitId.value,
 					sectionId: aggregate.sectionId.value,
 					userId: aggregate.userId.toString(),

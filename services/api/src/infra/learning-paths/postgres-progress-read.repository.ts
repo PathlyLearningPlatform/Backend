@@ -45,19 +45,6 @@ export class PostgresLearningPathProgressReadRepository
 		}
 	}
 
-	async findById(id: string): Promise<LearningPathProgressDto | null> {
-		try {
-			const [learningPathProgress] = await this.db
-				.select()
-				.from(learningPathProgressTable)
-				.where(eq(learningPathProgressTable.id, id));
-
-			return learningPathProgress ?? null;
-		} catch (err) {
-			throw new DbException('drizzle err', err);
-		}
-	}
-
 	async findOneForUser(
 		learningPathId: string,
 		userId: string,

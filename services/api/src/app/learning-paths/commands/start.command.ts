@@ -56,7 +56,6 @@ export class StartLearningPathHandler
 		await this.eventBus.publish(events);
 
 		return {
-			id: learningPathProgress.id.toString(),
 			completedAt: learningPathProgress.completedAt,
 			learningPathId: learningPathProgress.learningPathId.toString(),
 			userId: learningPathProgress.userId.toString(),

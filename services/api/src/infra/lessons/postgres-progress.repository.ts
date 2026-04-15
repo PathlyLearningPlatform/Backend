@@ -10,10 +10,6 @@ import type { Db } from '@/infra/db/type';
 import { DbService } from '../db/db.service';
 import { lessonProgressTable } from '../db/schemas';
 
-function createProgressId(lessonId: string, userId: string): string {
-	return `${lessonId}:${userId}`;
-}
-
 @Injectable()
 export class PostgresLessonProgressRepository
 	implements ILessonProgressRepository
@@ -58,10 +54,6 @@ export class PostgresLessonProgressRepository
 			await this.db
 				.insert(lessonProgressTable)
 				.values({
-					id: createProgressId(
-						aggregate.lessonId.value,
-						aggregate.userId.toString(),
-					),
 					lessonId: aggregate.lessonId.value,
 					unitId: aggregate.unitId.value,
 					userId: aggregate.userId.toString(),

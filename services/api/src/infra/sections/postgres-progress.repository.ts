@@ -10,10 +10,6 @@ import type { Db } from '@/infra/db/type';
 import { DbService } from '../db/db.service';
 import { sectionProgressTable } from '../db/schemas';
 
-function createProgressId(sectionId: string, userId: string): string {
-	return `${sectionId}:${userId}`;
-}
-
 @Injectable()
 export class PostgresSectionProgressRepository
 	implements ISectionProgressRepository
@@ -58,10 +54,6 @@ export class PostgresSectionProgressRepository
 			await this.db
 				.insert(sectionProgressTable)
 				.values({
-					id: createProgressId(
-						aggregate.sectionId.value,
-						aggregate.userId.toString(),
-					),
 					sectionId: aggregate.sectionId.value,
 					learningPathId: aggregate.learningPathId.toString(),
 					userId: aggregate.userId.toString(),

@@ -51,9 +51,6 @@ export class LessonResponseDto {
 
 export class LessonProgressResponseDto {
 	@ApiProperty()
-	id: string;
-
-	@ApiProperty()
 	lessonId: string;
 
 	@ApiProperty()

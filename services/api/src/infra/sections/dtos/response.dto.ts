@@ -51,9 +51,6 @@ export class SectionResponseDto {
 
 export class SectionProgressResponseDto {
 	@ApiProperty()
-	id: string;
-
-	@ApiProperty()
 	sectionId: string;
 
 	@ApiProperty()

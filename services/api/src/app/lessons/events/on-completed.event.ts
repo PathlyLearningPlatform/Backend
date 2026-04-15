@@ -1,12 +1,12 @@
-import type { IEventBus, IEventHandler } from "@/app/common";
-import type { IUnitProgressReadRepository } from "@/app/units/interfaces";
-import { UserId, UUID } from "@/domain/common";
-import type { LessonCompletedEvent } from "@/domain/lessons";
+import type { IEventBus, IEventHandler } from '@/app/common';
+import type { IUnitProgressReadRepository } from '@/app/units/interfaces';
+import { UserId, UUID } from '@/domain/common';
+import type { LessonCompletedEvent } from '@/domain/lessons';
 import {
 	type IUnitProgressRepository,
 	UnitId,
 	UnitProgressId,
-} from "@/domain/units";
+} from '@/domain/units';
 
 export class OnLessonCompletedHandler
 	implements IEventHandler<LessonCompletedEvent>
@@ -40,6 +40,8 @@ export class OnLessonCompletedHandler
 		}
 
 		unitProgress.completeLesson(event.occuredAt);
+
+		await this.unitProgressRepository.save(unitProgress);
 
 		const events = unitProgress.pullEvents();
 		await this.eventBus.publish(events);

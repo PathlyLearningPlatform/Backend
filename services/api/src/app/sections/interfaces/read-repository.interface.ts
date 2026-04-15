@@ -1,9 +1,9 @@
-import type { OffsetPagination } from "@/app/common";
+import type { OffsetPagination } from '@/app/common';
 import type {
 	ListSectionProgressDto,
 	SectionDto,
 	SectionProgressDto,
-} from "../dtos";
+} from '../dtos';
 
 type SectionFilter = {
 	options?: OffsetPagination;
@@ -19,8 +19,6 @@ export interface ISectionReadRepository {
 
 export interface ISectionProgressReadRepository {
 	list(dto?: ListSectionProgressDto): Promise<SectionProgressDto[]>;
-
-	findById(id: string): Promise<SectionProgressDto | null>;
 
 	findOneForUser(
 		sectionId: string,

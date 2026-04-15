@@ -2,17 +2,17 @@ import {
 	type ICommandHandler,
 	type IEventBus,
 	LessonNotFoundException,
-} from "@/app/common";
-import { UserId, UUID } from "@/domain/common";
+} from '@/app/common';
+import { UserId, UUID } from '@/domain/common';
 import {
 	type ILessonProgressRepository,
 	LessonId,
 	LessonProgress,
 	LessonProgressId,
-} from "@/domain/lessons";
-import { UnitId } from "@/domain/units";
-import type { LessonProgressDto } from "../dtos";
-import type { ILessonReadRepository } from "../interfaces";
+} from '@/domain/lessons';
+import { UnitId } from '@/domain/units';
+import type { LessonProgressDto } from '../dtos';
+import type { ILessonReadRepository } from '../interfaces';
 
 export type StartLessonCommand = {
 	lessonId: string;
@@ -50,7 +50,6 @@ export class StartLessonHandler
 		await this.eventBus.publish(events);
 
 		return {
-			id: lessonProgress.id.toString(),
 			completedAt: lessonProgress.completedAt,
 			lessonId: lessonProgress.lessonId.value,
 			unitId: lessonProgress.unitId.value,

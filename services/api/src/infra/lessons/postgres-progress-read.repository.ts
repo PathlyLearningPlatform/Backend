@@ -44,19 +44,6 @@ export class PostgresLessonProgressReadRepository
 		}
 	}
 
-	async findById(id: string): Promise<LessonProgressDto | null> {
-		try {
-			const [lessonProgress] = await this.db
-				.select()
-				.from(lessonProgressTable)
-				.where(eq(lessonProgressTable.id, id));
-
-			return lessonProgress ?? null;
-		} catch (err) {
-			throw new DbException('drizzle err', err);
-		}
-	}
-
 	async findOneForUser(
 		lessonId: string,
 		userId: string,

@@ -6,8 +6,8 @@ import type {
 	ListActivityProgressDto,
 	QuizDto,
 	QuizWithoutQuestionsDto,
-} from "../dtos";
-import type { ActivityFilter } from "./filter.interface";
+} from '../dtos';
+import type { ActivityFilter } from './filter.interface';
 
 export interface IActivityReadRepository {
 	list(filter?: ActivityFilter): Promise<ActivityDto[]>;
@@ -23,8 +23,6 @@ export interface IActivityReadRepository {
 
 export interface IActivityProgressReadRepository {
 	list(dto: ListActivityProgressDto): Promise<ActivityProgressDto[]>;
-
-	findById(id: string): Promise<ActivityProgressDto | null>;
 
 	findOneForUser(
 		activityId: string,

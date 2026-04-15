@@ -1,5 +1,4 @@
 export interface LessonProgressDto {
-	id: string;
 	lessonId: string;
 	unitId: string;
 	userId: string;

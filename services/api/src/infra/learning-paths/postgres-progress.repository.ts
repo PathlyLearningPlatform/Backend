@@ -10,10 +10,6 @@ import type { Db } from '@/infra/db/type';
 import { DbService } from '../db/db.service';
 import { learningPathProgressTable } from '../db/schemas';
 
-function createProgressId(learningPathId: string, userId: string): string {
-	return `${learningPathId}:${userId}`;
-}
-
 @Injectable()
 export class PostgresLearningPathProgressRepository
 	implements ILearningPathProgressRepository
@@ -60,10 +56,6 @@ export class PostgresLearningPathProgressRepository
 			await this.db
 				.insert(learningPathProgressTable)
 				.values({
-					id: createProgressId(
-						aggregate.learningPathId.toString(),
-						aggregate.userId.toString(),
-					),
 					learningPathId: aggregate.learningPathId.toString(),
 					userId: aggregate.userId.toString(),
 					completedAt: aggregate.completedAt,

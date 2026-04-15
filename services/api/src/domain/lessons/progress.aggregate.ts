@@ -1,7 +1,7 @@
-import { AggregateRoot, UserId, UUID } from "../common";
-import { UnitId } from "../units/value-objects/id.vo";
-import { LessonCompletedEvent } from "./events";
-import { LessonId, LessonProgressId } from "./value-objects";
+import { AggregateRoot, UserId, UUID } from '../common';
+import { UnitId } from '../units/value-objects/id.vo';
+import { LessonCompletedEvent } from './events';
+import { LessonId, LessonProgressId } from './value-objects';
 
 export type LessonProgressProps = {
 	unitId: UnitId;

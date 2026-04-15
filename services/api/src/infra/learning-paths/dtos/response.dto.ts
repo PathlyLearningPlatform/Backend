@@ -40,9 +40,6 @@ export class LearningPathResponseDto {
 
 export class LearningPathProgressResponseDto {
 	@ApiProperty()
-	id: string;
-
-	@ApiProperty()
 	learningPathId: string;
 
 	@ApiProperty()

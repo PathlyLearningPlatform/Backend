@@ -13,8 +13,6 @@ export interface ILearningPathReadRepository {
 export interface ILearningPathProgressReadRepository {
 	list(dto?: ListLearningPathProgressDto): Promise<LearningPathProgressDto[]>;
 
-	findById(id: string): Promise<LearningPathProgressDto | null>;
-
 	findOneForUser(
 		learningPathId: string,
 		userId: string,

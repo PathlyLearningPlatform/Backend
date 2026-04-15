@@ -26,7 +26,6 @@ export function clientLearningPathProgressToResponseDto(
 	return {
 		completedAt: progress.completedAt?.toISOString() ?? null,
 		completedSectionCount: progress.completedSectionCount,
-		id: progress.id,
 		learningPathId: progress.learningPathId,
 		totalSectionCount: progress.totalSectionCount,
 		userId: progress.userId,

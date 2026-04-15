@@ -95,9 +95,6 @@ export class ExerciseResponseDto extends ActivityResponseDto {
 
 export class ActivityProgressResponseDto {
 	@ApiProperty()
-	id: string;
-
-	@ApiProperty()
 	activityId: string;
 
 	@ApiProperty()

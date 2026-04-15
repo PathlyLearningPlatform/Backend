@@ -2,17 +2,17 @@ import {
 	type ICommandHandler,
 	type IEventBus,
 	SectionNotFoundException,
-} from "@/app/common";
-import { UserId, UUID } from "@/domain/common";
-import { LearningPathId } from "@/domain/learning-paths";
+} from '@/app/common';
+import { UserId, UUID } from '@/domain/common';
+import { LearningPathId } from '@/domain/learning-paths';
 import {
 	type ISectionProgressRepository,
 	SectionId,
 	SectionProgress,
 	SectionProgressId,
-} from "@/domain/sections";
-import type { SectionProgressDto } from "../dtos";
-import type { ISectionReadRepository } from "../interfaces";
+} from '@/domain/sections';
+import type { SectionProgressDto } from '../dtos';
+import type { ISectionReadRepository } from '../interfaces';
 
 export type StartSectionCommand = {
 	sectionId: string;
@@ -54,7 +54,6 @@ export class StartSectionHandler
 		await this.eventBus.publish(events);
 
 		return {
-			id: sectionProgress.id.toString(),
 			completedUnitCount: sectionProgress.completedUnitCount,
 			totalUnitCount: sectionProgress.totalUnitCount,
 			learningPathId: sectionProgress.learningPathId.toString(),
