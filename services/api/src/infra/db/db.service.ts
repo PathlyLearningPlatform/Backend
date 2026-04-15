@@ -1,4 +1,9 @@
-import { Inject, Injectable, type OnModuleInit } from '@nestjs/common';
+import {
+	Inject,
+	Injectable,
+	OnModuleDestroy,
+	type OnModuleInit,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ConfigException } from '@infra/common';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
@@ -9,7 +14,7 @@ import type * as schema from './schemas';
 import { AppLogger } from '../logger';
 
 @Injectable()
-export class DbService implements OnModuleInit {
+export class DbService implements OnModuleInit, OnModuleDestroy {
 	private readonly dbConfig: Config['db'];
 
 	constructor(
@@ -39,7 +44,7 @@ export class DbService implements OnModuleInit {
 		return this.db;
 	}
 
-	async close() {
+	async onModuleDestroy() {
 		await this.pool.end();
 	}
 }

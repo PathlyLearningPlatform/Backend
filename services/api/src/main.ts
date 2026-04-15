@@ -49,6 +49,7 @@ async function bootstrap() {
 	});
 
 	app.enableVersioning();
+	app.enableShutdownHooks();
 
 	app.useLogger(new AppLogger());
 	await app.listen(appConfig.port);
