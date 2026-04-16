@@ -1,6 +1,7 @@
-import type { IQueryHandler, OffsetPagination } from "@/app/common";
-import type { LessonDto } from "../dtos";
-import type { ILessonReadRepository } from "../interfaces";
+import type { IQueryHandler, OffsetPagination } from '@/app/common';
+import type { LessonDto } from '../dtos';
+import { ILessonRepository } from '@/domain/lessons';
+import { aggregateToDto } from '../helpers';
 
 type ListLessonsQuery = {
 	where?: {
@@ -13,10 +14,10 @@ type ListLessonsResult = LessonDto[];
 export class ListLessonsHandler
 	implements IQueryHandler<ListLessonsQuery, ListLessonsResult>
 {
-	constructor(private readonly lessonReadRepository: ILessonReadRepository) {}
+	constructor(private readonly lessonRepository: ILessonRepository) {}
 
 	async execute(query: ListLessonsQuery): Promise<ListLessonsResult> {
-		const lessons = await this.lessonReadRepository.list({
+		const lessons = await this.lessonRepository.list({
 			where: {
 				unitId: query.where?.unitId,
 			},
@@ -26,6 +27,6 @@ export class ListLessonsHandler
 			},
 		});
 
-		return lessons;
+		return lessons.map(aggregateToDto);
 	}
 }

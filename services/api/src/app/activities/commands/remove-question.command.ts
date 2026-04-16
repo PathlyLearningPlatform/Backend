@@ -2,11 +2,11 @@ import {
 	ActivityNotFoundException,
 	type ICommandHandler,
 	QuestionNotFoundException,
-} from "@/app/common";
-import { Quiz } from "@/domain/activities/quizzes/quiz.aggregate";
-import { QuestionId } from "@/domain/activities/quizzes/value-objects";
-import type { IActivityRepository } from "@/domain/activities/repositories";
-import { ActivityId } from "@/domain/activities/value-objects/id.vo";
+} from '@/app/common';
+import { Quiz } from '@/domain/activities/quizzes/quiz.aggregate';
+import { QuestionId } from '@/domain/activities/quizzes/value-objects';
+import type { IActivityRepository } from '@/domain/activities/repositories';
+import { ActivityId } from '@/domain/activities/value-objects/id.vo';
 
 type RemoveQuestionCommand = {
 	quizId: string;
@@ -20,7 +20,7 @@ export class RemoveQuestionHandler
 
 	async execute(command: RemoveQuestionCommand): Promise<void> {
 		const quizId = ActivityId.create(command.quizId);
-		const activity = await this.activityRepository.load(quizId);
+		const activity = await this.activityRepository.findById(quizId);
 
 		if (!activity || !(activity instanceof Quiz)) {
 			throw new ActivityNotFoundException(quizId.value);

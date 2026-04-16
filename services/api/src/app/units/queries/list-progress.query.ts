@@ -1,6 +1,7 @@
-import type { IQueryHandler, OffsetPagination } from "@/app/common";
-import type { UnitProgressDto } from "../dtos";
-import type { IUnitProgressReadRepository } from "../interfaces";
+import type { IQueryHandler, OffsetPagination } from '@/app/common';
+import type { UnitProgressDto } from '../dtos';
+import { IUnitProgressRepository } from '@/domain/units';
+import { progressAggregateToDto } from '../helpers';
 
 export type ListUnitProgressQuery = {
 	options?: OffsetPagination;
@@ -15,11 +16,11 @@ export class ListUnitProgressHandler
 	implements IQueryHandler<ListUnitProgressQuery, ListUnitProgressResult>
 {
 	constructor(
-		private readonly unitProgressReadRepository: IUnitProgressReadRepository,
+		private readonly unitProgressRepository: IUnitProgressRepository,
 	) {}
 
 	async execute(query: ListUnitProgressQuery): Promise<ListUnitProgressResult> {
-		const unitProgress = await this.unitProgressReadRepository.list({
+		const unitProgress = await this.unitProgressRepository.list({
 			options: {
 				limit: query.options?.limit,
 				page: query.options?.page,
@@ -30,6 +31,6 @@ export class ListUnitProgressHandler
 			},
 		});
 
-		return unitProgress;
+		return unitProgress.map(progressAggregateToDto);
 	}
 }

@@ -10,8 +10,6 @@ import { QuizzesController } from './quizzes.controller';
 import { ActivityProgressController } from './progress.controller';
 import { PostgresActivityRepository } from './postgres.repository';
 import { PostgresActivityProgressRepository } from './postgres-progress.repository';
-import { PostgresActivityProgressReadRepository } from './postgres-progress-read.repository';
-import { PostgresActivityReadRepository } from './postgres-read.repository';
 import { InMemoryEventBus } from '@infra/common';
 
 @Module({
@@ -26,16 +24,12 @@ import { InMemoryEventBus } from '@infra/common';
 	providers: [
 		InMemoryEventBus,
 		PostgresActivityRepository,
-		PostgresActivityReadRepository,
 		PostgresActivityProgressRepository,
-		PostgresActivityProgressReadRepository,
 		...activityHandlersProvider,
 	],
 	exports: [
 		PostgresActivityRepository,
-		PostgresActivityReadRepository,
 		PostgresActivityProgressRepository,
-		PostgresActivityProgressReadRepository,
 		...activityHandlersProvider,
 	],
 })

@@ -1,6 +1,7 @@
-import type { IQueryHandler, OffsetPagination } from "@/app/common";
-import type { LearningPathProgressDto } from "../dtos";
-import type { ILearningPathProgressReadRepository } from "../interfaces";
+import type { IQueryHandler, OffsetPagination } from '@/app/common';
+import type { LearningPathProgressDto } from '../dtos';
+import { ILearningPathProgressRepository } from '@/domain/learning-paths';
+import { progressAggregateToDto } from '../helpers';
 
 export type ListLearningPathProgressQuery = {
 	options?: OffsetPagination;
@@ -15,14 +16,14 @@ export class ListLearningPathProgressHandler
 		IQueryHandler<ListLearningPathProgressQuery, ListLearningPathProgressResult>
 {
 	constructor(
-		private readonly learningPathProgressReadRepository: ILearningPathProgressReadRepository,
+		private readonly learningPathProgressRepository: ILearningPathProgressRepository,
 	) {}
 
 	async execute(
 		query: ListLearningPathProgressQuery,
 	): Promise<ListLearningPathProgressResult> {
-		const learningPathProgress =
-			await this.learningPathProgressReadRepository.list({
+		const learningPathProgress = await this.learningPathProgressRepository.list(
+			{
 				options: {
 					limit: query.options?.limit,
 					page: query.options?.page,
@@ -30,8 +31,9 @@ export class ListLearningPathProgressHandler
 				where: {
 					userId: query.where?.userId,
 				},
-			});
+			},
+		);
 
-		return learningPathProgress;
+		return learningPathProgress.map(progressAggregateToDto);
 	}
 }

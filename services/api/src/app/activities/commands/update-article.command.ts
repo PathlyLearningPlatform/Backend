@@ -1,14 +1,14 @@
-import { ActivityNotFoundException, type ICommandHandler } from "@/app/common";
-import { Article } from "@/domain/activities/articles/article.aggregate";
-import type { IActivityRepository } from "@/domain/activities/repositories";
+import { ActivityNotFoundException, type ICommandHandler } from '@/app/common';
+import { Article } from '@/domain/activities/articles/article.aggregate';
+import type { IActivityRepository } from '@/domain/activities/repositories';
 import {
 	ActivityDescription,
 	ActivityName,
 	ActivityType,
-} from "@/domain/activities/value-objects";
-import { ActivityId } from "@/domain/activities/value-objects/id.vo";
-import { Url } from "@/domain/common";
-import type { ArticleDto } from "../dtos";
+} from '@/domain/activities/value-objects';
+import { ActivityId } from '@/domain/activities/value-objects/id.vo';
+import { Url } from '@/domain/common';
+import type { ArticleDto } from '../dtos';
 
 type UpdateArticleCommand = {
 	where: {
@@ -29,7 +29,7 @@ export class UpdateArticleHandler
 
 	async execute(command: UpdateArticleCommand): Promise<UpdateArticleResult> {
 		const id = ActivityId.create(command.where.id);
-		const activity = await this.activityRepository.load(id);
+		const activity = await this.activityRepository.findById(id);
 
 		if (!activity || !(activity instanceof Article)) {
 			throw new ActivityNotFoundException(id.value);

@@ -1,6 +1,7 @@
-import type { IQueryHandler, OffsetPagination } from "@/app/common";
-import type { ExerciseDto } from "../dtos";
-import type { IActivityReadRepository } from "../interfaces";
+import type { IQueryHandler, OffsetPagination } from '@/app/common';
+import type { ExerciseDto } from '../dtos';
+import { IActivityRepository } from '@/domain/activities';
+import { exerciseAggregateToDto } from '../helpers';
 
 type ListExercisesQuery = {
 	where?: {
@@ -13,12 +14,10 @@ type ListExercisesResult = ExerciseDto[];
 export class ListExercisesHandler
 	implements IQueryHandler<ListExercisesQuery, ListExercisesResult>
 {
-	constructor(
-		private readonly activityReadRepository: IActivityReadRepository,
-	) {}
+	constructor(private readonly activityRepository: IActivityRepository) {}
 
 	async execute(query: ListExercisesQuery): Promise<ListExercisesResult> {
-		return this.activityReadRepository.listExercises({
+		const exercises = await this.activityRepository.listExercises({
 			where: {
 				lessonId: query.where?.lessonId,
 			},
@@ -27,5 +26,7 @@ export class ListExercisesHandler
 				page: query.options?.page,
 			},
 		});
+
+		return exercises.map(exerciseAggregateToDto);
 	}
 }

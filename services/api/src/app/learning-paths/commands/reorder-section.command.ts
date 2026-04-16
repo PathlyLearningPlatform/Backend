@@ -23,13 +23,13 @@ export class ReorderSectionHandler
 
 	async execute(command: ReorderSectionCommand): Promise<void> {
 		const sectionId = SectionId.create(command.sectionId);
-		const section = await this.sectionsRepository.load(sectionId);
+		const section = await this.sectionsRepository.findById(sectionId);
 
 		if (!section) {
 			throw new SectionNotFoundException(command.sectionId);
 		}
 
-		const learningPath = await this.learningPathRepository.load(
+		const learningPath = await this.learningPathRepository.findById(
 			section.learningPathId,
 		);
 

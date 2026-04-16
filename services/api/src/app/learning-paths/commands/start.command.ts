@@ -6,12 +6,13 @@ import {
 import { UserId, UUID } from '@/domain/common';
 import {
 	type ILearningPathProgressRepository,
+	ILearningPathRepository,
 	LearningPathId,
 	LearningPathProgress,
 	LearningPathProgressId,
 } from '@/domain/learning-paths';
 import type { LearningPathProgressDto } from '../dtos';
-import type { ILearningPathReadRepository } from '../interfaces';
+import { progressAggregateToDto } from '../helpers';
 
 export type StartLearningPathCommand = {
 	learningPathId: string;
@@ -24,7 +25,7 @@ export class StartLearningPathHandler
 {
 	constructor(
 		private readonly learningPathProgressRepository: ILearningPathProgressRepository,
-		private readonly learningPathReadRepository: ILearningPathReadRepository,
+		private readonly learningPathRepository: ILearningPathRepository,
 		private readonly eventBus: IEventBus,
 	) {}
 
@@ -33,18 +34,18 @@ export class StartLearningPathHandler
 	): Promise<LearningPathProgressDto> {
 		// TODO: check if user exists
 
-		const learningPath = await this.learningPathReadRepository.findById(
-			command.learningPathId,
+		const userId = UserId.create(UUID.create(command.userId));
+
+		const learningPathId = LearningPathId.create(
+			UUID.create(command.learningPathId),
 		);
+		const learningPath =
+			await this.learningPathRepository.findById(learningPathId);
 
 		if (!learningPath) {
 			throw new LearningPathNotFoundException(command.learningPathId);
 		}
 
-		const learningPathId = LearningPathId.create(
-			UUID.create(command.learningPathId),
-		);
-		const userId = UserId.create(UUID.create(command.userId));
 		const id = LearningPathProgressId.create(learningPathId, userId);
 		const learningPathProgress = LearningPathProgress.create(id, {
 			totalSectionCount: learningPath.sectionCount,
@@ -55,12 +56,6 @@ export class StartLearningPathHandler
 		const events = learningPathProgress.pullEvents();
 		await this.eventBus.publish(events);
 
-		return {
-			completedAt: learningPathProgress.completedAt,
-			learningPathId: learningPathProgress.learningPathId.toString(),
-			userId: learningPathProgress.userId.toString(),
-			totalSectionCount: learningPathProgress.totalSectionCount,
-			completedSectionCount: learningPathProgress.completedSectionCount,
-		};
+		return progressAggregateToDto(learningPathProgress);
 	}
 }

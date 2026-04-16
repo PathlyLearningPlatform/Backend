@@ -1,6 +1,7 @@
-import { ActivityNotFoundException, type IQueryHandler } from "@/app/common";
-import type { ActivityDto } from "../dtos";
-import type { IActivityReadRepository } from "../interfaces";
+import { ActivityNotFoundException, type IQueryHandler } from '@/app/common';
+import { ActivityId, IActivityRepository } from '@/domain/activities';
+import type { ActivityDto } from '../dtos';
+import { aggregateToDto } from '../helpers';
 
 type FindActivityByIdQuery = {
 	where: {
@@ -12,17 +13,16 @@ type FindActivityByIdResult = ActivityDto;
 export class FindActivityByIdHandler
 	implements IQueryHandler<FindActivityByIdQuery, FindActivityByIdResult>
 {
-	constructor(
-		private readonly activityReadRepository: IActivityReadRepository,
-	) {}
+	constructor(private readonly activityRepository: IActivityRepository) {}
 
 	async execute(query: FindActivityByIdQuery): Promise<FindActivityByIdResult> {
-		const activity = await this.activityReadRepository.findById(query.where.id);
+		const activityId = ActivityId.create(query.where.id);
+		const activity = await this.activityRepository.findById(activityId);
 
 		if (!activity) {
 			throw new ActivityNotFoundException(query.where.id);
 		}
 
-		return activity;
+		return aggregateToDto(activity);
 	}
 }

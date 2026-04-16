@@ -1,13 +1,13 @@
-import { LearningPathNotFoundException } from "@app/common";
-import type { ICommandHandler } from "@/app/common";
-import { UUID } from "@/domain/common";
+import { LearningPathNotFoundException } from '@app/common';
+import type { ICommandHandler } from '@/app/common';
+import { UUID } from '@/domain/common';
 import {
 	type ILearningPathRepository,
 	LearningPathDescription,
 	LearningPathId,
 	LearningPathName,
-} from "@/domain/learning-paths";
-import type { LearningPathDto } from "../dtos";
+} from '@/domain/learning-paths';
+import type { LearningPathDto } from '../dtos';
 
 type UpdateLearningPathCommand = {
 	where: {
@@ -32,7 +32,7 @@ export class UpdateLearningPathHandler
 		command: UpdateLearningPathCommand,
 	): Promise<UpdateLearningPathResult> {
 		const id = LearningPathId.create(UUID.create(command.where.id));
-		const learningPath = await this.learningPathRepository.load(id);
+		const learningPath = await this.learningPathRepository.findById(id);
 
 		if (!learningPath) {
 			throw new LearningPathNotFoundException(id.toString());

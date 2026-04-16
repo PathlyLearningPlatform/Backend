@@ -2,11 +2,11 @@ import {
 	type ICommandHandler,
 	SectionNotFoundException,
 	UnitNotFoundException,
-} from "@/app/common";
-import { Order } from "@/domain/common";
-import type { ISectionRepository } from "@/domain/sections/repositories";
-import type { IUnitRepository } from "@/domain/units/repositories";
-import { UnitId } from "@/domain/units/value-objects/id.vo";
+} from '@/app/common';
+import { Order } from '@/domain/common';
+import type { ISectionRepository } from '@/domain/sections/repositories';
+import type { IUnitRepository } from '@/domain/units/repositories';
+import { UnitId } from '@/domain/units/value-objects/id.vo';
 
 type ReorderUnitCommand = {
 	unitId: string;
@@ -23,13 +23,13 @@ export class ReorderUnitHandler
 
 	async execute(command: ReorderUnitCommand): Promise<void> {
 		const unitId = UnitId.create(command.unitId);
-		const unit = await this.unitRepository.load(unitId);
+		const unit = await this.unitRepository.findById(unitId);
 
 		if (!unit) {
 			throw new UnitNotFoundException(command.unitId);
 		}
 
-		const section = await this.sectionRepository.load(unit.sectionId);
+		const section = await this.sectionRepository.findById(unit.sectionId);
 
 		// never going to happen
 		// only for type safety

@@ -1,6 +1,7 @@
-import type { IQueryHandler, OffsetPagination } from "@/app/common";
-import type { SectionProgressDto } from "../dtos";
-import type { ISectionProgressReadRepository } from "../interfaces";
+import type { IQueryHandler, OffsetPagination } from '@/app/common';
+import type { SectionProgressDto } from '../dtos';
+import { ISectionProgressRepository } from '@/domain/sections';
+import { progressAggregateToDto } from '../helpers';
 
 export type ListSectionProgressQuery = {
 	options?: OffsetPagination;
@@ -15,13 +16,13 @@ export class ListSectionProgressHandler
 	implements IQueryHandler<ListSectionProgressQuery, ListSectionProgressResult>
 {
 	constructor(
-		private readonly sectionProgressReadRepository: ISectionProgressReadRepository,
+		private readonly sectionProgressRepository: ISectionProgressRepository,
 	) {}
 
 	async execute(
 		query: ListSectionProgressQuery,
 	): Promise<ListSectionProgressResult> {
-		const sectionProgress = await this.sectionProgressReadRepository.list({
+		const sectionProgress = await this.sectionProgressRepository.list({
 			options: {
 				limit: query.options?.limit,
 				page: query.options?.page,
@@ -32,6 +33,6 @@ export class ListSectionProgressHandler
 			},
 		});
 
-		return sectionProgress;
+		return sectionProgress.map(progressAggregateToDto);
 	}
 }

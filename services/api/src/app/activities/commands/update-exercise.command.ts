@@ -1,14 +1,14 @@
-import { ActivityNotFoundException, type ICommandHandler } from "@/app/common";
-import { Exercise } from "@/domain/activities/exercises/exercise.aggregate";
-import type { ExerciseDifficulty } from "@/domain/activities/exercises/value-objects";
-import type { IActivityRepository } from "@/domain/activities/repositories";
+import { ActivityNotFoundException, type ICommandHandler } from '@/app/common';
+import { Exercise } from '@/domain/activities/exercises/exercise.aggregate';
+import type { ExerciseDifficulty } from '@/domain/activities/exercises/value-objects';
+import type { IActivityRepository } from '@/domain/activities/repositories';
 import {
 	ActivityDescription,
 	ActivityName,
 	ActivityType,
-} from "@/domain/activities/value-objects";
-import { ActivityId } from "@/domain/activities/value-objects/id.vo";
-import type { ExerciseDto } from "../dtos";
+} from '@/domain/activities/value-objects';
+import { ActivityId } from '@/domain/activities/value-objects/id.vo';
+import type { ExerciseDto } from '../dtos';
 
 type UpdateExerciseCommand = {
 	where: {
@@ -29,7 +29,7 @@ export class UpdateExerciseHandler
 
 	async execute(command: UpdateExerciseCommand): Promise<UpdateExerciseResult> {
 		const id = ActivityId.create(command.where.id);
-		const activity = await this.activityRepository.load(id);
+		const activity = await this.activityRepository.findById(id);
 
 		if (!activity || !(activity instanceof Exercise)) {
 			throw new ActivityNotFoundException(id.value);

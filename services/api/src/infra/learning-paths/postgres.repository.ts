@@ -2,18 +2,15 @@ import { DbService } from '@/infra/db/db.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { DbException } from '@infra/common';
 import { eq } from 'drizzle-orm';
-import { Order } from '@/domain/common';
-import type { ILearningPathRepository } from '@/domain/learning-paths';
+import type {
+	ILearningPathRepository,
+	ListLearningPathsOptions,
+} from '@/domain/learning-paths';
 import { LearningPath } from '@/domain/learning-paths/learning-path.aggregate';
-import {
-	LearningPathDescription,
-	type LearningPathId,
-	LearningPathName,
-	SectionRef,
-} from '@/domain/learning-paths/value-objects';
-import { SectionId } from '@/domain/sections/value-objects';
+import { type LearningPathId } from '@/domain/learning-paths/value-objects';
 import type { Db } from '@/infra/db/type';
 import { learningPathsTable, sectionsTable } from '../db/schemas';
+import { LearningPathsApiConstraints } from './enums';
 
 @Injectable()
 export class PostgresLearningPathRepository implements ILearningPathRepository {
@@ -23,7 +20,7 @@ export class PostgresLearningPathRepository implements ILearningPathRepository {
 		this.db = this.dbService.getDb();
 	}
 
-	async load(id: LearningPathId): Promise<LearningPath | null> {
+	async findById(id: LearningPathId): Promise<LearningPath | null> {
 		const rawId = id.toString();
 
 		try {
@@ -42,23 +39,7 @@ export class PostgresLearningPathRepository implements ILearningPathRepository {
 					.from(sectionsTable)
 					.where(eq(sectionsTable.learningPathId, rawId));
 
-				const learningPath = LearningPath.fromDataSource(id, {
-					name: LearningPathName.create(dbLearningPath.name),
-					description: dbLearningPath.description
-						? LearningPathDescription.create(dbLearningPath.description)
-						: null,
-					createdAt: dbLearningPath.createdAt,
-					updatedAt: dbLearningPath.updatedAt,
-					sectionCount: dbLearningPath.sectionCount,
-					sectionRefs: sectionRefs.map((ref) =>
-						SectionRef.create({
-							order: Order.create(ref.order),
-							sectionId: SectionId.create(ref.sectionId),
-						}),
-					),
-				});
-
-				return learningPath;
+				return LearningPath.fromDataSource({ ...dbLearningPath, sectionRefs });
 			});
 
 			return result;
@@ -103,5 +84,22 @@ export class PostgresLearningPathRepository implements ILearningPathRepository {
 		} catch (err) {
 			throw new DbException('postgres exception', err);
 		}
+	}
+
+	async list(filter?: ListLearningPathsOptions): Promise<LearningPath[]> {
+		const limit =
+			filter?.options?.limit ?? LearningPathsApiConstraints.DEFAULT_LIMIT;
+		const page =
+			filter?.options?.page ?? LearningPathsApiConstraints.DEFAULT_PAGE;
+
+		const learningPaths = await this.db
+			.select()
+			.from(learningPathsTable)
+			.limit(limit)
+			.offset(page * limit);
+
+		return learningPaths.map((item) =>
+			LearningPath.fromDataSource({ ...item, sectionRefs: [] }),
+		);
 	}
 }

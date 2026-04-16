@@ -1,7 +1,13 @@
-import type { IQueryHandler } from "@/app/common";
-import type { ActivityProgressDto } from "../dtos";
-import { ActivityProgressNotFoundException } from "../exceptions";
-import type { IActivityProgressReadRepository } from "../interfaces";
+import type { IQueryHandler } from '@/app/common';
+import {
+	ActivityId,
+	ActivityProgressId,
+	IActivityProgressRepository,
+} from '@/domain/activities';
+import { UserId, UUID } from '@/domain/common';
+import type { ActivityProgressDto } from '../dtos';
+import { ActivityProgressNotFoundException } from '../exceptions';
+import { progressAggregateToDto } from '../helpers';
 
 export type FindActivityProgressForUserQuery = {
 	activityId: string;
@@ -17,22 +23,23 @@ export class FindActivityProgressForUserHandler
 		>
 {
 	constructor(
-		private readonly activityProgressReadRepository: IActivityProgressReadRepository,
+		private readonly activityProgressRepository: IActivityProgressRepository,
 	) {}
 
 	async execute(
 		query: FindActivityProgressForUserQuery,
 	): Promise<ActivityProgressDto> {
+		const progressId = ActivityProgressId.create(
+			ActivityId.create(query.activityId),
+			UserId.create(UUID.create(query.userId)),
+		);
 		const activityProgress =
-			await this.activityProgressReadRepository.findOneForUser(
-				query.activityId,
-				query.userId,
-			);
+			await this.activityProgressRepository.findById(progressId);
 
 		if (!activityProgress) {
-			throw new ActivityProgressNotFoundException("");
+			throw new ActivityProgressNotFoundException('');
 		}
 
-		return activityProgress;
+		return progressAggregateToDto(activityProgress);
 	}
 }

@@ -5,13 +5,9 @@ import { OnLessonCompletedHandler } from '@/app/lessons/events';
 import { OnSectionCompletedHandler } from '@/app/sections/events';
 import { OnUnitCompletedHandler } from '@/app/units/events';
 import { PostgresLearningPathProgressRepository } from '@/infra/learning-paths/postgres-progress.repository';
-import { PostgresLearningPathProgressReadRepository } from '@/infra/learning-paths/postgres-progress-read.repository';
 import { PostgresLessonProgressRepository } from '@/infra/lessons/postgres-progress.repository';
-import { PostgresLessonProgressReadRepository } from '@/infra/lessons/postgres-progress-read.repository';
 import { PostgresSectionProgressRepository } from '@/infra/sections/postgres-progress.repository';
-import { PostgresSectionProgressReadRepository } from '@/infra/sections/postgres-progress-read.repository';
 import { PostgresUnitProgressRepository } from '@/infra/units/postgres-progress.repository';
-import { PostgresUnitProgressReadRepository } from '@/infra/units/postgres-progress-read.repository';
 import { InMemoryEventBus } from '@infra/common';
 import { DiToken } from '@infra/common';
 
@@ -20,77 +16,44 @@ export const eventHandlersProvider: Provider[] = [
 		provide: DiToken.ON_ACTIVITY_COMPLETED_HANDLER,
 		useFactory(
 			lessonProgressRepository: PostgresLessonProgressRepository,
-			lessonProgressReadRepository: PostgresLessonProgressReadRepository,
 			eventBus: InMemoryEventBus,
 		) {
-			return new OnActivityCompletedHandler(
-				lessonProgressRepository,
-				lessonProgressReadRepository,
-				eventBus,
-			);
+			return new OnActivityCompletedHandler(lessonProgressRepository, eventBus);
 		},
-		inject: [
-			PostgresLessonProgressRepository,
-			PostgresLessonProgressReadRepository,
-			InMemoryEventBus,
-		],
+		inject: [PostgresLessonProgressRepository, InMemoryEventBus],
 	},
 	{
 		provide: DiToken.ON_LESSON_COMPLETED_HANDLER,
 		useFactory(
 			unitProgressRepository: PostgresUnitProgressRepository,
-			unitProgressReadRepository: PostgresUnitProgressReadRepository,
 			eventBus: InMemoryEventBus,
 		) {
-			return new OnLessonCompletedHandler(
-				unitProgressRepository,
-				unitProgressReadRepository,
-				eventBus,
-			);
+			return new OnLessonCompletedHandler(unitProgressRepository, eventBus);
 		},
-		inject: [
-			PostgresUnitProgressRepository,
-			PostgresUnitProgressReadRepository,
-			InMemoryEventBus,
-		],
+		inject: [PostgresUnitProgressRepository, InMemoryEventBus],
 	},
 	{
 		provide: DiToken.ON_UNIT_COMPLETED_HANDLER,
 		useFactory(
 			sectionProgressRepository: PostgresSectionProgressRepository,
-			sectionProgressReadRepository: PostgresSectionProgressReadRepository,
 			eventBus: InMemoryEventBus,
 		) {
-			return new OnUnitCompletedHandler(
-				sectionProgressRepository,
-				sectionProgressReadRepository,
-				eventBus,
-			);
+			return new OnUnitCompletedHandler(sectionProgressRepository, eventBus);
 		},
-		inject: [
-			PostgresSectionProgressRepository,
-			PostgresSectionProgressReadRepository,
-			InMemoryEventBus,
-		],
+		inject: [PostgresSectionProgressRepository, InMemoryEventBus],
 	},
 	{
 		provide: DiToken.ON_SECTION_COMPLETED_HANDLER,
 		useFactory(
 			learningPathProgressRepository: PostgresLearningPathProgressRepository,
-			learningPathProgressReadRepository: PostgresLearningPathProgressReadRepository,
 			eventBus: InMemoryEventBus,
 		) {
 			return new OnSectionCompletedHandler(
 				learningPathProgressRepository,
-				learningPathProgressReadRepository,
 				eventBus,
 			);
 		},
-		inject: [
-			PostgresLearningPathProgressRepository,
-			PostgresLearningPathProgressReadRepository,
-			InMemoryEventBus,
-		],
+		inject: [PostgresLearningPathProgressRepository, InMemoryEventBus],
 	},
 	{
 		provide: DiToken.ON_LEARNING_PATH_COMPLETED_HANDLER,

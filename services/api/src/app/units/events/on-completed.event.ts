@@ -1,5 +1,4 @@
 import type { IEventBus, IEventHandler } from '@/app/common';
-import type { ISectionProgressReadRepository } from '@/app/sections/interfaces';
 import { UserId, UUID } from '@/domain/common';
 import {
 	type ISectionProgressRepository,
@@ -13,22 +12,11 @@ export class OnUnitCompletedHandler
 {
 	constructor(
 		private readonly sectionProgressRepository: ISectionProgressRepository,
-		private readonly sectionProgressReadRepository: ISectionProgressReadRepository,
 		private readonly eventBus: IEventBus,
 	) {}
 
 	async handle(event: UnitCompletedEvent): Promise<void> {
-		const sectionProgressDto =
-			await this.sectionProgressReadRepository.findOneForUser(
-				event.sectionId,
-				event.userId,
-			);
-
-		if (!sectionProgressDto) {
-			return;
-		}
-
-		const sectionProgress = await this.sectionProgressRepository.load(
+		const sectionProgress = await this.sectionProgressRepository.findById(
 			SectionProgressId.create(
 				SectionId.create(event.sectionId),
 				UserId.create(UUID.create(event.userId)),

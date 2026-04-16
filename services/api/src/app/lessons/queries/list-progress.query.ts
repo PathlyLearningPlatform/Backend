@@ -1,6 +1,7 @@
-import type { IQueryHandler, OffsetPagination } from "@/app/common";
-import type { LessonProgressDto } from "../dtos";
-import type { ILessonProgressReadRepository } from "../interfaces";
+import type { IQueryHandler, OffsetPagination } from '@/app/common';
+import type { LessonProgressDto } from '../dtos';
+import { ILessonProgressRepository } from '@/domain/lessons';
+import { progressAggregateToDto } from '../helpers';
 
 export type ListLessonProgressQuery = {
 	options?: OffsetPagination;
@@ -15,13 +16,13 @@ export class ListLessonProgressHandler
 	implements IQueryHandler<ListLessonProgressQuery, ListLessonProgressResult>
 {
 	constructor(
-		private readonly lessonProgressReadRepository: ILessonProgressReadRepository,
+		private readonly lessonProgressRepository: ILessonProgressRepository,
 	) {}
 
 	async execute(
 		query: ListLessonProgressQuery,
 	): Promise<ListLessonProgressResult> {
-		const lessonProgress = await this.lessonProgressReadRepository.list({
+		const lessonProgress = await this.lessonProgressRepository.list({
 			options: {
 				limit: query.options?.limit,
 				page: query.options?.page,
@@ -32,6 +33,6 @@ export class ListLessonProgressHandler
 			},
 		});
 
-		return lessonProgress;
+		return lessonProgress.map(progressAggregateToDto);
 	}
 }

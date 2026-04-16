@@ -1,16 +1,16 @@
-import { randomUUID } from "node:crypto";
-import type { QuizWithoutQuestionsDto } from "@/app/activities/dtos";
-import { type ICommandHandler, LessonNotFoundException } from "@/app/common";
-import { Quiz } from "@/domain/activities/quizzes/quiz.aggregate";
-import type { IActivityRepository } from "@/domain/activities/repositories";
+import { randomUUID } from 'node:crypto';
+import type { QuizWithoutQuestionsDto } from '@/app/activities/dtos';
+import { type ICommandHandler, LessonNotFoundException } from '@/app/common';
+import { Quiz } from '@/domain/activities/quizzes/quiz.aggregate';
+import type { IActivityRepository } from '@/domain/activities/repositories';
 import {
 	ActivityDescription,
 	ActivityName,
 	ActivityType,
-} from "@/domain/activities/value-objects";
-import { ActivityId } from "@/domain/activities/value-objects/id.vo";
-import type { ILessonRepository } from "@/domain/lessons/repositories";
-import { LessonId } from "@/domain/lessons/value-objects/id.vo";
+} from '@/domain/activities/value-objects';
+import { ActivityId } from '@/domain/activities/value-objects/id.vo';
+import type { ILessonRepository } from '@/domain/lessons/repositories';
+import { LessonId } from '@/domain/lessons/value-objects/id.vo';
 
 type AddQuizCommand = {
 	lessonId: string;
@@ -29,7 +29,7 @@ export class AddQuizHandler
 
 	async execute(command: AddQuizCommand): Promise<AddQuizResult> {
 		const lessonId = LessonId.create(command.lessonId);
-		const lesson = await this.lessonRepository.load(lessonId);
+		const lesson = await this.lessonRepository.findById(lessonId);
 
 		if (!lesson) {
 			throw new LessonNotFoundException(lessonId.value);

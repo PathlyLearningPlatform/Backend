@@ -1,8 +1,8 @@
-import { type ICommandHandler, LessonNotFoundException } from "@/app/common";
-import type { ILessonRepository } from "@/domain/lessons/repositories";
-import { LessonDescription, LessonName } from "@/domain/lessons/value-objects";
-import { LessonId } from "@/domain/lessons/value-objects/id.vo";
-import type { LessonDto } from "../dtos";
+import { type ICommandHandler, LessonNotFoundException } from '@/app/common';
+import type { ILessonRepository } from '@/domain/lessons/repositories';
+import { LessonDescription, LessonName } from '@/domain/lessons/value-objects';
+import { LessonId } from '@/domain/lessons/value-objects/id.vo';
+import type { LessonDto } from '../dtos';
 
 type UpdateLessonCommand = {
 	where: {
@@ -22,7 +22,7 @@ export class UpdateLessonHandler
 
 	async execute(command: UpdateLessonCommand): Promise<UpdateLessonResult> {
 		const id = LessonId.create(command.where.id);
-		const lesson = await this.lessonRepository.load(id);
+		const lesson = await this.lessonRepository.findById(id);
 
 		if (!lesson) {
 			throw new LessonNotFoundException(id.value);

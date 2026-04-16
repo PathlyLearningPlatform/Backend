@@ -1,16 +1,16 @@
-import { Order } from "../common";
-import { AggregateRoot } from "../common/aggregate-root";
-import type { SectionId } from "../sections/value-objects/id.vo";
-import { LearningPathCannotBeRemovedException } from "./exceptions";
-import { SectionAlreadyExistsException } from "./exceptions/section-already-exists.exception";
+import { Order, UUID } from '../common';
+import { AggregateRoot } from '../common/aggregate-root';
+import { SectionId } from '../sections/value-objects/id.vo';
+import { LearningPathCannotBeRemovedException } from './exceptions';
+import { SectionAlreadyExistsException } from './exceptions/section-already-exists.exception';
 import {
 	LearningPathDescription,
-	type LearningPathId,
+	LearningPathId,
 	LearningPathName,
 	SectionRef,
-} from "./value-objects";
+} from './value-objects';
 
-type LearningPathProps = {
+export type LearningPathProps = {
 	name: LearningPathName;
 	description: LearningPathDescription | null;
 	createdAt: Date;
@@ -18,13 +18,22 @@ type LearningPathProps = {
 	sectionRefs: SectionRef[];
 	sectionCount: number;
 };
-type CreateLearningPathProps = {
+export type LearningPathFromDataSourceProps = {
+	id: string;
+	name: string;
+	description: string | null;
+	createdAt: Date;
+	updatedAt: Date | null;
+	sectionRefs: { order: number; sectionId: string }[];
+	sectionCount: number;
+};
+export type CreateLearningPathProps = {
 	name: string;
 	description?: string | null;
 	createdAt: Date;
 };
-type UpdateLearningPathProps = Partial<
-	Pick<LearningPathProps, "name" | "description">
+export type UpdateLearningPathProps = Partial<
+	Pick<LearningPathProps, 'name' | 'description'>
 >;
 
 export class LearningPath extends AggregateRoot<
@@ -38,8 +47,24 @@ export class LearningPath extends AggregateRoot<
 		this._props = props;
 	}
 
-	static fromDataSource(id: LearningPathId, props: LearningPathProps) {
-		const learningPath = new LearningPath(id, props);
+	static fromDataSource(props: LearningPathFromDataSourceProps) {
+		const id = LearningPathId.create(UUID.create(props.id));
+
+		const learningPath = new LearningPath(id, {
+			name: LearningPathName.create(props.name),
+			createdAt: props.createdAt,
+			updatedAt: props.updatedAt,
+			sectionCount: props.sectionCount,
+			description: props.description
+				? LearningPathDescription.create(props.description)
+				: null,
+			sectionRefs: props.sectionRefs.map((item) =>
+				SectionRef.create({
+					order: Order.create(item.order),
+					sectionId: SectionId.create(item.sectionId),
+				}),
+			),
+		});
 
 		learningPath._props.sectionRefs.sort(
 			(a, b) => a.order.value - b.order.value,

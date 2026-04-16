@@ -7,10 +7,6 @@ import {
 	StartUnitHandler,
 	UpdateUnitHandler,
 } from '@/app/units/commands';
-import type {
-	IUnitProgressReadRepository,
-	IUnitReadRepository,
-} from '@/app/units/interfaces';
 import {
 	FindUnitByIdHandler,
 	FindUnitProgressForUserHandler,
@@ -18,30 +14,27 @@ import {
 	ListUnitsHandler,
 } from '@/app/units/queries';
 import type { ISectionRepository } from '@/domain/sections/repositories';
-import type { IUnitProgressRepository } from '@/domain/units';
-import type { IUnitRepository } from '@/domain/units/repositories';
+import type { IUnitProgressRepository, IUnitRepository } from '@/domain/units';
 import { InMemoryEventBus } from '@infra/common';
 import { DiToken } from '@infra/common';
 import { PostgresSectionRepository } from '../sections/postgres.repository';
 import { PostgresUnitRepository } from './postgres.repository';
 import { PostgresUnitProgressRepository } from './postgres-progress.repository';
-import { PostgresUnitProgressReadRepository } from './postgres-progress-read.repository';
-import { PostgresUnitReadRepository } from './postgres-read.repository';
 
 export const unitHandlersProvider: Provider[] = [
 	{
 		provide: DiToken.LIST_UNITS_HANDLER,
-		useFactory(unitReadRepository: IUnitReadRepository) {
-			return new ListUnitsHandler(unitReadRepository);
+		useFactory(unitRepository: IUnitRepository) {
+			return new ListUnitsHandler(unitRepository);
 		},
-		inject: [PostgresUnitReadRepository],
+		inject: [PostgresUnitRepository],
 	},
 	{
 		provide: DiToken.FIND_UNIT_BY_ID_HANDLER,
-		useFactory(unitReadRepository: IUnitReadRepository) {
-			return new FindUnitByIdHandler(unitReadRepository);
+		useFactory(unitRepository: IUnitRepository) {
+			return new FindUnitByIdHandler(unitRepository);
 		},
-		inject: [PostgresUnitReadRepository],
+		inject: [PostgresUnitRepository],
 	},
 	{
 		provide: DiToken.UPDATE_UNIT_HANDLER,
@@ -84,18 +77,18 @@ export const unitHandlersProvider: Provider[] = [
 		provide: DiToken.START_UNIT_HANDLER,
 		useFactory(
 			unitProgressRepository: IUnitProgressRepository,
-			unitReadRepository: IUnitReadRepository,
+			unitRepository: IUnitRepository,
 			eventBus: IEventBus,
 		) {
 			return new StartUnitHandler(
 				unitProgressRepository,
-				unitReadRepository,
+				unitRepository,
 				eventBus,
 			);
 		},
 		inject: [
 			PostgresUnitProgressRepository,
-			PostgresUnitReadRepository,
+			PostgresUnitRepository,
 			InMemoryEventBus,
 		],
 	},
@@ -108,16 +101,16 @@ export const unitHandlersProvider: Provider[] = [
 	},
 	{
 		provide: DiToken.LIST_UNIT_PROGRESS_HANDLER,
-		useFactory(unitProgressReadRepository: IUnitProgressReadRepository) {
-			return new ListUnitProgressHandler(unitProgressReadRepository);
+		useFactory(unitProgressRepository: IUnitProgressRepository) {
+			return new ListUnitProgressHandler(unitProgressRepository);
 		},
-		inject: [PostgresUnitProgressReadRepository],
+		inject: [PostgresUnitProgressRepository],
 	},
 	{
 		provide: DiToken.FIND_UNIT_PROGRESS_FOR_USER_HANDLER,
-		useFactory(unitProgressReadRepository: IUnitProgressReadRepository) {
-			return new FindUnitProgressForUserHandler(unitProgressReadRepository);
+		useFactory(unitProgressRepository: IUnitProgressRepository) {
+			return new FindUnitProgressForUserHandler(unitProgressRepository);
 		},
-		inject: [PostgresUnitProgressReadRepository],
+		inject: [PostgresUnitProgressRepository],
 	},
 ];

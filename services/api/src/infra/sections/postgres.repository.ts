@@ -2,12 +2,16 @@ import { DbService } from '@/infra/db/db.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { DbException } from '@infra/common';
 import { eq } from 'drizzle-orm';
-import type { ISectionRepository } from '@/domain/sections/repositories';
+import type {
+	ISectionRepository,
+	ListSectionsOptions,
+} from '@/domain/sections/repositories';
 import { Section } from '@/domain/sections/section.aggregate';
 import { UnitRef } from '@/domain/sections/value-objects';
 import type { SectionId } from '@/domain/sections/value-objects/id.vo';
 import type { Db } from '@/infra/db/type';
 import { sectionsTable, unitsTable } from '../db/schemas';
+import { SectionsApiConstraints } from './enums';
 
 @Injectable()
 export class PostgresSectionRepository implements ISectionRepository {
@@ -17,7 +21,7 @@ export class PostgresSectionRepository implements ISectionRepository {
 		this.db = this.dbService.getDb();
 	}
 
-	async load(id: SectionId): Promise<Section | null> {
+	async findById(id: SectionId): Promise<Section | null> {
 		const rawId = id.value;
 
 		try {
@@ -60,6 +64,31 @@ export class PostgresSectionRepository implements ISectionRepository {
 		} catch (err) {
 			throw new DbException('postgres exception', err);
 		}
+	}
+
+	async list(filter?: ListSectionsOptions): Promise<Section[]> {
+		const limit =
+			filter?.options?.limit ?? SectionsApiConstraints.DEFAULT_LIMIT;
+		const page = filter?.options?.page ?? SectionsApiConstraints.DEFAULT_PAGE;
+		const learningPathId = filter?.where?.learningPathId;
+
+		const sections = await this.db
+			.select()
+			.from(sectionsTable)
+			.where(
+				learningPathId
+					? eq(sectionsTable.learningPathId, learningPathId)
+					: undefined,
+			)
+			.limit(limit)
+			.offset(page * limit);
+
+		return sections.map((item) =>
+			Section.fromDataSource({
+				...item,
+				unitRefs: [],
+			}),
+		);
 	}
 
 	async remove(id: SectionId): Promise<boolean> {

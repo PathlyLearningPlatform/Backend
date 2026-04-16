@@ -6,8 +6,6 @@ import { LearningPathsController } from './learning-paths.controller';
 import { LearningPathProgressController } from './progress.controller';
 import { PostgresLearningPathRepository } from './postgres.repository';
 import { PostgresLearningPathProgressRepository } from './postgres-progress.repository';
-import { PostgresLearningPathProgressReadRepository } from './postgres-progress-read.repository';
-import { PostgresLearningPathReadRepository } from './postgres-read.repository';
 import { InMemoryEventBus } from '@infra/common';
 
 @Module({
@@ -16,16 +14,12 @@ import { InMemoryEventBus } from '@infra/common';
 	providers: [
 		InMemoryEventBus,
 		PostgresLearningPathRepository,
-		PostgresLearningPathReadRepository,
 		PostgresLearningPathProgressRepository,
-		PostgresLearningPathProgressReadRepository,
 		...learningPathHandlersProvider,
 	],
 	exports: [
 		PostgresLearningPathRepository,
-		PostgresLearningPathReadRepository,
 		PostgresLearningPathProgressRepository,
-		PostgresLearningPathProgressReadRepository,
 		...learningPathHandlersProvider,
 	],
 })

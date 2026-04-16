@@ -1,7 +1,13 @@
-import type { IQueryHandler } from "@/app/common";
-import type { UnitProgressDto } from "../dtos";
-import { UnitProgressNotFoundException } from "../exceptions";
-import type { IUnitProgressReadRepository } from "../interfaces";
+import type { IQueryHandler } from '@/app/common';
+import type { UnitProgressDto } from '../dtos';
+import { UnitProgressNotFoundException } from '../exceptions';
+import {
+	IUnitProgressRepository,
+	UnitId,
+	UnitProgressId,
+} from '@/domain/units';
+import { UserId, UUID } from '@/domain/common';
+import { progressAggregateToDto } from '../helpers';
 
 export type FindUnitProgressForUserQuery = {
 	unitId: string;
@@ -14,19 +20,20 @@ export class FindUnitProgressForUserHandler
 		IQueryHandler<FindUnitProgressForUserQuery, FindUnitProgressForUserResult>
 {
 	constructor(
-		private readonly unitProgressReadRepository: IUnitProgressReadRepository,
+		private readonly unitProgressRepository: IUnitProgressRepository,
 	) {}
 
 	async execute(query: FindUnitProgressForUserQuery): Promise<UnitProgressDto> {
-		const unitProgress = await this.unitProgressReadRepository.findOneForUser(
-			query.unitId,
-			query.userId,
+		const progressId = UnitProgressId.create(
+			UnitId.create(query.unitId),
+			UserId.create(UUID.create(query.userId)),
 		);
+		const unitProgress = await this.unitProgressRepository.findById(progressId);
 
 		if (!unitProgress) {
-			throw new UnitProgressNotFoundException("");
+			throw new UnitProgressNotFoundException('');
 		}
 
-		return unitProgress;
+		return progressAggregateToDto(unitProgress);
 	}
 }

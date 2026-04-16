@@ -1,10 +1,23 @@
-import type { ActivityProgress } from "../progress.aggregate";
-import type { ActivityProgressId } from "../value-objects";
+import type { ActivityProgress } from '../progress.aggregate';
+import type { ActivityProgressId } from '../value-objects';
+
+export type ListActivityProgressOptions = {
+	options?: Partial<{
+		limit: number;
+		page: number;
+	}>;
+	where?: Partial<{
+		userId: string;
+		lessonId: string;
+	}>;
+};
 
 export interface IActivityProgressRepository {
-	load(id: ActivityProgressId): Promise<ActivityProgress | null>;
+	findById(id: ActivityProgressId): Promise<ActivityProgress | null>;
 
 	save(aggregate: ActivityProgress): Promise<void>;
 
 	remove(id: ActivityProgressId): Promise<boolean>;
+
+	list(options?: ListActivityProgressOptions): Promise<ActivityProgress[]>;
 }

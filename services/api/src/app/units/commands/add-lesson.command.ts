@@ -1,12 +1,12 @@
-import { randomUUID } from "node:crypto";
-import { type ICommandHandler, UnitNotFoundException } from "@/app/common";
-import type { LessonDto } from "@/app/lessons/dtos";
-import { Lesson } from "@/domain/lessons/lesson.aggregate";
-import type { ILessonRepository } from "@/domain/lessons/repositories";
-import { LessonDescription, LessonName } from "@/domain/lessons/value-objects";
-import { LessonId } from "@/domain/lessons/value-objects/id.vo";
-import type { IUnitRepository } from "@/domain/units/repositories";
-import { UnitId } from "@/domain/units/value-objects/id.vo";
+import { randomUUID } from 'node:crypto';
+import { type ICommandHandler, UnitNotFoundException } from '@/app/common';
+import type { LessonDto } from '@/app/lessons/dtos';
+import { Lesson } from '@/domain/lessons/lesson.aggregate';
+import type { ILessonRepository } from '@/domain/lessons/repositories';
+import { LessonDescription, LessonName } from '@/domain/lessons/value-objects';
+import { LessonId } from '@/domain/lessons/value-objects/id.vo';
+import type { IUnitRepository } from '@/domain/units/repositories';
+import { UnitId } from '@/domain/units/value-objects/id.vo';
 
 type AddLessonCommand = {
 	unitId: string;
@@ -25,7 +25,7 @@ export class AddLessonHandler
 
 	async execute(command: AddLessonCommand): Promise<AddLessonResult> {
 		const unitId = UnitId.create(command.unitId);
-		const unit = await this.unitRepository.load(unitId);
+		const unit = await this.unitRepository.findById(unitId);
 
 		if (!unit) {
 			throw new UnitNotFoundException(unitId.value);

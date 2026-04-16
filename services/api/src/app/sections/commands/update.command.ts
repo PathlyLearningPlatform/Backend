@@ -1,11 +1,11 @@
-import { type ICommandHandler, SectionNotFoundException } from "@/app/common";
-import type { ISectionRepository } from "@/domain/sections/repositories";
+import { type ICommandHandler, SectionNotFoundException } from '@/app/common';
+import type { ISectionRepository } from '@/domain/sections/repositories';
 import {
 	SectionDescription,
 	SectionName,
-} from "@/domain/sections/value-objects";
-import { SectionId } from "@/domain/sections/value-objects/id.vo";
-import type { SectionDto } from "../dtos";
+} from '@/domain/sections/value-objects';
+import { SectionId } from '@/domain/sections/value-objects/id.vo';
+import type { SectionDto } from '../dtos';
 
 type UpdateSectionCommand = {
 	where: {
@@ -25,7 +25,7 @@ export class UpdateSectionHandler
 
 	async execute(command: UpdateSectionCommand): Promise<UpdateSectionResult> {
 		const id = SectionId.create(command.where.id);
-		const section = await this.sectionRepository.load(id);
+		const section = await this.sectionRepository.findById(id);
 
 		if (!section) {
 			throw new SectionNotFoundException(id.value);

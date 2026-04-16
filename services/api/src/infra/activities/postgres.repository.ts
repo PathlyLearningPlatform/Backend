@@ -8,10 +8,8 @@ import { Exercise } from '@/domain/activities/exercises/exercise.aggregate';
 import { Question } from '@/domain/activities/quizzes/question.entity';
 import { Quiz } from '@/domain/activities/quizzes/quiz.aggregate';
 import type { IActivityRepository } from '@/domain/activities/repositories';
-import {
-	type ActivityId,
-	ActivityType,
-} from '@/domain/activities/value-objects';
+import type { ListActivitiesOptions } from '@/domain/activities/repositories';
+import { ActivityId, ActivityType } from '@/domain/activities/value-objects';
 import type { Db } from '@/infra/db/type';
 import {
 	activitiesTable,
@@ -20,6 +18,7 @@ import {
 	questionsTable,
 	quizzesTable,
 } from '../db/schemas';
+import { ActivitiesApiConstraints } from './enums';
 
 @Injectable()
 export class PostgresActivityRepository implements IActivityRepository {
@@ -29,7 +28,7 @@ export class PostgresActivityRepository implements IActivityRepository {
 		this.db = this.dbService.getDb();
 	}
 
-	async load(id: ActivityId): Promise<Activity | null> {
+	async findById(id: ActivityId): Promise<Activity | null> {
 		const rawId = id.value;
 
 		try {
@@ -137,6 +136,159 @@ export class PostgresActivityRepository implements IActivityRepository {
 		} catch (err) {
 			throw new DbException('postgres exception', err);
 		}
+	}
+
+	async list(options?: ListActivitiesOptions): Promise<Activity[]> {
+		const limit =
+			options?.options?.limit ?? ActivitiesApiConstraints.DEFAULT_LIMIT;
+		const page =
+			options?.options?.page ?? ActivitiesApiConstraints.DEFAULT_PAGE;
+		const lessonId = options?.where?.lessonId;
+
+		const rows = await this.db
+			.select({ id: activitiesTable.id })
+			.from(activitiesTable)
+			.where(lessonId ? eq(activitiesTable.lessonId, lessonId) : undefined)
+			.limit(limit)
+			.offset(page * limit);
+
+		const activities = await Promise.all(
+			rows.map((row) => this.findById(ActivityId.create(row.id))),
+		);
+
+		return activities.filter((item): item is Activity => item !== null);
+	}
+
+	async listArticles(options?: ListActivitiesOptions): Promise<Article[]> {
+		const limit =
+			options?.options?.limit ?? ActivitiesApiConstraints.DEFAULT_LIMIT;
+		const page =
+			options?.options?.page ?? ActivitiesApiConstraints.DEFAULT_PAGE;
+		const lessonId = options?.where?.lessonId;
+
+		const rows = await this.db
+			.select({
+				id: activitiesTable.id,
+				lessonId: activitiesTable.lessonId,
+				name: activitiesTable.name,
+				description: activitiesTable.description,
+				createdAt: activitiesTable.createdAt,
+				updatedAt: activitiesTable.updatedAt,
+				order: activitiesTable.order,
+				ref: articlesTable.ref,
+			})
+			.from(activitiesTable)
+			.innerJoin(
+				articlesTable,
+				eq(activitiesTable.id, articlesTable.activityId),
+			)
+			.where(lessonId ? eq(activitiesTable.lessonId, lessonId) : undefined)
+			.limit(limit)
+			.offset(page * limit);
+
+		return rows.map((row) => Article.fromDataSource(row));
+	}
+
+	async listExercises(options?: ListActivitiesOptions): Promise<Exercise[]> {
+		const limit =
+			options?.options?.limit ?? ActivitiesApiConstraints.DEFAULT_LIMIT;
+		const page =
+			options?.options?.page ?? ActivitiesApiConstraints.DEFAULT_PAGE;
+		const lessonId = options?.where?.lessonId;
+
+		const rows = await this.db
+			.select({
+				id: activitiesTable.id,
+				lessonId: activitiesTable.lessonId,
+				name: activitiesTable.name,
+				description: activitiesTable.description,
+				createdAt: activitiesTable.createdAt,
+				updatedAt: activitiesTable.updatedAt,
+				order: activitiesTable.order,
+				difficulty: exercisesTable.difficulty,
+			})
+			.from(activitiesTable)
+			.innerJoin(
+				exercisesTable,
+				eq(activitiesTable.id, exercisesTable.activityId),
+			)
+			.where(lessonId ? eq(activitiesTable.lessonId, lessonId) : undefined)
+			.limit(limit)
+			.offset(page * limit);
+
+		return rows.map((row) => Exercise.fromDataSource(row));
+	}
+
+	async listQuizzes(options?: ListActivitiesOptions): Promise<Quiz[]> {
+		const limit =
+			options?.options?.limit ?? ActivitiesApiConstraints.DEFAULT_LIMIT;
+		const page =
+			options?.options?.page ?? ActivitiesApiConstraints.DEFAULT_PAGE;
+		const lessonId = options?.where?.lessonId;
+
+		const rows = await this.db
+			.select({
+				id: activitiesTable.id,
+				lessonId: activitiesTable.lessonId,
+				name: activitiesTable.name,
+				description: activitiesTable.description,
+				createdAt: activitiesTable.createdAt,
+				updatedAt: activitiesTable.updatedAt,
+				order: activitiesTable.order,
+			})
+			.from(activitiesTable)
+			.innerJoin(quizzesTable, eq(activitiesTable.id, quizzesTable.activityId))
+			.where(lessonId ? eq(activitiesTable.lessonId, lessonId) : undefined)
+			.limit(limit)
+			.offset(page * limit);
+
+		const result: Quiz[] = [];
+		for (const row of rows) {
+			const questionCountRows = await this.db
+				.select({ id: questionsTable.id })
+				.from(questionsTable)
+				.where(eq(questionsTable.quizId, row.id));
+
+			result.push(
+				Quiz.fromDataSource({
+					...row,
+					questionCount: questionCountRows.length,
+					questions: [],
+				}),
+			);
+		}
+
+		return result;
+	}
+
+	async findArticleById(id: ActivityId): Promise<Article | null> {
+		const aggregate = await this.findById(id);
+
+		if (!aggregate || !(aggregate instanceof Article)) {
+			return null;
+		}
+
+		return aggregate;
+	}
+
+	async findExerciseById(id: ActivityId): Promise<Exercise | null> {
+		const aggregate = await this.findById(id);
+
+		if (!aggregate || !(aggregate instanceof Exercise)) {
+			return null;
+		}
+
+		return aggregate;
+	}
+
+	async findQuizById(id: ActivityId): Promise<Quiz | null> {
+		const aggregate = await this.findById(id);
+
+		if (!aggregate || !(aggregate instanceof Quiz)) {
+			return null;
+		}
+
+		return aggregate;
 	}
 
 	async remove(id: ActivityId): Promise<boolean> {

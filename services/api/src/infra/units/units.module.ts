@@ -7,8 +7,6 @@ import { UnitProgressController } from './progress.controller';
 import { UnitsController } from './units.controller';
 import { PostgresUnitRepository } from './postgres.repository';
 import { PostgresUnitProgressRepository } from './postgres-progress.repository';
-import { PostgresUnitProgressReadRepository } from './postgres-progress-read.repository';
-import { PostgresUnitReadRepository } from './postgres-read.repository';
 import { InMemoryEventBus } from '@infra/common';
 
 @Module({
@@ -17,16 +15,12 @@ import { InMemoryEventBus } from '@infra/common';
 	providers: [
 		InMemoryEventBus,
 		PostgresUnitRepository,
-		PostgresUnitReadRepository,
 		PostgresUnitProgressRepository,
-		PostgresUnitProgressReadRepository,
 		...unitHandlersProvider,
 	],
 	exports: [
 		PostgresUnitRepository,
-		PostgresUnitReadRepository,
 		PostgresUnitProgressRepository,
-		PostgresUnitProgressReadRepository,
 		...unitHandlersProvider,
 	],
 })

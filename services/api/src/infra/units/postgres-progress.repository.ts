@@ -3,12 +3,14 @@ import { DbException } from '@infra/common';
 import { and, eq } from 'drizzle-orm';
 import {
 	type IUnitProgressRepository,
+	type ListUnitProgressOptions,
 	UnitProgress,
 	type UnitProgressId,
 } from '@/domain/units';
 import type { Db } from '@/infra/db/type';
 import { DbService } from '../db/db.service';
 import { unitProgressTable } from '../db/schemas';
+import { UnitsApiConstraints } from './enums';
 
 @Injectable()
 export class PostgresUnitProgressRepository implements IUnitProgressRepository {
@@ -18,7 +20,7 @@ export class PostgresUnitProgressRepository implements IUnitProgressRepository {
 		this.db = dbService.getDb();
 	}
 
-	async load(id: UnitProgressId): Promise<UnitProgress | null> {
+	async findById(id: UnitProgressId): Promise<UnitProgress | null> {
 		try {
 			const [unitProgress] = await this.db
 				.select()
@@ -34,14 +36,7 @@ export class PostgresUnitProgressRepository implements IUnitProgressRepository {
 				return null;
 			}
 
-			return UnitProgress.fromDataSource({
-				unitId: unitProgress.unitId,
-				sectionId: unitProgress.sectionId,
-				userId: unitProgress.userId,
-				completedAt: unitProgress.completedAt,
-				completedLessonCount: unitProgress.completedLessonCount,
-				totalLessonCount: unitProgress.totalLessonCount,
-			});
+			return UnitProgress.fromDataSource(unitProgress);
 		} catch (err) {
 			throw new DbException('drizzle err', err);
 		}
@@ -83,6 +78,31 @@ export class PostgresUnitProgressRepository implements IUnitProgressRepository {
 				);
 
 			return result.rows.length > 0;
+		} catch (err) {
+			throw new DbException('drizzle err', err);
+		}
+	}
+
+	async list(dto?: ListUnitProgressOptions): Promise<UnitProgress[]> {
+		const limit = dto?.options?.limit ?? UnitsApiConstraints.DEFAULT_LIMIT;
+		const page = dto?.options?.page ?? UnitsApiConstraints.DEFAULT_PAGE;
+		const userId = dto?.where?.userId;
+		const sectionId = dto?.where?.sectionId;
+
+		try {
+			const rows = await this.db
+				.select()
+				.from(unitProgressTable)
+				.where(
+					and(
+						sectionId ? eq(unitProgressTable.sectionId, sectionId) : undefined,
+						userId ? eq(unitProgressTable.userId, userId) : undefined,
+					),
+				)
+				.limit(limit)
+				.offset(limit * page);
+
+			return rows.map(UnitProgress.fromDataSource);
 		} catch (err) {
 			throw new DbException('drizzle err', err);
 		}

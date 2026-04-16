@@ -22,7 +22,7 @@ export class AddQuestionHandler
 
 	async execute(command: AddQuestionCommand): Promise<AddQuestionResult> {
 		const quizId = ActivityId.create(command.quizId);
-		const activity = await this.activityRepository.load(quizId);
+		const activity = await this.activityRepository.findById(quizId);
 
 		if (!activity || !(activity instanceof Quiz)) {
 			throw new ActivityNotFoundException(quizId.value);

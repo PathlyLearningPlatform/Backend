@@ -1,6 +1,7 @@
-import { type IQueryHandler, UnitNotFoundException } from "@/app/common";
-import type { UnitDto } from "../dtos";
-import type { IUnitReadRepository } from "../interfaces";
+import { type IQueryHandler, UnitNotFoundException } from '@/app/common';
+import type { UnitDto } from '../dtos';
+import { IUnitRepository, UnitId } from '@/domain/units';
+import { aggregateToDto } from '../helpers';
 
 type FindUnitByIdQuery = {
 	where: {
@@ -12,15 +13,16 @@ type FindUnitByIdResult = UnitDto;
 export class FindUnitByIdHandler
 	implements IQueryHandler<FindUnitByIdQuery, FindUnitByIdResult>
 {
-	constructor(private readonly unitReadRepository: IUnitReadRepository) {}
+	constructor(private readonly unitRepository: IUnitRepository) {}
 
 	async execute(query: FindUnitByIdQuery): Promise<FindUnitByIdResult> {
-		const unit = await this.unitReadRepository.findById(query.where.id);
+		const unitId = UnitId.create(query.where.id);
+		const unit = await this.unitRepository.findById(unitId);
 
 		if (!unit) {
 			throw new UnitNotFoundException(query.where.id);
 		}
 
-		return unit;
+		return aggregateToDto(unit);
 	}
 }

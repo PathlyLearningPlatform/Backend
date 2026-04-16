@@ -5,10 +5,12 @@ import {
 	type ILearningPathProgressRepository,
 	LearningPathProgress,
 	type LearningPathProgressId,
+	ListLearningPathProgressOptions,
 } from '@/domain/learning-paths';
 import type { Db } from '@/infra/db/type';
 import { DbService } from '../db/db.service';
 import { learningPathProgressTable } from '../db/schemas';
+import { LearningPathsApiConstraints } from './enums';
 
 @Injectable()
 export class PostgresLearningPathProgressRepository
@@ -20,7 +22,9 @@ export class PostgresLearningPathProgressRepository
 		this.db = dbService.getDb();
 	}
 
-	async load(id: LearningPathProgressId): Promise<LearningPathProgress | null> {
+	async findById(
+		id: LearningPathProgressId,
+	): Promise<LearningPathProgress | null> {
 		try {
 			const [learningPathProgress] = await this.db
 				.select()
@@ -39,13 +43,7 @@ export class PostgresLearningPathProgressRepository
 				return null;
 			}
 
-			return LearningPathProgress.fromDataSource({
-				learningPathId: learningPathProgress.learningPathId,
-				userId: learningPathProgress.userId,
-				completedAt: learningPathProgress.completedAt,
-				completedSectionCount: learningPathProgress.completedSectionCount,
-				totalSectionCount: learningPathProgress.totalSectionCount,
-			});
+			return LearningPathProgress.fromDataSource(learningPathProgress);
 		} catch (err) {
 			throw new DbException('drizzle err', err);
 		}
@@ -92,6 +90,32 @@ export class PostgresLearningPathProgressRepository
 				);
 
 			return result.rows.length > 0;
+		} catch (err) {
+			throw new DbException('drizzle err', err);
+		}
+	}
+
+	async list(
+		dto?: ListLearningPathProgressOptions,
+	): Promise<LearningPathProgress[]> {
+		const limit =
+			dto?.options?.limit ?? LearningPathsApiConstraints.DEFAULT_LIMIT;
+		const page = dto?.options?.page ?? LearningPathsApiConstraints.DEFAULT_PAGE;
+		const userId = dto?.where?.userId;
+
+		try {
+			const result = await this.db
+				.select()
+				.from(learningPathProgressTable)
+				.where(
+					and(
+						userId ? eq(learningPathProgressTable.userId, userId) : undefined,
+					),
+				)
+				.limit(limit)
+				.offset(limit * page);
+
+			return result.map(LearningPathProgress.fromDataSource);
 		} catch (err) {
 			throw new DbException('drizzle err', err);
 		}

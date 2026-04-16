@@ -1,9 +1,14 @@
 import {
 	type IQueryHandler,
 	LearningPathNotFoundException,
-} from "@/app/common";
-import type { LearningPathDto } from "../dtos";
-import type { ILearningPathReadRepository } from "../interfaces";
+} from '@/app/common';
+import type { LearningPathDto } from '../dtos';
+import {
+	ILearningPathRepository,
+	LearningPathId,
+} from '@/domain/learning-paths';
+import { UUID } from '@/domain/common';
+import { aggregateToDto } from '../helpers';
 
 type FindLearningPathByIdQuery = {
 	where: {
@@ -17,20 +22,20 @@ export class FindLearningPathByIdHandler
 		IQueryHandler<FindLearningPathByIdQuery, FindLearningPathByIdResult>
 {
 	constructor(
-		private readonly learningPathReadRepository: ILearningPathReadRepository,
+		private readonly learningPathRepository: ILearningPathRepository,
 	) {}
 
 	async execute(
 		query: FindLearningPathByIdQuery,
 	): Promise<FindLearningPathByIdResult> {
-		const learningPath = await this.learningPathReadRepository.findById(
-			query.where.id,
-		);
+		const learningPathId = LearningPathId.create(UUID.create(query.where.id));
+		const learningPath =
+			await this.learningPathRepository.findById(learningPathId);
 
 		if (!learningPath) {
 			throw new LearningPathNotFoundException(query.where.id);
 		}
 
-		return learningPath;
+		return aggregateToDto(learningPath);
 	}
 }

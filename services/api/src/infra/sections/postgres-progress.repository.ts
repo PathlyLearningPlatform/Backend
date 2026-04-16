@@ -3,12 +3,14 @@ import { DbException } from '@infra/common';
 import { and, eq } from 'drizzle-orm';
 import {
 	type ISectionProgressRepository,
+	type ListSectionProgressOptions,
 	SectionProgress,
 	type SectionProgressId,
 } from '@/domain/sections';
 import type { Db } from '@/infra/db/type';
 import { DbService } from '../db/db.service';
 import { sectionProgressTable } from '../db/schemas';
+import { SectionsApiConstraints } from './enums';
 
 @Injectable()
 export class PostgresSectionProgressRepository
@@ -20,7 +22,7 @@ export class PostgresSectionProgressRepository
 		this.db = dbService.getDb();
 	}
 
-	async load(id: SectionProgressId): Promise<SectionProgress | null> {
+	async findById(id: SectionProgressId): Promise<SectionProgress | null> {
 		try {
 			const [sectionProgress] = await this.db
 				.select()
@@ -36,14 +38,7 @@ export class PostgresSectionProgressRepository
 				return null;
 			}
 
-			return SectionProgress.fromDataSource({
-				sectionId: sectionProgress.sectionId,
-				learningPathId: sectionProgress.learningPathId,
-				userId: sectionProgress.userId,
-				completedAt: sectionProgress.completedAt,
-				completedUnitCount: sectionProgress.completedUnitCount,
-				totalUnitCount: sectionProgress.totalUnitCount,
-			});
+			return SectionProgress.fromDataSource(sectionProgress);
 		} catch (err) {
 			throw new DbException('drizzle err', err);
 		}
@@ -85,6 +80,33 @@ export class PostgresSectionProgressRepository
 				);
 
 			return result.rows.length > 0;
+		} catch (err) {
+			throw new DbException('drizzle err', err);
+		}
+	}
+
+	async list(dto?: ListSectionProgressOptions): Promise<SectionProgress[]> {
+		const limit = dto?.options?.limit ?? SectionsApiConstraints.DEFAULT_LIMIT;
+		const page = dto?.options?.page ?? SectionsApiConstraints.DEFAULT_PAGE;
+		const userId = dto?.where?.userId;
+		const learningPathId = dto?.where?.learningPathId;
+
+		try {
+			const rows = await this.db
+				.select()
+				.from(sectionProgressTable)
+				.where(
+					and(
+						learningPathId
+							? eq(sectionProgressTable.learningPathId, learningPathId)
+							: undefined,
+						userId ? eq(sectionProgressTable.userId, userId) : undefined,
+					),
+				)
+				.limit(limit)
+				.offset(limit * page);
+
+			return rows.map(SectionProgress.fromDataSource);
 		} catch (err) {
 			throw new DbException('drizzle err', err);
 		}

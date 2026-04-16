@@ -1,17 +1,17 @@
-import { randomUUID } from "node:crypto";
-import type { ExerciseDto } from "@/app/activities/dtos";
-import { type ICommandHandler, LessonNotFoundException } from "@/app/common";
-import { Exercise } from "@/domain/activities/exercises/exercise.aggregate";
-import type { ExerciseDifficulty } from "@/domain/activities/exercises/value-objects";
-import type { IActivityRepository } from "@/domain/activities/repositories";
+import { randomUUID } from 'node:crypto';
+import type { ExerciseDto } from '@/app/activities/dtos';
+import { type ICommandHandler, LessonNotFoundException } from '@/app/common';
+import { Exercise } from '@/domain/activities/exercises/exercise.aggregate';
+import type { ExerciseDifficulty } from '@/domain/activities/exercises/value-objects';
+import type { IActivityRepository } from '@/domain/activities/repositories';
 import {
 	ActivityDescription,
 	ActivityName,
 	ActivityType,
-} from "@/domain/activities/value-objects";
-import { ActivityId } from "@/domain/activities/value-objects/id.vo";
-import type { ILessonRepository } from "@/domain/lessons/repositories";
-import { LessonId } from "@/domain/lessons/value-objects/id.vo";
+} from '@/domain/activities/value-objects';
+import { ActivityId } from '@/domain/activities/value-objects/id.vo';
+import type { ILessonRepository } from '@/domain/lessons/repositories';
+import { LessonId } from '@/domain/lessons/value-objects/id.vo';
 
 type AddExerciseCommand = {
 	lessonId: string;
@@ -31,7 +31,7 @@ export class AddExerciseHandler
 
 	async execute(command: AddExerciseCommand): Promise<AddExerciseResult> {
 		const lessonId = LessonId.create(command.lessonId);
-		const lesson = await this.lessonRepository.load(lessonId);
+		const lesson = await this.lessonRepository.findById(lessonId);
 
 		if (!lesson) {
 			throw new LessonNotFoundException(lessonId.value);

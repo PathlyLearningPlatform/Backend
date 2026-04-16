@@ -1,7 +1,13 @@
-import type { IQueryHandler } from "@/app/common";
-import type { LessonProgressDto } from "../dtos";
-import { LessonProgressNotFoundException } from "../exceptions";
-import type { ILessonProgressReadRepository } from "../interfaces";
+import type { IQueryHandler } from '@/app/common';
+import type { LessonProgressDto } from '../dtos';
+import { LessonProgressNotFoundException } from '../exceptions';
+import {
+	ILessonProgressRepository,
+	LessonId,
+	LessonProgressId,
+} from '@/domain/lessons';
+import { UserId, UUID } from '@/domain/common';
+import { progressAggregateToDto } from '../helpers';
 
 export type FindLessonProgressForUserQuery = {
 	lessonId: string;
@@ -17,22 +23,23 @@ export class FindLessonProgressForUserHandler
 		>
 {
 	constructor(
-		private readonly lessonProgressReadRepository: ILessonProgressReadRepository,
+		private readonly lessonProgressRepository: ILessonProgressRepository,
 	) {}
 
 	async execute(
 		query: FindLessonProgressForUserQuery,
 	): Promise<LessonProgressDto> {
+		const progressId = LessonProgressId.create(
+			LessonId.create(query.lessonId),
+			UserId.create(UUID.create(query.userId)),
+		);
 		const lessonProgress =
-			await this.lessonProgressReadRepository.findOneForUser(
-				query.lessonId,
-				query.userId,
-			);
+			await this.lessonProgressRepository.findById(progressId);
 
 		if (!lessonProgress) {
-			throw new LessonProgressNotFoundException("");
+			throw new LessonProgressNotFoundException('');
 		}
 
-		return lessonProgress;
+		return progressAggregateToDto(lessonProgress);
 	}
 }

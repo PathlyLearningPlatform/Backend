@@ -6,13 +6,13 @@ import {
 import { UserId, UUID } from '@/domain/common';
 import {
 	type ILessonProgressRepository,
+	type ILessonRepository,
 	LessonId,
 	LessonProgress,
 	LessonProgressId,
 } from '@/domain/lessons';
-import { UnitId } from '@/domain/units';
 import type { LessonProgressDto } from '../dtos';
-import type { ILessonReadRepository } from '../interfaces';
+import { progressAggregateToDto } from '../helpers';
 
 export type StartLessonCommand = {
 	lessonId: string;
@@ -25,22 +25,22 @@ export class StartLessonHandler
 {
 	constructor(
 		private readonly lessonProgressRepository: ILessonProgressRepository,
-		private readonly lessonReadRepository: ILessonReadRepository,
+		private readonly lessonRepository: ILessonRepository,
 		private readonly eventBus: IEventBus,
 	) {}
 
 	async execute(command: StartLessonCommand): Promise<StartLessonResult> {
-		const lesson = await this.lessonReadRepository.findById(command.lessonId);
+		const lessonId = LessonId.create(command.lessonId);
+		const lesson = await this.lessonRepository.findById(lessonId);
 
 		if (!lesson) {
 			throw new LessonNotFoundException(command.lessonId);
 		}
 
-		const lessonId = LessonId.create(command.lessonId);
 		const userId = UserId.create(UUID.create(command.userId));
 		const id = LessonProgressId.create(lessonId, userId);
 		const lessonProgress = LessonProgress.create(id, {
-			unitId: UnitId.create(lesson.unitId),
+			unitId: lesson.unitId,
 			totalActivityCount: lesson.activityCount,
 		});
 
@@ -49,13 +49,6 @@ export class StartLessonHandler
 		const events = lessonProgress.pullEvents();
 		await this.eventBus.publish(events);
 
-		return {
-			completedAt: lessonProgress.completedAt,
-			lessonId: lessonProgress.lessonId.value,
-			unitId: lessonProgress.unitId.value,
-			userId: lessonProgress.userId.toString(),
-			totalActivityCount: lessonProgress.totalActivityCount,
-			completedActivityCount: lessonProgress.completedActivityCount,
-		};
+		return progressAggregateToDto(lessonProgress);
 	}
 }

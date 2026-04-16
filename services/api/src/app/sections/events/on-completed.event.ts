@@ -1,5 +1,4 @@
 import type { IEventBus, IEventHandler } from '@/app/common';
-import type { ILearningPathProgressReadRepository } from '@/app/learning-paths/interfaces';
 import { UserId, UUID } from '@/domain/common';
 import {
 	type ILearningPathProgressRepository,
@@ -13,27 +12,35 @@ export class OnSectionCompletedHandler
 {
 	constructor(
 		private readonly learningPathProgressRepository: ILearningPathProgressRepository,
-		private readonly learningPathProgressReadRepository: ILearningPathProgressReadRepository,
 		private readonly eventBus: IEventBus,
 	) {}
 
 	async handle(event: SectionCompletedEvent): Promise<void> {
+		const learningPathId = LearningPathId.create(
+			UUID.create(event.learningPathId),
+		);
+		const userId = UserId.create(UUID.create(event.userId));
+		const learningPathProgressId = LearningPathProgressId.create(
+			learningPathId,
+			userId,
+		);
+
 		const learningPathProgressDto =
-			await this.learningPathProgressReadRepository.findOneForUser(
-				event.learningPathId,
-				event.userId,
+			await this.learningPathProgressRepository.findById(
+				learningPathProgressId,
 			);
 
 		if (!learningPathProgressDto) {
 			return;
 		}
 
-		const learningPathProgress = await this.learningPathProgressRepository.load(
-			LearningPathProgressId.create(
-				LearningPathId.create(UUID.create(event.learningPathId)),
-				UserId.create(UUID.create(event.userId)),
-			),
-		);
+		const learningPathProgress =
+			await this.learningPathProgressRepository.findById(
+				LearningPathProgressId.create(
+					LearningPathId.create(UUID.create(event.learningPathId)),
+					UserId.create(UUID.create(event.userId)),
+				),
+			);
 
 		if (!learningPathProgress) {
 			return;

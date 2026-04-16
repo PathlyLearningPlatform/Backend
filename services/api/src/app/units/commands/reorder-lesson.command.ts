@@ -2,11 +2,11 @@ import {
 	type ICommandHandler,
 	LessonNotFoundException,
 	UnitNotFoundException,
-} from "@/app/common";
-import { Order } from "@/domain/common";
-import type { ILessonRepository } from "@/domain/lessons/repositories";
-import { LessonId } from "@/domain/lessons/value-objects/id.vo";
-import type { IUnitRepository } from "@/domain/units/repositories";
+} from '@/app/common';
+import { Order } from '@/domain/common';
+import type { ILessonRepository } from '@/domain/lessons/repositories';
+import { LessonId } from '@/domain/lessons/value-objects/id.vo';
+import type { IUnitRepository } from '@/domain/units/repositories';
 
 type ReorderLessonCommand = {
 	lessonId: string;
@@ -23,13 +23,13 @@ export class ReorderLessonHandler
 
 	async execute(command: ReorderLessonCommand): Promise<void> {
 		const lessonId = LessonId.create(command.lessonId);
-		const lesson = await this.lessonRepository.load(lessonId);
+		const lesson = await this.lessonRepository.findById(lessonId);
 
 		if (!lesson) {
 			throw new LessonNotFoundException(command.lessonId);
 		}
 
-		const unit = await this.unitRepository.load(lesson.unitId);
+		const unit = await this.unitRepository.findById(lesson.unitId);
 
 		// never going to happen
 		// only for type safety

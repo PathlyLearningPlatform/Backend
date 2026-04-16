@@ -10,10 +10,6 @@ import {
 	StartSectionHandler,
 	UpdateSectionHandler,
 } from '@/app/sections/commands';
-import type {
-	ISectionProgressReadRepository,
-	ISectionReadRepository,
-} from '@/app/sections/interfaces';
 import {
 	FindSectionByIdHandler,
 	FindSectionProgressForUserHandler,
@@ -21,30 +17,30 @@ import {
 	ListSectionsHandler,
 } from '@/app/sections/queries';
 import type { ILearningPathRepository } from '@/domain/learning-paths';
-import type { ISectionProgressRepository } from '@/domain/sections';
-import type { ISectionRepository } from '@/domain/sections/repositories';
+import type {
+	ISectionProgressRepository,
+	ISectionRepository,
+} from '@/domain/sections';
 import { InMemoryEventBus } from '@infra/common';
 import { DiToken } from '@infra/common';
 import { PostgresLearningPathRepository } from '../learning-paths/postgres.repository';
 import { PostgresSectionRepository } from './postgres.repository';
 import { PostgresSectionProgressRepository } from './postgres-progress.repository';
-import { PostgresSectionProgressReadRepository } from './postgres-progress-read.repository';
-import { PostgresSectionReadRepository } from './postgres-read.repository';
 
 export const sectionHandlersProvider: Provider[] = [
 	{
 		provide: DiToken.LIST_SECTIONS_HANDLER,
-		useFactory(sectionReadRepository: ISectionReadRepository) {
-			return new ListSectionsHandler(sectionReadRepository);
+		useFactory(sectionRepository: ISectionRepository) {
+			return new ListSectionsHandler(sectionRepository);
 		},
-		inject: [PostgresSectionReadRepository],
+		inject: [PostgresSectionRepository],
 	},
 	{
 		provide: DiToken.FIND_SECTION_BY_ID_HANDLER,
-		useFactory(sectionReadRepository: ISectionReadRepository) {
-			return new FindSectionByIdHandler(sectionReadRepository);
+		useFactory(sectionRepository: ISectionRepository) {
+			return new FindSectionByIdHandler(sectionRepository);
 		},
-		inject: [PostgresSectionReadRepository],
+		inject: [PostgresSectionRepository],
 	},
 	{
 		provide: DiToken.ADD_SECTION_HANDLER,
@@ -93,18 +89,18 @@ export const sectionHandlersProvider: Provider[] = [
 		provide: DiToken.START_SECTION_HANDLER,
 		useFactory(
 			sectionProgressRepository: ISectionProgressRepository,
-			sectionReadRepository: ISectionReadRepository,
+			sectionRepository: ISectionRepository,
 			eventBus: IEventBus,
 		) {
 			return new StartSectionHandler(
 				sectionProgressRepository,
-				sectionReadRepository,
+				sectionRepository,
 				eventBus,
 			);
 		},
 		inject: [
 			PostgresSectionProgressRepository,
-			PostgresSectionReadRepository,
+			PostgresSectionRepository,
 			InMemoryEventBus,
 		],
 	},
@@ -117,18 +113,16 @@ export const sectionHandlersProvider: Provider[] = [
 	},
 	{
 		provide: DiToken.LIST_SECTION_PROGRESS_HANDLER,
-		useFactory(sectionProgressReadRepository: ISectionProgressReadRepository) {
-			return new ListSectionProgressHandler(sectionProgressReadRepository);
+		useFactory(sectionProgressRepository: ISectionProgressRepository) {
+			return new ListSectionProgressHandler(sectionProgressRepository);
 		},
-		inject: [PostgresSectionProgressReadRepository],
+		inject: [PostgresSectionProgressRepository],
 	},
 	{
 		provide: DiToken.FIND_SECTION_PROGRESS_FOR_USER_HANDLER,
-		useFactory(sectionProgressReadRepository: ISectionProgressReadRepository) {
-			return new FindSectionProgressForUserHandler(
-				sectionProgressReadRepository,
-			);
+		useFactory(sectionProgressRepository: ISectionProgressRepository) {
+			return new FindSectionProgressForUserHandler(sectionProgressRepository);
 		},
-		inject: [PostgresSectionProgressReadRepository],
+		inject: [PostgresSectionProgressRepository],
 	},
 ];

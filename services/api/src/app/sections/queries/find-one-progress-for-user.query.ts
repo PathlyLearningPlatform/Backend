@@ -1,7 +1,13 @@
-import type { IQueryHandler } from "@/app/common";
-import type { SectionProgressDto } from "../dtos";
-import { SectionProgressNotFoundException } from "../exceptions";
-import type { ISectionProgressReadRepository } from "../interfaces";
+import type { IQueryHandler } from '@/app/common';
+import type { SectionProgressDto } from '../dtos';
+import { SectionProgressNotFoundException } from '../exceptions';
+import {
+	ISectionProgressRepository,
+	SectionId,
+	SectionProgressId,
+} from '@/domain/sections';
+import { UserId, UUID } from '@/domain/common';
+import { progressAggregateToDto } from '../helpers';
 
 export type FindSectionProgressForUserQuery = {
 	sectionId: string;
@@ -17,22 +23,23 @@ export class FindSectionProgressForUserHandler
 		>
 {
 	constructor(
-		private readonly sectionProgressReadRepository: ISectionProgressReadRepository,
+		private readonly sectionProgressRepository: ISectionProgressRepository,
 	) {}
 
 	async execute(
 		query: FindSectionProgressForUserQuery,
 	): Promise<SectionProgressDto> {
+		const progressId = SectionProgressId.create(
+			SectionId.create(query.sectionId),
+			UserId.create(UUID.create(query.userId)),
+		);
 		const sectionProgress =
-			await this.sectionProgressReadRepository.findOneForUser(
-				query.sectionId,
-				query.userId,
-			);
+			await this.sectionProgressRepository.findById(progressId);
 
 		if (!sectionProgress) {
-			throw new SectionProgressNotFoundException("");
+			throw new SectionProgressNotFoundException('');
 		}
 
-		return sectionProgress;
+		return progressAggregateToDto(sectionProgress);
 	}
 }

@@ -1,6 +1,7 @@
-import { type IQueryHandler, SectionNotFoundException } from "@/app/common";
-import type { SectionDto } from "../dtos";
-import type { ISectionReadRepository } from "../interfaces";
+import { type IQueryHandler, SectionNotFoundException } from '@/app/common';
+import type { SectionDto } from '../dtos';
+import { ISectionRepository, SectionId } from '@/domain/sections';
+import { aggregateToDto } from '../helpers';
 
 type FindSectionByIdQuery = {
 	where: {
@@ -12,15 +13,16 @@ type FindSectionByIdResult = SectionDto;
 export class FindSectionByIdHandler
 	implements IQueryHandler<FindSectionByIdQuery, FindSectionByIdResult>
 {
-	constructor(private readonly sectionReadRepository: ISectionReadRepository) {}
+	constructor(private readonly sectionRepository: ISectionRepository) {}
 
 	async execute(query: FindSectionByIdQuery): Promise<FindSectionByIdResult> {
-		const section = await this.sectionReadRepository.findById(query.where.id);
+		const sectionId = SectionId.create(query.where.id);
+		const section = await this.sectionRepository.findById(sectionId);
 
 		if (!section) {
 			throw new SectionNotFoundException(query.where.id);
 		}
 
-		return section;
+		return aggregateToDto(section);
 	}
 }

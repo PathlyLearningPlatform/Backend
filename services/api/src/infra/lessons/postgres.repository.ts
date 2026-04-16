@@ -3,11 +3,15 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DbException } from '@infra/common';
 import { eq } from 'drizzle-orm';
 import { Lesson } from '@/domain/lessons/lesson.aggregate';
-import type { ILessonRepository } from '@/domain/lessons/repositories';
+import type {
+	ILessonRepository,
+	ListLessonsOptions,
+} from '@/domain/lessons/repositories';
 import { ActivityRef } from '@/domain/lessons/value-objects';
 import type { LessonId } from '@/domain/lessons/value-objects/id.vo';
 import type { Db } from '@/infra/db/type';
 import { activitiesTable, lessonsTable } from '../db/schemas';
+import { LessonsApiConstraints } from './enums';
 
 @Injectable()
 export class PostgresLessonRepository implements ILessonRepository {
@@ -17,7 +21,7 @@ export class PostgresLessonRepository implements ILessonRepository {
 		this.db = this.dbService.getDb();
 	}
 
-	async load(id: LessonId): Promise<Lesson | null> {
+	async findById(id: LessonId): Promise<Lesson | null> {
 		const rawId = id.value;
 
 		try {
@@ -63,6 +67,26 @@ export class PostgresLessonRepository implements ILessonRepository {
 		} catch (err) {
 			throw new DbException('postgres exception', err);
 		}
+	}
+
+	async list(filter?: ListLessonsOptions): Promise<Lesson[]> {
+		const limit = filter?.options?.limit ?? LessonsApiConstraints.DEFAULT_LIMIT;
+		const page = filter?.options?.page ?? LessonsApiConstraints.DEFAULT_PAGE;
+		const unitId = filter?.where?.unitId;
+
+		const lessons = await this.db
+			.select()
+			.from(lessonsTable)
+			.where(unitId ? eq(lessonsTable.unitId, unitId) : undefined)
+			.limit(limit)
+			.offset(page * limit);
+
+		return lessons.map((item) =>
+			Lesson.fromDataSource({
+				...item,
+				activityRefs: [],
+			}),
+		);
 	}
 
 	async remove(id: LessonId): Promise<boolean> {

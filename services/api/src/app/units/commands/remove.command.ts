@@ -2,10 +2,10 @@ import {
 	type ICommandHandler,
 	SectionNotFoundException,
 	UnitNotFoundException,
-} from "@/app/common";
-import type { ISectionRepository } from "@/domain/sections/repositories";
-import type { IUnitRepository } from "@/domain/units/repositories";
-import { UnitId } from "@/domain/units/value-objects/id.vo";
+} from '@/app/common';
+import type { ISectionRepository } from '@/domain/sections/repositories';
+import type { IUnitRepository } from '@/domain/units/repositories';
+import { UnitId } from '@/domain/units/value-objects/id.vo';
 
 type RemoveUnitCommand = {
 	unitId: string;
@@ -21,13 +21,13 @@ export class RemoveUnitHandler
 
 	async execute(command: RemoveUnitCommand): Promise<void> {
 		const unitId = UnitId.create(command.unitId);
-		const unit = await this.unitRepository.load(unitId);
+		const unit = await this.unitRepository.findById(unitId);
 
 		if (!unit) {
 			throw new UnitNotFoundException(unitId.value);
 		}
 
-		const section = await this.sectionRepository.load(unit.sectionId);
+		const section = await this.sectionRepository.findById(unit.sectionId);
 
 		// never going to happen
 		// only for type safety

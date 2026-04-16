@@ -7,8 +7,6 @@ import { LessonsController } from './lessons.controller';
 import { LessonProgressController } from './progress.controller';
 import { PostgresLessonRepository } from './postgres.repository';
 import { PostgresLessonProgressRepository } from './postgres-progress.repository';
-import { PostgresLessonProgressReadRepository } from './postgres-progress-read.repository';
-import { PostgresLessonReadRepository } from './postgres-read.repository';
 import { InMemoryEventBus } from '@infra/common';
 
 @Module({
@@ -17,16 +15,12 @@ import { InMemoryEventBus } from '@infra/common';
 	providers: [
 		InMemoryEventBus,
 		PostgresLessonRepository,
-		PostgresLessonReadRepository,
 		PostgresLessonProgressRepository,
-		PostgresLessonProgressReadRepository,
 		...lessonHandlersProvider,
 	],
 	exports: [
 		PostgresLessonRepository,
-		PostgresLessonReadRepository,
 		PostgresLessonProgressRepository,
-		PostgresLessonProgressReadRepository,
 		...lessonHandlersProvider,
 	],
 })

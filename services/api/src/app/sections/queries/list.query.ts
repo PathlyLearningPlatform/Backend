@@ -1,6 +1,7 @@
-import type { IQueryHandler, OffsetPagination } from "@/app/common";
-import type { SectionDto } from "../dtos";
-import type { ISectionReadRepository } from "../interfaces";
+import type { IQueryHandler, OffsetPagination } from '@/app/common';
+import type { SectionDto } from '../dtos';
+import { ISectionRepository } from '@/domain/sections';
+import { aggregateToDto } from '../helpers';
 
 type ListSectionsQuery = {
 	where?: {
@@ -13,10 +14,10 @@ type ListSectionsResult = SectionDto[];
 export class ListSectionsHandler
 	implements IQueryHandler<ListSectionsQuery, ListSectionsResult>
 {
-	constructor(private readonly sectionReadRepository: ISectionReadRepository) {}
+	constructor(private readonly sectionRepository: ISectionRepository) {}
 
 	async execute(query: ListSectionsQuery): Promise<ListSectionsResult> {
-		const sections = await this.sectionReadRepository.list({
+		const sections = await this.sectionRepository.list({
 			where: {
 				learningPathId: query.where?.learningPathId,
 			},
@@ -26,6 +27,6 @@ export class ListSectionsHandler
 			},
 		});
 
-		return sections;
+		return sections.map(aggregateToDto);
 	}
 }

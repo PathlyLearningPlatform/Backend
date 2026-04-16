@@ -1,6 +1,7 @@
-import type { IQueryHandler, OffsetPagination } from "@/app/common";
-import type { QuizWithoutQuestionsDto } from "../dtos";
-import type { IActivityReadRepository } from "../interfaces";
+import type { IQueryHandler, OffsetPagination } from '@/app/common';
+import type { QuizWithoutQuestionsDto } from '../dtos';
+import { IActivityRepository } from '@/domain/activities';
+import { quizAggregateToPreviewDto } from '../helpers';
 
 type ListQuizzesQuery = {
 	where?: {
@@ -13,12 +14,10 @@ type ListQuizzesResult = QuizWithoutQuestionsDto[];
 export class ListQuizzesHandler
 	implements IQueryHandler<ListQuizzesQuery, ListQuizzesResult>
 {
-	constructor(
-		private readonly activityReadRepository: IActivityReadRepository,
-	) {}
+	constructor(private readonly activityRepository: IActivityRepository) {}
 
 	async execute(query: ListQuizzesQuery): Promise<ListQuizzesResult> {
-		return this.activityReadRepository.listQuizzes({
+		const quizzes = await this.activityRepository.listQuizzes({
 			where: {
 				lessonId: query.where?.lessonId,
 			},
@@ -27,5 +26,7 @@ export class ListQuizzesHandler
 				page: query.options?.page,
 			},
 		});
+
+		return quizzes.map(quizAggregateToPreviewDto);
 	}
 }

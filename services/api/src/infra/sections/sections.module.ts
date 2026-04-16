@@ -7,8 +7,6 @@ import { SectionProgressController } from './progress.controller';
 import { SectionsController } from './sections.controller';
 import { PostgresSectionRepository } from './postgres.repository';
 import { PostgresSectionProgressRepository } from './postgres-progress.repository';
-import { PostgresSectionProgressReadRepository } from './postgres-progress-read.repository';
-import { PostgresSectionReadRepository } from './postgres-read.repository';
 import { InMemoryEventBus } from '@infra/common';
 
 @Module({
@@ -17,16 +15,12 @@ import { InMemoryEventBus } from '@infra/common';
 	providers: [
 		InMemoryEventBus,
 		PostgresSectionRepository,
-		PostgresSectionReadRepository,
 		PostgresSectionProgressRepository,
-		PostgresSectionProgressReadRepository,
 		...sectionHandlersProvider,
 	],
 	exports: [
 		PostgresSectionRepository,
-		PostgresSectionReadRepository,
 		PostgresSectionProgressRepository,
-		PostgresSectionProgressReadRepository,
 		...sectionHandlersProvider,
 	],
 })

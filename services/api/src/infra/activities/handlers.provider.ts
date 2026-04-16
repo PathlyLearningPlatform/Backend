@@ -10,10 +10,6 @@ import {
 	UpdateExerciseHandler,
 	UpdateQuestionHandler,
 } from '@/app/activities/commands';
-import type {
-	IActivityProgressReadRepository,
-	IActivityReadRepository,
-} from '@/app/activities/interfaces';
 import {
 	FindActivityByIdHandler,
 	FindActivityProgressForUserHandler,
@@ -33,16 +29,16 @@ import {
 	AddQuizHandler,
 	ReorderActivityHandler,
 } from '@/app/lessons/commands';
-import type { IActivityProgressRepository } from '@/domain/activities';
-import type { IActivityRepository } from '@/domain/activities/repositories';
+import type {
+	IActivityProgressRepository,
+	IActivityRepository,
+} from '@/domain/activities';
 import type { ILessonRepository } from '@/domain/lessons/repositories';
 import { InMemoryEventBus } from '@infra/common';
 import { DiToken } from '@infra/common';
 import { PostgresLessonRepository } from '../lessons/postgres.repository';
 import { PostgresActivityRepository } from './postgres.repository';
 import { PostgresActivityProgressRepository } from './postgres-progress.repository';
-import { PostgresActivityProgressReadRepository } from './postgres-progress-read.repository';
-import { PostgresActivityReadRepository } from './postgres-read.repository';
 
 export const activityHandlersProvider: Provider[] = [
 	// ──────────────────────────────────────────────
@@ -50,59 +46,59 @@ export const activityHandlersProvider: Provider[] = [
 	// ──────────────────────────────────────────────
 	{
 		provide: DiToken.LIST_ACTIVITIES_HANDLER,
-		useFactory(activityReadRepository: IActivityReadRepository) {
-			return new ListActivitiesHandler(activityReadRepository);
+		useFactory(activityRepository: IActivityRepository) {
+			return new ListActivitiesHandler(activityRepository);
 		},
-		inject: [PostgresActivityReadRepository],
+		inject: [PostgresActivityRepository],
 	},
 	{
 		provide: DiToken.LIST_ARTICLES_HANDLER,
-		useFactory(activityReadRepository: IActivityReadRepository) {
-			return new ListArticlesHandler(activityReadRepository);
+		useFactory(activityRepository: IActivityRepository) {
+			return new ListArticlesHandler(activityRepository);
 		},
-		inject: [PostgresActivityReadRepository],
+		inject: [PostgresActivityRepository],
 	},
 	{
 		provide: DiToken.LIST_EXERCISES_HANDLER,
-		useFactory(activityReadRepository: IActivityReadRepository) {
-			return new ListExercisesHandler(activityReadRepository);
+		useFactory(activityRepository: IActivityRepository) {
+			return new ListExercisesHandler(activityRepository);
 		},
-		inject: [PostgresActivityReadRepository],
+		inject: [PostgresActivityRepository],
 	},
 	{
 		provide: DiToken.LIST_QUIZZES_HANDLER,
-		useFactory(activityReadRepository: IActivityReadRepository) {
-			return new ListQuizzesHandler(activityReadRepository);
+		useFactory(activityRepository: IActivityRepository) {
+			return new ListQuizzesHandler(activityRepository);
 		},
-		inject: [PostgresActivityReadRepository],
+		inject: [PostgresActivityRepository],
 	},
 	{
 		provide: DiToken.FIND_ACTIVITY_BY_ID_HANDLER,
-		useFactory(activityReadRepository: IActivityReadRepository) {
-			return new FindActivityByIdHandler(activityReadRepository);
+		useFactory(activityRepository: IActivityRepository) {
+			return new FindActivityByIdHandler(activityRepository);
 		},
-		inject: [PostgresActivityReadRepository],
+		inject: [PostgresActivityRepository],
 	},
 	{
 		provide: DiToken.FIND_ARTICLE_BY_ID_HANDLER,
-		useFactory(activityReadRepository: IActivityReadRepository) {
-			return new FindArticleByIdHandler(activityReadRepository);
+		useFactory(activityRepository: IActivityRepository) {
+			return new FindArticleByIdHandler(activityRepository);
 		},
-		inject: [PostgresActivityReadRepository],
+		inject: [PostgresActivityRepository],
 	},
 	{
 		provide: DiToken.FIND_EXERCISE_BY_ID_HANDLER,
-		useFactory(activityReadRepository: IActivityReadRepository) {
-			return new FindExerciseByIdHandler(activityReadRepository);
+		useFactory(activityRepository: IActivityRepository) {
+			return new FindExerciseByIdHandler(activityRepository);
 		},
-		inject: [PostgresActivityReadRepository],
+		inject: [PostgresActivityRepository],
 	},
 	{
 		provide: DiToken.FIND_QUIZ_BY_ID_HANDLER,
-		useFactory(activityReadRepository: IActivityReadRepository) {
-			return new FindQuizByIdHandler(activityReadRepository);
+		useFactory(activityRepository: IActivityRepository) {
+			return new FindQuizByIdHandler(activityRepository);
 		},
-		inject: [PostgresActivityReadRepository],
+		inject: [PostgresActivityRepository],
 	},
 
 	// ──────────────────────────────────────────────
@@ -204,18 +200,18 @@ export const activityHandlersProvider: Provider[] = [
 		provide: DiToken.COMPLETE_ACTIVITY_HANDLER,
 		useFactory(
 			activityProgressRepository: IActivityProgressRepository,
-			activityReadRepository: IActivityReadRepository,
+			activityRepository: IActivityRepository,
 			eventBus: IEventBus,
 		) {
 			return new CompleteActivityHandler(
 				activityProgressRepository,
-				activityReadRepository,
+				activityRepository,
 				eventBus,
 			);
 		},
 		inject: [
 			PostgresActivityProgressRepository,
-			PostgresActivityReadRepository,
+			PostgresActivityRepository,
 			InMemoryEventBus,
 		],
 	},
@@ -228,22 +224,16 @@ export const activityHandlersProvider: Provider[] = [
 	},
 	{
 		provide: DiToken.LIST_ACTIVITY_PROGRESS_HANDLER,
-		useFactory(
-			activityProgressReadRepository: IActivityProgressReadRepository,
-		) {
-			return new ListActivityProgressHandler(activityProgressReadRepository);
+		useFactory(activityProgressRepository: IActivityProgressRepository) {
+			return new ListActivityProgressHandler(activityProgressRepository);
 		},
-		inject: [PostgresActivityProgressReadRepository],
+		inject: [PostgresActivityProgressRepository],
 	},
 	{
 		provide: DiToken.FIND_ACTIVITY_PROGRESS_FOR_USER_HANDLER,
-		useFactory(
-			activityProgressReadRepository: IActivityProgressReadRepository,
-		) {
-			return new FindActivityProgressForUserHandler(
-				activityProgressReadRepository,
-			);
+		useFactory(activityProgressRepository: IActivityProgressRepository) {
+			return new FindActivityProgressForUserHandler(activityProgressRepository);
 		},
-		inject: [PostgresActivityProgressReadRepository],
+		inject: [PostgresActivityProgressRepository],
 	},
 ];

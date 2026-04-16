@@ -6,10 +6,6 @@ import {
 	StartLessonHandler,
 	UpdateLessonHandler,
 } from '@/app/lessons/commands';
-import type {
-	ILessonProgressReadRepository,
-	ILessonReadRepository,
-} from '@/app/lessons/interfaces';
 import {
 	FindLessonByIdHandler,
 	FindLessonProgressForUserHandler,
@@ -17,31 +13,31 @@ import {
 	ListLessonsHandler,
 } from '@/app/lessons/queries';
 import { AddLessonHandler, ReorderLessonHandler } from '@/app/units/commands';
-import type { ILessonProgressRepository } from '@/domain/lessons';
-import type { ILessonRepository } from '@/domain/lessons/repositories';
+import type {
+	ILessonProgressRepository,
+	ILessonRepository,
+} from '@/domain/lessons';
 import type { IUnitRepository } from '@/domain/units/repositories';
 import { InMemoryEventBus } from '@infra/common';
 import { DiToken } from '@infra/common';
 import { PostgresUnitRepository } from '../units/postgres.repository';
 import { PostgresLessonRepository } from './postgres.repository';
 import { PostgresLessonProgressRepository } from './postgres-progress.repository';
-import { PostgresLessonProgressReadRepository } from './postgres-progress-read.repository';
-import { PostgresLessonReadRepository } from './postgres-read.repository';
 
 export const lessonHandlersProvider: Provider[] = [
 	{
 		provide: DiToken.LIST_LESSONS_HANDLER,
-		useFactory(lessonReadRepository: ILessonReadRepository) {
-			return new ListLessonsHandler(lessonReadRepository);
+		useFactory(lessonRepository: ILessonRepository) {
+			return new ListLessonsHandler(lessonRepository);
 		},
-		inject: [PostgresLessonReadRepository],
+		inject: [PostgresLessonRepository],
 	},
 	{
 		provide: DiToken.FIND_LESSON_BY_ID_HANDLER,
-		useFactory(lessonReadRepository: ILessonReadRepository) {
-			return new FindLessonByIdHandler(lessonReadRepository);
+		useFactory(lessonRepository: ILessonRepository) {
+			return new FindLessonByIdHandler(lessonRepository);
 		},
-		inject: [PostgresLessonReadRepository],
+		inject: [PostgresLessonRepository],
 	},
 	{
 		provide: DiToken.ADD_LESSON_HANDLER,
@@ -84,18 +80,18 @@ export const lessonHandlersProvider: Provider[] = [
 		provide: DiToken.START_LESSON_HANDLER,
 		useFactory(
 			lessonProgressRepository: ILessonProgressRepository,
-			lessonReadRepository: ILessonReadRepository,
+			lessonRepository: ILessonRepository,
 			eventBus: IEventBus,
 		) {
 			return new StartLessonHandler(
 				lessonProgressRepository,
-				lessonReadRepository,
+				lessonRepository,
 				eventBus,
 			);
 		},
 		inject: [
 			PostgresLessonProgressRepository,
-			PostgresLessonReadRepository,
+			PostgresLessonRepository,
 			InMemoryEventBus,
 		],
 	},
@@ -108,16 +104,16 @@ export const lessonHandlersProvider: Provider[] = [
 	},
 	{
 		provide: DiToken.LIST_LESSON_PROGRESS_HANDLER,
-		useFactory(lessonProgressReadRepository: ILessonProgressReadRepository) {
-			return new ListLessonProgressHandler(lessonProgressReadRepository);
+		useFactory(lessonProgressRepository: ILessonProgressRepository) {
+			return new ListLessonProgressHandler(lessonProgressRepository);
 		},
-		inject: [PostgresLessonProgressReadRepository],
+		inject: [PostgresLessonProgressRepository],
 	},
 	{
 		provide: DiToken.FIND_LESSON_PROGRESS_FOR_USER_HANDLER,
-		useFactory(lessonProgressReadRepository: ILessonProgressReadRepository) {
-			return new FindLessonProgressForUserHandler(lessonProgressReadRepository);
+		useFactory(lessonProgressRepository: ILessonProgressRepository) {
+			return new FindLessonProgressForUserHandler(lessonProgressRepository);
 		},
-		inject: [PostgresLessonProgressReadRepository],
+		inject: [PostgresLessonProgressRepository],
 	},
 ];

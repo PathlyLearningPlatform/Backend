@@ -1,12 +1,12 @@
-import { randomUUID } from "node:crypto";
-import { type ICommandHandler, SectionNotFoundException } from "@/app/common";
-import type { UnitDto } from "@/app/units/dtos";
-import type { ISectionRepository } from "@/domain/sections/repositories";
-import { SectionId } from "@/domain/sections/value-objects/id.vo";
-import type { IUnitRepository } from "@/domain/units/repositories";
-import { Unit } from "@/domain/units/unit.aggregate";
-import { UnitDescription, UnitName } from "@/domain/units/value-objects";
-import { UnitId } from "@/domain/units/value-objects/id.vo";
+import { randomUUID } from 'node:crypto';
+import { type ICommandHandler, SectionNotFoundException } from '@/app/common';
+import type { UnitDto } from '@/app/units/dtos';
+import type { ISectionRepository } from '@/domain/sections/repositories';
+import { SectionId } from '@/domain/sections/value-objects/id.vo';
+import type { IUnitRepository } from '@/domain/units/repositories';
+import { Unit } from '@/domain/units/unit.aggregate';
+import { UnitDescription, UnitName } from '@/domain/units/value-objects';
+import { UnitId } from '@/domain/units/value-objects/id.vo';
 
 type AddUnitCommand = {
 	sectionId: string;
@@ -25,7 +25,7 @@ export class AddUnitHandler
 
 	async execute(command: AddUnitCommand): Promise<AddUnitResult> {
 		const sectionId = SectionId.create(command.sectionId);
-		const section = await this.sectionRepository.load(sectionId);
+		const section = await this.sectionRepository.findById(sectionId);
 
 		if (!section) {
 			throw new SectionNotFoundException(sectionId.value);

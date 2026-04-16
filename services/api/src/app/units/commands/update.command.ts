@@ -1,8 +1,8 @@
-import { type ICommandHandler, UnitNotFoundException } from "@/app/common";
-import type { IUnitRepository } from "@/domain/units/repositories";
-import { UnitDescription, UnitName } from "@/domain/units/value-objects";
-import { UnitId } from "@/domain/units/value-objects/id.vo";
-import type { UnitDto } from "../dtos";
+import { type ICommandHandler, UnitNotFoundException } from '@/app/common';
+import type { IUnitRepository } from '@/domain/units/repositories';
+import { UnitDescription, UnitName } from '@/domain/units/value-objects';
+import { UnitId } from '@/domain/units/value-objects/id.vo';
+import type { UnitDto } from '../dtos';
 
 type UpdateUnitCommand = {
 	where: {
@@ -22,7 +22,7 @@ export class UpdateUnitHandler
 
 	async execute(command: UpdateUnitCommand): Promise<UpdateUnitResult> {
 		const id = UnitId.create(command.where.id);
-		const unit = await this.unitRepository.load(id);
+		const unit = await this.unitRepository.findById(id);
 
 		if (!unit) {
 			throw new UnitNotFoundException(id.value);

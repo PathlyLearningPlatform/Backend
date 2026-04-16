@@ -1,6 +1,7 @@
-import type { IQueryHandler, OffsetPagination } from "@/app/common";
-import type { UnitDto } from "../dtos";
-import type { IUnitReadRepository } from "../interfaces";
+import type { IQueryHandler, OffsetPagination } from '@/app/common';
+import type { UnitDto } from '../dtos';
+import { IUnitRepository } from '@/domain/units';
+import { aggregateToDto } from '../helpers';
 
 type ListUnitsQuery = {
 	where?: {
@@ -13,10 +14,10 @@ type ListUnitsResult = UnitDto[];
 export class ListUnitsHandler
 	implements IQueryHandler<ListUnitsQuery, ListUnitsResult>
 {
-	constructor(private readonly unitReadRepository: IUnitReadRepository) {}
+	constructor(private readonly unitRepository: IUnitRepository) {}
 
 	async execute(query: ListUnitsQuery): Promise<ListUnitsResult> {
-		const units = await this.unitReadRepository.list({
+		const units = await this.unitRepository.list({
 			where: {
 				sectionId: query.where?.sectionId,
 			},
@@ -26,6 +27,6 @@ export class ListUnitsHandler
 			},
 		});
 
-		return units;
+		return units.map(aggregateToDto);
 	}
 }

@@ -1,6 +1,7 @@
-import type { IQueryHandler, OffsetPagination } from "@/app/common";
-import type { ActivityProgressDto } from "../dtos";
-import type { IActivityProgressReadRepository } from "../interfaces";
+import type { IQueryHandler, OffsetPagination } from '@/app/common';
+import type { ActivityProgressDto } from '../dtos';
+import { IActivityProgressRepository } from '@/domain/activities';
+import { progressAggregateToDto } from '../helpers';
 
 export type ListActivityProgressQuery = {
 	options?: OffsetPagination;
@@ -16,13 +17,13 @@ export class ListActivityProgressHandler
 		IQueryHandler<ListActivityProgressQuery, ListActivityProgressResult>
 {
 	constructor(
-		private readonly activityProgressReadRepository: IActivityProgressReadRepository,
+		private readonly activityProgressRepository: IActivityProgressRepository,
 	) {}
 
 	async execute(
 		query: ListActivityProgressQuery,
 	): Promise<ListActivityProgressResult> {
-		const activityProgress = await this.activityProgressReadRepository.list({
+		const activityProgress = await this.activityProgressRepository.list({
 			options: {
 				limit: query.options?.limit,
 				page: query.options?.page,
@@ -33,6 +34,6 @@ export class ListActivityProgressHandler
 			},
 		});
 
-		return activityProgress;
+		return activityProgress.map(progressAggregateToDto);
 	}
 }

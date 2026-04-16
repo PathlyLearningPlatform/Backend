@@ -3,12 +3,14 @@ import { DbException } from '@infra/common';
 import { and, eq } from 'drizzle-orm';
 import {
 	type ILessonProgressRepository,
+	type ListLessonProgressOptions,
 	LessonProgress,
 	type LessonProgressId,
 } from '@/domain/lessons';
 import type { Db } from '@/infra/db/type';
 import { DbService } from '../db/db.service';
 import { lessonProgressTable } from '../db/schemas';
+import { LessonsApiConstraints } from './enums';
 
 @Injectable()
 export class PostgresLessonProgressRepository
@@ -20,7 +22,7 @@ export class PostgresLessonProgressRepository
 		this.db = dbService.getDb();
 	}
 
-	async load(id: LessonProgressId): Promise<LessonProgress | null> {
+	async findById(id: LessonProgressId): Promise<LessonProgress | null> {
 		try {
 			const [lessonProgress] = await this.db
 				.select()
@@ -36,14 +38,7 @@ export class PostgresLessonProgressRepository
 				return null;
 			}
 
-			return LessonProgress.fromDataSource({
-				lessonId: lessonProgress.lessonId,
-				unitId: lessonProgress.unitId,
-				userId: lessonProgress.userId,
-				completedAt: lessonProgress.completedAt,
-				completedActivityCount: lessonProgress.completedActivityCount,
-				totalActivityCount: lessonProgress.totalActivityCount,
-			});
+			return LessonProgress.fromDataSource(lessonProgress);
 		} catch (err) {
 			throw new DbException('drizzle err', err);
 		}
@@ -85,6 +80,31 @@ export class PostgresLessonProgressRepository
 				);
 
 			return result.rows.length > 0;
+		} catch (err) {
+			throw new DbException('drizzle err', err);
+		}
+	}
+
+	async list(dto?: ListLessonProgressOptions): Promise<LessonProgress[]> {
+		const limit = dto?.options?.limit ?? LessonsApiConstraints.DEFAULT_LIMIT;
+		const page = dto?.options?.page ?? LessonsApiConstraints.DEFAULT_PAGE;
+		const userId = dto?.where?.userId;
+		const unitId = dto?.where?.unitId;
+
+		try {
+			const rows = await this.db
+				.select()
+				.from(lessonProgressTable)
+				.where(
+					and(
+						unitId ? eq(lessonProgressTable.unitId, unitId) : undefined,
+						userId ? eq(lessonProgressTable.userId, userId) : undefined,
+					),
+				)
+				.limit(limit)
+				.offset(limit * page);
+
+			return rows.map(LessonProgress.fromDataSource);
 		} catch (err) {
 			throw new DbException('drizzle err', err);
 		}

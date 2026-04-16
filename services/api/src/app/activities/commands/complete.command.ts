@@ -7,12 +7,12 @@ import {
 	ActivityId,
 	ActivityProgress,
 	ActivityProgressId,
+	type IActivityRepository,
 	type IActivityProgressRepository,
 } from '@/domain/activities';
 import { UserId, UUID } from '@/domain/common';
-import { LessonId } from '@/domain/lessons';
 import type { ActivityProgressDto } from '../dtos';
-import type { IActivityReadRepository } from '../interfaces';
+import { progressAggregateToDto } from '../helpers';
 
 export type CompleteActivityCommand = {
 	activityId: string;
@@ -25,26 +25,24 @@ export class CompleteActivityHandler
 {
 	constructor(
 		private readonly activityProgressRepository: IActivityProgressRepository,
-		private readonly activityReadRepository: IActivityReadRepository,
+		private readonly activityRepository: IActivityRepository,
 		private readonly eventBus: IEventBus,
 	) {}
 
 	async execute(
 		command: CompleteActivityCommand,
 	): Promise<CompleteActivityResult> {
-		const activity = await this.activityReadRepository.findById(
-			command.activityId,
-		);
+		const activityId = ActivityId.create(command.activityId);
+		const activity = await this.activityRepository.findById(activityId);
 
 		if (!activity) {
 			throw new ActivityNotFoundException(command.activityId);
 		}
 
-		const activityId = ActivityId.create(command.activityId);
 		const userId = UserId.create(UUID.create(command.userId));
 		const id = ActivityProgressId.create(activityId, userId);
 		const activityProgress = ActivityProgress.create(id, {
-			lessonId: LessonId.create(activity.lessonId),
+			lessonId: activity.lessonId,
 		});
 
 		activityProgress.complete(new Date());
@@ -54,11 +52,6 @@ export class CompleteActivityHandler
 		const events = activityProgress.pullEvents();
 		await this.eventBus.publish(events);
 
-		return {
-			activityId: activityProgress.activityId.value,
-			userId: activityProgress.userId.toString(),
-			lessonId: activityProgress.lessonId.value,
-			completedAt: activityProgress.completedAt,
-		};
+		return progressAggregateToDto(activityProgress);
 	}
 }

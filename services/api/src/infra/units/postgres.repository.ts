@@ -2,12 +2,16 @@ import { DbService } from '@/infra/db/db.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { DbException } from '@infra/common';
 import { eq } from 'drizzle-orm';
-import type { IUnitRepository } from '@/domain/units/repositories';
+import type {
+	IUnitRepository,
+	ListUnitsOptions,
+} from '@/domain/units/repositories';
 import { Unit } from '@/domain/units/unit.aggregate';
 import { LessonRef } from '@/domain/units/value-objects';
 import type { UnitId } from '@/domain/units/value-objects/id.vo';
 import type { Db } from '@/infra/db/type';
 import { lessonsTable, unitsTable } from '../db/schemas';
+import { UnitsApiConstraints } from './enums';
 
 @Injectable()
 export class PostgresUnitRepository implements IUnitRepository {
@@ -17,7 +21,7 @@ export class PostgresUnitRepository implements IUnitRepository {
 		this.db = this.dbService.getDb();
 	}
 
-	async load(id: UnitId): Promise<Unit | null> {
+	async findById(id: UnitId): Promise<Unit | null> {
 		const rawId = id.value;
 
 		try {
@@ -60,6 +64,26 @@ export class PostgresUnitRepository implements IUnitRepository {
 		} catch (err) {
 			throw new DbException('postgres exception', err);
 		}
+	}
+
+	async list(filter?: ListUnitsOptions): Promise<Unit[]> {
+		const limit = filter?.options?.limit ?? UnitsApiConstraints.DEFAULT_LIMIT;
+		const page = filter?.options?.page ?? UnitsApiConstraints.DEFAULT_PAGE;
+		const sectionId = filter?.where?.sectionId;
+
+		const units = await this.db
+			.select()
+			.from(unitsTable)
+			.where(sectionId ? eq(unitsTable.sectionId, sectionId) : undefined)
+			.limit(limit)
+			.offset(page * limit);
+
+		return units.map((item) =>
+			Unit.fromDataSource({
+				...item,
+				lessonRefs: [],
+			}),
+		);
 	}
 
 	async remove(id: UnitId): Promise<boolean> {
