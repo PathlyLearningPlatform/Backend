@@ -1,7 +1,7 @@
 import { DbService } from '@/infra/db/db.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { DbException } from '@infra/common';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { Lesson } from '@/domain/lessons/lesson.aggregate';
 import type {
 	ILessonRepository,
@@ -12,6 +12,8 @@ import type { LessonId } from '@/domain/lessons/value-objects/id.vo';
 import type { Db } from '@/infra/db/type';
 import { activitiesTable, lessonsTable } from '../db/schemas';
 import { LessonsApiConstraints } from './enums';
+import { Order } from '@/domain/common';
+import { UnitId } from '@/domain/units';
 
 @Injectable()
 export class PostgresLessonRepository implements ILessonRepository {
@@ -42,6 +44,60 @@ export class PostgresLessonRepository implements ILessonRepository {
 					})
 					.from(activitiesTable)
 					.where(eq(activitiesTable.lessonId, rawId));
+
+				const lesson = Lesson.fromDataSource({
+					id: dbLesson.id,
+					unitId: dbLesson.unitId,
+					name: dbLesson.name,
+					description: dbLesson.description,
+					createdAt: dbLesson.createdAt,
+					updatedAt: dbLesson.updatedAt,
+					order: dbLesson.order,
+					activityCount: dbLesson.activityCount,
+					activityRefs: activityRefs.map((ref) =>
+						ActivityRef.create({
+							order: ref.order,
+							activityId: ref.activityId,
+						}),
+					),
+				});
+
+				return lesson;
+			});
+
+			return result;
+		} catch (err) {
+			throw new DbException('postgres exception', err);
+		}
+	}
+
+	async findByUnitIdAndOrder(
+		unitId: UnitId,
+		order: Order,
+	): Promise<Lesson | null> {
+		try {
+			const result = await this.db.transaction(async (tx) => {
+				const [dbLesson] = await tx
+					.select()
+					.from(lessonsTable)
+					.where(
+						and(
+							eq(lessonsTable.unitId, unitId.value),
+							eq(lessonsTable.order, order.value),
+						),
+					);
+
+				if (!dbLesson) {
+					return null;
+				}
+
+				const activityRefs = await tx
+					.select({
+						order: activitiesTable.order,
+						activityId: activitiesTable.id,
+					})
+					.from(activitiesTable)
+					.where(eq(activitiesTable.lessonId, dbLesson.id));
 
 				const lesson = Lesson.fromDataSource({
 					id: dbLesson.id,

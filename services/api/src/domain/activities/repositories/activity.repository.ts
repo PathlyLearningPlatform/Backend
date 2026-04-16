@@ -3,6 +3,8 @@ import type { Article } from '@domain/articles/article.aggregate';
 import type { Exercise } from '@domain/exercises/exercise.aggregate';
 import type { Quiz } from '@domain/quizzes/quiz.aggregate';
 import type { ActivityId } from '../value-objects';
+import { LessonId } from '@/domain/lessons';
+import { Order } from '@/domain/common';
 
 export type ListActivitiesOptions = {
 	options?: Partial<{
@@ -16,6 +18,11 @@ export type ListActivitiesOptions = {
 
 export interface IActivityRepository {
 	findById(id: ActivityId): Promise<Activity | null>;
+
+	findByLessonIdAndOrder(
+		lessonId: LessonId,
+		order: Order,
+	): Promise<Activity | null>;
 
 	list(options?: ListActivitiesOptions): Promise<Activity[]>;
 

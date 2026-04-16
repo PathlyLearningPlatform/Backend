@@ -1,7 +1,9 @@
 import { DbService } from '@/infra/db/db.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { DbException } from '@infra/common';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
+import type { Order } from '@/domain/common';
+import type { LearningPathId } from '@/domain/learning-paths';
 import type {
 	ISectionRepository,
 	ListSectionsOptions,
@@ -39,6 +41,57 @@ export class PostgresSectionRepository implements ISectionRepository {
 					.select({ order: unitsTable.order, unitId: unitsTable.id })
 					.from(unitsTable)
 					.where(eq(unitsTable.sectionId, rawId));
+
+				const section = Section.fromDataSource({
+					id: dbSection.id,
+					learningPathId: dbSection.learningPathId,
+					name: dbSection.name,
+					description: dbSection.description,
+					createdAt: dbSection.createdAt,
+					updatedAt: dbSection.updatedAt,
+					order: dbSection.order,
+					unitCount: dbSection.unitCount,
+					unitRefs: unitRefs.map((ref) =>
+						UnitRef.create({
+							order: ref.order,
+							unitId: ref.unitId,
+						}),
+					),
+				});
+
+				return section;
+			});
+
+			return result;
+		} catch (err) {
+			throw new DbException('postgres exception', err);
+		}
+	}
+
+	async findByLearningPathIdAndOrder(
+		learningPathId: LearningPathId,
+		order: Order,
+	): Promise<Section | null> {
+		try {
+			const result = await this.db.transaction(async (tx) => {
+				const [dbSection] = await tx
+					.select()
+					.from(sectionsTable)
+					.where(
+						and(
+							eq(sectionsTable.learningPathId, learningPathId.toString()),
+							eq(sectionsTable.order, order.value),
+						),
+					);
+
+				if (!dbSection) {
+					return null;
+				}
+
+				const unitRefs = await tx
+					.select({ order: unitsTable.order, unitId: unitsTable.id })
+					.from(unitsTable)
+					.where(eq(unitsTable.sectionId, dbSection.id));
 
 				const section = Section.fromDataSource({
 					id: dbSection.id,

@@ -1,12 +1,14 @@
 import { DbService } from '@/infra/db/db.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { DbException } from '@infra/common';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
+import type { Order } from '@/domain/common';
 import type { Activity } from '@/domain/activities/activity.aggregate';
 import { Article } from '@/domain/articles';
 import { Exercise } from '@/domain/exercises';
 import { Question } from '@/domain/quizzes/question.entity';
 import { Quiz } from '@/domain/quizzes/quiz.aggregate';
+import type { LessonId } from '@/domain/lessons';
 import type { IActivityRepository } from '@/domain/activities/repositories';
 import type { ListActivitiesOptions } from '@/domain/activities/repositories';
 import { ActivityId, ActivityType } from '@/domain/activities/value-objects';
@@ -101,6 +103,122 @@ export class PostgresActivityRepository implements IActivityRepository {
 							.select()
 							.from(questionsTable)
 							.where(eq(questionsTable.quizId, rawId));
+
+						const questions = dbQuestions.map((q) =>
+							Question.fromDataSource({
+								id: q.id,
+								quizId: q.quizId,
+								content: q.content,
+								correctAnswer: q.correctAnswer,
+								order: q.order,
+								createdAt: q.createdAt,
+								updatedAt: q.updatedAt,
+							}),
+						);
+
+						return Quiz.fromDataSource({
+							id: dbActivity.id,
+							lessonId: dbActivity.lessonId,
+							name: dbActivity.name,
+							description: dbActivity.description,
+							createdAt: dbActivity.createdAt,
+							updatedAt: dbActivity.updatedAt,
+							order: dbActivity.order,
+							questions,
+							questionCount: questions.length,
+						});
+					}
+
+					default:
+						return null;
+				}
+			});
+
+			return result;
+		} catch (err) {
+			throw new DbException('postgres exception', err);
+		}
+	}
+
+	async findByLessonIdAndOrder(
+		lessonId: LessonId,
+		order: Order,
+	): Promise<Activity | null> {
+		try {
+			const result = await this.db.transaction(async (tx) => {
+				const [dbActivity] = await tx
+					.select()
+					.from(activitiesTable)
+					.where(
+						and(
+							eq(activitiesTable.lessonId, lessonId.value),
+							eq(activitiesTable.order, order.value),
+						),
+					);
+
+				if (!dbActivity) {
+					return null;
+				}
+
+				switch (dbActivity.type) {
+					case ActivityType.ARTICLE: {
+						const [dbArticle] = await tx
+							.select()
+							.from(articlesTable)
+							.where(eq(articlesTable.activityId, dbActivity.id));
+
+						if (!dbArticle) {
+							return null;
+						}
+
+						return Article.fromDataSource({
+							id: dbActivity.id,
+							lessonId: dbActivity.lessonId,
+							name: dbActivity.name,
+							description: dbActivity.description,
+							createdAt: dbActivity.createdAt,
+							updatedAt: dbActivity.updatedAt,
+							order: dbActivity.order,
+							ref: dbArticle.ref,
+						});
+					}
+
+					case ActivityType.EXERCISE: {
+						const [dbExercise] = await tx
+							.select()
+							.from(exercisesTable)
+							.where(eq(exercisesTable.activityId, dbActivity.id));
+
+						if (!dbExercise) {
+							return null;
+						}
+
+						return Exercise.fromDataSource({
+							id: dbActivity.id,
+							lessonId: dbActivity.lessonId,
+							name: dbActivity.name,
+							description: dbActivity.description,
+							createdAt: dbActivity.createdAt,
+							updatedAt: dbActivity.updatedAt,
+							order: dbActivity.order,
+							difficulty: dbExercise.difficulty,
+						});
+					}
+
+					case ActivityType.QUIZ: {
+						const [dbQuiz] = await tx
+							.select()
+							.from(quizzesTable)
+							.where(eq(quizzesTable.activityId, dbActivity.id));
+
+						if (!dbQuiz) {
+							return null;
+						}
+
+						const dbQuestions = await tx
+							.select()
+							.from(questionsTable)
+							.where(eq(questionsTable.quizId, dbActivity.id));
 
 						const questions = dbQuestions.map((q) =>
 							Question.fromDataSource({

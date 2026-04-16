@@ -23,6 +23,8 @@ import { DiToken } from '@infra/common';
 import { PostgresUnitRepository } from '../units/postgres.repository';
 import { PostgresLessonRepository } from './postgres.repository';
 import { PostgresLessonProgressRepository } from './postgres-progress.repository';
+import { PostgresUnitProgressRepository } from '../units/postgres-progress.repository';
+import { IUnitProgressRepository } from '@/domain/units/repositories';
 
 export const lessonHandlersProvider: Provider[] = [
 	{
@@ -81,17 +83,20 @@ export const lessonHandlersProvider: Provider[] = [
 		useFactory(
 			lessonProgressRepository: ILessonProgressRepository,
 			lessonRepository: ILessonRepository,
+			unitProgressRepository: IUnitProgressRepository,
 			eventBus: IEventBus,
 		) {
 			return new StartLessonHandler(
 				lessonProgressRepository,
 				lessonRepository,
+				unitProgressRepository,
 				eventBus,
 			);
 		},
 		inject: [
 			PostgresLessonProgressRepository,
 			PostgresLessonRepository,
+			PostgresUnitProgressRepository,
 			InMemoryEventBus,
 		],
 	},

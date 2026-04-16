@@ -39,6 +39,8 @@ import { DiToken } from '@infra/common';
 import { PostgresLessonRepository } from '../lessons/postgres.repository';
 import { PostgresActivityRepository } from './postgres.repository';
 import { PostgresActivityProgressRepository } from './postgres-progress.repository';
+import { PostgresLessonProgressRepository } from '../lessons/postgres-progress.repository';
+import { ILessonProgressRepository } from '@/domain/lessons/repositories';
 
 export const activityHandlersProvider: Provider[] = [
 	// ──────────────────────────────────────────────
@@ -201,17 +203,20 @@ export const activityHandlersProvider: Provider[] = [
 		useFactory(
 			activityProgressRepository: IActivityProgressRepository,
 			activityRepository: IActivityRepository,
+			lessonProgressRepository: ILessonProgressRepository,
 			eventBus: IEventBus,
 		) {
 			return new CompleteActivityHandler(
 				activityProgressRepository,
 				activityRepository,
+				lessonProgressRepository,
 				eventBus,
 			);
 		},
 		inject: [
 			PostgresActivityProgressRepository,
 			PostgresActivityRepository,
+			PostgresLessonProgressRepository,
 			InMemoryEventBus,
 		],
 	},

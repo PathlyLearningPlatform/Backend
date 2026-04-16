@@ -1,7 +1,9 @@
 import { DbService } from '@/infra/db/db.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { DbException } from '@infra/common';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
+import type { Order } from '@/domain/common';
+import type { SectionId } from '@/domain/sections';
 import type {
 	IUnitRepository,
 	ListUnitsOptions,
@@ -39,6 +41,57 @@ export class PostgresUnitRepository implements IUnitRepository {
 					.select({ order: lessonsTable.order, lessonId: lessonsTable.id })
 					.from(lessonsTable)
 					.where(eq(lessonsTable.unitId, rawId));
+
+				const unit = Unit.fromDataSource({
+					id: dbUnit.id,
+					sectionId: dbUnit.sectionId,
+					name: dbUnit.name,
+					description: dbUnit.description,
+					createdAt: dbUnit.createdAt,
+					updatedAt: dbUnit.updatedAt,
+					order: dbUnit.order,
+					lessonCount: dbUnit.lessonCount,
+					lessonRefs: lessonRefs.map((ref) =>
+						LessonRef.create({
+							order: ref.order,
+							lessonId: ref.lessonId,
+						}),
+					),
+				});
+
+				return unit;
+			});
+
+			return result;
+		} catch (err) {
+			throw new DbException('postgres exception', err);
+		}
+	}
+
+	async findBySectionIdAndOrder(
+		sectionId: SectionId,
+		order: Order,
+	): Promise<Unit | null> {
+		try {
+			const result = await this.db.transaction(async (tx) => {
+				const [dbUnit] = await tx
+					.select()
+					.from(unitsTable)
+					.where(
+						and(
+							eq(unitsTable.sectionId, sectionId.value),
+							eq(unitsTable.order, order.value),
+						),
+					);
+
+				if (!dbUnit) {
+					return null;
+				}
+
+				const lessonRefs = await tx
+					.select({ order: lessonsTable.order, lessonId: lessonsTable.id })
+					.from(lessonsTable)
+					.where(eq(lessonsTable.unitId, dbUnit.id));
 
 				const unit = Unit.fromDataSource({
 					id: dbUnit.id,

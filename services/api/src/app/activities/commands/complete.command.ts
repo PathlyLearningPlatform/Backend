@@ -13,6 +13,12 @@ import {
 import { UserId, UUID } from '@/domain/common';
 import type { ActivityProgressDto } from '../dtos';
 import { progressAggregateToDto } from '../helpers';
+import {
+	ILessonProgressRepository,
+	LessonId,
+	LessonProgressId,
+} from '@/domain/lessons';
+import { LessonProgressNotFoundException } from '@/app/lessons/exceptions';
 
 export type CompleteActivityCommand = {
 	activityId: string;
@@ -26,6 +32,7 @@ export class CompleteActivityHandler
 	constructor(
 		private readonly activityProgressRepository: IActivityProgressRepository,
 		private readonly activityRepository: IActivityRepository,
+		private readonly lessonProgressRepository: ILessonProgressRepository,
 		private readonly eventBus: IEventBus,
 	) {}
 
@@ -40,6 +47,15 @@ export class CompleteActivityHandler
 		}
 
 		const userId = UserId.create(UUID.create(command.userId));
+		const lessonProgressId = LessonProgressId.create(activity.lessonId, userId);
+
+		const lessonProgress =
+			await this.lessonProgressRepository.findById(lessonProgressId);
+
+		if (!lessonProgress) {
+			throw new LessonProgressNotFoundException('');
+		}
+
 		const id = ActivityProgressId.create(activityId, userId);
 		const activityProgress = ActivityProgress.create(id, {
 			lessonId: activity.lessonId,

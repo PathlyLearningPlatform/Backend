@@ -26,6 +26,8 @@ import { DiToken } from '@infra/common';
 import { PostgresLearningPathRepository } from '../learning-paths/postgres.repository';
 import { PostgresSectionRepository } from './postgres.repository';
 import { PostgresSectionProgressRepository } from './postgres-progress.repository';
+import { PostgresLearningPathProgressRepository } from '../learning-paths/postgres-progress.repository';
+import { ILearningPathProgressRepository } from '@/domain/learning-paths';
 
 export const sectionHandlersProvider: Provider[] = [
 	{
@@ -90,17 +92,20 @@ export const sectionHandlersProvider: Provider[] = [
 		useFactory(
 			sectionProgressRepository: ISectionProgressRepository,
 			sectionRepository: ISectionRepository,
+			learningPathProgressRepository: ILearningPathProgressRepository,
 			eventBus: IEventBus,
 		) {
 			return new StartSectionHandler(
 				sectionProgressRepository,
 				sectionRepository,
+				learningPathProgressRepository,
 				eventBus,
 			);
 		},
 		inject: [
 			PostgresSectionProgressRepository,
 			PostgresSectionRepository,
+			PostgresLearningPathProgressRepository,
 			InMemoryEventBus,
 		],
 	},

@@ -20,6 +20,8 @@ import { DiToken } from '@infra/common';
 import { PostgresSectionRepository } from '../sections/postgres.repository';
 import { PostgresUnitRepository } from './postgres.repository';
 import { PostgresUnitProgressRepository } from './postgres-progress.repository';
+import { PostgresSectionProgressRepository } from '../sections/postgres-progress.repository';
+import { ISectionProgressRepository } from '@/domain/sections/repositories';
 
 export const unitHandlersProvider: Provider[] = [
 	{
@@ -78,17 +80,20 @@ export const unitHandlersProvider: Provider[] = [
 		useFactory(
 			unitProgressRepository: IUnitProgressRepository,
 			unitRepository: IUnitRepository,
+			sectionProgressRepository: ISectionProgressRepository,
 			eventBus: IEventBus,
 		) {
 			return new StartUnitHandler(
 				unitProgressRepository,
 				unitRepository,
+				sectionProgressRepository,
 				eventBus,
 			);
 		},
 		inject: [
 			PostgresUnitProgressRepository,
 			PostgresUnitRepository,
+			PostgresSectionProgressRepository,
 			InMemoryEventBus,
 		],
 	},

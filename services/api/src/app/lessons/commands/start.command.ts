@@ -3,16 +3,19 @@ import {
 	type IEventBus,
 	LessonNotFoundException,
 } from '@/app/common';
-import { UserId, UUID } from '@/domain/common';
+import { Order, UserId, UUID } from '@/domain/common';
 import {
 	type ILessonProgressRepository,
 	type ILessonRepository,
 	LessonId,
 	LessonProgress,
 	LessonProgressId,
+	PreviousLessonNotCompletedException,
 } from '@/domain/lessons';
 import type { LessonProgressDto } from '../dtos';
 import { progressAggregateToDto } from '../helpers';
+import { IUnitProgressRepository, UnitProgressId } from '@/domain/units';
+import { UnitProgressNotFoundException } from '@/app/units/exceptions';
 
 export type StartLessonCommand = {
 	lessonId: string;
@@ -26,6 +29,7 @@ export class StartLessonHandler
 	constructor(
 		private readonly lessonProgressRepository: ILessonProgressRepository,
 		private readonly lessonRepository: ILessonRepository,
+		private readonly unitProgressRepository: IUnitProgressRepository,
 		private readonly eventBus: IEventBus,
 	) {}
 
@@ -38,6 +42,31 @@ export class StartLessonHandler
 		}
 
 		const userId = UserId.create(UUID.create(command.userId));
+		const unitProgressId = UnitProgressId.create(lesson.unitId, userId);
+
+		const unitProgress =
+			await this.unitProgressRepository.findById(unitProgressId);
+
+		if (!unitProgress) {
+			throw new UnitProgressNotFoundException('');
+		}
+
+		if (!lesson.order.equals(Order.create(0))) {
+			const previousLesson = await this.lessonRepository.findByUnitIdAndOrder(
+				lesson.unitId,
+				Order.create(lesson.order.value - 1),
+			);
+
+			const previousLessonProgress =
+				await this.lessonProgressRepository.findById(
+					LessonProgressId.create(previousLesson!.id, userId),
+				);
+
+			if (!previousLessonProgress?.completedAt) {
+				throw new PreviousLessonNotCompletedException();
+			}
+		}
+
 		const id = LessonProgressId.create(lessonId, userId);
 		const lessonProgress = LessonProgress.create(id, {
 			unitId: lesson.unitId,

@@ -1,5 +1,7 @@
+import { LearningPathId } from '@/domain/learning-paths';
 import type { Section } from '../section.aggregate';
 import type { SectionId } from '../value-objects/id.vo';
+import { Order } from '@/domain/common';
 
 export type ListSectionsOptions = {
 	options?: Partial<{
@@ -13,6 +15,11 @@ export type ListSectionsOptions = {
 
 export interface ISectionRepository {
 	findById(id: SectionId): Promise<Section | null>;
+
+	findByLearningPathIdAndOrder(
+		learningPathId: LearningPathId,
+		order: Order,
+	): Promise<Section | null>;
 
 	save(aggregate: Section): Promise<void>;
 
