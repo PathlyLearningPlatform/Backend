@@ -1,7 +1,7 @@
 import type { Activity } from '../activity.aggregate';
-import type { Article } from '../articles/article.aggregate';
-import type { Exercise } from '../exercises/exercise.aggregate';
-import type { Quiz } from '../quizzes/quiz.aggregate';
+import type { Article } from '@domain/articles/article.aggregate';
+import type { Exercise } from '@domain/exercises/exercise.aggregate';
+import type { Quiz } from '@domain/quizzes/quiz.aggregate';
 import type { ActivityId } from '../value-objects';
 
 export type ListActivitiesOptions = {

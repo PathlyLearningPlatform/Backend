@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import type { QuizWithoutQuestionsDto } from '@/app/activities/dtos';
 import { type ICommandHandler, LessonNotFoundException } from '@/app/common';
-import { Quiz } from '@/domain/activities/quizzes/quiz.aggregate';
+import { Quiz } from '@/domain/quizzes/quiz.aggregate';
 import type { IActivityRepository } from '@/domain/activities/repositories';
 import {
 	ActivityDescription,

@@ -1,19 +1,17 @@
-import { Order } from "@/domain/common";
-import { LessonId } from "@/domain/lessons/value-objects";
+import { Order } from '@/domain/common';
+import { LessonId } from '@/domain/lessons/value-objects';
 import {
 	Activity,
 	type ActivityFromDataSourceProps,
 	type ActivityProps,
 	type CreateActivityProps,
 	type UpdateActivityProps,
-} from "../activity.aggregate";
-import {
 	ActivityDescription,
 	ActivityId,
 	ActivityName,
 	ActivityType,
-} from "../value-objects";
-import type { ExerciseDifficulty } from "./value-objects";
+} from '../activities';
+import type { ExerciseDifficulty } from './value-objects';
 
 type ExerciseProps = ActivityProps & {
 	difficulty: ExerciseDifficulty;
@@ -22,13 +20,13 @@ type CreateExerciseProps = Omit<
 	CreateActivityProps & {
 		difficulty: ExerciseDifficulty;
 	},
-	"type"
+	'type'
 >;
 type ExerciseFromDataSourceProps = Omit<
 	ActivityFromDataSourceProps & {
 		difficulty: ExerciseDifficulty;
 	},
-	"type"
+	'type'
 >;
 type UpdateExerciseProps = UpdateActivityProps &
 	Partial<{

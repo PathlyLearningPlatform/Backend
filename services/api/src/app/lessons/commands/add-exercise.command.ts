@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto';
 import type { ExerciseDto } from '@/app/activities/dtos';
 import { type ICommandHandler, LessonNotFoundException } from '@/app/common';
-import { Exercise } from '@/domain/activities/exercises/exercise.aggregate';
-import type { ExerciseDifficulty } from '@/domain/activities/exercises/value-objects';
+import { Exercise } from '@/domain/exercises/exercise.aggregate';
+import type { ExerciseDifficulty } from '@/domain/exercises/value-objects';
 import type { IActivityRepository } from '@/domain/activities/repositories';
 import {
 	ActivityDescription,

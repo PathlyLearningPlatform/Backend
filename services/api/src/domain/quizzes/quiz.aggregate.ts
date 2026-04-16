@@ -1,33 +1,31 @@
-import { Order } from "@/domain/common";
-import { LessonId } from "@/domain/lessons/value-objects";
+import { Order } from '@/domain/common';
+import { LessonId } from '@/domain/lessons/value-objects';
 import {
 	Activity,
 	type ActivityFromDataSourceProps,
 	type ActivityProps,
 	type CreateActivityProps,
 	type UpdateActivityProps,
-} from "../activity.aggregate";
-import {
 	ActivityDescription,
 	ActivityId,
 	ActivityName,
 	ActivityType,
-} from "../value-objects";
-import { QuestionAlreadyExistsException } from "./exceptions";
-import type { Question } from "./question.entity";
-import type { QuestionId } from "./value-objects";
+} from '../activities';
+import { QuestionAlreadyExistsException } from './exceptions';
+import type { Question } from './question.entity';
+import type { QuestionId } from './value-objects';
 
 type QuizProps = ActivityProps & {
 	questions: Question[];
 	questionCount: number;
 };
-type CreateQuizProps = Omit<CreateActivityProps & {}, "type">;
+type CreateQuizProps = Omit<CreateActivityProps & {}, 'type'>;
 type QuizFromDataSource = Omit<
 	ActivityFromDataSourceProps & {
 		questions: Question[];
 		questionCount: number;
 	},
-	"type"
+	'type'
 >;
 type UpdateQuizProps = UpdateActivityProps & Partial<{}>;
 

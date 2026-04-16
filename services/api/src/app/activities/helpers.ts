@@ -1,8 +1,7 @@
-import type { Activity } from '@/domain/activities/activity.aggregate';
-import type { Article } from '@/domain/activities/articles/article.aggregate';
-import type { Exercise } from '@/domain/activities/exercises/exercise.aggregate';
-import type { Quiz } from '@/domain/activities/quizzes/quiz.aggregate';
-import type { ActivityProgress } from '@/domain/activities/progress.aggregate';
+import type { Activity, ActivityProgress } from '@/domain/activities';
+import type { Article } from '@/domain/articles';
+import type { Exercise } from '@/domain/exercises';
+import type { Quiz } from '@/domain/quizzes';
 import type {
 	ActivityDto,
 	ActivityProgressDto,

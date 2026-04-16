@@ -3,8 +3,8 @@ import {
 	type ICommandHandler,
 	QuestionNotFoundException,
 } from '@/app/common';
-import { Quiz } from '@/domain/activities/quizzes/quiz.aggregate';
-import { QuestionId } from '@/domain/activities/quizzes/value-objects';
+import { Quiz } from '@/domain/quizzes/quiz.aggregate';
+import { QuestionId } from '@/domain/quizzes/value-objects';
 import type { IActivityRepository } from '@/domain/activities/repositories';
 import { ActivityId } from '@/domain/activities/value-objects/id.vo';
 

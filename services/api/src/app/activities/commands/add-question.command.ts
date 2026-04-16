@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto';
 import { ActivityNotFoundException, type ICommandHandler } from '@/app/common';
-import { Question } from '@/domain/activities/quizzes/question.entity';
-import { Quiz } from '@/domain/activities/quizzes/quiz.aggregate';
-import { QuestionId } from '@/domain/activities/quizzes/value-objects';
+import { Question } from '@/domain/quizzes/question.entity';
+import { Quiz } from '@/domain/quizzes/quiz.aggregate';
+import { QuestionId } from '@/domain/quizzes/value-objects';
 import type { IActivityRepository } from '@/domain/activities/repositories';
 import { ActivityId } from '@/domain/activities/value-objects/id.vo';
 import { Order } from '@/domain/common';

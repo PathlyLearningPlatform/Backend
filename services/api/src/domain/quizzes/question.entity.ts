@@ -1,6 +1,6 @@
-import { Entity, Order } from "@/domain/common";
-import { ActivityId } from "../value-objects";
-import { QuestionId } from "./value-objects";
+import { Entity, Order } from '@/domain/common';
+import { ActivityId } from '../activities';
+import { QuestionId } from './value-objects';
 
 type QuestionProps = {
 	quizId: ActivityId;
@@ -27,7 +27,7 @@ type QuestionFromDataSource = {
 	updatedAt: Date | null;
 };
 type UpdateQuestionProps = Partial<
-	Pick<QuestionProps, "content" | "correctAnswer" | "order" | "createdAt">
+	Pick<QuestionProps, 'content' | 'correctAnswer' | 'order' | 'createdAt'>
 >;
 
 export class Question extends Entity<QuestionId, QuestionProps> {

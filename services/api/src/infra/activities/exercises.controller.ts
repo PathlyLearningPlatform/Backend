@@ -24,7 +24,7 @@ import {
 	LessonNotFoundException,
 } from '@/app/common';
 import type { AddExerciseHandler } from '@/app/lessons/commands';
-import { ExerciseDifficulty as DomainExerciseDifficulty } from '@/domain/activities/exercises/value-objects';
+import { ExerciseDifficulty as DomainExerciseDifficulty } from '@/domain/exercises/value-objects';
 import { DiToken } from '@infra/common';
 import { ExceptionMessage } from '@infra/common';
 import { CreateExerciseDto, UpdateExerciseDto } from './dtos';

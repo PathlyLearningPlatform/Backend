@@ -1,5 +1,5 @@
 import { ActivityNotFoundException, type ICommandHandler } from '@/app/common';
-import { Article } from '@/domain/activities/articles/article.aggregate';
+import { Article } from '@/domain/articles/article.aggregate';
 import type { IActivityRepository } from '@/domain/activities/repositories';
 import {
 	ActivityDescription,

@@ -1,18 +1,16 @@
-import { Order, Url } from "@/domain/common";
-import { LessonId } from "@/domain/lessons/value-objects";
+import { Order, Url } from '@/domain/common';
+import { LessonId } from '@/domain/lessons/value-objects';
 import {
 	Activity,
 	type ActivityFromDataSourceProps,
 	type ActivityProps,
 	type CreateActivityProps,
 	type UpdateActivityProps,
-} from "../activity.aggregate";
-import {
 	ActivityDescription,
 	ActivityId,
 	ActivityName,
 	ActivityType,
-} from "../value-objects";
+} from '../activities';
 
 type ArticleProps = ActivityProps & {
 	ref: Url;
@@ -21,13 +19,13 @@ type CreateArticleProps = Omit<
 	CreateActivityProps & {
 		ref: Url;
 	},
-	"type"
+	'type'
 >;
 type ArticleFromDataSourceProps = Omit<
 	ActivityFromDataSourceProps & {
 		ref: string;
 	},
-	"type"
+	'type'
 >;
 type UpdateArticleProps = UpdateActivityProps &
 	Partial<{

@@ -8,3 +8,12 @@ export interface SectionDto {
 	order: number;
 	unitCount: number;
 }
+
+export interface SectionProgressDto {
+	sectionId: string;
+	learningPathId: string;
+	userId: string;
+	completedUnitCount: number;
+	totalUnitCount: number;
+	completedAt: Date | null;
+}
