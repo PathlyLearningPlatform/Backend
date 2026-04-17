@@ -25,6 +25,7 @@ import { PostgresLessonRepository } from './postgres.repository';
 import { PostgresLessonProgressRepository } from './postgres-progress.repository';
 import { PostgresUnitProgressRepository } from '../units/postgres-progress.repository';
 import { IUnitProgressRepository } from '@/domain/units/repositories';
+import { OnLessonCompletedHandler } from '@/app/lessons/events';
 
 export const lessonHandlersProvider: Provider[] = [
 	{
@@ -120,5 +121,15 @@ export const lessonHandlersProvider: Provider[] = [
 			return new FindLessonProgressForUserHandler(lessonProgressRepository);
 		},
 		inject: [PostgresLessonProgressRepository],
+	},
+	{
+		provide: DiToken.ON_LESSON_COMPLETED_HANDLER,
+		useFactory(
+			unitProgressRepository: PostgresUnitProgressRepository,
+			eventBus: InMemoryEventBus,
+		) {
+			return new OnLessonCompletedHandler(unitProgressRepository, eventBus);
+		},
+		inject: [PostgresUnitProgressRepository, InMemoryEventBus],
 	},
 ];

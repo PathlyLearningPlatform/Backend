@@ -8,7 +8,6 @@ import { ActivitiesModule } from './infra/activities/activities.module';
 import { InMemoryEventBus } from '@infra/common';
 import { validateConfig } from './infra/config';
 import { DbModule } from './infra/db/db.module';
-import { eventHandlersProvider } from './infra/event-handlers.provider';
 import { LearningPathsModule } from './infra/learning-paths/learning-paths.module';
 import { LessonsModule } from './infra/lessons/lessons.module';
 import { SectionsModule } from './infra/sections/sections.module';
@@ -16,6 +15,9 @@ import { UnitsModule } from './infra/units/units.module';
 import { AppController } from './app.controller';
 import { AppLoggerModule } from './infra/logger';
 import { SkillsModule } from './infra/skills/skills.module';
+import { ArticlesModule } from './infra/articles/articles.module';
+import { ExercisesModule } from './infra/exercises/exercises.module';
+import { QuizzesModule } from './infra/quizzes/quizzes.module';
 
 @Module({
 	imports: [
@@ -38,6 +40,9 @@ import { SkillsModule } from './infra/skills/skills.module';
 		UnitsModule,
 		LessonsModule,
 		ActivitiesModule,
+		ArticlesModule,
+		ExercisesModule,
+		QuizzesModule,
 		SkillsModule,
 	],
 	providers: [
@@ -50,7 +55,6 @@ import { SkillsModule } from './infra/skills/skills.module';
 			useClass: HttpExceptionFilter,
 		},
 		InMemoryEventBus,
-		...eventHandlersProvider,
 		AppService,
 	],
 	controllers: [AppController],

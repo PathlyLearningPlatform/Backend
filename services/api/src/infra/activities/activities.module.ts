@@ -4,9 +4,6 @@ import { AuthModule } from '../auth/auth.module';
 import { LessonsModule } from '../lessons/lessons.module';
 import { activityHandlersProvider } from './handlers.provider';
 import { ActivitiesController } from './activities.controller';
-import { ArticlesController } from './articles.controller';
-import { ExercisesController } from './exercises.controller';
-import { QuizzesController } from './quizzes.controller';
 import { ActivityProgressController } from './progress.controller';
 import { PostgresActivityRepository } from './postgres.repository';
 import { PostgresActivityProgressRepository } from './postgres-progress.repository';
@@ -14,13 +11,7 @@ import { InMemoryEventBus } from '@infra/common';
 
 @Module({
 	imports: [DbModule, LessonsModule, AuthModule],
-	controllers: [
-		ActivitiesController,
-		ArticlesController,
-		ExercisesController,
-		QuizzesController,
-		ActivityProgressController,
-	],
+	controllers: [ActivitiesController, ActivityProgressController],
 	providers: [
 		InMemoryEventBus,
 		PostgresActivityRepository,

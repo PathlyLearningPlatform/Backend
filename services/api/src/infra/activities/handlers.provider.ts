@@ -1,34 +1,23 @@
 import type { Provider } from '@nestjs/common';
 import {
-	AddQuestionHandler,
 	CompleteActivityHandler,
 	RemoveActivityHandler,
 	RemoveActivityProgressHandler,
-	RemoveQuestionHandler,
-	ReorderQuestionHandler,
-	UpdateArticleHandler,
-	UpdateExerciseHandler,
-	UpdateQuestionHandler,
 } from '@/app/activities/commands';
+import {
+	UpdateArticleHandler,
+	FindArticleByIdHandler,
+	ListArticlesHandler,
+	AddArticleHandler,
+} from '@app/articles';
 import {
 	FindActivityByIdHandler,
 	FindActivityProgressForUserHandler,
-	FindArticleByIdHandler,
-	FindExerciseByIdHandler,
-	FindQuizByIdHandler,
 	ListActivitiesHandler,
 	ListActivityProgressHandler,
-	ListArticlesHandler,
-	ListExercisesHandler,
-	ListQuizzesHandler,
 } from '@/app/activities/queries';
 import type { IEventBus } from '@/app/common';
-import {
-	AddArticleHandler,
-	AddExerciseHandler,
-	AddQuizHandler,
-	ReorderActivityHandler,
-} from '@/app/lessons/commands';
+import { ReorderActivityHandler } from '@/app/lessons/commands';
 import type {
 	IActivityProgressRepository,
 	IActivityRepository,
@@ -40,7 +29,8 @@ import { PostgresLessonRepository } from '../lessons/postgres.repository';
 import { PostgresActivityRepository } from './postgres.repository';
 import { PostgresActivityProgressRepository } from './postgres-progress.repository';
 import { PostgresLessonProgressRepository } from '../lessons/postgres-progress.repository';
-import { ILessonProgressRepository } from '@/domain/lessons/repositories';
+import type { ILessonProgressRepository } from '@/domain/lessons/repositories';
+import { OnActivityCompletedHandler } from '@/app/activities/events';
 
 export const activityHandlersProvider: Provider[] = [
 	// ──────────────────────────────────────────────
@@ -54,27 +44,6 @@ export const activityHandlersProvider: Provider[] = [
 		inject: [PostgresActivityRepository],
 	},
 	{
-		provide: DiToken.LIST_ARTICLES_HANDLER,
-		useFactory(activityRepository: IActivityRepository) {
-			return new ListArticlesHandler(activityRepository);
-		},
-		inject: [PostgresActivityRepository],
-	},
-	{
-		provide: DiToken.LIST_EXERCISES_HANDLER,
-		useFactory(activityRepository: IActivityRepository) {
-			return new ListExercisesHandler(activityRepository);
-		},
-		inject: [PostgresActivityRepository],
-	},
-	{
-		provide: DiToken.LIST_QUIZZES_HANDLER,
-		useFactory(activityRepository: IActivityRepository) {
-			return new ListQuizzesHandler(activityRepository);
-		},
-		inject: [PostgresActivityRepository],
-	},
-	{
 		provide: DiToken.FIND_ACTIVITY_BY_ID_HANDLER,
 		useFactory(activityRepository: IActivityRepository) {
 			return new FindActivityByIdHandler(activityRepository);
@@ -82,44 +51,22 @@ export const activityHandlersProvider: Provider[] = [
 		inject: [PostgresActivityRepository],
 	},
 	{
-		provide: DiToken.FIND_ARTICLE_BY_ID_HANDLER,
-		useFactory(activityRepository: IActivityRepository) {
-			return new FindArticleByIdHandler(activityRepository);
+		provide: DiToken.LIST_ACTIVITY_PROGRESS_HANDLER,
+		useFactory(activityProgressRepository: IActivityProgressRepository) {
+			return new ListActivityProgressHandler(activityProgressRepository);
 		},
-		inject: [PostgresActivityRepository],
+		inject: [PostgresActivityProgressRepository],
 	},
 	{
-		provide: DiToken.FIND_EXERCISE_BY_ID_HANDLER,
-		useFactory(activityRepository: IActivityRepository) {
-			return new FindExerciseByIdHandler(activityRepository);
+		provide: DiToken.FIND_ACTIVITY_PROGRESS_FOR_USER_HANDLER,
+		useFactory(activityProgressRepository: IActivityProgressRepository) {
+			return new FindActivityProgressForUserHandler(activityProgressRepository);
 		},
-		inject: [PostgresActivityRepository],
+		inject: [PostgresActivityProgressRepository],
 	},
-	{
-		provide: DiToken.FIND_QUIZ_BY_ID_HANDLER,
-		useFactory(activityRepository: IActivityRepository) {
-			return new FindQuizByIdHandler(activityRepository);
-		},
-		inject: [PostgresActivityRepository],
-	},
-
 	// ──────────────────────────────────────────────
 	// Commands
 	// ──────────────────────────────────────────────
-	{
-		provide: DiToken.UPDATE_ARTICLE_HANDLER,
-		useFactory(activityRepository: IActivityRepository) {
-			return new UpdateArticleHandler(activityRepository);
-		},
-		inject: [PostgresActivityRepository],
-	},
-	{
-		provide: DiToken.UPDATE_EXERCISE_HANDLER,
-		useFactory(activityRepository: IActivityRepository) {
-			return new UpdateExerciseHandler(activityRepository);
-		},
-		inject: [PostgresActivityRepository],
-	},
 	{
 		provide: DiToken.REMOVE_ACTIVITY_HANDLER,
 		useFactory(
@@ -129,64 +76,6 @@ export const activityHandlersProvider: Provider[] = [
 			return new RemoveActivityHandler(activityRepository, lessonRepository);
 		},
 		inject: [PostgresActivityRepository, PostgresLessonRepository],
-	},
-	{
-		provide: DiToken.ADD_QUESTION_HANDLER,
-		useFactory(activityRepository: IActivityRepository) {
-			return new AddQuestionHandler(activityRepository);
-		},
-		inject: [PostgresActivityRepository],
-	},
-	{
-		provide: DiToken.UPDATE_QUESTION_HANDLER,
-		useFactory(activityRepository: IActivityRepository) {
-			return new UpdateQuestionHandler(activityRepository);
-		},
-		inject: [PostgresActivityRepository],
-	},
-	{
-		provide: DiToken.REMOVE_QUESTION_HANDLER,
-		useFactory(activityRepository: IActivityRepository) {
-			return new RemoveQuestionHandler(activityRepository);
-		},
-		inject: [PostgresActivityRepository],
-	},
-	{
-		provide: DiToken.REORDER_QUESTION_HANDLER,
-		useFactory(activityRepository: IActivityRepository) {
-			return new ReorderQuestionHandler(activityRepository);
-		},
-		inject: [PostgresActivityRepository],
-	},
-	{
-		provide: DiToken.ADD_ARTICLE_HANDLER,
-		useFactory(
-			lessonRepository: ILessonRepository,
-			activityRepository: IActivityRepository,
-		) {
-			return new AddArticleHandler(lessonRepository, activityRepository);
-		},
-		inject: [PostgresLessonRepository, PostgresActivityRepository],
-	},
-	{
-		provide: DiToken.ADD_EXERCISE_HANDLER,
-		useFactory(
-			lessonRepository: ILessonRepository,
-			activityRepository: IActivityRepository,
-		) {
-			return new AddExerciseHandler(lessonRepository, activityRepository);
-		},
-		inject: [PostgresLessonRepository, PostgresActivityRepository],
-	},
-	{
-		provide: DiToken.ADD_QUIZ_HANDLER,
-		useFactory(
-			lessonRepository: ILessonRepository,
-			activityRepository: IActivityRepository,
-		) {
-			return new AddQuizHandler(lessonRepository, activityRepository);
-		},
-		inject: [PostgresLessonRepository, PostgresActivityRepository],
 	},
 	{
 		provide: DiToken.REORDER_ACTIVITY_HANDLER,
@@ -227,18 +116,17 @@ export const activityHandlersProvider: Provider[] = [
 		},
 		inject: [PostgresActivityProgressRepository],
 	},
+	// ──────────────────────────────────────────────
+	// Events
+	// ──────────────────────────────────────────────
 	{
-		provide: DiToken.LIST_ACTIVITY_PROGRESS_HANDLER,
-		useFactory(activityProgressRepository: IActivityProgressRepository) {
-			return new ListActivityProgressHandler(activityProgressRepository);
+		provide: DiToken.ON_ACTIVITY_COMPLETED_HANDLER,
+		useFactory(
+			lessonProgressRepository: PostgresLessonProgressRepository,
+			eventBus: InMemoryEventBus,
+		) {
+			return new OnActivityCompletedHandler(lessonProgressRepository, eventBus);
 		},
-		inject: [PostgresActivityProgressRepository],
-	},
-	{
-		provide: DiToken.FIND_ACTIVITY_PROGRESS_FOR_USER_HANDLER,
-		useFactory(activityProgressRepository: IActivityProgressRepository) {
-			return new FindActivityProgressForUserHandler(activityProgressRepository);
-		},
-		inject: [PostgresActivityProgressRepository],
+		inject: [PostgresLessonProgressRepository, InMemoryEventBus],
 	},
 ];

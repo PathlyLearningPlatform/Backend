@@ -28,6 +28,7 @@ import { PostgresSectionRepository } from './postgres.repository';
 import { PostgresSectionProgressRepository } from './postgres-progress.repository';
 import { PostgresLearningPathProgressRepository } from '../learning-paths/postgres-progress.repository';
 import { ILearningPathProgressRepository } from '@/domain/learning-paths';
+import { OnSectionCompletedHandler } from '@/app/sections/events';
 
 export const sectionHandlersProvider: Provider[] = [
 	{
@@ -129,5 +130,18 @@ export const sectionHandlersProvider: Provider[] = [
 			return new FindSectionProgressForUserHandler(sectionProgressRepository);
 		},
 		inject: [PostgresSectionProgressRepository],
+	},
+	{
+		provide: DiToken.ON_SECTION_COMPLETED_HANDLER,
+		useFactory(
+			learningPathProgressRepository: PostgresLearningPathProgressRepository,
+			eventBus: InMemoryEventBus,
+		) {
+			return new OnSectionCompletedHandler(
+				learningPathProgressRepository,
+				eventBus,
+			);
+		},
+		inject: [PostgresLearningPathProgressRepository, InMemoryEventBus],
 	},
 ];

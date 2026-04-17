@@ -21,6 +21,7 @@ import { InMemoryEventBus } from '@infra/common';
 import { DiToken } from '@infra/common';
 import { PostgresLearningPathRepository } from './postgres.repository';
 import { PostgresLearningPathProgressRepository } from './postgres-progress.repository';
+import { OnLearningPathCompletedHandler } from '@/app/learning-paths/events';
 
 export const learningPathHandlersProvider: Provider[] = [
 	{
@@ -109,5 +110,11 @@ export const learningPathHandlersProvider: Provider[] = [
 			);
 		},
 		inject: [PostgresLearningPathProgressRepository],
+	},
+	{
+		provide: DiToken.ON_LEARNING_PATH_COMPLETED_HANDLER,
+		useFactory() {
+			return new OnLearningPathCompletedHandler();
+		},
 	},
 ];

@@ -22,6 +22,7 @@ import { PostgresUnitRepository } from './postgres.repository';
 import { PostgresUnitProgressRepository } from './postgres-progress.repository';
 import { PostgresSectionProgressRepository } from '../sections/postgres-progress.repository';
 import { ISectionProgressRepository } from '@/domain/sections/repositories';
+import { OnUnitCompletedHandler } from '@/app/units/events';
 
 export const unitHandlersProvider: Provider[] = [
 	{
@@ -117,5 +118,15 @@ export const unitHandlersProvider: Provider[] = [
 			return new FindUnitProgressForUserHandler(unitProgressRepository);
 		},
 		inject: [PostgresUnitProgressRepository],
+	},
+	{
+		provide: DiToken.ON_UNIT_COMPLETED_HANDLER,
+		useFactory(
+			sectionProgressRepository: PostgresSectionProgressRepository,
+			eventBus: InMemoryEventBus,
+		) {
+			return new OnUnitCompletedHandler(sectionProgressRepository, eventBus);
+		},
+		inject: [PostgresSectionProgressRepository, InMemoryEventBus],
 	},
 ];

@@ -6,7 +6,6 @@ import {
 	nameSchema,
 	questionContentSchema,
 	questionCorrectAnswerSchema,
-	refSchema,
 } from './fields.schema';
 
 export const updateActivitySchema = z.object({
@@ -14,12 +13,6 @@ export const updateActivitySchema = z.object({
 	description: descriptionSchema.optional().nullable(),
 	lessonId: lessonIdSchema.optional(),
 });
-
-export const updateArticlePropsSchema = updateActivitySchema
-	.safeExtend({
-		ref: refSchema.optional(),
-	})
-	.optional();
 
 export const updateExercisePropsSchema = updateActivitySchema
 	.safeExtend({ difficulty: difficultySchema.optional() })
