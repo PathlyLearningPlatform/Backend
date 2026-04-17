@@ -5,7 +5,6 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { HttpExceptionFilter, HttpRequestInterceptor } from '@infra/common';
 import { AppService } from './app.service';
 import { ActivitiesModule } from './infra/activities/activities.module';
-import { InMemoryEventBus } from '@infra/common';
 import { validateConfig } from './infra/config';
 import { DbModule } from './infra/db/db.module';
 import { LearningPathsModule } from './infra/learning-paths/learning-paths.module';
@@ -54,7 +53,6 @@ import { QuizzesModule } from './infra/quizzes/quizzes.module';
 			provide: APP_FILTER,
 			useClass: HttpExceptionFilter,
 		},
-		InMemoryEventBus,
 		AppService,
 	],
 	controllers: [AppController],

@@ -1,7 +1,6 @@
 import { ICommandHandler } from '@/app/common';
 import { UUID, ValidationException } from '@/domain/common';
-import { SkillGraphService } from '@/domain/services';
-import { SkillId } from '@/domain/skills';
+import { SkillId, SkillGraphService } from '@/domain/skills';
 
 export type RemoveSkillCommand = {
 	id: string;

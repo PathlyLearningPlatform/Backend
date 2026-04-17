@@ -1,8 +1,7 @@
 import { IQueryHandler } from '@/app/common';
 import { SkillDto } from '../dtos';
-import { SkillGraphService } from '@/domain/services';
-import { SkillId } from '@/domain/skills';
 import { UUID } from '@/domain/common';
+import { SkillId, SkillGraphService } from '@/domain/skills';
 
 export type ListSkillPrerequisitiesQuery = {
 	skillId: string;

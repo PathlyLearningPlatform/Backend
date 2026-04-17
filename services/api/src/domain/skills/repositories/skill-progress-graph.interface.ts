@@ -1,5 +1,5 @@
-import { UserId } from '../common';
-import { SkillProgress, SkillProgressId } from '../skills';
+import { UserId } from '../../common';
+import { SkillProgress, SkillProgressId } from '..';
 
 export interface ISkillProgressGraph {
 	save(aggregate: SkillProgress): Promise<void>;

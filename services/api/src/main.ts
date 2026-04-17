@@ -17,18 +17,14 @@ async function bootstrap() {
 	});
 
 	const configService = app.get(ConfigService);
-	const appConfig = configService.get<AppConfig['app']>('app');
-
-	if (!appConfig) {
-		throw new Error('Missing app config.');
-	}
+	const appConfig = configService.get<AppConfig['app']>('app')!;
 
 	const swaggerOptions: SwaggerDocumentOptions = {
 		operationIdFactory: (_controllerKey: string, methodKey: string) =>
 			methodKey,
 	};
 	const swaggerConfig = new DocumentBuilder()
-		.setTitle('Pathly Learning Paths API')
+		.setTitle('Pathly API')
 		.setVersion('1.0')
 		.addGlobalResponse({
 			status: HttpStatus.INTERNAL_SERVER_ERROR,

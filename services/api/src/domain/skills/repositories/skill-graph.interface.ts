@@ -1,10 +1,5 @@
-import {
-	Skill,
-	SkillId,
-	SkillRelationship,
-	SkillRelationshipType,
-} from '../skills';
-import { Slug } from '../common';
+import { Skill, SkillId, SkillRelationship, SkillRelationshipType } from '..';
+import { Slug } from '../../common';
 
 export interface ISkillGraph {
 	/**

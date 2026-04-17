@@ -1,8 +1,7 @@
 import { IQueryHandler } from '@/app/common';
-import { SkillGraphService } from '@/domain/services';
 import { SkillDto, SkillRelationshipDto } from '../dtos';
-import { SkillId } from '@/domain/skills';
 import { UUID } from '@/domain/common';
+import { SkillGraphService, SkillId } from '@/domain/skills';
 
 export type GetPrerequisiteGraphCommand = {
 	parentSkillId?: string;

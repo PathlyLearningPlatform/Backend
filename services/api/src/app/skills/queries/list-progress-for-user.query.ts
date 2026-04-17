@@ -1,10 +1,7 @@
 import { IQueryHandler } from '@/app/common';
 import { SkillProgressDto } from '../dtos';
-import { SkillProgressService } from '@/domain/services';
-import { SkillProgressId } from '@/domain/skills';
-import { SkillId } from '@/domain/skills';
 import { UserId, UUID, ValidationException } from '@/domain/common';
-import { SkillProgressNotFoundException } from '@/domain/exceptions';
+import { SkillProgressService } from '@/domain/skills';
 
 export type ListSkillProgressForUserQuery = {
 	userId: string;

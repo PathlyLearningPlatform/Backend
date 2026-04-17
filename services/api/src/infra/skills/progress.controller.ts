@@ -39,7 +39,7 @@ import { listSkillProgressQuerySchema } from './schemas';
 import {
 	SkillNotFoundException,
 	SkillProgressNotFoundException,
-} from '@/domain/exceptions';
+} from '@/domain/skills';
 
 @UseGuards(JwtGuard)
 @Controller({

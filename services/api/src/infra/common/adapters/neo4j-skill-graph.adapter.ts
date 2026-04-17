@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Neo4jService } from '@/infra/neo4j/neo4j.service';
-import type { ISkillGraph } from '@/domain/interfaces';
+import type { ISkillGraph } from '@/domain/skills/repositories';
 import { Skill, SkillRelationshipType } from '@/domain/skills';
 import { SkillId, SkillRelationship } from '@/domain/skills';
 import type { Slug } from '@/domain/common';

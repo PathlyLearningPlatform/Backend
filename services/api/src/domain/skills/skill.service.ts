@@ -1,6 +1,6 @@
 import { Slug } from '../common';
-import { SkillNotFoundException } from '../exceptions';
-import { ISkillGraph } from '../interfaces';
+import { SkillNotFoundException } from './exceptions';
+import { ISkillGraph } from './repositories';
 import {
 	Skill,
 	SkillCannotReferenceItselfException,
@@ -8,7 +8,7 @@ import {
 	SkillName,
 	SkillRelationship,
 	SkillRelationshipType,
-} from '../skills';
+} from '.';
 
 export class SkillGraphService {
 	constructor(private readonly skillGraph: ISkillGraph) {}

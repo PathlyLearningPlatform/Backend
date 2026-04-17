@@ -1,8 +1,7 @@
 import { IQueryHandler } from '@/app/common';
 import { SkillDto } from '../dtos';
-import { SkillGraphService } from '@/domain/services';
 import { Slug } from '@/domain/common';
-import { SkillNotFoundException } from '@/domain/exceptions';
+import { SkillNotFoundException, SkillGraphService } from '@/domain/skills';
 
 export type FindSkillBySlugQuery = {
 	slug: string;

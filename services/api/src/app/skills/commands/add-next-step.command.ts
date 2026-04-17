@@ -1,8 +1,11 @@
 import { ICommandHandler } from '@/app/common';
 import { UUID, ValidationException } from '@/domain/common';
-import { SkillNotFoundException } from '@/domain/exceptions';
-import { SkillGraphService } from '@/domain/services';
-import { SkillCannotReferenceItselfException, SkillId } from '@/domain/skills';
+import {
+	SkillNotFoundException,
+	SkillGraphService,
+	SkillCannotReferenceItselfException,
+	SkillId,
+} from '@/domain/skills';
 
 export type AddNextStepSkillCommand = {
 	prerequisiteSkillId: string;

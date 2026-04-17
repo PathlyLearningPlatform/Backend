@@ -1,10 +1,13 @@
 import { ICommandHandler } from '@/app/common';
 import { SkillDto } from '../dtos';
-import { SkillId, SkillName } from '@/domain/skills';
+import {
+	SkillId,
+	SkillName,
+	SkillGraphService,
+	SkillNotFoundException,
+} from '@/domain/skills';
 import { UUID, ValidationException } from '@/domain/common';
 import { randomUUID } from 'node:crypto';
-import { SkillGraphService } from '@/domain/services';
-import { SkillNotFoundException } from '@/domain/exceptions';
 
 export type CreateSkillCommand = {
 	name: string;

@@ -1,9 +1,11 @@
 import { ICommandHandler } from '@/app/common';
 import { UserId, UUID, ValidationException } from '@/domain/common';
-import { SkillNotFoundException } from '@/domain/exceptions';
-import { SkillProgressService } from '@/domain/services';
-import { SkillProgressId } from '@/domain/skills';
-import { SkillId } from '@/domain/skills';
+import {
+	SkillProgressId,
+	SkillProgressService,
+	SkillNotFoundException,
+	SkillId,
+} from '@/domain/skills';
 
 export type UnlockSkillCommand = {
 	skillId: string;

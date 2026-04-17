@@ -1,9 +1,11 @@
 import { IQueryHandler } from '@/app/common';
 import { SkillDto } from '../dtos';
-import { SkillGraphService } from '@/domain/services';
-import { SkillId } from '@/domain/skills';
+import {
+	SkillId,
+	SkillNotFoundException,
+	SkillGraphService,
+} from '@/domain/skills';
 import { UUID } from '@/domain/common';
-import { SkillNotFoundException } from '@/domain/exceptions';
 
 export type FindSkillByIdQuery = {
 	id: string;

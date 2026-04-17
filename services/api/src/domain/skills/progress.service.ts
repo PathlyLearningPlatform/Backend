@@ -1,8 +1,8 @@
 import { UserId } from '../common';
-import { SkillNotFoundException } from '../exceptions';
-import { ISkillProgressGraph } from '../interfaces/skill-progress-graph.interface';
-import { SkillProgress, SkillProgressId } from '../skills';
-import { SkillGraphService } from './skill-graph.service';
+import { SkillNotFoundException } from './exceptions';
+import { ISkillProgressGraph } from './repositories/skill-progress-graph.interface';
+import { SkillProgress, SkillProgressId } from '.';
+import { SkillGraphService } from './skill.service';
 
 export class SkillProgressService {
 	constructor(

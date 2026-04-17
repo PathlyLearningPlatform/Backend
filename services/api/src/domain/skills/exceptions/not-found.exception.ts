@@ -1,4 +1,4 @@
-import { DomainException } from '../common';
+import { DomainException } from '../../common';
 
 export class SkillNotFoundException extends DomainException {
 	constructor(skillId?: string) {

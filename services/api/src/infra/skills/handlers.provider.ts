@@ -16,7 +16,7 @@ import {
 	UnlockSkillHandler,
 	UpdateSkillHandler,
 } from '@/app/skills';
-import { SkillGraphService, SkillProgressService } from '@/domain/services';
+import { SkillGraphService, SkillProgressService } from '@/domain/skills';
 import {
 	Neo4jSkillGraphAdapter,
 	Neo4jSkillProgressGraphAdapter,

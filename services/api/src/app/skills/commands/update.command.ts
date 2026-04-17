@@ -1,9 +1,12 @@
 import { ICommandHandler } from '@/app/common';
 import { SkillDto } from '../dtos';
-import { ISkillRepository, SkillId, SkillName } from '@/domain/skills';
+import {
+	SkillId,
+	SkillName,
+	SkillNotFoundException,
+	SkillGraphService,
+} from '@/domain/skills';
 import { UUID, ValidationException } from '@/domain/common';
-import { SkillNotFoundException } from '@/domain/exceptions';
-import { SkillGraphService } from '@/domain/services';
 
 export type UpdateSkillCommand = {
 	where: {

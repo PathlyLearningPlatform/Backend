@@ -35,7 +35,7 @@ import type {
 	ListSkillNextStepsHandler,
 	ListSkillPrerequisitiesHandler,
 } from '@/app/skills/queries';
-import { SkillNotFoundException } from '@/domain/exceptions';
+import { SkillNotFoundException } from '@/domain/skills';
 import {
 	RootSkillParentException,
 	SkillCannotReferenceItselfException,
