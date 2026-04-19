@@ -1,10 +1,16 @@
 import { Article } from '@/domain/articles';
 import { ArticleDto } from './dtos';
-import { aggregateToDto as activityAggregateToDto } from '../activities/helpers';
 
 export function aggregateToDto(aggregate: Article): ArticleDto {
 	return {
-		...activityAggregateToDto(aggregate),
+		id: aggregate.id.value,
+		lessonId: aggregate.lessonId.value,
+		name: aggregate.name.value,
+		description: aggregate.description?.value ?? null,
+		createdAt: aggregate.createdAt,
+		updatedAt: aggregate.updatedAt,
+		order: aggregate.order.value,
+		type: aggregate.type,
 		ref: aggregate.ref.value,
 	};
 }

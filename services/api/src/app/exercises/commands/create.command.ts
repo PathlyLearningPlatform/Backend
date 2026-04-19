@@ -3,7 +3,6 @@ import type { ExerciseDto } from '../dtos';
 import { type ICommandHandler, LessonNotFoundException } from '@/app/common';
 import { Exercise } from '@/domain/exercises/exercise.aggregate';
 import type { ExerciseDifficulty } from '@/domain/exercises/value-objects';
-import type { IActivityRepository } from '@/domain/activities/repositories';
 import {
 	ActivityDescription,
 	ActivityName,
@@ -12,6 +11,7 @@ import {
 import { ActivityId } from '@/domain/activities/value-objects/id.vo';
 import type { ILessonRepository } from '@/domain/lessons/repositories';
 import { LessonId } from '@/domain/lessons/value-objects/id.vo';
+import { IExerciseRepository } from '@/domain/exercises/repositories';
 
 type AddExerciseCommand = {
 	lessonId: string;
@@ -26,7 +26,7 @@ export class AddExerciseHandler
 {
 	constructor(
 		private readonly lessonRepository: ILessonRepository,
-		private readonly activityRepository: IActivityRepository,
+		private readonly exerciseRepository: IExerciseRepository,
 	) {}
 
 	async execute(command: AddExerciseCommand): Promise<AddExerciseResult> {
@@ -37,10 +37,10 @@ export class AddExerciseHandler
 			throw new LessonNotFoundException(lessonId.value);
 		}
 
-		const activityId = ActivityId.create(randomUUID());
-		const activityRef = lesson.addActivity(activityId);
+		const exerciseId = ActivityId.create(randomUUID());
+		const activityRef = lesson.addActivity(exerciseId);
 
-		const exercise = Exercise.create(activityRef.activityId, {
+		const exercise = Exercise.create(exerciseId, {
 			createdAt: new Date(),
 			lessonId,
 			name: ActivityName.create(command.name),
@@ -54,7 +54,7 @@ export class AddExerciseHandler
 
 		lesson.update(new Date());
 
-		await this.activityRepository.save(exercise);
+		await this.exerciseRepository.save(exercise);
 		await this.lessonRepository.save(lesson);
 
 		return {

@@ -18,6 +18,11 @@ export enum ExceptionMessage {
 	ACTIVITY_CANNOT_BE_REMOVED = 'Activity cannot be removed.',
 	ACTIVITY_NOT_STARTED = 'Activity not started.',
 
+	QUIZ_NOT_FOUND = 'Quiz was not found.',
+	ARTICLE_NOT_FOUND = 'Article was not found.',
+	EXERCISE_NOT_FOUND = 'Exercise was not found.',
+	QUIZ_ATTEMPT_NOT_FOUND = 'Quiz attempt was not found.',
+
 	QUESTION_NOT_FOUND = 'Question was not found.',
 
 	LEARNING_PATH_NOT_STARTED = 'Learning path not started.',

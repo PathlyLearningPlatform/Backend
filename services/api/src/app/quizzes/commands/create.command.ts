@@ -2,68 +2,42 @@ import { randomUUID } from 'node:crypto';
 import type { QuizWithoutQuestionsDto } from '../dtos';
 import { type ICommandHandler, LessonNotFoundException } from '@/app/common';
 import { Quiz } from '@/domain/quizzes/quiz.aggregate';
-import type { IActivityRepository } from '@/domain/activities/repositories';
 import {
 	ActivityDescription,
 	ActivityName,
 	ActivityType,
 } from '@/domain/activities/value-objects';
 import { ActivityId } from '@/domain/activities/value-objects/id.vo';
-import type { ILessonRepository } from '@/domain/lessons/repositories';
 import { LessonId } from '@/domain/lessons/value-objects/id.vo';
+import { IQuizRepository } from '@/domain/quizzes/repositories';
+import { Order } from '@/domain/common';
+import { aggregateToPreviewDto } from '../helpers';
 
-type AddQuizCommand = {
-	lessonId: string;
+type CreateQuizCommand = {
 	name: string;
 	description?: string | null;
 };
-type AddQuizResult = QuizWithoutQuestionsDto;
 
-export class AddQuizHandler
-	implements ICommandHandler<AddQuizCommand, AddQuizResult>
+export class CreateQuizHandler
+	implements ICommandHandler<CreateQuizCommand, QuizWithoutQuestionsDto>
 {
-	constructor(
-		private readonly lessonRepository: ILessonRepository,
-		private readonly activityRepository: IActivityRepository,
-	) {}
+	constructor(private readonly quizRepository: IQuizRepository) {}
 
-	async execute(command: AddQuizCommand): Promise<AddQuizResult> {
-		const lessonId = LessonId.create(command.lessonId);
-		const lesson = await this.lessonRepository.findById(lessonId);
+	async execute(command: CreateQuizCommand): Promise<QuizWithoutQuestionsDto> {
+		const quizId = ActivityId.create(randomUUID());
 
-		if (!lesson) {
-			throw new LessonNotFoundException(lessonId.value);
-		}
-
-		const activityId = ActivityId.create(randomUUID());
-		const activityRef = lesson.addActivity(activityId);
-
-		const quiz = Quiz.create(activityRef.activityId, {
+		const quiz = Quiz.create(quizId, {
 			createdAt: new Date(),
-			lessonId,
+			lessonId: LessonId.create('00000000-0000-0000-0000-000000000000'),
 			name: ActivityName.create(command.name),
-			description:
-				command.description != null
-					? ActivityDescription.create(command.description)
-					: null,
-			order: activityRef.order,
+			order: Order.create(0),
+			description: command.description
+				? ActivityDescription.create(command.description)
+				: null,
 		});
 
-		lesson.update(new Date());
+		await this.quizRepository.save(quiz);
 
-		await this.activityRepository.save(quiz);
-		await this.lessonRepository.save(lesson);
-
-		return {
-			type: ActivityType.QUIZ,
-			id: quiz.id.value,
-			lessonId: quiz.lessonId.value,
-			name: quiz.name.value,
-			description: quiz.description?.value ?? null,
-			createdAt: quiz.createdAt,
-			updatedAt: quiz.updatedAt ?? null,
-			order: quiz.order.value,
-			questionCount: quiz.questionCount,
-		};
+		return aggregateToPreviewDto(quiz);
 	}
 }

@@ -4,11 +4,11 @@ import { QuestionId } from './question-id.vo';
 type Props = {
 	questionId: QuestionId;
 	text: string;
-	isCorrect: boolean;
+	isCorrect: boolean | null;
 };
 
-export class Answer extends ValueObject<Props> {
-	private readonly _brand: 'answer' = 'answer';
+export class UserAnswer extends ValueObject<Props> {
+	private readonly _brand: 'userAnswer' = 'userAnswer';
 
 	get questionId(): QuestionId {
 		return this._props.questionId;
@@ -18,12 +18,12 @@ export class Answer extends ValueObject<Props> {
 		return this._props.text;
 	}
 
-	get isCorrect(): boolean {
+	get isCorrect(): boolean | null {
 		return this._props.isCorrect;
 	}
 
-	static create(props: Props): Answer {
-		return new Answer({
+	static create(props: Props): UserAnswer {
+		return new UserAnswer({
 			questionId: props.questionId,
 			text: props.text,
 			isCorrect: props.isCorrect,

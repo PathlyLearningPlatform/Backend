@@ -1,5 +1,4 @@
 import { QuizAttempt } from './attempt.aggregate';
-import { AnswerNotProvidedException } from './exceptions/answer-not-provided.exception';
 import { Quiz } from './quiz.aggregate';
 
 export type VerifyAnswerFunc = (
@@ -13,21 +12,18 @@ export class QuizService {
 		attempt: QuizAttempt,
 		verifyAnswerFunc: VerifyAnswerFunc,
 	) {
-		const questionAnswerMap = new Map<string, string>();
+		const questionUserAnswerMap = new Map<string, string>();
 
 		for (const answer of attempt.answers) {
-			questionAnswerMap.set(answer.questionId.value, answer.text);
-		}
-
-		if (attempt.answers.length !== quiz.questions.length) {
-			throw new AnswerNotProvidedException();
+			questionUserAnswerMap.set(answer.questionId.value, answer.text);
 		}
 
 		for (const question of quiz.questions) {
-			const userAnswer = questionAnswerMap.get(question.id.value);
+			const userAnswer = questionUserAnswerMap.get(question.id.value);
 
 			if (!userAnswer) {
-				throw new AnswerNotProvidedException();
+				attempt.markAnswerAs(question.id, false);
+				return;
 			}
 
 			const isCorrect = await verifyAnswerFunc(
@@ -35,9 +31,7 @@ export class QuizService {
 				question.correctAnswer,
 			);
 
-			if (isCorrect) {
-				attempt.markAnswerAsCorrect(question.id);
-			}
+			attempt.markAnswerAs(question.id, isCorrect);
 		}
 	}
 }

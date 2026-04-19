@@ -1,11 +1,11 @@
-import { AggregateRoot, type Order } from "../common";
-import type { LessonId } from "../lessons/value-objects";
-import type {
+import { AggregateRoot, Order } from '../common';
+import { LessonId } from '../lessons/value-objects';
+import {
 	ActivityDescription,
 	ActivityId,
 	ActivityName,
 	ActivityType,
-} from "./value-objects";
+} from './value-objects';
 
 export type ActivityProps = {
 	lessonId: LessonId;
@@ -40,15 +40,38 @@ export type UpdateActivityProps = Partial<{
 	order: Order;
 }>;
 
-export abstract class Activity extends AggregateRoot<
-	ActivityId,
-	ActivityProps
-> {
-	protected readonly _props: ActivityProps;
+export class Activity extends AggregateRoot<ActivityId, ActivityProps> {
+	private readonly _props: ActivityProps;
 
-	protected constructor(id: ActivityId, props: ActivityProps) {
+	private constructor(id: ActivityId, props: ActivityProps) {
 		super(id);
 		this._props = props;
+	}
+
+	static create(id: ActivityId, props: CreateActivityProps): Activity {
+		return new Activity(id, {
+			createdAt: props.createdAt,
+			description: props.description ?? null,
+			lessonId: props.lessonId,
+			name: props.name,
+			order: props.order,
+			type: props.type,
+			updatedAt: null,
+		});
+	}
+
+	static fromDataSource(props: ActivityFromDataSourceProps): Activity {
+		return new Activity(ActivityId.create(props.id), {
+			createdAt: props.createdAt,
+			updatedAt: props.updatedAt,
+			description: props.description
+				? ActivityDescription.create(props.description)
+				: null,
+			lessonId: LessonId.create(props.lessonId),
+			name: ActivityName.create(props.name),
+			order: Order.create(props.order),
+			type: props.type,
+		});
 	}
 
 	get id(): ActivityId {

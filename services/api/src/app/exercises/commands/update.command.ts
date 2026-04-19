@@ -1,7 +1,5 @@
-import { ActivityNotFoundException, type ICommandHandler } from '@/app/common';
-import { Exercise } from '@/domain/exercises/exercise.aggregate';
+import { ExerciseNotFoundException, type ICommandHandler } from '@/app/common';
 import type { ExerciseDifficulty } from '@/domain/exercises/value-objects';
-import type { IActivityRepository } from '@/domain/activities/repositories';
 import {
 	ActivityDescription,
 	ActivityName,
@@ -9,6 +7,7 @@ import {
 } from '@/domain/activities/value-objects';
 import { ActivityId } from '@/domain/activities/value-objects/id.vo';
 import type { ExerciseDto } from '../dtos';
+import { IExerciseRepository } from '@/domain/exercises/repositories';
 
 type UpdateExerciseCommand = {
 	where: {
@@ -25,14 +24,14 @@ type UpdateExerciseResult = ExerciseDto;
 export class UpdateExerciseHandler
 	implements ICommandHandler<UpdateExerciseCommand, UpdateExerciseResult>
 {
-	constructor(private readonly activityRepository: IActivityRepository) {}
+	constructor(private readonly exerciseRepository: IExerciseRepository) {}
 
 	async execute(command: UpdateExerciseCommand): Promise<UpdateExerciseResult> {
 		const id = ActivityId.create(command.where.id);
-		const activity = await this.activityRepository.findById(id);
+		const exercise = await this.exerciseRepository.findById(id);
 
-		if (!activity || !(activity instanceof Exercise)) {
-			throw new ActivityNotFoundException(id.value);
+		if (!exercise) {
+			throw new ExerciseNotFoundException(id.value);
 		}
 
 		const name = command.props?.name
@@ -45,24 +44,24 @@ export class UpdateExerciseHandler
 				? null
 				: undefined;
 
-		activity.update(new Date(), {
+		exercise.update(new Date(), {
 			name,
 			description,
 			difficulty: command.props?.difficulty,
 		});
 
-		await this.activityRepository.save(activity);
+		await this.exerciseRepository.save(exercise);
 
 		return {
 			type: ActivityType.EXERCISE,
-			id: activity.id.value,
-			lessonId: activity.lessonId.value,
-			name: activity.name.value,
-			description: activity.description?.value ?? null,
-			createdAt: activity.createdAt,
-			updatedAt: activity.updatedAt ?? null,
-			order: activity.order.value,
-			difficulty: activity.difficulty,
+			id: exercise.id.value,
+			lessonId: exercise.lessonId.value,
+			name: exercise.name.value,
+			description: exercise.description?.value ?? null,
+			createdAt: exercise.createdAt,
+			updatedAt: exercise.updatedAt ?? null,
+			order: exercise.order.value,
+			difficulty: exercise.difficulty,
 		};
 	}
 }

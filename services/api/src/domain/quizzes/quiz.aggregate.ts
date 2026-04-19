@@ -1,11 +1,6 @@
-import { Order } from '@/domain/common';
+import { AggregateRoot, Order } from '@/domain/common';
 import { LessonId } from '@/domain/lessons/value-objects';
 import {
-	Activity,
-	type ActivityFromDataSourceProps,
-	type ActivityProps,
-	type CreateActivityProps,
-	type UpdateActivityProps,
 	ActivityDescription,
 	ActivityId,
 	ActivityName,
@@ -15,25 +10,48 @@ import { QuestionAlreadyExistsException } from './exceptions';
 import type { Question } from './question.entity';
 import type { QuestionId } from './value-objects';
 
-type QuizProps = ActivityProps & {
+type QuizProps = {
 	questions: Question[];
 	questionCount: number;
+	maxScore: number;
+	lessonId: LessonId;
+	createdAt: Date;
+	updatedAt: Date | null;
+	name: ActivityName;
+	description: ActivityDescription | null;
+	order: Order;
+	type: ActivityType;
 };
-type CreateQuizProps = Omit<CreateActivityProps & {}, 'type'>;
-type QuizFromDataSource = Omit<
-	ActivityFromDataSourceProps & {
-		questions: Question[];
-		questionCount: number;
-	},
-	'type'
->;
-type UpdateQuizProps = UpdateActivityProps & Partial<{}>;
+type CreateQuizProps = {
+	lessonId: LessonId;
+	createdAt: Date;
+	name: ActivityName;
+	description?: ActivityDescription | null;
+	order: Order;
+};
+type QuizFromDataSource = {
+	id: string;
+	lessonId: string;
+	createdAt: Date;
+	updatedAt: Date | null;
+	name: string;
+	description: string | null;
+	order: number;
+	questions: Question[];
+	questionCount: number;
+	maxScore: number;
+};
+type UpdateQuizProps = Partial<{
+	name: ActivityName;
+	description: ActivityDescription | null;
+	order: Order;
+}>;
 
-export class Quiz extends Activity {
+export class Quiz extends AggregateRoot<ActivityId, QuizProps> {
 	protected readonly _props: QuizProps;
 
 	private constructor(id: ActivityId, props: QuizProps) {
-		super(id, props);
+		super(id);
 		this._props = props;
 	}
 
@@ -48,6 +66,7 @@ export class Quiz extends Activity {
 			updatedAt: null,
 			questionCount: 0,
 			questions: [],
+			maxScore: 0,
 		});
 	}
 
@@ -65,11 +84,49 @@ export class Quiz extends Activity {
 			updatedAt: props.updatedAt,
 			questionCount: props.questionCount,
 			questions: props.questions,
+			maxScore: props.maxScore,
 		});
 	}
 
 	update(now: Date, props?: UpdateQuizProps) {
-		super.update(now, props);
+		if (props?.name) {
+			this._props.name = props.name;
+		}
+
+		if (props?.description) {
+			this._props.description = props.description;
+		}
+
+		if (props?.order) {
+			this._props.order = props.order;
+		}
+
+		this._props.updatedAt = now;
+	}
+
+	get id(): ActivityId {
+		return this._id;
+	}
+	get lessonId(): LessonId {
+		return this._props.lessonId;
+	}
+	get createdAt(): Date {
+		return this._props.createdAt;
+	}
+	get updatedAt(): Date | null {
+		return this._props.updatedAt;
+	}
+	get name(): ActivityName {
+		return this._props.name;
+	}
+	get description(): ActivityDescription | null {
+		return this._props.description;
+	}
+	get order(): Order {
+		return this._props.order;
+	}
+	get type(): ActivityType {
+		return this._props.type;
 	}
 
 	get questions(): readonly Question[] {
@@ -80,6 +137,10 @@ export class Quiz extends Activity {
 		return this._props.questionCount;
 	}
 
+	get maxScore(): number {
+		return this._props.maxScore;
+	}
+
 	addQuestion(question: Question): void {
 		if (this.findQuestion(question.id)) {
 			throw new QuestionAlreadyExistsException(question.id.value);
@@ -87,6 +148,7 @@ export class Quiz extends Activity {
 
 		this._props.questions.push(question);
 		this._props.questionCount = this._props.questions.length;
+		this._props.maxScore = this._props.questionCount;
 	}
 
 	removeQuestion(id: QuestionId) {
@@ -98,6 +160,7 @@ export class Quiz extends Activity {
 
 		this._props.questions.splice(i, 1);
 		this._props.questionCount = this._props.questions.length;
+		this._props.maxScore = this._props.questionCount;
 
 		this._rearrangeQuestions();
 	}

@@ -1,23 +1,21 @@
 import { ActivityId } from '../activities';
 import { AggregateRoot, UserId, UUID } from '../common';
-import { Answer, QuestionId } from './value-objects';
+import { UserAnswer, QuestionId } from './value-objects';
 import { QuizAttemptId } from './value-objects/attempt-id.vo';
 
 export type QuizAttemptProps = {
 	quizId: ActivityId;
 	userId: UserId;
-	answers: Answer[];
+	answers: UserAnswer[];
 	attemptedAt: Date;
 	score: number;
-	maxScore: number;
 };
 
 export type CreateQuizAttemptProps = {
 	quizId: ActivityId;
 	userId: UserId;
-	answers: Answer[];
+	answers: UserAnswer[];
 	attemptedAt: Date;
-	maxScore: number;
 };
 
 export type UpdateQuizAttemptProps = Partial<{
@@ -35,7 +33,6 @@ export type QuizAttemptFromDataSourceProps = {
 	}[];
 	attemptedAt: Date;
 	score: number;
-	maxScore: number;
 };
 
 export class QuizAttempt extends AggregateRoot<
@@ -53,7 +50,6 @@ export class QuizAttempt extends AggregateRoot<
 		return new QuizAttempt(id, {
 			answers: props.answers,
 			attemptedAt: props.attemptedAt,
-			maxScore: props.maxScore,
 			score: 0,
 			quizId: props.quizId,
 			userId: props.userId,
@@ -68,10 +64,9 @@ export class QuizAttempt extends AggregateRoot<
 		return new QuizAttempt(id, {
 			quizId,
 			userId,
-			maxScore: props.maxScore,
 			score: props.score,
 			answers: props.answers.map((item) =>
-				Answer.create({
+				UserAnswer.create({
 					questionId: QuestionId.create(item.questionId),
 					text: item.text,
 					isCorrect: item.isCorrect,
@@ -87,12 +82,19 @@ export class QuizAttempt extends AggregateRoot<
 		}
 	}
 
-	markAnswerAsCorrect(questionId: QuestionId) {
+	markAnswerAs(questionId: QuestionId, isCorrect: boolean) {
 		this._props.answers = this._props.answers.map((item) => {
-			if (item.questionId.equals(questionId) && !item.isCorrect) {
-				this._props.score++;
-				return Answer.create({
-					isCorrect: true,
+			if (item.questionId.equals(questionId)) {
+				if (!item.isCorrect && isCorrect) {
+					this._props.score++;
+				}
+
+				if (item.isCorrect && !isCorrect) {
+					this._props.score--;
+				}
+
+				return UserAnswer.create({
+					isCorrect: isCorrect,
 					questionId: item.questionId,
 					text: item.text,
 				});
@@ -114,10 +116,6 @@ export class QuizAttempt extends AggregateRoot<
 		return this._props.score;
 	}
 
-	get maxScore(): number {
-		return this._props.maxScore;
-	}
-
 	get attemptedAt(): Date {
 		return this._props.attemptedAt;
 	}
@@ -126,7 +124,7 @@ export class QuizAttempt extends AggregateRoot<
 		return this._id;
 	}
 
-	get answers(): Answer[] {
+	get answers(): UserAnswer[] {
 		return this._props.answers;
 	}
 }

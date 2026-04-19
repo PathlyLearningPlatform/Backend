@@ -24,3 +24,34 @@ export class QuizResponseDto extends ActivityResponseDto {
 	})
 	questions: QuestionResponseDto[];
 }
+
+export class UserAnswerResponseDto {
+	@ApiProperty()
+	questionId: string;
+
+	@ApiProperty()
+	isCorrect: boolean;
+
+	@ApiProperty()
+	text: string;
+}
+
+export class QuizAttemptResponseDto {
+	@ApiProperty()
+	id: string;
+
+	@ApiProperty()
+	userId: string;
+
+	@ApiProperty()
+	quizId: string;
+
+	@ApiProperty()
+	score: number;
+
+	@ApiProperty()
+	attemptedAt: string;
+
+	@ApiProperty({ type: [UserAnswerResponseDto] })
+	answers: UserAnswerResponseDto[];
+}

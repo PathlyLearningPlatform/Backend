@@ -7,3 +7,6 @@ export * from './update-question.dto';
 export * from './list-questions.dto';
 export * from './find-question-by-id.dto';
 export * from './remove-question.dto';
+export * from './complete.dto';
+export * from './find-attempt-by-id.dto';
+export * from './list-attempts.dto';

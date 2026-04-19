@@ -1,7 +1,7 @@
 import type { IQueryHandler, OffsetPagination } from '@/app/common';
 import type { ExerciseDto } from '../dtos';
-import { IActivityRepository } from '@/domain/activities';
 import { aggregateToDto } from '../helpers';
+import { IExerciseRepository } from '@/domain/exercises/repositories';
 
 type ListExercisesQuery = {
 	where?: {
@@ -14,10 +14,10 @@ type ListExercisesResult = ExerciseDto[];
 export class ListExercisesHandler
 	implements IQueryHandler<ListExercisesQuery, ListExercisesResult>
 {
-	constructor(private readonly activityRepository: IActivityRepository) {}
+	constructor(private readonly exerciseRepository: IExerciseRepository) {}
 
 	async execute(query: ListExercisesQuery): Promise<ListExercisesResult> {
-		const exercises = await this.activityRepository.listExercises({
+		const exercises = await this.exerciseRepository.list({
 			where: {
 				lessonId: query.where?.lessonId,
 			},

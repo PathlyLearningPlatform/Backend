@@ -2,7 +2,6 @@ import { randomUUID } from 'node:crypto';
 import type { ArticleDto } from '../dtos';
 import { type ICommandHandler, LessonNotFoundException } from '@/app/common';
 import { Article } from '@/domain/articles/article.aggregate';
-import type { IActivityRepository } from '@/domain/activities/repositories';
 import {
 	ActivityDescription,
 	ActivityName,
@@ -12,6 +11,7 @@ import { ActivityId } from '@/domain/activities/value-objects/id.vo';
 import { Url } from '@/domain/common';
 import type { ILessonRepository } from '@/domain/lessons/repositories';
 import { LessonId } from '@/domain/lessons/value-objects/id.vo';
+import { IArticleRepository } from '@/domain/articles/repositories';
 
 type AddArticleCommand = {
 	lessonId: string;
@@ -26,7 +26,7 @@ export class AddArticleHandler
 {
 	constructor(
 		private readonly lessonRepository: ILessonRepository,
-		private readonly activityRepository: IActivityRepository,
+		private readonly articleRepository: IArticleRepository,
 	) {}
 
 	async execute(command: AddArticleCommand): Promise<AddArticleResult> {
@@ -37,8 +37,8 @@ export class AddArticleHandler
 			throw new LessonNotFoundException(lessonId.value);
 		}
 
-		const activityId = ActivityId.create(randomUUID());
-		const activityRef = lesson.addActivity(activityId);
+		const articleId = ActivityId.create(randomUUID());
+		const activityRef = lesson.addActivity(articleId);
 
 		const article = Article.create(activityRef.activityId, {
 			createdAt: new Date(),
@@ -54,7 +54,7 @@ export class AddArticleHandler
 
 		lesson.update(new Date());
 
-		await this.activityRepository.save(article);
+		await this.articleRepository.save(article);
 		await this.lessonRepository.save(lesson);
 
 		return {

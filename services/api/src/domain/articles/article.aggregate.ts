@@ -1,42 +1,52 @@
-import { Order, Url } from '@/domain/common';
+import { AggregateRoot, Order, Url } from '@/domain/common';
 import { LessonId } from '@/domain/lessons/value-objects';
 import {
-	Activity,
-	type ActivityFromDataSourceProps,
-	type ActivityProps,
-	type CreateActivityProps,
-	type UpdateActivityProps,
 	ActivityDescription,
 	ActivityId,
 	ActivityName,
 	ActivityType,
 } from '../activities';
 
-type ArticleProps = ActivityProps & {
+type ArticleProps = {
+	ref: Url;
+	lessonId: LessonId;
+	createdAt: Date;
+	updatedAt: Date | null;
+	name: ActivityName;
+	description: ActivityDescription | null;
+	order: Order;
+	type: ActivityType;
+};
+type CreateArticleProps = {
+	lessonId: LessonId;
+	createdAt: Date;
+	name: ActivityName;
+	description?: ActivityDescription | null;
+	order: Order;
 	ref: Url;
 };
-type CreateArticleProps = Omit<
-	CreateActivityProps & {
-		ref: Url;
-	},
-	'type'
->;
-type ArticleFromDataSourceProps = Omit<
-	ActivityFromDataSourceProps & {
-		ref: string;
-	},
-	'type'
->;
-type UpdateArticleProps = UpdateActivityProps &
-	Partial<{
-		ref: Url;
-	}>;
+type ArticleFromDataSourceProps = {
+	id: string;
+	lessonId: string;
+	createdAt: Date;
+	updatedAt: Date | null;
+	name: string;
+	description: string | null;
+	order: number;
+	ref: string;
+};
+type UpdateArticleProps = Partial<{
+	name: ActivityName;
+	description: ActivityDescription | null;
+	order: Order;
+	ref: Url;
+}>;
 
-export class Article extends Activity {
+export class Article extends AggregateRoot<ActivityId, ArticleProps> {
 	protected readonly _props: ArticleProps;
 
 	private constructor(id: ActivityId, props: ArticleProps) {
-		super(id, props);
+		super(id);
 		this._props = props;
 	}
 
@@ -68,15 +78,52 @@ export class Article extends Activity {
 		});
 	}
 
+	get id(): ActivityId {
+		return this._id;
+	}
+	get lessonId(): LessonId {
+		return this._props.lessonId;
+	}
+	get createdAt(): Date {
+		return this._props.createdAt;
+	}
+	get updatedAt(): Date | null {
+		return this._props.updatedAt;
+	}
+	get name(): ActivityName {
+		return this._props.name;
+	}
+	get description(): ActivityDescription | null {
+		return this._props.description;
+	}
+	get order(): Order {
+		return this._props.order;
+	}
+	get type(): ActivityType {
+		return this._props.type;
+	}
+
 	get ref(): Url {
 		return this._props.ref;
 	}
 
 	update(now: Date, props?: UpdateArticleProps): void {
-		super.update(now, props);
+		if (props?.name) {
+			this._props.name = props.name;
+		}
+
+		if (props?.description) {
+			this._props.description = props.description;
+		}
+
+		if (props?.order) {
+			this._props.order = props.order;
+		}
 
 		if (props?.ref) {
 			this._props.ref = props.ref;
 		}
+
+		this._props.updatedAt = now;
 	}
 }

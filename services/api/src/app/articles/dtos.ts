@@ -1,5 +1,13 @@
-import { ActivityDto } from '../activities/dtos';
+import { ActivityType } from '@/domain/activities';
 
-export interface ArticleDto extends ActivityDto {
+export interface ArticleDto {
+	id: string;
+	lessonId: string;
+	name: string;
+	description: string | null;
+	createdAt: Date;
+	updatedAt: Date | null;
+	type: ActivityType;
+	order: number;
 	ref: string;
 }
