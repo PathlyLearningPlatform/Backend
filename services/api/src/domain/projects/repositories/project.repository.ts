@@ -6,9 +6,6 @@ export type ListProjectsOptions = {
 		limit: number;
 		page: number;
 	}>;
-	where?: Partial<{
-		unitId: string;
-	}>;
 };
 
 export interface IProjectRepository {

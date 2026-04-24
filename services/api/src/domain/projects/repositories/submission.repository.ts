@@ -18,10 +18,21 @@ export type ListProjectSubmissionsOptions = {
 	}>;
 };
 
+export type FindFirstProjectSubmissionOptions = Partial<{
+	userId: string;
+	projectId: string;
+	submissionId: string;
+	status: ProjectSubmissionStatus;
+}>;
+
 export interface IProjectSubmissionRepository {
 	list(options?: ListProjectSubmissionsOptions): Promise<ProjectSubmission[]>;
 
 	findById(id: ProjectSubmissionId): Promise<ProjectSubmission | null>;
+
+	findFirst(
+		options: FindFirstProjectSubmissionOptions,
+	): Promise<ProjectSubmission | null>;
 
 	save(aggregate: ProjectSubmission): Promise<void>;
 

@@ -12,7 +12,6 @@ export type ProjectSubmissionProps = {
 export type CreateProjectSubmission = {
 	projectId: ProjectId;
 	submittedAt: Date;
-	status: ProjectSubmissionStatus;
 	userId: UserId;
 };
 export type ProjectSubmissionFromDataSource = {
@@ -41,7 +40,7 @@ export class ProjectSubmission extends AggregateRoot<
 	): ProjectSubmission {
 		return new ProjectSubmission(id, {
 			projectId: props.projectId,
-			status: props.status,
+			status: ProjectSubmissionStatus.PENDING,
 			submittedAt: props.submittedAt,
 			updatedAt: null,
 			userId: props.userId,
@@ -91,5 +90,9 @@ export class ProjectSubmission extends AggregateRoot<
 
 	get status(): ProjectSubmissionStatus {
 		return this._props.status;
+	}
+
+	get userId(): UserId {
+		return this._props.userId;
 	}
 }

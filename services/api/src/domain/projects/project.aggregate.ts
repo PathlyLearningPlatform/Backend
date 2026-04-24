@@ -1,35 +1,33 @@
-import { AggregateRoot, UUID } from '../common';
-import { UnitId } from '../units';
+import { AggregateRoot, Url, UUID } from '../common';
 import { ProjectId } from './value-objects';
 
 export type ProjectProps = {
 	name: string;
 	description: string | null;
+	acceptUrl: Url;
 	createdAt: Date;
 	updatedAt: Date | null;
-	afterUnitId: UnitId | null;
 };
 
 export type CreateProjectProps = {
 	name: string;
+	acceptUrl: Url;
 	description?: string;
 	createdAt: Date;
-	afterUnitId?: UnitId;
 };
 
 export type ProjectFromDataSourceProps = {
 	id: string;
 	name: string;
+	acceptUrl: string;
 	description: string | null;
 	createdAt: Date;
 	updatedAt: Date | null;
-	afterUnitId: string | null;
 };
 
 export type UpdateProjectProps = Partial<{
 	name: string;
 	description: string | null;
-	afterUnitId: UnitId | null;
 }>;
 
 export class Project extends AggregateRoot<ProjectId, ProjectProps> {
@@ -46,7 +44,7 @@ export class Project extends AggregateRoot<ProjectId, ProjectProps> {
 			description: props.description ?? null,
 			createdAt: props.createdAt,
 			updatedAt: null,
-			afterUnitId: props.afterUnitId ?? null,
+			acceptUrl: props.acceptUrl,
 		});
 	}
 
@@ -56,7 +54,7 @@ export class Project extends AggregateRoot<ProjectId, ProjectProps> {
 			description: props.description,
 			createdAt: props.createdAt,
 			updatedAt: props.updatedAt,
-			afterUnitId: props.afterUnitId ? UnitId.create(props.afterUnitId) : null,
+			acceptUrl: Url.create(props.acceptUrl),
 		});
 	}
 
@@ -69,10 +67,6 @@ export class Project extends AggregateRoot<ProjectId, ProjectProps> {
 
 		if (props.description !== undefined) {
 			this._props.description = props.description;
-		}
-
-		if (props.afterUnitId !== undefined) {
-			this._props.afterUnitId = props.afterUnitId;
 		}
 	}
 
@@ -88,15 +82,15 @@ export class Project extends AggregateRoot<ProjectId, ProjectProps> {
 		return this._props.description;
 	}
 
-	get afterUnitId(): UnitId | null {
-		return this._props.afterUnitId;
-	}
-
 	get createdAt(): Date {
 		return this._props.createdAt;
 	}
 
 	get updatedAt(): Date | null {
 		return this._props.updatedAt;
+	}
+
+	get acceptUrl(): Url {
+		return this._props.acceptUrl;
 	}
 }

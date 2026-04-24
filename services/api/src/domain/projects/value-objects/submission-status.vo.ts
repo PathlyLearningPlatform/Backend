@@ -1,5 +1,5 @@
 export enum ProjectSubmissionStatus {
-	IN_TESTING = 'in_testing',
+	PENDING = 'pending',
 	COMPLETED = 'completed',
 	FAILED = 'failed',
 }
