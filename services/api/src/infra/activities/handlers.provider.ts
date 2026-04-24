@@ -5,12 +5,6 @@ import {
 	RemoveActivityProgressHandler,
 } from '@/app/activities/commands';
 import {
-	UpdateArticleHandler,
-	FindArticleByIdHandler,
-	ListArticlesHandler,
-	AddArticleHandler,
-} from '@app/articles';
-import {
 	FindActivityByIdHandler,
 	FindActivityProgressForUserHandler,
 	ListActivitiesHandler,

@@ -20,7 +20,7 @@ import { HttpErrorDto, HttpValidationPipe } from '@infra/common';
 import type {
 	UpdateArticleHandler,
 	FindArticleByIdHandler,
-	AddArticleHandler,
+	CreateArticleHandler,
 } from '@/app/articles';
 import {
 	ActivityNotFoundException,
@@ -46,8 +46,8 @@ export class ArticlesController {
 	constructor(
 		@Inject(DiToken.FIND_ARTICLE_BY_ID_HANDLER)
 		private readonly findArticleByIdHandler: FindArticleByIdHandler,
-		@Inject(DiToken.ADD_ARTICLE_HANDLER)
-		private readonly addArticleHandler: AddArticleHandler,
+		@Inject(DiToken.CREATE_ARTICLE_HANDLER)
+		private readonly createArticleHandler: CreateArticleHandler,
 		@Inject(DiToken.UPDATE_ARTICLE_HANDLER)
 		private readonly updateArticleHandler: UpdateArticleHandler,
 	) {}
@@ -91,7 +91,7 @@ export class ArticlesController {
 		body: CreateArticleDto,
 	): Promise<CreateArticleResponseDto> {
 		try {
-			const result = await this.addArticleHandler.execute({
+			const result = await this.createArticleHandler.execute({
 				name: body.name,
 				description: body.description,
 				lessonId: body.lessonId,

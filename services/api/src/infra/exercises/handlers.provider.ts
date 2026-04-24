@@ -1,6 +1,6 @@
 import type { Provider } from '@nestjs/common';
 import {
-	AddExerciseHandler,
+	CreateExerciseHandler,
 	FindExerciseByIdHandler,
 	ListExercisesHandler,
 	UpdateExerciseHandler,
@@ -34,12 +34,12 @@ export const exerciseHandlersProvider: Provider[] = [
 		inject: [PostgresExerciseRepository],
 	},
 	{
-		provide: DiToken.ADD_EXERCISE_HANDLER,
+		provide: DiToken.CREATE_EXERCISE_HANDLER,
 		useFactory(
 			lessonRepository: ILessonRepository,
 			exerciseRepository: IExerciseRepository,
 		) {
-			return new AddExerciseHandler(lessonRepository, exerciseRepository);
+			return new CreateExerciseHandler(lessonRepository, exerciseRepository);
 		},
 		inject: [PostgresLessonRepository, PostgresExerciseRepository],
 	},

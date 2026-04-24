@@ -2,7 +2,7 @@ import { z } from 'zod';
 import {
 	questionContentSchema,
 	questionCorrectAnswerSchema,
-} from '@infra/activities/schemas/fields.schema';
+} from './fields.schema';
 
 export const updateQuestionSchema = z
 	.object({

@@ -13,23 +13,23 @@ import type { ILessonRepository } from '@/domain/lessons/repositories';
 import { LessonId } from '@/domain/lessons/value-objects/id.vo';
 import { IExerciseRepository } from '@/domain/exercises/repositories';
 
-type AddExerciseCommand = {
+type CreateExerciseCommand = {
 	lessonId: string;
 	name: string;
 	description?: string | null;
 	difficulty: ExerciseDifficulty;
 };
-type AddExerciseResult = ExerciseDto;
+type CreateExerciseResult = ExerciseDto;
 
-export class AddExerciseHandler
-	implements ICommandHandler<AddExerciseCommand, AddExerciseResult>
+export class CreateExerciseHandler
+	implements ICommandHandler<CreateExerciseCommand, CreateExerciseResult>
 {
 	constructor(
 		private readonly lessonRepository: ILessonRepository,
 		private readonly exerciseRepository: IExerciseRepository,
 	) {}
 
-	async execute(command: AddExerciseCommand): Promise<AddExerciseResult> {
+	async execute(command: CreateExerciseCommand): Promise<CreateExerciseResult> {
 		const lessonId = LessonId.create(command.lessonId);
 		const lesson = await this.lessonRepository.findById(lessonId);
 

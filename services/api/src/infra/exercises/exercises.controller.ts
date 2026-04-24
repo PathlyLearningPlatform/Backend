@@ -19,14 +19,13 @@ import {
 import { HttpErrorDto, HttpValidationPipe } from '@infra/common';
 import type {
 	FindExerciseByIdHandler,
-	AddExerciseHandler,
 	UpdateExerciseHandler,
+	CreateExerciseHandler,
 } from '@/app/exercises';
 import {
 	ActivityNotFoundException,
 	LessonNotFoundException,
 } from '@/app/common';
-import { ExerciseDifficulty as DomainExerciseDifficulty } from '@/domain/exercises/value-objects';
 import { DiToken } from '@infra/common';
 import { ExceptionMessage } from '@infra/common';
 import {
@@ -47,29 +46,11 @@ export class ExercisesController {
 	constructor(
 		@Inject(DiToken.FIND_EXERCISE_BY_ID_HANDLER)
 		private readonly findExerciseByIdHandler: FindExerciseByIdHandler,
-		@Inject(DiToken.ADD_EXERCISE_HANDLER)
-		private readonly addExerciseHandler: AddExerciseHandler,
+		@Inject(DiToken.CREATE_EXERCISE_HANDLER)
+		private readonly createExerciseHandler: CreateExerciseHandler,
 		@Inject(DiToken.UPDATE_EXERCISE_HANDLER)
 		private readonly updateExerciseHandler: UpdateExerciseHandler,
 	) {}
-
-	private toDomainDifficulty(
-		difficulty: unknown,
-	): DomainExerciseDifficulty | undefined {
-		if (difficulty === undefined) {
-			return undefined;
-		}
-
-		if (
-			difficulty === DomainExerciseDifficulty.EASY ||
-			difficulty === DomainExerciseDifficulty.MEDIUM ||
-			difficulty === DomainExerciseDifficulty.HARD
-		) {
-			return difficulty as DomainExerciseDifficulty;
-		}
-
-		return undefined;
-	}
 
 	@ApiOkResponse({ type: FindExerciseByIdResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorDto })
@@ -110,19 +91,11 @@ export class ExercisesController {
 		body: CreateExerciseDto,
 	): Promise<CreateExerciseResponseDto> {
 		try {
-			const difficulty = this.toDomainDifficulty(body.difficulty);
-
-			if (!difficulty) {
-				throw new InternalServerErrorException(
-					new HttpErrorDto(ExceptionMessage.INTERNAL_ERROR),
-				);
-			}
-
-			const result = await this.addExerciseHandler.execute({
+			const result = await this.createExerciseHandler.execute({
 				name: body.name,
 				description: body.description,
 				lessonId: body.lessonId,
-				difficulty,
+				difficulty: body.difficulty,
 			});
 
 			return {
@@ -159,7 +132,7 @@ export class ExercisesController {
 				props: {
 					name: body.name,
 					description: body.description,
-					difficulty: this.toDomainDifficulty(body.difficulty),
+					difficulty: body.difficulty,
 				},
 			});
 

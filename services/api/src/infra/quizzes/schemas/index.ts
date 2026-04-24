@@ -3,3 +3,4 @@ export * from './create-question.schema';
 export * from './update.schema';
 export * from './update-question.schema';
 export * from './complete.schema';
+export * from './fields.schema';

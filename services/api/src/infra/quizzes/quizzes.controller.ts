@@ -23,7 +23,7 @@ import type {
 	RemoveQuestionHandler,
 	UpdateQuestionHandler,
 	FindQuizByIdHandler,
-	AddQuizHandler,
+	CreateQuizHandler,
 } from '@/app/quizzes';
 import {
 	ActivityNotFoundException,
@@ -64,8 +64,8 @@ export class QuizzesController {
 	constructor(
 		@Inject(DiToken.FIND_QUIZ_BY_ID_HANDLER)
 		private readonly findQuizByIdHandler: FindQuizByIdHandler,
-		@Inject(DiToken.ADD_QUIZ_HANDLER)
-		private readonly addQuizHandler: AddQuizHandler,
+		@Inject(DiToken.CREATE_QUIZ_HANDLER)
+		private readonly createQuizHandler: CreateQuizHandler,
 		@Inject(DiToken.ADD_QUESTION_HANDLER)
 		private readonly addQuestionHandler: AddQuestionHandler,
 		@Inject(DiToken.UPDATE_QUESTION_HANDLER)
@@ -113,7 +113,7 @@ export class QuizzesController {
 		body: CreateQuizDto,
 	): Promise<CreateQuizResponseDto> {
 		try {
-			const result = await this.addQuizHandler.execute({
+			const result = await this.createQuizHandler.execute({
 				name: body.name,
 				description: body.description,
 				lessonId: body.lessonId,

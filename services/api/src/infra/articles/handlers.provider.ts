@@ -3,7 +3,7 @@ import {
 	UpdateArticleHandler,
 	FindArticleByIdHandler,
 	ListArticlesHandler,
-	AddArticleHandler,
+	CreateArticleHandler,
 } from '@app/articles';
 import type { ILessonRepository } from '@/domain/lessons/repositories';
 import { DiToken } from '@infra/common';
@@ -40,12 +40,12 @@ export const articleHandlersProvider: Provider[] = [
 		inject: [PostgresArticleRepository],
 	},
 	{
-		provide: DiToken.ADD_ARTICLE_HANDLER,
+		provide: DiToken.CREATE_ARTICLE_HANDLER,
 		useFactory(
 			lessonRepository: ILessonRepository,
 			articleRepository: IArticleRepository,
 		) {
-			return new AddArticleHandler(lessonRepository, articleRepository);
+			return new CreateArticleHandler(lessonRepository, articleRepository);
 		},
 		inject: [PostgresLessonRepository, PostgresArticleRepository],
 	},

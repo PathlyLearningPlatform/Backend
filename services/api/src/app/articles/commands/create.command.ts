@@ -13,23 +13,23 @@ import type { ILessonRepository } from '@/domain/lessons/repositories';
 import { LessonId } from '@/domain/lessons/value-objects/id.vo';
 import { IArticleRepository } from '@/domain/articles/repositories';
 
-type AddArticleCommand = {
+type CreateArticleCommand = {
 	lessonId: string;
 	name: string;
 	description?: string | null;
 	ref: string;
 };
-type AddArticleResult = ArticleDto;
+type CreateArticleResult = ArticleDto;
 
-export class AddArticleHandler
-	implements ICommandHandler<AddArticleCommand, AddArticleResult>
+export class CreateArticleHandler
+	implements ICommandHandler<CreateArticleCommand, CreateArticleResult>
 {
 	constructor(
 		private readonly lessonRepository: ILessonRepository,
 		private readonly articleRepository: IArticleRepository,
 	) {}
 
-	async execute(command: AddArticleCommand): Promise<AddArticleResult> {
+	async execute(command: CreateArticleCommand): Promise<CreateArticleResult> {
 		const lessonId = LessonId.create(command.lessonId);
 		const lesson = await this.lessonRepository.findById(lessonId);
 

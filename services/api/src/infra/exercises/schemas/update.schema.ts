@@ -1,5 +1,5 @@
-import { difficultySchema } from '@infra/activities/schemas/fields.schema';
 import { updateActivitySchema } from '@infra/activities/schemas';
+import { difficultySchema } from './fields.schema';
 
 export const updateExercisePropsSchema = updateActivitySchema
 	.safeExtend({

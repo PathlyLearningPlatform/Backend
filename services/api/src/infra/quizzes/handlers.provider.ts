@@ -1,7 +1,7 @@
 import type { Provider } from '@nestjs/common';
 import {
 	AddQuestionHandler,
-	AddQuizHandler,
+	CreateQuizHandler,
 	CompleteQuizHandler,
 	FindQuizAttemptForUserHandler,
 	FindQuizByIdHandler,
@@ -67,12 +67,12 @@ export const quizHandlersProvider: Provider[] = [
 		inject: [PostgresQuizRepository],
 	},
 	{
-		provide: DiToken.ADD_QUIZ_HANDLER,
+		provide: DiToken.CREATE_QUIZ_HANDLER,
 		useFactory(
 			lessonRepository: ILessonRepository,
 			quizRepository: IQuizRepository,
 		) {
-			return new AddQuizHandler(lessonRepository, quizRepository);
+			return new CreateQuizHandler(lessonRepository, quizRepository);
 		},
 		inject: [PostgresLessonRepository, PostgresQuizRepository],
 	},

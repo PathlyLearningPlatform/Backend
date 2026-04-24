@@ -1,31 +1,8 @@
 import { z } from 'zod';
-import {
-	descriptionSchema,
-	difficultySchema,
-	lessonIdSchema,
-	nameSchema,
-	questionContentSchema,
-	questionCorrectAnswerSchema,
-	refSchema,
-} from './fields.schema';
+import { descriptionSchema, lessonIdSchema, nameSchema } from './fields.schema';
 
 export const createActivitySchema = z.object({
 	name: nameSchema,
 	description: descriptionSchema.optional().nullable(),
 	lessonId: lessonIdSchema,
-});
-
-export const createArticleSchema = createActivitySchema.safeExtend({
-	ref: refSchema,
-});
-
-export const createExerciseSchema = createActivitySchema.safeExtend({
-	difficulty: difficultySchema,
-});
-
-export const createQuizSchema = createActivitySchema.safeExtend({});
-
-export const createQuestionSchema = z.object({
-	content: questionContentSchema,
-	correctAnswer: questionCorrectAnswerSchema,
 });
