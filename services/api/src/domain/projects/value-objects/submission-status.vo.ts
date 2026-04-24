@@ -1,6 +1,5 @@
 export enum ProjectSubmissionStatus {
-	UNVERIFIED = 'unverified',
-	IN_VERIFICATION = 'in_verification',
+	IN_TESTING = 'in_testing',
 	COMPLETED = 'completed',
 	FAILED = 'failed',
 }
