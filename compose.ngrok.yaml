@@ -1,0 +1,13 @@
+# docker compose -f compose.ngrok.yaml up -d --build
+name: ngrok
+services:
+  ngrok:
+    image: ngrok/ngrok:latest
+    env_file:
+      - .env
+    command: http --url=laptop-overturn-trustee.ngrok-free.dev --traffic-policy-file=policy.yaml 4000
+    network_mode: "host"
+    volumes:
+      - type: bind
+        source: ./services/ngrok/policy.yaml
+        target: /policy.yaml
