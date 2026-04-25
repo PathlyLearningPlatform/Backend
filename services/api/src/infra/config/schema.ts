@@ -29,5 +29,9 @@ export const appConfigSchema = z
 			port: z.coerce.number().int(),
 			user: z.string(),
 		}),
+		github: z.object({
+			projectsOrgId: z.coerce.number().int(),
+			exercisesOrgId: z.coerce.number().int(),
+		}),
 	})
 	.strict();

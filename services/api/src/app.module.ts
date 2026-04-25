@@ -17,6 +17,7 @@ import { SkillsModule } from './infra/skills/skills.module';
 import { ArticlesModule } from './infra/articles/articles.module';
 import { ExercisesModule } from './infra/exercises/exercises.module';
 import { QuizzesModule } from './infra/quizzes/quizzes.module';
+import { WebhooksModule } from './infra/webhooks/webhooks.module';
 
 @Module({
 	imports: [
@@ -43,6 +44,7 @@ import { QuizzesModule } from './infra/quizzes/quizzes.module';
 		ExercisesModule,
 		QuizzesModule,
 		SkillsModule,
+		WebhooksModule,
 	],
 	providers: [
 		{

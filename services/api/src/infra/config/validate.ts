@@ -29,6 +29,10 @@ export function validateConfig(config: Record<string, unknown>) {
 			user: config.GRAPH_DB_USER,
 			password: config.GRAPH_DB_PASSWORD,
 		},
+		github: {
+			projectsOrgId: config.GITHUB_PROJECTS_ORG_ID,
+			exercisesOrgId: config.GITHUB_EXERCISES_ORG_ID,
+		},
 	};
 
 	const result = appConfigSchema.safeParse(transformedConfig);
