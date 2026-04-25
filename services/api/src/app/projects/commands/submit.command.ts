@@ -5,13 +5,15 @@ import {
 	IProjectRepository,
 	IProjectSubmissionRepository,
 	ProjectId,
-	ProjectProgress,
 	ProjectProgressId,
 	ProjectSubmission,
 	ProjectSubmissionId,
 } from '@/domain/projects';
 import { UserId, UUID } from '@/domain/common';
-import { ProjectNotFoundException } from '../exceptions';
+import {
+	ProjectNotFoundException,
+	ProjectProgressNotFoundException,
+} from '../exceptions';
 import { randomUUID } from 'crypto';
 import { submissionAggregateToDto } from '../helpers';
 
@@ -30,14 +32,24 @@ export class SubmitProjectHandler
 	) {}
 
 	async execute(command: SubmitProjectCommand): Promise<ProjectSubmissionDto> {
-		// TODO: check if user exists
 		const userId = UserId.create(UUID.create(command.userId));
+		// TODO: check if user exists
 
 		const projectId = ProjectId.create(UUID.create(command.projectId));
 		const project = await this.projectRepository.findById(projectId);
 
 		if (!project) {
 			throw new ProjectNotFoundException(projectId.value);
+		}
+
+		const progressId = ProjectProgressId.create(projectId, userId);
+		const progress = await this.projectProgressRepository.findById(progressId);
+
+		if (!progress) {
+			throw new ProjectProgressNotFoundException(
+				projectId.value,
+				userId.toString(),
+			);
 		}
 
 		const submissionId = ProjectSubmissionId.create(UUID.create(randomUUID()));
@@ -47,11 +59,7 @@ export class SubmitProjectHandler
 			submittedAt: new Date(),
 		});
 
-		const progressId = ProjectProgressId.create(projectId, userId);
-		const progress = ProjectProgress.create(progressId);
-
 		await this.projectSubmissionRepository.save(submission);
-		await this.projectProgressRepository.save(progress);
 
 		return submissionAggregateToDto(submission);
 	}

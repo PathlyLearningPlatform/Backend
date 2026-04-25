@@ -1,18 +1,20 @@
-import { AggregateRoot, UserId, UUID } from '../common';
+import { AggregateRoot, Url, UserId, UUID } from '../common';
 import { ProjectId, ProjectProgressId, ProjectStatus } from './value-objects';
 
 export type ProjectProgressProps = {
 	completedAt: Date | null;
 	updatedAt: Date | null;
 	status: ProjectStatus;
+	repositoryUrl: Url;
 };
-export type CreateProjectProgressProps = {};
+export type CreateProjectProgressProps = { repositoryUrl: Url };
 export type ProjectProgressFromDataSourceProps = {
 	projectId: string;
 	userId: string;
 	completedAt: Date | null;
 	updatedAt: Date | null;
 	status: ProjectStatus;
+	repositoryUrl: string;
 };
 
 export class ProjectProgress extends AggregateRoot<
@@ -26,11 +28,15 @@ export class ProjectProgress extends AggregateRoot<
 		this._props = props;
 	}
 
-	static create(id: ProjectProgressId): ProjectProgress {
+	static create(
+		id: ProjectProgressId,
+		props: CreateProjectProgressProps,
+	): ProjectProgress {
 		return new ProjectProgress(id, {
 			completedAt: null,
 			status: ProjectStatus.IN_PROGRESS,
 			updatedAt: null,
+			repositoryUrl: props.repositoryUrl,
 		});
 	}
 
@@ -46,6 +52,7 @@ export class ProjectProgress extends AggregateRoot<
 				completedAt: props.completedAt,
 				status: props.status,
 				updatedAt: props.updatedAt,
+				repositoryUrl: Url.create(props.repositoryUrl),
 			},
 		);
 	}
@@ -74,5 +81,9 @@ export class ProjectProgress extends AggregateRoot<
 
 	get updatedAt(): Date | null {
 		return this._props.updatedAt;
+	}
+
+	get repositoryUrl(): Url {
+		return this._props.repositoryUrl;
 	}
 }

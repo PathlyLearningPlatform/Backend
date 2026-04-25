@@ -24,4 +24,5 @@ export interface ProjectProgressDto {
 	completedAt: Date | null;
 	updatedAt: Date | null;
 	status: ProjectStatus;
+	repositoryUrl: string;
 }

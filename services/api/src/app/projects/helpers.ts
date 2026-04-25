@@ -34,5 +34,6 @@ export function progressAggregateToDto(
 		status: aggregate.status,
 		updatedAt: aggregate.updatedAt,
 		userId: aggregate.userId.toString(),
+		repositoryUrl: aggregate.repositoryUrl.value,
 	};
 }
