@@ -8,7 +8,7 @@ export const githubWebhookSchema = z.object({
 		url: z.url(),
 		created_at: z.iso.datetime(),
 	}),
-	sender: z.object({ login: z.string(), id: z.string() }),
+	sender: z.object({ login: z.string(), id: z.int() }),
 	organization: z.object({
 		login: z.string(),
 		id: z.int(),

@@ -32,6 +32,8 @@ export const appConfigSchema = z
 		github: z.object({
 			projectsOrgId: z.coerce.number().int(),
 			exercisesOrgId: z.coerce.number().int(),
+			exercisesClassroomId: z.coerce.number().int(),
+			projectsClassroomId: z.coerce.number().int(),
 		}),
 	})
 	.strict();

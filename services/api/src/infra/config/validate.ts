@@ -30,8 +30,10 @@ export function validateConfig(config: Record<string, unknown>) {
 			password: config.GRAPH_DB_PASSWORD,
 		},
 		github: {
-			projectsOrgId: config.GITHUB_PROJECTS_ORG_ID,
-			exercisesOrgId: config.GITHUB_EXERCISES_ORG_ID,
+			projectsOrgId: config.GH_PROJECTS_ORG_ID,
+			exercisesOrgId: config.GH_EXERCISES_ORG_ID,
+			exercisesClassroomId: config.GH_EXERCISES_CLASSROOM_ID,
+			projectsClassroomId: config.GH_PROJECTS_CLASSROOM_ID,
 		},
 	};
 

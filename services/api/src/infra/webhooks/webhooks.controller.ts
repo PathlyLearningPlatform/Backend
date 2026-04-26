@@ -38,8 +38,11 @@ export class WebhooksController {
 		@Headers('x-github-event') xGithubEvent: string,
 		@Body(new HttpValidationPipe(githubWebhookSchema)) body: GithubWebhookDto,
 	): Promise<void> {
-		// TODO: handle assignment created event
-		// TODO: handle assignment accepted event
-		// TODO: handle assginment submitted event
+		// TODO: handle exercise created case
+		// TODO: handle exercise accepted case
+		// TODO: handle exercise submitted case
+		// TODO: handle project created case
+		// TODO: handle project accepted case
+		// TODO: handle project submitted case
 	}
 }
