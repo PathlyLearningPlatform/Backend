@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ProjectModule } from '../projects/projects.module';
+import { ProjectsModule } from '../projects/projects.module';
 import { WebhooksController } from './webhooks.controller';
 
 @Module({
-	imports: [ProjectModule],
+	imports: [ProjectsModule],
 	controllers: [WebhooksController],
 })
 export class WebhooksModule {}

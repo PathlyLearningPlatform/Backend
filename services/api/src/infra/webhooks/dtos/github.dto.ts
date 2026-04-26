@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 class Repository {
 	id!: number;
@@ -30,15 +30,15 @@ export class GithubWebhookDto {
 	@ApiProperty()
 	action!: string;
 
-	@ApiProperty({ type: Repository })
-	repository!: Repository;
+	@ApiPropertyOptional({ type: Repository })
+	repository?: Repository;
 
-	@ApiProperty({ type: Organization })
-	organization!: Organization;
+	@ApiPropertyOptional({ type: Organization })
+	organization?: Organization;
 
 	@ApiProperty({ type: Sender })
 	sender!: Sender;
 
-	@ApiProperty({ type: CheckRun })
+	@ApiPropertyOptional({ type: CheckRun })
 	check_run?: CheckRun;
 }

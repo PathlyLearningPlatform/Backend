@@ -1,15 +1,15 @@
 import { Body, Controller, Headers, Inject, Post } from '@nestjs/common';
-import { DiToken, HttpValidationPipe } from '../common';
+import { DiToken } from '../common';
 import {
 	CreateProjectHandler,
 	StartProjectHandler,
 	SubmitProjectHandler,
 } from '@/app/projects';
-import { githubWebhookSchema } from './schemas';
 import { ApiBody, ApiOkResponse } from '@nestjs/swagger';
 import { GithubWebhookDto } from './dtos/github.dto';
 import { ConfigService } from '@nestjs/config';
 import { Config } from '../config/type';
+import { Octokit } from 'octokit';
 
 @Controller({
 	path: 'webhooks',
@@ -17,6 +17,7 @@ import { Config } from '../config/type';
 })
 export class WebhooksController {
 	private readonly githubConfig: Config['github'];
+	private octokit!: Octokit;
 
 	constructor(
 		@Inject(ConfigService)
@@ -29,6 +30,9 @@ export class WebhooksController {
 		private readonly startProjectHandler: StartProjectHandler,
 	) {
 		this.githubConfig = this.configService.get<Config['github']>('github')!;
+		this.octokit = new Octokit({
+			auth: this.githubConfig.projectsClassroomPAT,
+		});
 	}
 
 	@ApiBody({ type: GithubWebhookDto })
@@ -36,8 +40,36 @@ export class WebhooksController {
 	@Post('github')
 	async github(
 		@Headers('x-github-event') xGithubEvent: string,
-		@Body(new HttpValidationPipe(githubWebhookSchema)) body: GithubWebhookDto,
+		@Body(/*new HttpValidationPipe(githubWebhookSchema)*/)
+		body: GithubWebhookDto,
 	): Promise<void> {
+		if (xGithubEvent === 'repository') {
+			if (body.action === 'created' && body.repository) {
+				const repoName = body.repository.name;
+				const classroomName = repoName.split('-')[0];
+				const assignmentSlug = repoName.split('-')[1];
+
+				if (classroomName === 'pathlyprojects') {
+					const res = await this.octokit.request(
+						'GET /classrooms/{classroom_id}/assignments',
+						{
+							classroom_id: this.githubConfig.projectsClassroomId,
+						},
+					);
+
+					for (const assignment of res.data) {
+						if (assignment.slug === assignmentSlug) {
+							console.log(assignment);
+							await this.createProjectHandler.execute({
+								name: assignment.slug,
+								acceptUrl: assignment.invite_link,
+							});
+							break;
+						}
+					}
+				}
+			}
+		}
 		// TODO: handle exercise created case
 		// TODO: handle exercise accepted case
 		// TODO: handle exercise submitted case

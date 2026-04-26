@@ -25,6 +25,10 @@ export enum ExceptionMessage {
 
 	QUESTION_NOT_FOUND = 'Question was not found.',
 
+	PROJECT_NOT_FOUND = 'Project was not found.',
+	PROJECT_NOT_STARTED = 'Project not started.',
+	PROJECT_SUBMISSION_NOT_FOUND = 'Project submission was not found.',
+
 	LEARNING_PATH_NOT_STARTED = 'Learning path not started.',
 
 	INTERNAL_ERROR = 'Internal error. Please try again later.',

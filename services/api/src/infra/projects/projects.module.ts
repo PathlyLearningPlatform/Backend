@@ -33,4 +33,4 @@ import {
 		...projectHandlersProvider,
 	],
 })
-export class ProjectModule {}
+export class ProjectsModule {}

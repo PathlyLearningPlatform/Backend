@@ -2,17 +2,21 @@ import z from 'zod';
 
 export const githubWebhookSchema = z.object({
 	action: z.string(),
-	repository: z.object({
-		id: z.int(),
-		name: z.string(),
-		url: z.url(),
-		created_at: z.iso.datetime(),
-	}),
+	repository: z
+		.object({
+			id: z.int(),
+			name: z.string(),
+			url: z.url(),
+			created_at: z.iso.datetime(),
+		})
+		.optional(),
 	sender: z.object({ login: z.string(), id: z.int() }),
-	organization: z.object({
-		login: z.string(),
-		id: z.int(),
-	}),
+	organization: z
+		.object({
+			login: z.string(),
+			id: z.int(),
+		})
+		.optional(),
 	check_run: z
 		.object({
 			id: z.int(),
