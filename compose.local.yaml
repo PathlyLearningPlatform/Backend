@@ -84,6 +84,8 @@ services:
       - GH_PROJECTS_ORG_ID=279263998
       - GH_EXERCISES_CLASSROOM_ID=321585
       - GH_PROJECTS_CLASSROOM_ID=321606
+      - GH_PATHLY_BACKEND_APP_ID=3508416
+      - GH_PATHLY_BACKEND_APP_CLIENT_ID=Iv23liMJAF6DnzOuaVii
 
     volumes:
       - ./services/api/src:/usr/src/app/services/api/src
