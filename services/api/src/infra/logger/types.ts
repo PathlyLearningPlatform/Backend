@@ -1,3 +1,3 @@
 export type AppLoggerModuleOptions = {
-  isGlobal?: boolean
-}
+	isGlobal?: boolean;
+};

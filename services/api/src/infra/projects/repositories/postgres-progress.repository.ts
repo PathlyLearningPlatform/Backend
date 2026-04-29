@@ -8,7 +8,7 @@ import { DbException } from '@infra/common';
 import { and, eq } from 'drizzle-orm';
 import { DbService } from '@/infra/db/db.service';
 import { projectProgressTable } from '@/infra/db/schemas';
-import type { Db } from '@/infra/db/type';
+import type { Db } from '@/infra/db/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { ProjectApiConstraints } from '../enums';
 

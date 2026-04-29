@@ -8,7 +8,7 @@ import type {
 } from '@/domain/learning-paths';
 import { LearningPath } from '@/domain/learning-paths/learning-path.aggregate';
 import { type LearningPathId } from '@/domain/learning-paths/value-objects';
-import type { Db } from '@/infra/db/type';
+import type { Db } from '@/infra/db/types';
 import { learningPathsTable, sectionsTable } from '../db/schemas';
 import { LearningPathsApiConstraints } from './enums';
 

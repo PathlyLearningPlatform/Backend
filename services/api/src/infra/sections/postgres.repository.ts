@@ -11,7 +11,7 @@ import type {
 import { Section } from '@/domain/sections/section.aggregate';
 import { UnitRef } from '@/domain/sections/value-objects';
 import type { SectionId } from '@/domain/sections/value-objects/id.vo';
-import type { Db } from '@/infra/db/type';
+import type { Db } from '@/infra/db/types';
 import { sectionsTable, unitsTable } from '../db/schemas';
 import { SectionsApiConstraints } from './enums';
 

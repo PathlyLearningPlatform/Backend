@@ -18,7 +18,7 @@ export class OnActivityCompletedHandler
 	async handle(event: ActivityCompletedEvent): Promise<void> {
 		const lessonProgress = await this.lessonProgressRepository.findById(
 			LessonProgressId.create(
-				LessonId.create(event.lessonId),
+				LessonId.create(event.payload.lessonId),
 				UserId.create(UUID.create(event.userId)),
 			),
 		);

@@ -1,6 +1,6 @@
-import { AggregateRoot, UserId, UUID } from "../common";
-import { LearningPathCompletedEvent } from "./events";
-import { LearningPathId, LearningPathProgressId } from "./value-objects";
+import { AggregateRoot, UserId, UUID } from '../common';
+import { LearningPathCompletedEvent } from './events';
+import { LearningPathId, LearningPathProgressId } from './value-objects';
 
 export type LearningPathProgressProps = {
 	completedAt: Date | null;
@@ -73,11 +73,9 @@ export class LearningPathProgress extends AggregateRoot<
 		this._props.completedAt = now;
 
 		this.addEvent(
-			new LearningPathCompletedEvent(
-				this._id.learningPathId.toString(),
-				this._id.userId.toString(),
-				now,
-			),
+			new LearningPathCompletedEvent(this._id.userId.toString(), now, {
+				learningPathId: this._id.learningPathId.value,
+			}),
 		);
 	}
 

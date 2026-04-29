@@ -9,7 +9,7 @@ import type {
 } from '@/domain/lessons/repositories';
 import { ActivityRef } from '@/domain/lessons/value-objects';
 import type { LessonId } from '@/domain/lessons/value-objects/id.vo';
-import type { Db } from '@/infra/db/type';
+import type { Db } from '@/infra/db/types';
 import { activitiesTable, lessonsTable } from '../db/schemas';
 import { LessonsApiConstraints } from './enums';
 import { Order } from '@/domain/common';

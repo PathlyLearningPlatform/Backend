@@ -11,7 +11,7 @@ import type {
 import { Unit } from '@/domain/units/unit.aggregate';
 import { LessonRef } from '@/domain/units/value-objects';
 import type { UnitId } from '@/domain/units/value-objects/id.vo';
-import type { Db } from '@/infra/db/type';
+import type { Db } from '@/infra/db/types';
 import { lessonsTable, unitsTable } from '../db/schemas';
 import { UnitsApiConstraints } from './enums';
 

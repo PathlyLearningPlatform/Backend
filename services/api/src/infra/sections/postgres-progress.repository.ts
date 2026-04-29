@@ -7,7 +7,7 @@ import {
 	SectionProgress,
 	type SectionProgressId,
 } from '@/domain/sections';
-import type { Db } from '@/infra/db/type';
+import type { Db } from '@/infra/db/types';
 import { DbService } from '../db/db.service';
 import { sectionProgressTable } from '../db/schemas';
 import { SectionsApiConstraints } from './enums';

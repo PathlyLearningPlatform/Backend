@@ -77,12 +77,10 @@ export class LessonProgress extends AggregateRoot<
 		this._props.completedAt = now;
 
 		this.addEvent(
-			new LessonCompletedEvent(
-				this._id.lessonId.value,
-				this._props.unitId.value,
-				this._id.userId.toString(),
-				now,
-			),
+			new LessonCompletedEvent(this._id.userId.toString(), now, {
+				lessonId: this._id.lessonId.value,
+				unitId: this._props.unitId.value,
+			}),
 		);
 	}
 

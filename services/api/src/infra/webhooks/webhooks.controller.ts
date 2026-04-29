@@ -8,7 +8,7 @@ import {
 import { ApiBody, ApiOkResponse } from '@nestjs/swagger';
 import { GithubWebhookDto } from './dtos/github.dto';
 import { ConfigService } from '@nestjs/config';
-import { Config } from '../config/type';
+import { Config } from '../config/types';
 import { Octokit } from 'octokit';
 
 @Controller({
@@ -76,5 +76,11 @@ export class WebhooksController {
 		// TODO: handle project created case
 		// TODO: handle project accepted case
 		// TODO: handle project submitted case
+	}
+
+	@ApiOkResponse()
+	@Post('keycloak')
+	async keycloak(@Body() body): Promise<void> {
+		console.log(body);
 	}
 }

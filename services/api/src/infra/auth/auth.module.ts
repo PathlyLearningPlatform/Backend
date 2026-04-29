@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { InfraException } from '@infra/common';
 import { readFile } from 'node:fs/promises';
-import type { AppConfig } from '../config/type';
+import type { AppConfig } from '../config/types';
 import { JwtGuard } from './jwt.guard';
 
 @Module({

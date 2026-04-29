@@ -1,14 +1,20 @@
-import { type DomainEvent, Event } from "@/domain/common";
+import { type DomainEvent, Event } from '@/domain/common';
 
-export class ActivityCompletedEvent implements DomainEvent {
+export type ActivityCompletedEventPayload = {
+	lessonId: string;
+	activityId: string;
+};
+
+export class ActivityCompletedEvent
+	implements DomainEvent<ActivityCompletedEventPayload>
+{
+	public readonly eventName: Event;
+
 	constructor(
-		public readonly activityId: string,
 		public readonly userId: string,
-		public readonly lessonId: string,
 		public readonly occuredAt: Date,
+		public readonly payload: ActivityCompletedEventPayload,
 	) {
 		this.eventName = Event.ACTIVITY_COMPLETED;
 	}
-
-	public readonly eventName: Event;
 }

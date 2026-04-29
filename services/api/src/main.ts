@@ -8,8 +8,15 @@ import {
 	SwaggerModule,
 } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import type { AppConfig } from './infra/config/type';
+import type { AppConfig } from './infra/config/types';
 import { HttpErrorDto } from './infra/common';
+import {
+	ActivityCompletedEventPayload,
+	LearningPathCompletedEventPayload,
+	LessonCompletedEventPayload,
+	SectionCompletedEventPaylod,
+	UnitCompletedEventPayload,
+} from './infra/events/dtos';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule, {
@@ -22,6 +29,13 @@ async function bootstrap() {
 	const swaggerOptions: SwaggerDocumentOptions = {
 		operationIdFactory: (_controllerKey: string, methodKey: string) =>
 			methodKey,
+		extraModels: [
+			LearningPathCompletedEventPayload,
+			SectionCompletedEventPaylod,
+			UnitCompletedEventPayload,
+			LessonCompletedEventPayload,
+			ActivityCompletedEventPayload,
+		],
 	};
 	const swaggerConfig = new DocumentBuilder()
 		.setTitle('Pathly API')

@@ -1,7 +1,7 @@
-import { AggregateRoot, UserId, UUID } from "../common";
-import { LearningPathId } from "../learning-paths/value-objects";
-import { SectionCompletedEvent } from "./events";
-import { SectionId, SectionProgressId } from "./value-objects";
+import { AggregateRoot, UserId, UUID } from '../common';
+import { LearningPathId } from '../learning-paths/value-objects';
+import { SectionCompletedEvent } from './events';
+import { SectionId, SectionProgressId } from './value-objects';
 
 export type SectionProgressProps = {
 	learningPathId: LearningPathId;
@@ -77,12 +77,10 @@ export class SectionProgress extends AggregateRoot<
 		this._props.completedAt = now;
 
 		this.addEvent(
-			new SectionCompletedEvent(
-				this._id.sectionId.value,
-				this._props.learningPathId.toString(),
-				this._id.userId.toString(),
-				now,
-			),
+			new SectionCompletedEvent(this._id.userId.toString(), now, {
+				sectionId: this._id.sectionId.value,
+				learningPathId: this._props.learningPathId.toString(),
+			}),
 		);
 	}
 

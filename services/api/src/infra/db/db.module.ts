@@ -4,7 +4,7 @@ import { ConfigException } from '@infra/common';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
 import { DiToken } from '@infra/common';
-import type { Config } from '../config/type';
+import type { Config } from '../config/types';
 import { DbService } from './db.service';
 import * as schema from './schemas';
 

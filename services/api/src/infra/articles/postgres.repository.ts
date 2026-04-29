@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DbException } from '@infra/common';
 import { and, eq } from 'drizzle-orm';
 import { ActivityId } from '@/domain/activities/value-objects';
-import type { Db } from '@/infra/db/type';
+import type { Db } from '@/infra/db/types';
 import { activitiesTable, articlesTable } from '../db/schemas';
 import { ActivitiesApiConstraints } from '../activities/enums';
 import {

@@ -5,7 +5,7 @@ import {
 } from '@/domain/quizzes/repositories';
 import { Inject, Injectable } from '@nestjs/common';
 import { DbService } from '../db/db.service';
-import { Db } from '../db/type';
+import { Db } from '../db/types';
 import { quizAttemptsTable } from '../db/schemas';
 import { and, eq } from 'drizzle-orm';
 import { DbException } from '../common';

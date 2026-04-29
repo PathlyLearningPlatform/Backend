@@ -17,7 +17,7 @@ export class OnSectionCompletedHandler
 
 	async handle(event: SectionCompletedEvent): Promise<void> {
 		const learningPathId = LearningPathId.create(
-			UUID.create(event.learningPathId),
+			UUID.create(event.payload.learningPathId),
 		);
 		const userId = UserId.create(UUID.create(event.userId));
 		const learningPathProgressId = LearningPathProgressId.create(
@@ -37,7 +37,7 @@ export class OnSectionCompletedHandler
 		const learningPathProgress =
 			await this.learningPathProgressRepository.findById(
 				LearningPathProgressId.create(
-					LearningPathId.create(UUID.create(event.learningPathId)),
+					LearningPathId.create(UUID.create(event.payload.learningPathId)),
 					UserId.create(UUID.create(event.userId)),
 				),
 			);

@@ -7,7 +7,7 @@ import {
 	LessonProgress,
 	type LessonProgressId,
 } from '@/domain/lessons';
-import type { Db } from '@/infra/db/type';
+import type { Db } from '@/infra/db/types';
 import { DbService } from '../db/db.service';
 import { lessonProgressTable } from '../db/schemas';
 import { LessonsApiConstraints } from './enums';

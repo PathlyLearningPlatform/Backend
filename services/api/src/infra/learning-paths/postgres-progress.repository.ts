@@ -7,7 +7,7 @@ import {
 	type LearningPathProgressId,
 	ListLearningPathProgressOptions,
 } from '@/domain/learning-paths';
-import type { Db } from '@/infra/db/type';
+import type { Db } from '@/infra/db/types';
 import { DbService } from '../db/db.service';
 import { learningPathProgressTable } from '../db/schemas';
 import { LearningPathsApiConstraints } from './enums';

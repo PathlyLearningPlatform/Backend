@@ -1,7 +1,7 @@
-import { AggregateRoot, UserId, UUID } from "../common";
-import { LessonId } from "../lessons/value-objects";
-import { ActivityCompletedEvent } from "./events";
-import { ActivityId, ActivityProgressId } from "./value-objects";
+import { AggregateRoot, UserId, UUID } from '../common';
+import { LessonId } from '../lessons/value-objects';
+import { ActivityCompletedEvent } from './events';
+import { ActivityId, ActivityProgressId } from './value-objects';
 
 export type ActivityProgressProps = {
 	lessonId: LessonId;
@@ -62,12 +62,10 @@ export class ActivityProgress extends AggregateRoot<
 		this._props.completedAt = now;
 
 		this.addEvent(
-			new ActivityCompletedEvent(
-				this._id.activityId.value,
-				this._id.userId.toString(),
-				this._props.lessonId.value,
-				now,
-			),
+			new ActivityCompletedEvent(this._id.userId.toString(), now, {
+				activityId: this._id.activityId.value,
+				lessonId: this._props.lessonId.value,
+			}),
 		);
 	}
 

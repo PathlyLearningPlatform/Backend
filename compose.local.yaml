@@ -39,10 +39,15 @@ services:
       environment:
         - KC_BOOTSTRAP_ADMIN_USERNAME=admin
         - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+        # - KC_HOSTNAME=http://localhost:4000/auth
+        # - KC_HOSTNAME_ADMIN=http://localhost:4000/auth
+        # - KC_PROXY_HEADERS=xforwarded
+        - WEBHOOK_HTTP_BASE_PATH=http://api:3000/v1/webhooks/keycloak
       volumes:
         - type: bind
           source: ./services/auth/realm-export.json
           target: /opt/keycloak/data/import/realm-export.json
+        - auth-data:/opt/keycloak/data
       healthcheck:
         test:
           - CMD-SHELL
@@ -131,3 +136,4 @@ services:
 volumes:
   db-data:
   graph-db-data:
+  auth-data:

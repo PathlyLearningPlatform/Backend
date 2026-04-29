@@ -9,7 +9,7 @@ import { ConfigException } from '@infra/common';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import type { Pool } from 'pg';
 import { DiToken } from '@infra/common';
-import type { Config } from '../config/type';
+import type { Config } from '../config/types';
 import type * as schema from './schemas';
 import { AppLogger } from '../logger';
 

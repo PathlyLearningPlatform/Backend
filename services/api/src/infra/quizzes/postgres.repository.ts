@@ -5,7 +5,7 @@ import { and, eq } from 'drizzle-orm';
 import { Question } from '@/domain/quizzes/question.entity';
 import { Quiz } from '@/domain/quizzes/quiz.aggregate';
 import { ActivityId } from '@/domain/activities/value-objects';
-import type { Db } from '@/infra/db/type';
+import type { Db } from '@/infra/db/types';
 import { activitiesTable, questionsTable, quizzesTable } from '../db/schemas';
 import {
 	IQuizRepository,

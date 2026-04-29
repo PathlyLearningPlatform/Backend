@@ -8,7 +8,7 @@ import type { LessonId } from '@/domain/lessons';
 import type { IActivityRepository } from '@/domain/activities/repositories';
 import type { ListActivitiesOptions } from '@/domain/activities/repositories';
 import { ActivityId } from '@/domain/activities/value-objects';
-import type { Db } from '@/infra/db/type';
+import type { Db } from '@/infra/db/types';
 import { activitiesTable } from '../db/schemas';
 import { ActivitiesApiConstraints } from './enums';
 

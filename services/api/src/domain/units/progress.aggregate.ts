@@ -1,7 +1,7 @@
-import { AggregateRoot, UserId, UUID } from "../common";
-import { SectionId } from "../sections/value-objects/id.vo";
-import { UnitCompletedEvent } from "./events";
-import { UnitId, UnitProgressId } from "./value-objects";
+import { AggregateRoot, UserId, UUID } from '../common';
+import { SectionId } from '../sections/value-objects/id.vo';
+import { UnitCompletedEvent } from './events';
+import { UnitId, UnitProgressId } from './value-objects';
 
 export type UnitProgressProps = {
 	sectionId: SectionId;
@@ -73,12 +73,10 @@ export class UnitProgress extends AggregateRoot<
 		this._props.completedAt = now;
 
 		this.addEvent(
-			new UnitCompletedEvent(
-				this._id.unitId.value,
-				this._props.sectionId.value,
-				this._id.userId.toString(),
-				now,
-			),
+			new UnitCompletedEvent(this._id.userId.toString(), now, {
+				unitId: this._id.unitId.value,
+				sectionId: this._props.sectionId.value,
+			}),
 		);
 	}
 
