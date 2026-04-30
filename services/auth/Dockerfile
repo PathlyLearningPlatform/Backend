@@ -15,7 +15,7 @@ COPY ./realm-export.json /opt/keycloak/data/import/
 
 RUN /opt/keycloak/bin/kc.sh build --vault=file
 
-CMD ["start-dev", "--import-realm", "--vault-dir=/opt/keycloak/secrets", "--log-level=DEBUG", "--vault=file"]
+CMD ["start-dev", "--import-realm", "--vault-dir=/opt/keycloak/secrets", "--vault=file"]
 
 EXPOSE 8080
 

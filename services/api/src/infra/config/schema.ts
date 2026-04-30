@@ -34,12 +34,13 @@ export const appConfigSchema = z
 			exercisesOrgId: z.coerce.number().int(),
 			exercisesClassroomId: z.coerce.number().int(),
 			projectsClassroomId: z.coerce.number().int(),
-			appId: z.coerce.number().int(),
-			appClientId: z.string(),
-			exercisesOrgInstallationId: z.coerce.number().int(),
-			projectsOrgInstalltionId: z.coerce.number().int(),
-			appPrivateKeyPath: z.string(),
 			projectsClassroomPAT: z.string().optional(),
+		}),
+		keycloak: z.object({
+			realmName: z.string(),
+			clientSecret: z.string(),
+			clientId: z.string(),
+			baseUrl: z.url(),
 		}),
 	})
 	.strict();

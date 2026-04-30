@@ -3,10 +3,9 @@ name: pathly
 services:
   db:
     image: postgres:18-alpine
-    environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=db
+    env_file:
+      - path: ./services/db/.env.example
+        required: true
     volumes:
       - db-data:/var/lib/postgresql
     healthcheck:
@@ -20,8 +19,9 @@ services:
     image: neo4j:latest
     volumes:
       - graph-db-data:/data
-    environment:
-      - NEO4J_AUTH=neo4j/zaq1@WSX
+    env_file:
+      - path: ./services/graph-db/.env.example
+        required: true
     ports:
       - "7474:7474"
       - "7687:7687"
@@ -36,13 +36,9 @@ services:
       build:
         context: ./services/auth
         target: dev
-      environment:
-        - KC_BOOTSTRAP_ADMIN_USERNAME=admin
-        - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
-        # - KC_HOSTNAME=http://localhost:4000/auth
-        # - KC_HOSTNAME_ADMIN=http://localhost:4000/auth
-        # - KC_PROXY_HEADERS=xforwarded
-        - WEBHOOK_HTTP_BASE_PATH=http://api:3000/v1/webhooks/keycloak
+      env_file:
+        - path: ./services/auth/.env.example
+          required: true
       volumes:
         - type: bind
           source: ./services/auth/realm-export.json
@@ -73,31 +69,8 @@ services:
     env_file:
       - path: ./services/api/.env
         required: false
-    environment:
-      - PORT=3000
-      - JWT_AUDIENCE=api
-      - JWT_ISSUER=http://localhost:8080/realms/pathly
-      - JWT_PUBLIC_KEY_PATH=jwt-public-key.pem
-      - DB_HOST=db
-      - DB_NAME=db
-      - DB_PORT=5432
-      - DB_USER=admin
-      - DB_PASSWORD=admin
-      - GRAPH_DB_HOST=graph-db
-      - GRAPH_DB_NAME=neo4j
-      - GRAPH_DB_PORT=7687
-      - GRAPH_DB_USER=neo4j
-      - GRAPH_DB_PASSWORD=zaq1@WSX
-      - GH_EXERCISES_ORG_ID=277455908
-      - GH_PROJECTS_ORG_ID=279263998
-      - GH_EXERCISES_CLASSROOM_ID=321585
-      - GH_PROJECTS_CLASSROOM_ID=321606
-      - GH_APP_ID=3508416
-      - GH_APP_CLIENT_ID=Iv23liMJAF6DnzOuaVii
-      - GH_EXERCISES_ORG_INSTALLATION_ID=127200784
-      - GH_PROJECTS_ORG_INSTALLATION_ID=127200620
-      - GH_APP_PRIVATE_KEY_PATH=gh-app-private-key.pem
-
+      - path: ./services/api/.env.example
+        required: true
     volumes:
       - ./services/api/src:/usr/src/app/services/api/src
       - ./services/api/test:/usr/src/app/services/api/test
@@ -109,6 +82,8 @@ services:
         target: /usr/src/app/services/api/jest.config.ts
     depends_on:
       db:
+        condition: service_healthy
+      auth:
         condition: service_healthy
     healthcheck:
       test: ['CMD', 'node', 'healthcheck.js']
@@ -129,9 +104,6 @@ services:
     depends_on:
       api:
         condition: service_healthy
-      auth:
-        condition: service_healthy
-        restart: true
     restart: always
 volumes:
   db-data:

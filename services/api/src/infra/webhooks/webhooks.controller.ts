@@ -10,6 +10,7 @@ import { GithubWebhookDto } from './dtos/github.dto';
 import { ConfigService } from '@nestjs/config';
 import { Config } from '../config/types';
 import { Octokit } from 'octokit';
+import KeycloakAdminClient from '@keycloak/keycloak-admin-client';
 
 @Controller({
 	path: 'webhooks',
@@ -28,6 +29,8 @@ export class WebhooksController {
 		private readonly submitProjectHandler: SubmitProjectHandler,
 		@Inject(DiToken.START_PROJECT_HANDLER)
 		private readonly startProjectHandler: StartProjectHandler,
+		@Inject(DiToken.KEYCLOAK_ADMIN_CLIENT)
+		private readonly kcAdminClient: KeycloakAdminClient,
 	) {
 		this.githubConfig = this.configService.get<Config['github']>('github')!;
 		this.octokit = new Octokit({
@@ -48,6 +51,16 @@ export class WebhooksController {
 				const repoName = body.repository.name;
 				const classroomName = repoName.split('-')[0];
 				const assignmentSlug = repoName.split('-')[1];
+
+				const ghUserId = body.sender.id;
+
+				const [user] = await this.kcAdminClient.users.find({
+					idpAlias: 'github',
+					idpUserId: ghUserId,
+				});
+
+				console.log(user);
+				console.log(body);
 
 				if (classroomName === 'pathlyprojects') {
 					const res = await this.octokit.request(

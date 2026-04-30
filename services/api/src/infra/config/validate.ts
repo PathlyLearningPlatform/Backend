@@ -34,12 +34,13 @@ export function validateConfig(config: Record<string, unknown>) {
 			exercisesOrgId: config.GH_EXERCISES_ORG_ID,
 			exercisesClassroomId: config.GH_EXERCISES_CLASSROOM_ID,
 			projectsClassroomId: config.GH_PROJECTS_CLASSROOM_ID,
-			appId: config.GH_APP_ID,
-			appClientId: config.GH_APP_CLIENT_ID,
-			exercisesOrgInstallationId: config.GH_EXERCISES_ORG_INSTALLATION_ID,
-			projectsOrgInstalltionId: config.GH_PROJECTS_ORG_INSTALLATION_ID,
-			appPrivateKeyPath: config.GH_APP_PRIVATE_KEY_PATH,
 			projectsClassroomPAT: config.GH_PROJECTS_CLASSROOM_PAT,
+		},
+		keycloak: {
+			realmName: config.KC_REALM_NAME,
+			clientSecret: config.KC_CLIENT_SECRET,
+			clientId: config.KC_CLIENT_ID,
+			baseUrl: config.KC_BASE_URL,
 		},
 	};
 
