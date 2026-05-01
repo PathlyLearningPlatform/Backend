@@ -30,9 +30,9 @@ import { LessonProgressNotFoundException } from '@/app/lessons/exceptions';
 import { UnitProgressNotFoundException } from '@/app/units/exceptions';
 import { LessonNotFoundException } from '@/app/common';
 import { DiToken } from '@infra/common';
-import { User } from '@infra/auth/user.decorator';
+import { User } from '@/infra/auth/decorators';
 import { JwtGuard } from '@infra/auth/jwt.guard';
-import type { UserInfo } from '@infra/auth/user-info.type';
+import type { UserInfo } from '@/infra/auth/types';
 import { ExceptionMessage } from '@infra/common';
 import {
 	ListLessonProgressQueryDto,

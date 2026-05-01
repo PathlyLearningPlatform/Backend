@@ -5,6 +5,7 @@ import { InfraException } from '@infra/common';
 import { readFile } from 'node:fs/promises';
 import type { AppConfig } from '../config/types';
 import { JwtGuard } from './jwt.guard';
+import { RoleGuard } from './role.guard';
 
 @Module({
 	imports: [
@@ -38,7 +39,7 @@ import { JwtGuard } from './jwt.guard';
 			inject: [ConfigService],
 		}),
 	],
-	providers: [JwtGuard],
-	exports: [JwtModule, JwtGuard],
+	providers: [JwtGuard, RoleGuard],
+	exports: [JwtModule, JwtGuard, RoleGuard],
 })
 export class AuthModule {}

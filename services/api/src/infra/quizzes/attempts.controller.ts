@@ -30,8 +30,8 @@ import {
 import { QuizAttemptNotFoundException } from '@/app/common';
 import { QuizNotFoundException } from '@/app/common/exceptions/quiz-not-found.exception';
 import { JwtGuard } from '../auth/jwt.guard';
-import { User } from '../auth/user.decorator';
-import type { UserInfo } from '../auth/user-info.type';
+import { User } from '../auth/decorators';
+import type { UserInfo } from '../auth/types';
 import { completeQuizSchema } from './schemas';
 import z from 'zod';
 

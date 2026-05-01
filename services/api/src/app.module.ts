@@ -20,6 +20,7 @@ import { QuizzesModule } from './infra/quizzes/quizzes.module';
 import { WebhooksModule } from './infra/webhooks/webhooks.module';
 import { ProjectsModule } from './infra/projects/projects.module';
 import { EventsModule } from './infra/events/events.module';
+import { AdminModule } from './infra/admin/admin.module';
 
 @Module({
 	imports: [
@@ -49,6 +50,7 @@ import { EventsModule } from './infra/events/events.module';
 		WebhooksModule,
 		ProjectsModule,
 		EventsModule,
+		AdminModule,
 	],
 	providers: [
 		{

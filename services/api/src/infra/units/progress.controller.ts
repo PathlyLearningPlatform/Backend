@@ -30,9 +30,9 @@ import { UnitProgressNotFoundException } from '@/app/units/exceptions';
 import { SectionProgressNotFoundException } from '@/app/sections/exceptions';
 import { UnitNotFoundException } from '@/app/common';
 import { DiToken } from '@infra/common';
-import { User } from '@infra/auth/user.decorator';
+import { User } from '@/infra/auth/decorators';
 import { JwtGuard } from '@infra/auth/jwt.guard';
-import type { UserInfo } from '@infra/auth/user-info.type';
+import type { UserInfo } from '@/infra/auth/types';
 import { ExceptionMessage } from '@infra/common';
 import {
 	ListUnitProgressQueryDto,

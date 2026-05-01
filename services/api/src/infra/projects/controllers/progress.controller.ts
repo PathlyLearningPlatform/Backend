@@ -28,9 +28,9 @@ import type {
 import { ProjectProgressNotFoundException } from '@/app/projects';
 import { progressDtoToClient } from '../helpers';
 import { listProjectProgressQuerySchema } from '../schemas/list-progress-query.schema';
-import { User } from '@/infra/auth/user.decorator';
+import { User } from '@/infra/auth/decorators';
 import { JwtGuard } from '@/infra/auth/jwt.guard';
-import type { UserInfo } from '@/infra/auth/user-info.type';
+import type { UserInfo } from '@/infra/auth/types';
 
 @UseGuards(JwtGuard)
 @Controller({

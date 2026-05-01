@@ -3,9 +3,9 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ApiHeader, ApiOkResponse, ApiResponse } from '@nestjs/swagger';
 import { filter, map, Observable } from 'rxjs';
 import { fromEvent } from 'rxjs';
-import { User } from '../auth/user.decorator';
+import { User } from '../auth/decorators';
 import { JwtGuard } from '../auth/jwt.guard';
-import { type UserInfo } from '../auth/user-info.type';
+import { type UserInfo } from '../auth/types';
 import { DomainEvent } from '@/domain/common';
 import { EventDto } from './dtos';
 

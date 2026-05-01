@@ -1,5 +1,6 @@
 import { createParamDecorator, type ExecutionContext } from '@nestjs/common';
 import type { Request } from 'express';
+import { Reflector } from '@nestjs/core';
 
 export const User = createParamDecorator(
 	(_data: unknown, ctx: ExecutionContext) => {
@@ -8,3 +9,5 @@ export const User = createParamDecorator(
 		return request.auth.user;
 	},
 );
+
+export const Roles = Reflector.createDecorator<string[]>();

@@ -4,7 +4,7 @@ import KeycloakAdminClient from '@keycloak/keycloak-admin-client';
 import { ApiOkResponse } from '@nestjs/swagger';
 
 @Controller({
-	path: 'webhooks',
+	path: 'webhooks/keycloak',
 	version: '1',
 })
 export class KeycloakWebhookController {
@@ -14,7 +14,7 @@ export class KeycloakWebhookController {
 	) {}
 
 	@ApiOkResponse()
-	@Post('keycloak')
+	@Post()
 	async keycloak(@Body() body): Promise<void> {
 		console.log(body);
 	}
