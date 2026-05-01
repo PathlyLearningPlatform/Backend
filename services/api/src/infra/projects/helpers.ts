@@ -45,5 +45,6 @@ export function submissionDtoToClient(
 		submittedAt: dto.submittedAt.toISOString(),
 		updatedAt: dto.updatedAt ? dto.updatedAt.toISOString() : null,
 		userId: dto.userId,
+		commitSha: dto.commitSha,
 	};
 }

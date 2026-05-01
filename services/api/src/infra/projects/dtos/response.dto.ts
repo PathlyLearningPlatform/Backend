@@ -65,4 +65,7 @@ export class ProjectSubmissionResponseDto {
 
 	@ApiProperty()
 	userId!: string;
+
+	@ApiProperty()
+	commitSha!: string;
 }
