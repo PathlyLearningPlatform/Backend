@@ -6,6 +6,7 @@ import {
 	text,
 	timestamp,
 	uuid,
+	integer,
 } from 'drizzle-orm/pg-core';
 import { createdAt, updatedAt } from './helpers';
 
@@ -22,6 +23,7 @@ export const projectsTable = pgTable('projects', {
 	acceptUrl: text().notNull(),
 	createdAt,
 	updatedAt,
+	repositoryId: integer().notNull().unique(),
 });
 
 export const projectProgressTable = pgTable(
@@ -35,6 +37,7 @@ export const projectProgressTable = pgTable(
 		updatedAt,
 		status: projectStatusEnum().notNull(),
 		repositoryUrl: text().notNull(),
+		repositoryId: integer().notNull().unique(),
 	},
 	(t) => [primaryKey({ columns: [t.projectId, t.userId] })],
 );
@@ -48,4 +51,5 @@ export const projectSubmissionsTable = pgTable('project_submissions', {
 	updatedAt,
 	submittedAt: timestamp('submitted_at').notNull(),
 	status: projectSubmissionStatus().notNull(),
+	commitSha: text().notNull().unique(),
 });

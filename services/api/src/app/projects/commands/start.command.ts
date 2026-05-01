@@ -6,6 +6,7 @@ import {
 	ProjectId,
 	ProjectProgress,
 	ProjectProgressId,
+	RepositoryId,
 } from '@/domain/projects';
 import { Url, UserId, UUID } from '@/domain/common';
 import { ProjectNotFoundException } from '../exceptions';
@@ -15,6 +16,7 @@ export type StartProjectCommand = {
 	projectId: string;
 	userId: string;
 	repositoryUrl: string;
+	repositoryId: number;
 };
 
 export class StartProjectHandler
@@ -39,6 +41,7 @@ export class StartProjectHandler
 		const progressId = ProjectProgressId.create(projectId, userId);
 		const progress = ProjectProgress.create(progressId, {
 			repositoryUrl: Url.create(command.repositoryUrl),
+			repositoryId: RepositoryId.create(command.repositoryId),
 		});
 
 		await this.projectProgressRepository.save(progress);

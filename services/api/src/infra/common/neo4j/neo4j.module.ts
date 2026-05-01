@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { Neo4jService } from './neo4j.service';
-import { DiToken } from '../common/enums';
+import { DiToken } from '../enums';
 import { ConfigService } from '@nestjs/config';
 import neo4j from 'neo4j-driver';
 

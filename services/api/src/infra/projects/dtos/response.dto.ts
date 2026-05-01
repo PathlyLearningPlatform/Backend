@@ -6,6 +6,9 @@ export class ProjectResponseDto {
 	id!: string;
 
 	@ApiProperty()
+	repositoryId!: number;
+
+	@ApiProperty()
 	name!: string;
 
 	@ApiProperty({ nullable: true })
@@ -27,6 +30,9 @@ export class ProjectProgressResponseDto {
 
 	@ApiProperty()
 	projectId!: string;
+
+	@ApiProperty()
+	repositoryId!: number;
 
 	@ApiProperty({ nullable: true })
 	completedAt!: string | null;

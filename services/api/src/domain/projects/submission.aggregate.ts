@@ -8,11 +8,13 @@ export type ProjectSubmissionProps = {
 	updatedAt: Date | null;
 	status: ProjectSubmissionStatus;
 	userId: UserId;
+	commitSha: string;
 };
 export type CreateProjectSubmission = {
 	projectId: ProjectId;
 	submittedAt: Date;
 	userId: UserId;
+	commitSha: string;
 };
 export type ProjectSubmissionFromDataSource = {
 	id: string;
@@ -21,6 +23,7 @@ export type ProjectSubmissionFromDataSource = {
 	updatedAt: Date | null;
 	status: ProjectSubmissionStatus;
 	userId: string;
+	commitSha: string;
 };
 
 export class ProjectSubmission extends AggregateRoot<
@@ -44,6 +47,7 @@ export class ProjectSubmission extends AggregateRoot<
 			submittedAt: props.submittedAt,
 			updatedAt: null,
 			userId: props.userId,
+			commitSha: props.commitSha,
 		});
 	}
 
@@ -58,6 +62,7 @@ export class ProjectSubmission extends AggregateRoot<
 				submittedAt: props.submittedAt,
 				updatedAt: props.updatedAt,
 				userId: UserId.create(UUID.create(props.userId)),
+				commitSha: props.commitSha,
 			},
 		);
 	}
@@ -94,5 +99,9 @@ export class ProjectSubmission extends AggregateRoot<
 
 	get userId(): UserId {
 		return this._props.userId;
+	}
+
+	get commitSha(): string {
+		return this._props.commitSha;
 	}
 }

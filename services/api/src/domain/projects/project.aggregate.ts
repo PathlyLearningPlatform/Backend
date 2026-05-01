@@ -1,8 +1,9 @@
 import { AggregateRoot, Url, UUID } from '../common';
-import { ProjectId } from './value-objects';
+import { ProjectId, RepositoryId } from './value-objects';
 
 export type ProjectProps = {
 	name: string;
+	repositoryId: RepositoryId;
 	description: string | null;
 	acceptUrl: Url;
 	createdAt: Date;
@@ -14,6 +15,7 @@ export type CreateProjectProps = {
 	acceptUrl: Url;
 	description?: string;
 	createdAt: Date;
+	repositoryId: RepositoryId;
 };
 
 export type ProjectFromDataSourceProps = {
@@ -23,6 +25,7 @@ export type ProjectFromDataSourceProps = {
 	description: string | null;
 	createdAt: Date;
 	updatedAt: Date | null;
+	repositoryId: number;
 };
 
 export type UpdateProjectProps = Partial<{
@@ -45,6 +48,7 @@ export class Project extends AggregateRoot<ProjectId, ProjectProps> {
 			createdAt: props.createdAt,
 			updatedAt: null,
 			acceptUrl: props.acceptUrl,
+			repositoryId: props.repositoryId,
 		});
 	}
 
@@ -55,6 +59,7 @@ export class Project extends AggregateRoot<ProjectId, ProjectProps> {
 			createdAt: props.createdAt,
 			updatedAt: props.updatedAt,
 			acceptUrl: Url.create(props.acceptUrl),
+			repositoryId: RepositoryId.create(props.repositoryId),
 		});
 	}
 
@@ -92,5 +97,9 @@ export class Project extends AggregateRoot<ProjectId, ProjectProps> {
 
 	get acceptUrl(): Url {
 		return this._props.acceptUrl;
+	}
+
+	get repositoryId(): RepositoryId {
+		return this._props.repositoryId;
 	}
 }

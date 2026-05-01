@@ -17,6 +17,7 @@ export function dtoToClient(dto: ProjectDto): ProjectResponseDto {
 		description: dto.description,
 		name: dto.name,
 		updatedAt: dto.updatedAt ? dto.updatedAt.toISOString() : null,
+		repositoryId: dto.repositoryId,
 	};
 }
 
@@ -30,6 +31,7 @@ export function progressDtoToClient(
 		status: dto.status,
 		updatedAt: dto.updatedAt ? dto.updatedAt.toISOString() : null,
 		userId: dto.userId,
+		repositoryId: dto.repositoryId,
 	};
 }
 

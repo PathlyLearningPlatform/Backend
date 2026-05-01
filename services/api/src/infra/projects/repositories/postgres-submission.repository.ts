@@ -62,6 +62,7 @@ export class PostgresProjectSubmissionRepository
 		const projectId = options.projectId;
 		const submissionId = options.submissionId;
 		const status = options.status;
+		const commitSha = options.commitSha;
 
 		try {
 			const [projectSubmission] = await this.db
@@ -77,6 +78,9 @@ export class PostgresProjectSubmissionRepository
 							? eq(projectSubmissionsTable.id, submissionId)
 							: undefined,
 						status ? eq(projectSubmissionsTable.status, status) : undefined,
+						commitSha
+							? eq(projectSubmissionsTable.commitSha, commitSha)
+							: undefined,
 					),
 				);
 
@@ -118,6 +122,7 @@ export class PostgresProjectSubmissionRepository
 					submittedAt: aggregate.submittedAt,
 					updatedAt: aggregate.updatedAt,
 					status: aggregate.status,
+					commitSha: aggregate.commitSha,
 				})
 				.onConflictDoUpdate({
 					target: projectSubmissionsTable.id,

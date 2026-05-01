@@ -20,6 +20,7 @@ import { submissionAggregateToDto } from '../helpers';
 export type SubmitProjectCommand = {
 	projectId: string;
 	userId: string;
+	commitSha: string;
 };
 
 export class SubmitProjectHandler
@@ -57,6 +58,7 @@ export class SubmitProjectHandler
 			projectId: projectId,
 			userId: userId,
 			submittedAt: new Date(),
+			commitSha: command.commitSha,
 		});
 
 		await this.projectSubmissionRepository.save(submission);

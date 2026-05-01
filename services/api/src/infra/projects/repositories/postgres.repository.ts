@@ -1,5 +1,6 @@
 import {
 	Project,
+	RepositoryId,
 	type IProjectRepository,
 	type ListProjectsOptions,
 	type ProjectId,
@@ -55,6 +56,23 @@ export class PostgresProjectRepository implements IProjectRepository {
 		}
 	}
 
+	async findByRepositoryId(id: RepositoryId): Promise<Project | null> {
+		try {
+			const [project] = await this.db
+				.select()
+				.from(projectsTable)
+				.where(eq(projectsTable.repositoryId, id.value));
+
+			if (!project) {
+				return null;
+			}
+
+			return Project.fromDataSource(project);
+		} catch (err) {
+			throw new DbException('postgres exception', err);
+		}
+	}
+
 	async save(aggregate: Project): Promise<void> {
 		try {
 			await this.db
@@ -66,6 +84,7 @@ export class PostgresProjectRepository implements IProjectRepository {
 					acceptUrl: aggregate.acceptUrl.value,
 					createdAt: aggregate.createdAt,
 					updatedAt: aggregate.updatedAt,
+					repositoryId: aggregate.repositoryId.value,
 				})
 				.onConflictDoUpdate({
 					target: projectsTable.id,

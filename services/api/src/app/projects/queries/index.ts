@@ -5,3 +5,6 @@ export * from './list-submissions.query';
 export * from './list.query';
 export * from './find-one-progress-for-user.query';
 export * from './list-progress.query';
+export * from './find-progress-by-repo-id-for-user.query';
+export * from './find-by-repo-id.query';
+export * from './find-submission-by-commit-sha.query';

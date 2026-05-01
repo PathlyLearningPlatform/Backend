@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ProjectsModule } from '../projects/projects.module';
-import { WebhooksController } from './webhooks.controller';
-import { KeycloakAdminModule } from '../common/keycloak-admin/keycloak-admin.module';
+import { GithubWebhookController } from './github.controller';
+import { KeycloakModule } from '../common/keycloak/keycloak.module';
+import { KeycloakWebhookController } from './keycloak.controller';
+import { GithubModule } from '../common/github/github.module';
 
 @Module({
-	imports: [ProjectsModule, KeycloakAdminModule],
-	controllers: [WebhooksController],
+	imports: [ProjectsModule, KeycloakModule, GithubModule],
+	controllers: [GithubWebhookController, KeycloakWebhookController],
 })
 export class WebhooksModule {}

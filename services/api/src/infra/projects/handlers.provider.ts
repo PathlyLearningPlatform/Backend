@@ -13,6 +13,9 @@ import {
 	FindOneProjectProgressForUserHandler,
 	FindOneProjectSubmissionForUserHandler,
 	FindProjectByIdHandler,
+	FindProjectByRepoIdHandler,
+	FindProjectProgressByRepoIdForUserHandler,
+	FindProjectSubmissionByCommitShaHandler,
 	FindProjectSubmissionByIdHandler,
 	ListProjectProgressHandler,
 	ListProjectsHandler,
@@ -42,6 +45,22 @@ export const projectHandlersProvider: Provider[] = [
 		provide: DiToken.FIND_PROJECT_BY_ID_HANDLER,
 		useFactory(projectRepository: IProjectRepository) {
 			return new FindProjectByIdHandler(projectRepository);
+		},
+		inject: [PostgresProjectRepository],
+	},
+	{
+		provide: DiToken.FIND_PROJECT_PROGRESS_BY_REPO_ID_FOR_USER_HANDLER,
+		useFactory(projectProgressRepository: IProjectProgressRepository) {
+			return new FindProjectProgressByRepoIdForUserHandler(
+				projectProgressRepository,
+			);
+		},
+		inject: [PostgresProjectProgressRepository],
+	},
+	{
+		provide: DiToken.FIND_PROJECT_BY_REPO_ID,
+		useFactory(projectRepository: IProjectRepository) {
+			return new FindProjectByRepoIdHandler(projectRepository);
 		},
 		inject: [PostgresProjectRepository],
 	},
@@ -120,6 +139,17 @@ export const projectHandlersProvider: Provider[] = [
 			PostgresProjectProgressRepository,
 			PostgresProjectSubmissionRepository,
 		],
+	},
+	{
+		provide: DiToken.FIND_PROJECT_SUBMISSION_BY_COMMIT_SHA,
+		async useFactory(
+			projectSubmissionRepository: IProjectSubmissionRepository,
+		) {
+			return new FindProjectSubmissionByCommitShaHandler(
+				projectSubmissionRepository,
+			);
+		},
+		inject: [PostgresProjectSubmissionRepository],
 	},
 	{
 		provide: DiToken.REMOVE_PROJECT_SUBMISSION_HANDLER,

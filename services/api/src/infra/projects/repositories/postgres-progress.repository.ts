@@ -1,5 +1,6 @@
 import {
 	ProjectProgress,
+	RepositoryId,
 	type IProjectProgressRepository,
 	type ListProjectProgressOptions,
 	type ProjectProgressId,
@@ -11,6 +12,7 @@ import { projectProgressTable } from '@/infra/db/schemas';
 import type { Db } from '@/infra/db/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { ProjectApiConstraints } from '../enums';
+import { UserId } from '@/domain/common';
 
 @Injectable()
 export class PostgresProjectProgressRepository
@@ -74,6 +76,31 @@ export class PostgresProjectProgressRepository
 		}
 	}
 
+	async findByRepositoryIdForUser(
+		id: RepositoryId,
+		userId: UserId,
+	): Promise<ProjectProgress | null> {
+		try {
+			const [projectProgress] = await this.db
+				.select()
+				.from(projectProgressTable)
+				.where(
+					and(
+						eq(projectProgressTable.repositoryId, id.value),
+						eq(projectProgressTable.userId, userId.toString()),
+					),
+				);
+
+			if (!projectProgress) {
+				return null;
+			}
+
+			return ProjectProgress.fromDataSource(projectProgress);
+		} catch (err) {
+			throw new DbException('postgres exception', err);
+		}
+	}
+
 	async save(aggregate: ProjectProgress): Promise<void> {
 		try {
 			await this.db
@@ -85,6 +112,7 @@ export class PostgresProjectProgressRepository
 					updatedAt: aggregate.updatedAt,
 					status: aggregate.status,
 					repositoryUrl: aggregate.repositoryUrl.value,
+					repositoryId: aggregate.repositoryId.value,
 				})
 				.onConflictDoUpdate({
 					target: [projectProgressTable.projectId, projectProgressTable.userId],

@@ -22,6 +22,7 @@ export type FindFirstProjectSubmissionOptions = Partial<{
 	userId: string;
 	projectId: string;
 	submissionId: string;
+	commitSha: string;
 	status: ProjectSubmissionStatus;
 }>;
 

@@ -9,7 +9,7 @@ import KcAdminClient from '@keycloak/keycloak-admin-client';
 	imports: [],
 	providers: [
 		{
-			provide: DiToken.KEYCLOAK_ADMIN_CLIENT,
+			provide: DiToken.KEYCLOAK_CLIENT,
 			async useFactory(configService: ConfigService) {
 				const keycloakConfig =
 					configService.get<Config['keycloak']>('keycloak')!;
@@ -33,6 +33,6 @@ import KcAdminClient from '@keycloak/keycloak-admin-client';
 			inject: [ConfigService],
 		},
 	],
-	exports: [DiToken.KEYCLOAK_ADMIN_CLIENT],
+	exports: [DiToken.KEYCLOAK_CLIENT],
 })
-export class KeycloakAdminModule {}
+export class KeycloakModule {}

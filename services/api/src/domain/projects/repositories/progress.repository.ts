@@ -1,5 +1,10 @@
+import { UserId } from '@/domain/common';
 import { ProjectProgress } from '../progress.aggregate';
-import { ProjectProgressId, ProjectStatus } from '../value-objects';
+import {
+	ProjectProgressId,
+	ProjectStatus,
+	RepositoryId,
+} from '../value-objects';
 
 export type ListProjectProgressOptions = {
 	options?: Partial<{
@@ -17,6 +22,11 @@ export interface IProjectProgressRepository {
 	list(options?: ListProjectProgressOptions): Promise<ProjectProgress[]>;
 
 	findById(id: ProjectProgressId): Promise<ProjectProgress | null>;
+
+	findByRepositoryIdForUser(
+		id: RepositoryId,
+		userId: UserId,
+	): Promise<ProjectProgress | null>;
 
 	save(aggregate: ProjectProgress): Promise<void>;
 

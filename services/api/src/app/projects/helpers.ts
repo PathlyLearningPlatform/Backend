@@ -9,6 +9,7 @@ export function aggregateToDto(aggregate: Project): ProjectDto {
 		createdAt: aggregate.createdAt,
 		updatedAt: aggregate.updatedAt,
 		acceptUrl: aggregate.acceptUrl.value,
+		repositoryId: aggregate.repositoryId.value,
 	};
 }
 
@@ -22,6 +23,7 @@ export function submissionAggregateToDto(
 		submittedAt: aggregate.submittedAt,
 		updatedAt: aggregate.updatedAt,
 		userId: aggregate.userId.toString(),
+		commitSha: aggregate.commitSha,
 	};
 }
 
@@ -35,5 +37,6 @@ export function progressAggregateToDto(
 		updatedAt: aggregate.updatedAt,
 		userId: aggregate.userId.toString(),
 		repositoryUrl: aggregate.repositoryUrl.value,
+		repositoryId: aggregate.repositoryId.value,
 	};
 }

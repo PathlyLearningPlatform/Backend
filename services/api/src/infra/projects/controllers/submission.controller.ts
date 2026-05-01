@@ -34,7 +34,7 @@ import type { UserInfo } from '@/infra/auth/user-info.type';
 
 @UseGuards(JwtGuard)
 @Controller({
-	path: 'projects/:project-id/submissions',
+	path: 'projects/:project_id/submissions',
 	version: '1',
 })
 export class ProjectSubmissionController {
@@ -49,7 +49,7 @@ export class ProjectSubmissionController {
 	@ApiOkResponse({ type: ListProjectSubmissionsResponseDto })
 	@Get()
 	async list(
-		@Param('project-id', ParseUUIDPipe) projectId: string,
+		@Param('project_id', ParseUUIDPipe) projectId: string,
 		@Query(new HttpValidationPipe(listProjectSubmissionsQuerySchema))
 		query: ListProjectSubmissionsQueryDto,
 		@User() user: UserInfo,

@@ -4,9 +4,9 @@ import {
 	OnModuleDestroy,
 	OnModuleInit,
 } from '@nestjs/common';
-import { DiToken } from '../common/enums';
+import { DiToken } from '../enums';
 import { Driver } from 'neo4j-driver';
-import { AppLogger } from '../logger/logger.service';
+import { AppLogger } from '../../logger/logger.service';
 
 @Injectable()
 export class Neo4jService implements OnModuleInit, OnModuleDestroy {

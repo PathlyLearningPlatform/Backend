@@ -1,5 +1,5 @@
 import { Project } from '../project.aggregate';
-import { ProjectId } from '../value-objects';
+import { ProjectId, RepositoryId } from '../value-objects';
 
 export type ListProjectsOptions = {
 	options?: Partial<{
@@ -12,6 +12,8 @@ export interface IProjectRepository {
 	list(options?: ListProjectsOptions): Promise<Project[]>;
 
 	findById(id: ProjectId): Promise<Project | null>;
+
+	findByRepositoryId(id: RepositoryId): Promise<Project | null>;
 
 	save(aggregate: Project): Promise<void>;
 

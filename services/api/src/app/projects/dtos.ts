@@ -7,6 +7,7 @@ export interface ProjectDto {
 	description: string | null;
 	createdAt: Date;
 	updatedAt: Date | null;
+	repositoryId: number;
 }
 
 export interface ProjectSubmissionDto {
@@ -16,6 +17,7 @@ export interface ProjectSubmissionDto {
 	updatedAt: Date | null;
 	status: ProjectSubmissionStatus;
 	userId: string;
+	commitSha: string;
 }
 
 export interface ProjectProgressDto {
@@ -25,4 +27,5 @@ export interface ProjectProgressDto {
 	updatedAt: Date | null;
 	status: ProjectStatus;
 	repositoryUrl: string;
+	repositoryId: number;
 }
