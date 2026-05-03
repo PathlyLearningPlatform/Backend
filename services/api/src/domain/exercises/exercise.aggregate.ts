@@ -1,90 +1,75 @@
-import { AggregateRoot, Order } from '@/domain/common';
-import { LessonId } from '@/domain/lessons/value-objects';
-import {
-	ActivityDescription,
-	ActivityId,
-	ActivityName,
-	ActivityType,
-} from '../activities';
-import type { ExerciseDifficulty } from './value-objects';
+import { AggregateRoot, Url, UUID } from '@/domain/common';
+import { ExerciseDifficulty, ExerciseId } from './value-objects';
+import { RepositoryId } from '../projects';
 
 type ExerciseProps = {
-	lessonId: LessonId;
-	createdAt: Date;
-	updatedAt: Date | null;
-	name: ActivityName;
-	description: ActivityDescription | null;
-	order: Order;
-	type: ActivityType;
-	difficulty: ExerciseDifficulty;
-};
-type CreateExerciseProps = {
-	difficulty: ExerciseDifficulty;
-	lessonId: LessonId;
-	createdAt: Date;
-	name: ActivityName;
-	description?: ActivityDescription | null;
-	order: Order;
-};
-
-type ExerciseFromDataSourceProps = {
-	id: string;
-	lessonId: string;
 	createdAt: Date;
 	updatedAt: Date | null;
 	name: string;
 	description: string | null;
-	order: number;
 	difficulty: ExerciseDifficulty;
+	repositoryId: RepositoryId;
+	acceptUrl: Url;
+};
+type CreateExerciseProps = {
+	difficulty: ExerciseDifficulty;
+	createdAt: Date;
+	name: string;
+	description?: string;
+	repositoryId: RepositoryId;
+	acceptUrl: Url;
+};
+
+type ExerciseFromDataSourceProps = {
+	id: string;
+	createdAt: Date;
+	updatedAt: Date | null;
+	name: string;
+	description: string | null;
+	difficulty: ExerciseDifficulty;
+	repositoryId: number;
+	acceptUrl: string;
 };
 type UpdateExerciseProps = Partial<{
 	difficulty: ExerciseDifficulty;
-	name: ActivityName;
-	description: ActivityDescription | null;
-	order: Order;
+	name: string;
+	description: string | null;
 }>;
 
-export class Exercise extends AggregateRoot<ActivityId, ExerciseProps> {
+export class Exercise extends AggregateRoot<ExerciseId, ExerciseProps> {
 	protected readonly _props: ExerciseProps;
 
-	private constructor(id: ActivityId, props: ExerciseProps) {
+	private constructor(id: ExerciseId, props: ExerciseProps) {
 		super(id);
 		this._props = props;
 	}
 
-	static create(id: ActivityId, props: CreateExerciseProps): Exercise {
+	static create(id: ExerciseId, props: CreateExerciseProps): Exercise {
 		return new Exercise(id, {
-			lessonId: props.lessonId,
 			name: props.name,
 			description: props.description ?? null,
 			createdAt: props.createdAt,
 			updatedAt: null,
-			order: props.order,
-			type: ActivityType.EXERCISE,
 			difficulty: props.difficulty,
+			acceptUrl: props.acceptUrl,
+			repositoryId: props.repositoryId,
 		});
 	}
 
 	static fromDataSource(props: ExerciseFromDataSourceProps): Exercise {
-		return new Exercise(ActivityId.create(props.id), {
-			lessonId: LessonId.create(props.lessonId),
-			name: ActivityName.create(props.name),
-			description: props.description
-				? ActivityDescription.create(props.description)
-				: null,
+		return new Exercise(ExerciseId.create(UUID.create(props.id)), {
+			name: props.name,
+			description: props.description,
 			createdAt: props.createdAt,
 			updatedAt: props.updatedAt,
-			order: Order.create(props.order),
-			type: ActivityType.EXERCISE,
 			difficulty: props.difficulty,
+			acceptUrl: Url.create(props.acceptUrl),
+			repositoryId: RepositoryId.create(props.repositoryId),
 		});
 	}
 
-	get id(): ActivityId {
+	get id(): ExerciseId {
 		return this._id;
-	}
-	get lessonId(): LessonId {
-		return this._props.lessonId;
 	}
 	get createdAt(): Date {
 		return this._props.createdAt;
@@ -92,21 +77,20 @@ export class Exercise extends AggregateRoot<ActivityId, ExerciseProps> {
 	get updatedAt(): Date | null {
 		return this._props.updatedAt;
 	}
-	get name(): ActivityName {
+	get name(): string {
 		return this._props.name;
 	}
-	get description(): ActivityDescription | null {
+	get description(): string | null {
 		return this._props.description;
 	}
-	get order(): Order {
-		return this._props.order;
-	}
-	get type(): ActivityType {
-		return this._props.type;
-	}
-
 	get difficulty(): ExerciseDifficulty {
 		return this._props.difficulty;
+	}
+	get repositoryId(): RepositoryId {
+		return this._props.repositoryId;
+	}
+	get acceptUrl(): Url {
+		return this._props.acceptUrl;
 	}
 
 	update(now: Date, props?: UpdateExerciseProps): void {
@@ -116,10 +100,6 @@ export class Exercise extends AggregateRoot<ActivityId, ExerciseProps> {
 
 		if (props?.description) {
 			this._props.description = props.description;
-		}
-
-		if (props?.order) {
-			this._props.order = props.order;
 		}
 
 		if (props?.difficulty) {

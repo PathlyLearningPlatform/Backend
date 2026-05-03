@@ -1,5 +1,5 @@
-import { AggregateRoot, Url, UUID } from '../common';
-import { ProjectId, RepositoryId } from './value-objects';
+import { AggregateRoot, Url, UUID, RepositoryId } from '../common';
+import { ProjectId } from './value-objects';
 
 export type ProjectProps = {
 	name: string;

@@ -1,5 +1,6 @@
 import { Project } from '../project.aggregate';
-import { ProjectId, RepositoryId } from '../value-objects';
+import { ProjectId } from '../value-objects';
+import { RepositoryId } from '@/domain/common';
 
 export type ListProjectsOptions = {
 	options?: Partial<{

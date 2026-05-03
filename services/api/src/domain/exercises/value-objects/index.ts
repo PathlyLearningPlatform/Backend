@@ -4,3 +4,4 @@ export * from './submission-id.vo';
 export * from './id.vo';
 export * from './status.vo';
 export * from './submission-status.vo';
+export * from './submission-conclusion.vo';

@@ -1,10 +1,5 @@
-import { AggregateRoot, Url, UserId, UUID } from '../common';
-import {
-	ProjectId,
-	ProjectProgressId,
-	ProjectStatus,
-	RepositoryId,
-} from './value-objects';
+import { AggregateRoot, Url, UserId, UUID, RepositoryId } from '../common';
+import { ProjectId, ProjectProgressId, ProjectStatus } from './value-objects';
 
 export type ProjectProgressProps = {
 	completedAt: Date | null;

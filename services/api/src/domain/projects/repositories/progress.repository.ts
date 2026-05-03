@@ -1,10 +1,6 @@
-import { UserId } from '@/domain/common';
+import { UserId, RepositoryId } from '@/domain/common';
 import { ProjectProgress } from '../progress.aggregate';
-import {
-	ProjectProgressId,
-	ProjectStatus,
-	RepositoryId,
-} from '../value-objects';
+import { ProjectProgressId, ProjectStatus } from '../value-objects';
 
 export type ListProjectProgressOptions = {
 	options?: Partial<{
