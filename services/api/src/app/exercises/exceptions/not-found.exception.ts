@@ -1,4 +1,4 @@
-import { AppException } from './app.exception';
+import { AppException } from '@app/common';
 
 export class ExerciseNotFoundException extends AppException {
 	constructor(public readonly exerciseId: string) {

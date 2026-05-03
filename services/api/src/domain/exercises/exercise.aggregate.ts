@@ -1,6 +1,5 @@
-import { AggregateRoot, Url, UUID } from '@/domain/common';
+import { AggregateRoot, Url, UUID, RepositoryId } from '@/domain/common';
 import { ExerciseDifficulty, ExerciseId } from './value-objects';
-import { RepositoryId } from '../projects';
 
 type ExerciseProps = {
 	createdAt: Date;

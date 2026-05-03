@@ -1,5 +1,9 @@
 import { AggregateRoot, UserId, UUID } from '../common';
-import { ExerciseId, ExerciseSubmissionId } from './value-objects';
+import {
+	ExerciseId,
+	ExerciseSubmissionConclusion,
+	ExerciseSubmissionId,
+} from './value-objects';
 import { ExerciseSubmissionStatus } from './value-objects/submission-status.vo';
 
 export type ExerciseSubmissionProps = {
@@ -7,6 +11,7 @@ export type ExerciseSubmissionProps = {
 	submittedAt: Date;
 	updatedAt: Date | null;
 	status: ExerciseSubmissionStatus;
+	conclusion: ExerciseSubmissionConclusion | null;
 	userId: UserId;
 	commitSha: string;
 };
@@ -24,7 +29,12 @@ export type ExerciseSubmissionFromDataSource = {
 	status: ExerciseSubmissionStatus;
 	userId: string;
 	commitSha: string;
+	conclusion: ExerciseSubmissionConclusion | null;
 };
+export type UpdateExerciseSubmissionProps = Partial<{
+	status: ExerciseSubmissionStatus;
+	conclusion: ExerciseSubmissionConclusion;
+}>;
 
 export class ExerciseSubmission extends AggregateRoot<
 	ExerciseSubmissionId,
@@ -49,6 +59,7 @@ export class ExerciseSubmission extends AggregateRoot<
 			status: ExerciseSubmissionStatus.PENDING,
 			submittedAt: props.submittedAt,
 			updatedAt: null,
+			conclusion: null,
 			userId: props.userId,
 			commitSha: props.commitSha,
 		});
@@ -66,18 +77,23 @@ export class ExerciseSubmission extends AggregateRoot<
 				updatedAt: props.updatedAt,
 				userId: UserId.create(UUID.create(props.userId)),
 				commitSha: props.commitSha,
+				conclusion: props.conclusion,
 			},
 		);
 	}
 
-	update(now: Date) {
+	update(now: Date, props: UpdateExerciseSubmissionProps) {
 		this._props.updatedAt = now;
-	}
 
-	changeStatus(now: Date, newStatus: ExerciseSubmissionStatus) {
-		this.update(now);
+		if (props.status) {
+			this._props.status = props.status;
+		}
 
-		this._props.status = newStatus;
+		if (props.conclusion) {
+			if (this._props.status === ExerciseSubmissionStatus.COMPLETED) {
+				this._props.conclusion = props.conclusion;
+			}
+		}
 	}
 
 	get id(): ExerciseSubmissionId {
@@ -106,5 +122,9 @@ export class ExerciseSubmission extends AggregateRoot<
 
 	get commitSha(): string {
 		return this._props.commitSha;
+	}
+
+	get conclusion(): ExerciseSubmissionConclusion | null {
+		return this._props.conclusion;
 	}
 }

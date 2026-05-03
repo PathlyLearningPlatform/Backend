@@ -1,8 +1,9 @@
 import { IQueryHandler } from '@/app/common';
 import { ProjectDto } from '../dtos';
-import { IProjectRepository, RepositoryId } from '@/domain/projects';
+import { IProjectRepository } from '@/domain/projects';
 import { ProjectNotFoundException } from '../exceptions';
 import { aggregateToDto } from '../helpers';
+import { RepositoryId } from '@/domain/common';
 
 export type FindProjectByRepoIdQuery = {
 	repositoryId: number;

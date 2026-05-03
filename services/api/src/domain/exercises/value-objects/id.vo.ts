@@ -11,7 +11,7 @@ export class ExerciseId extends ValueObject<Props> {
 		return this._props.value;
 	}
 
-	get primitive(): string {
+	primitive(): string {
 		return this._props.value.value;
 	}
 

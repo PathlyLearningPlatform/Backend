@@ -7,6 +7,8 @@ type Props = {
 };
 
 export class ExerciseProgressId extends ValueObject<Props> {
+	private readonly _brand: 'exerciseProgressId' = 'exerciseProgressId';
+
 	get exerciseId(): ExerciseId {
 		return this._props.exerciseId;
 	}

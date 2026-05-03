@@ -11,7 +11,7 @@ export class RepositoryId extends ValueObject<Props> {
 		return this._props.value;
 	}
 
-	primitve(): number {
+	primitive(): number {
 		return this._props.value;
 	}
 

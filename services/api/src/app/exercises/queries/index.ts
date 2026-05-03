@@ -4,3 +4,7 @@ export * from './find-submission-by-id.query';
 export * from './find-progress-for-user.query';
 export * from './list-progress.query';
 export * from './list-submissions.query';
+export * from './find-by-repo-id.query';
+export * from './find-submission-by-commit-sha.query';
+export * from './find-submission-for-user.query';
+export * from './find-progress-by-repo-id-for-user.query';

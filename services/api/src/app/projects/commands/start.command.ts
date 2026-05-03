@@ -6,9 +6,8 @@ import {
 	ProjectId,
 	ProjectProgress,
 	ProjectProgressId,
-	RepositoryId,
 } from '@/domain/projects';
-import { Url, UserId, UUID } from '@/domain/common';
+import { Url, UserId, UUID, RepositoryId } from '@/domain/common';
 import { ProjectNotFoundException } from '../exceptions';
 import { progressAggregateToDto } from '../helpers';
 

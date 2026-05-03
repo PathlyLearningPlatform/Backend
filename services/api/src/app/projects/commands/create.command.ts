@@ -1,12 +1,7 @@
 import { ICommandHandler } from '@/app/common';
 import { ProjectDto } from '../dtos';
-import {
-	IProjectRepository,
-	Project,
-	ProjectId,
-	RepositoryId,
-} from '@/domain/projects';
-import { Url, UUID } from '@/domain/common';
+import { IProjectRepository, Project, ProjectId } from '@/domain/projects';
+import { Url, UUID, RepositoryId } from '@/domain/common';
 import { randomUUID } from 'crypto';
 import { aggregateToDto } from '../helpers';
 

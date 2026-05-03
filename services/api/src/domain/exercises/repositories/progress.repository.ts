@@ -18,6 +18,7 @@ export type FindFirstExerciseProgressOptions = Partial<{
 	exerciseId: string;
 	userId: string;
 	status: ExerciseStatus;
+	repositoryId: number;
 }>;
 
 export interface IExerciseProgressRepository {

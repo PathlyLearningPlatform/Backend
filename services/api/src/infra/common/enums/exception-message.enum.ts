@@ -20,7 +20,6 @@ export enum ExceptionMessage {
 
 	QUIZ_NOT_FOUND = 'Quiz was not found.',
 	ARTICLE_NOT_FOUND = 'Article was not found.',
-	EXERCISE_NOT_FOUND = 'Exercise was not found.',
 	QUIZ_ATTEMPT_NOT_FOUND = 'Quiz attempt was not found.',
 
 	QUESTION_NOT_FOUND = 'Question was not found.',
@@ -28,6 +27,10 @@ export enum ExceptionMessage {
 	PROJECT_NOT_FOUND = 'Project was not found.',
 	PROJECT_NOT_STARTED = 'Project not started.',
 	PROJECT_SUBMISSION_NOT_FOUND = 'Project submission was not found.',
+
+	EXERCISE_NOT_FOUND = 'Exercise was not found.',
+	EXERCISE_NOT_STARTED = 'Exercise not started.',
+	EXERCISE_SUBMISSION_NOT_FOUND = 'Exercise submission was not found.',
 
 	LEARNING_PATH_NOT_STARTED = 'Learning path not started.',
 

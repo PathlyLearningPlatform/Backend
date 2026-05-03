@@ -1,11 +1,8 @@
-import { ActivityId } from '@/domain/activities';
 import { Exercise } from '../exercise.aggregate';
 import { RepositoryId } from '@/domain/common';
+import { ExerciseId } from '../value-objects';
 
 export type ListExercisesOptions = Partial<{
-	where: Partial<{
-		lessonId: string;
-	}>;
 	options: Partial<{
 		limit: number;
 		page: number;
@@ -15,11 +12,11 @@ export type ListExercisesOptions = Partial<{
 export interface IExerciseRepository {
 	list(options?: ListExercisesOptions): Promise<Exercise[]>;
 
-	findById(id: ActivityId): Promise<Exercise | null>;
+	findById(id: ExerciseId): Promise<Exercise | null>;
 
 	findByRepositoryId(id: RepositoryId): Promise<Exercise | null>;
 
 	save(aggregate: Exercise): Promise<void>;
 
-	remove(id: ActivityId): Promise<boolean>;
+	remove(id: ExerciseId): Promise<boolean>;
 }

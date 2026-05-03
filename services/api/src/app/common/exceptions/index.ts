@@ -5,6 +5,5 @@ export * from './lesson-not-found.exception';
 export * from './question-not-found.exception';
 export * from './section-not-found.exception';
 export * from './unit-not-found.exception';
-export * from './exercise-not-found.exception';
 export * from './article-not-found.exception';
 export * from './quiz-attempt-not-found.exception';

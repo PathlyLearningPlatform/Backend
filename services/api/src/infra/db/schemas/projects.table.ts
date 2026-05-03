@@ -20,7 +20,7 @@ export const projectsTable = pgTable('projects', {
 	id: uuid().primaryKey(),
 	name: text().notNull(),
 	description: text(),
-	acceptUrl: text().notNull(),
+	acceptUrl: text('accept_url').notNull(),
 	createdAt,
 	updatedAt,
 	repositoryId: integer().notNull().unique(),
@@ -29,27 +29,27 @@ export const projectsTable = pgTable('projects', {
 export const projectProgressTable = pgTable(
 	'project_progress',
 	{
-		projectId: uuid()
+		projectId: uuid('project_id')
 			.notNull()
 			.references(() => projectsTable.id),
-		userId: uuid().notNull(),
+		userId: uuid('user_id').notNull(),
 		completedAt: timestamp('completed_at'),
 		updatedAt,
 		status: projectStatusEnum().notNull(),
-		repositoryUrl: text().notNull(),
-		repositoryId: integer().notNull().unique(),
+		repositoryUrl: text('repository_url').notNull(),
+		repositoryId: integer('repository_id').notNull().unique(),
 	},
 	(t) => [primaryKey({ columns: [t.projectId, t.userId] })],
 );
 
 export const projectSubmissionsTable = pgTable('project_submissions', {
 	id: uuid().primaryKey(),
-	projectId: uuid()
+	projectId: uuid('project_id')
 		.notNull()
 		.references(() => projectsTable.id),
-	userId: uuid().notNull(),
+	userId: uuid('user_id').notNull(),
 	updatedAt,
 	submittedAt: timestamp('submitted_at').notNull(),
 	status: projectSubmissionStatus().notNull(),
-	commitSha: text().notNull().unique(),
+	commitSha: text('commit_sha').notNull().unique(),
 });

@@ -1,8 +1,10 @@
-import { ExerciseNotFoundException, type IQueryHandler } from '@/app/common';
-import { ActivityId } from '@/domain/activities';
+import { type IQueryHandler } from '@/app/common';
 import type { ExerciseDto } from '../dtos';
 import { aggregateToDto } from '../helpers';
 import { IExerciseRepository } from '@/domain/exercises/repositories';
+import { ExerciseNotFoundException } from '../exceptions';
+import { ExerciseId } from '@/domain/exercises';
+import { UUID } from '@/domain/common';
 
 type FindExerciseByIdQuery = {
 	where: {
@@ -17,7 +19,7 @@ export class FindExerciseByIdHandler
 	constructor(private readonly exerciseRepository: IExerciseRepository) {}
 
 	async execute(query: FindExerciseByIdQuery): Promise<FindExerciseByIdResult> {
-		const exerciseId = ActivityId.create(query.where.id);
+		const exerciseId = ExerciseId.create(UUID.create(query.where.id));
 		const exercise = await this.exerciseRepository.findById(exerciseId);
 
 		if (!exercise) {

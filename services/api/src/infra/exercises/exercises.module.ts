@@ -1,15 +1,36 @@
 import { Module } from '@nestjs/common';
 import { DbModule } from '../db/db.module';
 import { AuthModule } from '../auth/auth.module';
-import { LessonsModule } from '../lessons/lessons.module';
 import { exerciseHandlersProvider } from './handlers.provider';
-import { ExercisesController } from './exercises.controller';
-import { PostgresExerciseRepository } from './postgres.repository';
+import {
+	ExerciseController,
+	ExerciseProgressController,
+	ExerciseSubmissionController,
+} from './controllers';
+import {
+	PostgresExerciseRepository,
+	PostgresExerciseProgressRepository,
+	PostgresExerciseSubmissionRepository,
+} from './repositories';
 
 @Module({
-	imports: [DbModule, AuthModule, LessonsModule],
-	controllers: [ExercisesController],
-	providers: [...exerciseHandlersProvider, PostgresExerciseRepository],
-	exports: [...exerciseHandlersProvider, PostgresExerciseRepository],
+	imports: [DbModule, AuthModule],
+	controllers: [
+		ExerciseController,
+		ExerciseProgressController,
+		ExerciseSubmissionController,
+	],
+	providers: [
+		...exerciseHandlersProvider,
+		PostgresExerciseRepository,
+		PostgresExerciseProgressRepository,
+		PostgresExerciseSubmissionRepository,
+	],
+	exports: [
+		...exerciseHandlersProvider,
+		PostgresExerciseRepository,
+		PostgresExerciseProgressRepository,
+		PostgresExerciseSubmissionRepository,
+	],
 })
 export class ExercisesModule {}

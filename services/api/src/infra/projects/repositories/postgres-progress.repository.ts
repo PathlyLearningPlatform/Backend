@@ -1,6 +1,5 @@
 import {
 	ProjectProgress,
-	RepositoryId,
 	type IProjectProgressRepository,
 	type ListProjectProgressOptions,
 	type ProjectProgressId,
@@ -12,7 +11,7 @@ import { projectProgressTable } from '@/infra/db/schemas';
 import type { Db } from '@/infra/db/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { ProjectApiConstraints } from '../enums';
-import { UserId } from '@/domain/common';
+import { UserId, RepositoryId } from '@/domain/common';
 
 @Injectable()
 export class PostgresProjectProgressRepository

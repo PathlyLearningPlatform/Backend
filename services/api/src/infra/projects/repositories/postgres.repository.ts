@@ -1,6 +1,5 @@
 import {
 	Project,
-	RepositoryId,
 	type IProjectRepository,
 	type ListProjectsOptions,
 	type ProjectId,
@@ -12,6 +11,7 @@ import { projectsTable } from '@/infra/db/schemas';
 import type { Db } from '@/infra/db/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { ProjectApiConstraints } from '../enums';
+import { RepositoryId } from '@/domain/common';
 
 @Injectable()
 export class PostgresProjectRepository implements IProjectRepository {

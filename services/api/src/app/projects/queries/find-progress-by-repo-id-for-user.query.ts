@@ -1,6 +1,6 @@
 import { IQueryHandler } from '@/app/common';
-import { UserId, UUID } from '@/domain/common';
-import { IProjectProgressRepository, RepositoryId } from '@/domain/projects';
+import { UserId, UUID, RepositoryId } from '@/domain/common';
+import { IProjectProgressRepository } from '@/domain/projects';
 import { ProjectProgressNotFoundException } from '../exceptions';
 import { progressAggregateToDto } from '../helpers';
 import { ProjectProgressDto } from '../dtos';

@@ -1,72 +1,43 @@
 import { randomUUID } from 'node:crypto';
 import type { ExerciseDto } from '../dtos';
-import { type ICommandHandler, LessonNotFoundException } from '@/app/common';
+import { type ICommandHandler } from '@/app/common';
 import { Exercise } from '@/domain/exercises/exercise.aggregate';
-import type { ExerciseDifficulty } from '@/domain/exercises/value-objects';
 import {
-	ActivityDescription,
-	ActivityName,
-	ActivityType,
-} from '@/domain/activities/value-objects';
-import { ActivityId } from '@/domain/activities/value-objects/id.vo';
-import type { ILessonRepository } from '@/domain/lessons/repositories';
-import { LessonId } from '@/domain/lessons/value-objects/id.vo';
+	ExerciseDifficulty,
+	ExerciseId,
+} from '@/domain/exercises/value-objects';
 import { IExerciseRepository } from '@/domain/exercises/repositories';
+import { RepositoryId, Url, UUID } from '@/domain/common';
+import { aggregateToDto } from '../helpers';
 
 type CreateExerciseCommand = {
-	lessonId: string;
 	name: string;
-	description?: string | null;
+	description?: string;
 	difficulty: ExerciseDifficulty;
+	acceptUrl: string;
+	repositoryId: number;
 };
 type CreateExerciseResult = ExerciseDto;
 
 export class CreateExerciseHandler
 	implements ICommandHandler<CreateExerciseCommand, CreateExerciseResult>
 {
-	constructor(
-		private readonly lessonRepository: ILessonRepository,
-		private readonly exerciseRepository: IExerciseRepository,
-	) {}
+	constructor(private readonly exerciseRepository: IExerciseRepository) {}
 
 	async execute(command: CreateExerciseCommand): Promise<CreateExerciseResult> {
-		const lessonId = LessonId.create(command.lessonId);
-		const lesson = await this.lessonRepository.findById(lessonId);
-
-		if (!lesson) {
-			throw new LessonNotFoundException(lessonId.value);
-		}
-
-		const exerciseId = ActivityId.create(randomUUID());
-		const activityRef = lesson.addActivity(exerciseId);
+		const exerciseId = ExerciseId.create(UUID.create(randomUUID()));
 
 		const exercise = Exercise.create(exerciseId, {
 			createdAt: new Date(),
-			lessonId,
-			name: ActivityName.create(command.name),
-			description:
-				command.description != null
-					? ActivityDescription.create(command.description)
-					: null,
-			order: activityRef.order,
+			name: command.name,
+			description: command.description,
 			difficulty: command.difficulty,
+			acceptUrl: Url.create(command.acceptUrl),
+			repositoryId: RepositoryId.create(command.repositoryId),
 		});
 
-		lesson.update(new Date());
-
 		await this.exerciseRepository.save(exercise);
-		await this.lessonRepository.save(lesson);
 
-		return {
-			type: ActivityType.EXERCISE,
-			id: exercise.id.value,
-			lessonId: exercise.lessonId.value,
-			name: exercise.name.value,
-			description: exercise.description?.value ?? null,
-			createdAt: exercise.createdAt,
-			updatedAt: exercise.updatedAt ?? null,
-			order: exercise.order.value,
-			difficulty: exercise.difficulty,
-		};
+		return aggregateToDto(exercise);
 	}
 }

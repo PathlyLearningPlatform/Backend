@@ -4,9 +4,6 @@ import { aggregateToDto } from '../helpers';
 import { IExerciseRepository } from '@/domain/exercises/repositories';
 
 type ListExercisesQuery = {
-	where?: {
-		lessonId?: string;
-	};
 	options?: OffsetPagination;
 };
 type ListExercisesResult = ExerciseDto[];
@@ -18,9 +15,6 @@ export class ListExercisesHandler
 
 	async execute(query: ListExercisesQuery): Promise<ListExercisesResult> {
 		const exercises = await this.exerciseRepository.list({
-			where: {
-				lessonId: query.where?.lessonId,
-			},
 			options: {
 				limit: query.options?.limit,
 				page: query.options?.page,
