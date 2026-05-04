@@ -1,5 +1,6 @@
 import z from 'zod';
 import { LessonProgressApiConstraints } from '../enums';
+import { unitIdSchema } from './fields.schema';
 
 export const listLessonProgressQuerySchema = z
 	.object({
@@ -12,5 +13,6 @@ export const listLessonProgressQuerySchema = z
 			.number()
 			.nonnegative()
 			.default(LessonProgressApiConstraints.DEFAULT_PAGE),
+		unitId: unitIdSchema.optional(),
 	})
 	.optional();

@@ -1,6 +1,7 @@
-import z from 'zod'
-import type { ListSectionsQueryDto } from '../dtos'
-import { SectionsApiConstraints } from '../enums'
+import z from 'zod';
+import type { ListSectionsQueryDto } from '../dtos';
+import { SectionsApiConstraints } from '../enums';
+import { learningPathIdSchema } from './fields.schema';
 
 export const listSectionsQuerySchema = z
 	.object({
@@ -13,5 +14,6 @@ export const listSectionsQuerySchema = z
 			.number()
 			.nonnegative()
 			.default(SectionsApiConstraints.DEFAULT_PAGE),
+		learningPathId: learningPathIdSchema.optional(),
 	})
-	.optional() satisfies z.ZodType<ListSectionsQueryDto | undefined>
+	.optional() satisfies z.ZodType<ListSectionsQueryDto | undefined>;

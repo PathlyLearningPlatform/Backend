@@ -16,6 +16,9 @@ export class ListUnitsQueryDto {
 		default: UnitsApiConstraints.DEFAULT_PAGE,
 	})
 	page?: number;
+
+	@ApiPropertyOptional()
+	sectionId?: string;
 }
 
 export class ListUnitProgressQueryDto {
@@ -24,4 +27,7 @@ export class ListUnitProgressQueryDto {
 
 	@ApiPropertyOptional()
 	page?: number;
+
+	@ApiPropertyOptional()
+	sectionId?: string;
 }

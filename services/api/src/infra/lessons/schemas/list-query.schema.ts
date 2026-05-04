@@ -1,6 +1,7 @@
-import z from 'zod'
-import type { ListLessonsQueryDto } from '../dtos'
-import { LessonsApiConstraints } from '../enums'
+import z from 'zod';
+import type { ListLessonsQueryDto } from '../dtos';
+import { LessonsApiConstraints } from '../enums';
+import { unitIdSchema } from './fields.schema';
 
 export const listLessonsQuerySchema = z
 	.object({
@@ -13,5 +14,6 @@ export const listLessonsQuerySchema = z
 			.number()
 			.nonnegative()
 			.default(LessonsApiConstraints.DEFAULT_PAGE),
+		unitId: unitIdSchema.optional(),
 	})
-	.optional() satisfies z.ZodType<ListLessonsQueryDto | undefined>
+	.optional() satisfies z.ZodType<ListLessonsQueryDto | undefined>;

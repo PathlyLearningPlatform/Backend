@@ -51,6 +51,7 @@ export class ActivitiesController {
 		try {
 			const result = await this.listActivitiesHandler.execute({
 				options: { limit: query.limit, page: query.page },
+				where: { lessonId: query.lessonId },
 			});
 
 			return {

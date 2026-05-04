@@ -1,5 +1,6 @@
 import z from 'zod';
 import { UnitProgressApiConstraints } from '../enums';
+import { sectionIdSchema } from './fields.schema';
 
 export const listUnitProgressQuerySchema = z
 	.object({
@@ -12,5 +13,6 @@ export const listUnitProgressQuerySchema = z
 			.number()
 			.nonnegative()
 			.default(UnitProgressApiConstraints.DEFAULT_PAGE),
+		sectionId: sectionIdSchema.optional(),
 	})
 	.optional();

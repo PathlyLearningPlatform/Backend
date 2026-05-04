@@ -1,5 +1,6 @@
 import z from 'zod';
 import { SectionProgressApiConstraints } from '../enums';
+import { learningPathIdSchema } from './fields.schema';
 
 export const listSectionProgressQuerySchema = z
 	.object({
@@ -12,5 +13,6 @@ export const listSectionProgressQuerySchema = z
 			.number()
 			.nonnegative()
 			.default(SectionProgressApiConstraints.DEFAULT_PAGE),
+		learningPathId: learningPathIdSchema,
 	})
 	.optional();

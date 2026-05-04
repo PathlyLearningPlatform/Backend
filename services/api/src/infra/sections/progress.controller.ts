@@ -75,6 +75,7 @@ export class SectionProgressController {
 				},
 				where: {
 					userId: user.id,
+					learningPathId: query.learningPathId,
 				},
 			});
 

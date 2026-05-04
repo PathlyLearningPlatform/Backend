@@ -16,6 +16,9 @@ export class ListActivitiesQueryDto {
 		default: ActivitiesApiConstraints.DEFAULT_PAGE,
 	})
 	page?: number;
+
+	@ApiPropertyOptional()
+	lessonId?: string;
 }
 
 export class ListActivityProgressQueryDto {
@@ -24,4 +27,7 @@ export class ListActivityProgressQueryDto {
 
 	@ApiPropertyOptional()
 	page?: number;
+
+	@ApiPropertyOptional()
+	lessonId?: string;
 }

@@ -75,6 +75,7 @@ export class LessonProgressController {
 				},
 				where: {
 					userId: user.id,
+					unitId: query.unitId,
 				},
 			});
 

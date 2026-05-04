@@ -16,6 +16,9 @@ export class ListLessonsQueryDto {
 		default: LessonsApiConstraints.DEFAULT_PAGE,
 	})
 	page?: number;
+
+	@ApiPropertyOptional()
+	unitId?: string;
 }
 
 export class ListLessonProgressQueryDto {
@@ -24,4 +27,7 @@ export class ListLessonProgressQueryDto {
 
 	@ApiPropertyOptional()
 	page?: number;
+
+	@ApiPropertyOptional()
+	unitId?: string;
 }

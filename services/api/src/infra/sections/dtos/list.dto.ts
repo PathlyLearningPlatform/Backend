@@ -16,6 +16,9 @@ export class ListSectionsQueryDto {
 		default: SectionsApiConstraints.DEFAULT_PAGE,
 	})
 	page?: number;
+
+	@ApiPropertyOptional()
+	learningPathId?: string;
 }
 
 export class ListSectionProgressQueryDto {
@@ -24,4 +27,7 @@ export class ListSectionProgressQueryDto {
 
 	@ApiPropertyOptional()
 	page?: number;
+
+	@ApiPropertyOptional()
+	learningPathId?: string;
 }

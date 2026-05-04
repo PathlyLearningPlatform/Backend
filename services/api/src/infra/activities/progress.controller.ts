@@ -73,6 +73,7 @@ export class ActivityProgressController {
 				},
 				where: {
 					userId: user.id,
+					lessonId: query.lessonId,
 				},
 			});
 

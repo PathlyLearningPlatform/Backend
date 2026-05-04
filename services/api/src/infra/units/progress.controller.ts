@@ -75,6 +75,7 @@ export class UnitProgressController {
 				},
 				where: {
 					userId: user.id,
+					sectionId: query.sectionId,
 				},
 			});
 
