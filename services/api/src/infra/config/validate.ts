@@ -35,6 +35,7 @@ export function validateConfig(config: Record<string, unknown>) {
 			exercisesClassroomId: config.GH_EXERCISES_CLASSROOM_ID,
 			projectsClassroomId: config.GH_PROJECTS_CLASSROOM_ID,
 			projectsClassroomPAT: config.GH_PROJECTS_CLASSROOM_PAT,
+			appWebhookSecret: config.GH_APP_WEBHOOK_SECRET,
 		},
 		keycloak: {
 			realmName: config.KC_REALM_NAME,

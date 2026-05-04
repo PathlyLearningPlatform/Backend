@@ -18,7 +18,7 @@ export class DbService implements OnModuleInit, OnModuleDestroy {
 	private readonly dbConfig: Config['db'];
 
 	constructor(
-		@Inject(DiToken.DRIZZLE) private readonly db: NodePgDatabase<typeof schema>,
+		@Inject(DiToken.DRIZZLE) private readonly db: NodePgDatabase,
 		@Inject(DiToken.PG_POOL) private readonly pool: Pool,
 		@Inject(ConfigService)
 		private readonly configService: ConfigService,

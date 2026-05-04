@@ -35,6 +35,7 @@ export const appConfigSchema = z
 			exercisesClassroomId: z.coerce.number().int(),
 			projectsClassroomId: z.coerce.number().int(),
 			projectsClassroomPAT: z.string().optional(),
+			appWebhookSecret: z.string().optional(),
 		}),
 		keycloak: z.object({
 			realmName: z.string(),

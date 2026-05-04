@@ -6,7 +6,6 @@ import { Pool } from 'pg';
 import { DiToken } from '@infra/common';
 import type { Config } from '../config/types';
 import { DbService } from './db.service';
-import * as schema from './schemas';
 
 @Module({
 	providers: [
@@ -34,7 +33,7 @@ import * as schema from './schemas';
 		{
 			provide: DiToken.DRIZZLE,
 			useFactory(pool: Pool) {
-				return drizzle({ client: pool, schema: schema });
+				return drizzle({ client: pool });
 			},
 			inject: [DiToken.PG_POOL],
 		},

@@ -6,6 +6,7 @@ import {
 	Inject,
 	InternalServerErrorException,
 	Post,
+	UseGuards,
 } from '@nestjs/common';
 import { DiToken, HttpErrorDto } from '../common';
 import {
@@ -38,7 +39,9 @@ import {
 	ExerciseSubmissionConclusion,
 	ExerciseSubmissionStatus,
 } from '@/domain/exercises';
+import { GithubWebhookGuard } from './github.guard';
 
+@UseGuards(GithubWebhookGuard)
 @Controller({
 	path: 'webhooks/github',
 	version: '1',
