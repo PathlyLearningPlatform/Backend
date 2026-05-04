@@ -14,3 +14,4 @@ export * from './unit-progress.table';
 export * from './units.table';
 export * from './quiz-attempts.table';
 export * from './projects.table';
+export * from './users.table';

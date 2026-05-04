@@ -1,2 +1,0 @@
-ALTER TABLE "project_submissions" ADD COLUMN "commitSha" text NOT NULL;--> statement-breakpoint
-ALTER TABLE "project_submissions" ADD CONSTRAINT "project_submissions_commitSha_key" UNIQUE("commitSha");
