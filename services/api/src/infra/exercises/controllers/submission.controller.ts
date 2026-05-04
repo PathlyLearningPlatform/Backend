@@ -9,7 +9,12 @@ import {
 	Query,
 	UseGuards,
 } from '@nestjs/common';
-import { ApiNotFoundResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import {
+	ApiNotFoundResponse,
+	ApiOkResponse,
+	ApiQuery,
+	ApiTags,
+} from '@nestjs/swagger';
 import {
 	FindOneExerciseSubmissionResponseDto,
 	ListExerciseSubmissionsQueryDto,
@@ -32,6 +37,7 @@ import { User } from '@/infra/auth/decorators';
 import { JwtGuard } from '@/infra/auth/jwt.guard';
 import type { UserInfo } from '@/infra/auth/types';
 
+@ApiTags('progress/exercises/submissions')
 @UseGuards(JwtGuard)
 @Controller({
 	path: 'exercises/:exercise_id/submissions',

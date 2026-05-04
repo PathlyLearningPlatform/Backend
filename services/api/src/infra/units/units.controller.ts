@@ -20,6 +20,7 @@ import {
 	ApiNotFoundResponse,
 	ApiOkResponse,
 	ApiQuery,
+	ApiTags,
 } from '@nestjs/swagger';
 import { HttpErrorDto, HttpValidationPipe } from '@infra/common';
 import { SectionNotFoundException, UnitNotFoundException } from '@/app/common';
@@ -29,6 +30,8 @@ import type {
 	UpdateUnitHandler,
 } from '@/app/units/commands';
 import type {
+	FindNextUnitHandler,
+	FindPreviousUnitHandler,
 	FindUnitByIdHandler,
 	ListUnitsHandler,
 } from '@/app/units/queries';
@@ -51,6 +54,7 @@ import {
 	updateUnitBodySchema,
 } from './schemas';
 
+@ApiTags('units')
 @Controller({
 	path: 'units',
 	version: '1',
@@ -61,6 +65,10 @@ export class UnitsController {
 		private readonly listUnitsHandler: ListUnitsHandler,
 		@Inject(DiToken.FIND_UNIT_BY_ID_HANDLER)
 		private readonly findUnitByIdHandler: FindUnitByIdHandler,
+		@Inject(DiToken.FIND_PREVIOUS_UNIT_HANDLER)
+		private readonly findPreviousUnitHandler: FindPreviousUnitHandler,
+		@Inject(DiToken.FIND_NEXT_UNIT_HANDLER)
+		private readonly findNextUnitHandler: FindNextUnitHandler,
 		@Inject(DiToken.ADD_UNIT_HANDLER)
 		private readonly addUnitHandler: AddUnitHandler,
 		@Inject(DiToken.UPDATE_UNIT_HANDLER)
@@ -100,6 +108,58 @@ export class UnitsController {
 	): Promise<FindUnitByIdResponseDto> {
 		try {
 			const result = await this.findUnitByIdHandler.execute({ where: { id } });
+
+			return {
+				unit: clientUnitToResponseDto(result),
+			};
+		} catch (err) {
+			if (err instanceof UnitNotFoundException) {
+				throw new NotFoundException(
+					new HttpErrorDto(ExceptionMessage.UNIT_NOT_FOUND),
+				);
+			}
+
+			throw new InternalServerErrorException(
+				new HttpErrorDto(ExceptionMessage.INTERNAL_ERROR),
+				{ cause: err },
+			);
+		}
+	}
+
+	@ApiOkResponse({ type: FindUnitByIdResponseDto })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
+	@Get(':id/previous')
+	async findPrevious(
+		@Param('id', ParseUUIDPipe) id: string,
+	): Promise<FindUnitByIdResponseDto> {
+		try {
+			const result = await this.findPreviousUnitHandler.execute({ id });
+
+			return {
+				unit: clientUnitToResponseDto(result),
+			};
+		} catch (err) {
+			if (err instanceof UnitNotFoundException) {
+				throw new NotFoundException(
+					new HttpErrorDto(ExceptionMessage.UNIT_NOT_FOUND),
+				);
+			}
+
+			throw new InternalServerErrorException(
+				new HttpErrorDto(ExceptionMessage.INTERNAL_ERROR),
+				{ cause: err },
+			);
+		}
+	}
+
+	@ApiOkResponse({ type: FindUnitByIdResponseDto })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
+	@Get(':id/next')
+	async findNext(
+		@Param('id', ParseUUIDPipe) id: string,
+	): Promise<FindUnitByIdResponseDto> {
+		try {
+			const result = await this.findNextUnitHandler.execute({ id });
 
 			return {
 				unit: clientUnitToResponseDto(result),

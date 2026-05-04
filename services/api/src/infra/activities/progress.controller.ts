@@ -17,6 +17,7 @@ import {
 	ApiNotImplementedResponse,
 	ApiOkResponse,
 	ApiQuery,
+	ApiTags,
 } from '@nestjs/swagger';
 import { HttpErrorDto, HttpValidationPipe } from '@infra/common';
 import type { CompleteActivityHandler } from '@/app/activities/commands';
@@ -42,6 +43,7 @@ import {
 import { clientActivityProgressToResponseDto } from './helpers';
 import { listActivityProgressQuerySchema } from './schemas';
 
+@ApiTags('progress/activities')
 @UseGuards(JwtGuard)
 @Controller({
 	path: 'progress/activities',

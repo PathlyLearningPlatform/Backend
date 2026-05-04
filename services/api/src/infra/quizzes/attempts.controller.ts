@@ -21,7 +21,7 @@ import {
 	FindQuizAttemptForUserHandler,
 	ListQuizAttemptsHandler,
 } from '@/app/quizzes';
-import { ApiNotFoundResponse, ApiOkResponse } from '@nestjs/swagger';
+import { ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import {
 	CompleteQuizResponseDto,
 	FindQuizAttemptByIdResponseDto,
@@ -35,6 +35,7 @@ import type { UserInfo } from '../auth/types';
 import { completeQuizSchema } from './schemas';
 import z from 'zod';
 
+@ApiTags('progress/quizzes/attempts')
 @Controller({
 	path: 'quizzes/:quizId/attempts',
 	version: '1',

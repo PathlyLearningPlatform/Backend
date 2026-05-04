@@ -20,6 +20,7 @@ import {
 	ApiNotFoundResponse,
 	ApiOkResponse,
 	ApiQuery,
+	ApiTags,
 } from '@nestjs/swagger';
 import { HttpErrorDto, HttpValidationPipe } from '@infra/common';
 import type {
@@ -51,6 +52,7 @@ import {
 	updateLearningPathBodySchema,
 } from './schemas';
 
+@ApiTags('learning-paths')
 @Controller({
 	path: 'learning-paths',
 	version: '1',

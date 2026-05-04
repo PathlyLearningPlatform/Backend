@@ -11,6 +11,8 @@ import {
 	UpdateSectionHandler,
 } from '@/app/sections/commands';
 import {
+	FindNextSectionHandler,
+	FindPreviousSectionHandler,
 	FindSectionByIdHandler,
 	FindSectionProgressForUserHandler,
 	ListSectionProgressHandler,
@@ -42,6 +44,20 @@ export const sectionHandlersProvider: Provider[] = [
 		provide: DiToken.FIND_SECTION_BY_ID_HANDLER,
 		useFactory(sectionRepository: ISectionRepository) {
 			return new FindSectionByIdHandler(sectionRepository);
+		},
+		inject: [PostgresSectionRepository],
+	},
+	{
+		provide: DiToken.FIND_PREVIOUS_SECTION_HANDLER,
+		useFactory(sectionRepository: ISectionRepository) {
+			return new FindPreviousSectionHandler(sectionRepository);
+		},
+		inject: [PostgresSectionRepository],
+	},
+	{
+		provide: DiToken.FIND_NEXT_SECTION_HANDLER,
+		useFactory(sectionRepository: ISectionRepository) {
+			return new FindNextSectionHandler(sectionRepository);
 		},
 		inject: [PostgresSectionRepository],
 	},

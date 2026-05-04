@@ -20,6 +20,7 @@ import {
 	ApiNotFoundResponse,
 	ApiOkResponse,
 	ApiQuery,
+	ApiTags,
 } from '@nestjs/swagger';
 import type {
 	AddChildSkillHandler,
@@ -72,6 +73,7 @@ import {
 	clientSkillToResponseDto,
 } from './helpers';
 
+@ApiTags('skills')
 @Controller({
 	path: 'skills',
 	version: '1',

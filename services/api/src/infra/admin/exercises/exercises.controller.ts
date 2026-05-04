@@ -38,9 +38,11 @@ import {
 	ApiCreatedResponse,
 	ApiNotFoundResponse,
 	ApiOkResponse,
+	ApiTags,
 } from '@nestjs/swagger';
 import { RemoveExerciseHandler } from '@/app/exercises/commands/remove.command';
 
+@ApiTags('admin/exercises')
 @UseGuards(JwtGuard, RoleGuard)
 @Controller({
 	path: 'admin/exercises',

@@ -20,6 +20,7 @@ import {
 	ApiNotFoundResponse,
 	ApiOkResponse,
 	ApiQuery,
+	ApiTags,
 } from '@nestjs/swagger';
 import { HttpErrorDto, HttpValidationPipe } from '@infra/common';
 import { LessonNotFoundException, UnitNotFoundException } from '@/app/common';
@@ -28,6 +29,8 @@ import type {
 	UpdateLessonHandler,
 } from '@/app/lessons/commands';
 import type {
+	FindNextLessonHandler,
+	FindPreviousLessonHandler,
 	FindLessonByIdHandler,
 	ListLessonsHandler,
 } from '@/app/lessons/queries';
@@ -51,6 +54,7 @@ import {
 	updateLessonBodySchema,
 } from './schemas';
 
+@ApiTags('lessons')
 @Controller({
 	path: 'lessons',
 	version: '1',
@@ -61,6 +65,10 @@ export class LessonsController {
 		private readonly listLessonsHandler: ListLessonsHandler,
 		@Inject(DiToken.FIND_LESSON_BY_ID_HANDLER)
 		private readonly findLessonByIdHandler: FindLessonByIdHandler,
+		@Inject(DiToken.FIND_PREVIOUS_LESSON_HANDLER)
+		private readonly findPreviousLessonHandler: FindPreviousLessonHandler,
+		@Inject(DiToken.FIND_NEXT_LESSON_HANDLER)
+		private readonly findNextLessonHandler: FindNextLessonHandler,
 		@Inject(DiToken.ADD_LESSON_HANDLER)
 		private readonly addLessonHandler: AddLessonHandler,
 		@Inject(DiToken.UPDATE_LESSON_HANDLER)
@@ -102,6 +110,58 @@ export class LessonsController {
 			const result = await this.findLessonByIdHandler.execute({
 				where: { id },
 			});
+
+			return {
+				lesson: clientLessonToResponseDto(result),
+			};
+		} catch (err) {
+			if (err instanceof LessonNotFoundException) {
+				throw new NotFoundException(
+					new HttpErrorDto(ExceptionMessage.LESSON_NOT_FOUND),
+				);
+			}
+
+			throw new InternalServerErrorException(
+				new HttpErrorDto(ExceptionMessage.INTERNAL_ERROR),
+				{ cause: err },
+			);
+		}
+	}
+
+	@ApiOkResponse({ type: FindLessonByIdResponseDto })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
+	@Get(':id/previous')
+	async findPrevious(
+		@Param('id', ParseUUIDPipe) id: string,
+	): Promise<FindLessonByIdResponseDto> {
+		try {
+			const result = await this.findPreviousLessonHandler.execute({ id });
+
+			return {
+				lesson: clientLessonToResponseDto(result),
+			};
+		} catch (err) {
+			if (err instanceof LessonNotFoundException) {
+				throw new NotFoundException(
+					new HttpErrorDto(ExceptionMessage.LESSON_NOT_FOUND),
+				);
+			}
+
+			throw new InternalServerErrorException(
+				new HttpErrorDto(ExceptionMessage.INTERNAL_ERROR),
+				{ cause: err },
+			);
+		}
+	}
+
+	@ApiOkResponse({ type: FindLessonByIdResponseDto })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
+	@Get(':id/next')
+	async findNext(
+		@Param('id', ParseUUIDPipe) id: string,
+	): Promise<FindLessonByIdResponseDto> {
+		try {
+			const result = await this.findNextLessonHandler.execute({ id });
 
 			return {
 				lesson: clientLessonToResponseDto(result),

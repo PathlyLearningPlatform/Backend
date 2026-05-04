@@ -9,10 +9,17 @@ import {
 	ParseUUIDPipe,
 	Query,
 } from '@nestjs/common';
-import { ApiNotFoundResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import {
+	ApiNotFoundResponse,
+	ApiOkResponse,
+	ApiQuery,
+	ApiTags,
+} from '@nestjs/swagger';
 import { HttpErrorDto, HttpValidationPipe } from '@infra/common';
 import type { RemoveActivityHandler } from '@/app/activities/commands';
 import type {
+	FindNextActivityHandler,
+	FindPreviousActivityHandler,
 	FindActivityByIdHandler,
 	ListActivitiesHandler,
 } from '@/app/activities/queries';
@@ -27,6 +34,7 @@ import {
 import { clientActivityToResponseDto } from './helpers';
 import { listActivitiesQuerySchema } from './schemas';
 
+@ApiTags('activities')
 @Controller({
 	path: 'activities',
 	version: '1',
@@ -37,6 +45,10 @@ export class ActivitiesController {
 		private readonly listActivitiesHandler: ListActivitiesHandler,
 		@Inject(DiToken.FIND_ACTIVITY_BY_ID_HANDLER)
 		private readonly findActivityByIdHandler: FindActivityByIdHandler,
+		@Inject(DiToken.FIND_PREVIOUS_ACTIVITY_HANDLER)
+		private readonly findPreviousActivityHandler: FindPreviousActivityHandler,
+		@Inject(DiToken.FIND_NEXT_ACTIVITY_HANDLER)
+		private readonly findNextActivityHandler: FindNextActivityHandler,
 		@Inject(DiToken.REMOVE_ACTIVITY_HANDLER)
 		private readonly removeActivityHandler: RemoveActivityHandler,
 	) {}
@@ -77,6 +89,62 @@ export class ActivitiesController {
 			const result = await this.findActivityByIdHandler.execute({
 				where: { id },
 			});
+
+			return {
+				activity: clientActivityToResponseDto(result),
+			};
+		} catch (err) {
+			if (err instanceof ActivityNotFoundException) {
+				throw new NotFoundException(
+					new HttpErrorDto(ExceptionMessage.ACTIVITY_NOT_FOUND),
+				);
+			}
+
+			throw new InternalServerErrorException(
+				new HttpErrorDto(ExceptionMessage.INTERNAL_ERROR),
+				{
+					cause: err,
+				},
+			);
+		}
+	}
+
+	@ApiOkResponse({ type: FindActivityByIdResponseDto })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
+	@Get(':id/previous')
+	async findPrevious(
+		@Param('id', ParseUUIDPipe) id: string,
+	): Promise<FindActivityByIdResponseDto> {
+		try {
+			const result = await this.findPreviousActivityHandler.execute({ id });
+
+			return {
+				activity: clientActivityToResponseDto(result),
+			};
+		} catch (err) {
+			if (err instanceof ActivityNotFoundException) {
+				throw new NotFoundException(
+					new HttpErrorDto(ExceptionMessage.ACTIVITY_NOT_FOUND),
+				);
+			}
+
+			throw new InternalServerErrorException(
+				new HttpErrorDto(ExceptionMessage.INTERNAL_ERROR),
+				{
+					cause: err,
+				},
+			);
+		}
+	}
+
+	@ApiOkResponse({ type: FindActivityByIdResponseDto })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
+	@Get(':id/next')
+	async findNext(
+		@Param('id', ParseUUIDPipe) id: string,
+	): Promise<FindActivityByIdResponseDto> {
+		try {
+			const result = await this.findNextActivityHandler.execute({ id });
 
 			return {
 				activity: clientActivityToResponseDto(result),

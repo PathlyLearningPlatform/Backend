@@ -7,6 +7,8 @@ import {
 import {
 	FindActivityByIdHandler,
 	FindActivityProgressForUserHandler,
+	FindNextActivityHandler,
+	FindPreviousActivityHandler,
 	ListActivitiesHandler,
 	ListActivityProgressHandler,
 } from '@/app/activities/queries';
@@ -41,6 +43,20 @@ export const activityHandlersProvider: Provider[] = [
 		provide: DiToken.FIND_ACTIVITY_BY_ID_HANDLER,
 		useFactory(activityRepository: IActivityRepository) {
 			return new FindActivityByIdHandler(activityRepository);
+		},
+		inject: [PostgresActivityRepository],
+	},
+	{
+		provide: DiToken.FIND_PREVIOUS_ACTIVITY_HANDLER,
+		useFactory(activityRepository: IActivityRepository) {
+			return new FindPreviousActivityHandler(activityRepository);
+		},
+		inject: [PostgresActivityRepository],
+	},
+	{
+		provide: DiToken.FIND_NEXT_ACTIVITY_HANDLER,
+		useFactory(activityRepository: IActivityRepository) {
+			return new FindNextActivityHandler(activityRepository);
 		},
 		inject: [PostgresActivityRepository],
 	},

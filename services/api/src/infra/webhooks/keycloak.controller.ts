@@ -1,9 +1,10 @@
 import { Body, Controller, Inject, Post, UseGuards } from '@nestjs/common';
 import { DiToken } from '../common';
 import KeycloakAdminClient from '@keycloak/keycloak-admin-client';
-import { ApiOkResponse } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { KeycloakWebhookGuard } from './keycloak.guard';
 
+@ApiTags('webhooks/keycloak')
 @UseGuards(KeycloakWebhookGuard)
 @Controller({
 	path: 'webhooks/keycloak',

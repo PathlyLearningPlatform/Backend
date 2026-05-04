@@ -38,9 +38,11 @@ import {
 	ApiCreatedResponse,
 	ApiNotFoundResponse,
 	ApiOkResponse,
+	ApiTags,
 } from '@nestjs/swagger';
 import { RemoveProjectHandler } from '@/app/projects/commands/remove.command';
 
+@ApiTags('admin/projects')
 @UseGuards(JwtGuard, RoleGuard)
 @Controller({
 	path: 'admin/projects',

@@ -15,6 +15,7 @@ import {
 	ApiCreatedResponse,
 	ApiNotFoundResponse,
 	ApiOkResponse,
+	ApiTags,
 } from '@nestjs/swagger';
 import { HttpErrorDto, HttpValidationPipe } from '@infra/common';
 import type {
@@ -38,6 +39,7 @@ import {
 import { clientArticleToResponseDto } from './helpers';
 import { createArticleSchema, updateArticlePropsSchema } from './schemas';
 
+@ApiTags('articles')
 @Controller({
 	path: 'articles',
 	version: '1',

@@ -9,6 +9,8 @@ import {
 import {
 	FindLessonByIdHandler,
 	FindLessonProgressForUserHandler,
+	FindNextLessonHandler,
+	FindPreviousLessonHandler,
 	ListLessonProgressHandler,
 	ListLessonsHandler,
 } from '@/app/lessons/queries';
@@ -39,6 +41,20 @@ export const lessonHandlersProvider: Provider[] = [
 		provide: DiToken.FIND_LESSON_BY_ID_HANDLER,
 		useFactory(lessonRepository: ILessonRepository) {
 			return new FindLessonByIdHandler(lessonRepository);
+		},
+		inject: [PostgresLessonRepository],
+	},
+	{
+		provide: DiToken.FIND_PREVIOUS_LESSON_HANDLER,
+		useFactory(lessonRepository: ILessonRepository) {
+			return new FindPreviousLessonHandler(lessonRepository);
+		},
+		inject: [PostgresLessonRepository],
+	},
+	{
+		provide: DiToken.FIND_NEXT_LESSON_HANDLER,
+		useFactory(lessonRepository: ILessonRepository) {
+			return new FindNextLessonHandler(lessonRepository);
 		},
 		inject: [PostgresLessonRepository],
 	},

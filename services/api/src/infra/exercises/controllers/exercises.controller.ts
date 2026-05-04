@@ -8,7 +8,12 @@ import {
 	ParseUUIDPipe,
 	Query,
 } from '@nestjs/common';
-import { ApiNotFoundResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import {
+	ApiNotFoundResponse,
+	ApiOkResponse,
+	ApiQuery,
+	ApiTags,
+} from '@nestjs/swagger';
 import {
 	FindExerciseByIdResponseDto,
 	ListExercisesDto,
@@ -28,6 +33,7 @@ import type {
 } from '@/app/exercises';
 import { ExerciseNotFoundException } from '@/app/exercises';
 
+@ApiTags('exercises')
 @Controller({
 	path: 'exercises',
 	version: '1',

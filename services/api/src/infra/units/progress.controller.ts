@@ -19,6 +19,7 @@ import {
 	ApiNotImplementedResponse,
 	ApiOkResponse,
 	ApiQuery,
+	ApiTags,
 } from '@nestjs/swagger';
 import { HttpErrorDto, HttpValidationPipe } from '@infra/common';
 import type { StartUnitHandler } from '@/app/units/commands';
@@ -44,6 +45,7 @@ import {
 import { clientUnitProgressToResponseDto } from './helpers';
 import { listUnitProgressQuerySchema } from './schemas';
 
+@ApiTags('progress/units')
 @UseGuards(JwtGuard)
 @Controller({
 	path: 'progress/units',

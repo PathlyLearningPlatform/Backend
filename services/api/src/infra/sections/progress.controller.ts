@@ -19,6 +19,7 @@ import {
 	ApiNotImplementedResponse,
 	ApiOkResponse,
 	ApiQuery,
+	ApiTags,
 } from '@nestjs/swagger';
 import { HttpErrorDto, HttpValidationPipe } from '@infra/common';
 import type { StartSectionHandler } from '@/app/sections/commands';
@@ -44,6 +45,7 @@ import {
 import { clientSectionProgressToResponseDto } from './helpers';
 import { listSectionProgressQuerySchema } from './schemas';
 
+@ApiTags('progress/sections')
 @UseGuards(JwtGuard)
 @Controller({
 	path: 'progress/sections',

@@ -10,7 +10,12 @@ import {
 	Query,
 	UseGuards,
 } from '@nestjs/common';
-import { ApiNotFoundResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import {
+	ApiNotFoundResponse,
+	ApiOkResponse,
+	ApiQuery,
+	ApiTags,
+} from '@nestjs/swagger';
 import type { UnlockSkillHandler } from '@/app/skills/commands';
 import type {
 	FindOneSkillProgressForUserHandler,
@@ -41,6 +46,7 @@ import {
 	SkillProgressNotFoundException,
 } from '@/domain/skills';
 
+@ApiTags('progress/skills')
 @UseGuards(JwtGuard)
 @Controller({
 	path: 'progress/skills',

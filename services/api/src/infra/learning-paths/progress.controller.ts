@@ -17,6 +17,7 @@ import {
 	ApiNotImplementedResponse,
 	ApiOkResponse,
 	ApiQuery,
+	ApiTags,
 } from '@nestjs/swagger';
 import { HttpErrorDto, HttpValidationPipe } from '@infra/common';
 import type { StartLearningPathHandler } from '@/app/learning-paths/commands';
@@ -41,6 +42,7 @@ import {
 import { clientLearningPathProgressToResponseDto } from './helpers';
 import { listLearningPathProgressQuerySchema } from './schemas';
 
+@ApiTags('progress/learning-paths')
 @UseGuards(JwtGuard)
 @Controller({
 	path: 'progress/learning-paths',

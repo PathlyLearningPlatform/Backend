@@ -16,6 +16,7 @@ import {
 	ApiCreatedResponse,
 	ApiNotFoundResponse,
 	ApiOkResponse,
+	ApiTags,
 } from '@nestjs/swagger';
 import { HttpErrorDto, HttpValidationPipe } from '@infra/common';
 import type {
@@ -56,6 +57,7 @@ import {
 	updateQuizPropsSchema,
 } from './schemas';
 
+@ApiTags('quizzes')
 @Controller({
 	path: 'quizzes',
 	version: '1',

@@ -17,7 +17,7 @@ import {
 	SubmitProjectHandler,
 	UpdateProjectSubmissionHandler,
 } from '@/app/projects';
-import { ApiBody, ApiOkResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { GithubWebhookDto } from './dtos/github.dto';
 import { ConfigService } from '@nestjs/config';
 import { Config } from '../config/types';
@@ -41,6 +41,7 @@ import {
 } from '@/domain/exercises';
 import { GithubWebhookGuard } from './github.guard';
 
+@ApiTags('webhooks/github')
 @UseGuards(GithubWebhookGuard)
 @Controller({
 	path: 'webhooks/github',

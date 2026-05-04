@@ -20,6 +20,7 @@ import {
 	ApiNotFoundResponse,
 	ApiOkResponse,
 	ApiQuery,
+	ApiTags,
 } from '@nestjs/swagger';
 import { HttpErrorDto, HttpValidationPipe } from '@infra/common';
 import type { AddSectionHandler } from '@/app/learning-paths/commands';
@@ -32,6 +33,8 @@ import type {
 	RemoveSectionHandler,
 } from '@/app/sections/commands';
 import type {
+	FindNextSectionHandler,
+	FindPreviousSectionHandler,
 	FindSectionByIdHandler,
 	ListSectionsHandler,
 } from '@/app/sections/queries';
@@ -54,6 +57,7 @@ import {
 	updateSectionBodySchema,
 } from './schemas';
 
+@ApiTags('sections')
 @Controller({
 	path: 'sections',
 	version: '1',
@@ -64,6 +68,10 @@ export class SectionsController {
 		private readonly listSectionsHandler: ListSectionsHandler,
 		@Inject(DiToken.FIND_SECTION_BY_ID_HANDLER)
 		private readonly findSectionByIdHandler: FindSectionByIdHandler,
+		@Inject(DiToken.FIND_PREVIOUS_SECTION_HANDLER)
+		private readonly findPreviousSectionHandler: FindPreviousSectionHandler,
+		@Inject(DiToken.FIND_NEXT_SECTION_HANDLER)
+		private readonly findNextSectionHandler: FindNextSectionHandler,
 		@Inject(DiToken.ADD_SECTION_HANDLER)
 		private readonly addSectionHandler: AddSectionHandler,
 		@Inject(DiToken.UPDATE_SECTION_HANDLER)
@@ -104,6 +112,62 @@ export class SectionsController {
 		try {
 			const result = await this.findSectionByIdHandler.execute({
 				where: { id },
+			});
+
+			return {
+				section: clientSectionToResponseDto(result),
+			};
+		} catch (err) {
+			if (err instanceof SectionNotFoundException) {
+				throw new NotFoundException(
+					new HttpErrorDto(ExceptionMessage.SECTION_NOT_FOUND),
+				);
+			}
+
+			throw new InternalServerErrorException(
+				new HttpErrorDto(ExceptionMessage.INTERNAL_ERROR),
+				{ cause: err },
+			);
+		}
+	}
+
+	@ApiOkResponse({ type: FindSectionByIdResponseDto })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
+	@Get(':id/previous')
+	async findPrevious(
+		@Param('id', ParseUUIDPipe) id: string,
+	): Promise<FindSectionByIdResponseDto> {
+		try {
+			const result = await this.findPreviousSectionHandler.execute({
+				id,
+			});
+
+			return {
+				section: clientSectionToResponseDto(result),
+			};
+		} catch (err) {
+			if (err instanceof SectionNotFoundException) {
+				throw new NotFoundException(
+					new HttpErrorDto(ExceptionMessage.SECTION_NOT_FOUND),
+				);
+			}
+
+			throw new InternalServerErrorException(
+				new HttpErrorDto(ExceptionMessage.INTERNAL_ERROR),
+				{ cause: err },
+			);
+		}
+	}
+
+	@ApiOkResponse({ type: FindSectionByIdResponseDto })
+	@ApiNotFoundResponse({ type: HttpErrorDto })
+	@Get(':id/next')
+	async findNext(
+		@Param('id', ParseUUIDPipe) id: string,
+	): Promise<FindSectionByIdResponseDto> {
+		try {
+			const result = await this.findNextSectionHandler.execute({
+				id,
 			});
 
 			return {

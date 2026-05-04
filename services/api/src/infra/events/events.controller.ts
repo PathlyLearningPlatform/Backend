@@ -1,6 +1,11 @@
 import { Controller, Sse, UseGuards } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { ApiHeader, ApiOkResponse, ApiResponse } from '@nestjs/swagger';
+import {
+	ApiHeader,
+	ApiOkResponse,
+	ApiResponse,
+	ApiTags,
+} from '@nestjs/swagger';
 import { filter, map, Observable } from 'rxjs';
 import { fromEvent } from 'rxjs';
 import { User } from '../auth/decorators';
@@ -9,6 +14,7 @@ import { type UserInfo } from '../auth/types';
 import { DomainEvent } from '@/domain/common';
 import { EventDto } from './dtos';
 
+@ApiTags('events')
 @UseGuards(JwtGuard)
 @Controller({ path: 'events', version: '1' })
 export class EventsController {

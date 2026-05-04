@@ -8,6 +8,8 @@ import {
 	UpdateUnitHandler,
 } from '@/app/units/commands';
 import {
+	FindNextUnitHandler,
+	FindPreviousUnitHandler,
 	FindUnitByIdHandler,
 	FindUnitProgressForUserHandler,
 	ListUnitProgressHandler,
@@ -36,6 +38,20 @@ export const unitHandlersProvider: Provider[] = [
 		provide: DiToken.FIND_UNIT_BY_ID_HANDLER,
 		useFactory(unitRepository: IUnitRepository) {
 			return new FindUnitByIdHandler(unitRepository);
+		},
+		inject: [PostgresUnitRepository],
+	},
+	{
+		provide: DiToken.FIND_PREVIOUS_UNIT_HANDLER,
+		useFactory(unitRepository: IUnitRepository) {
+			return new FindPreviousUnitHandler(unitRepository);
+		},
+		inject: [PostgresUnitRepository],
+	},
+	{
+		provide: DiToken.FIND_NEXT_UNIT_HANDLER,
+		useFactory(unitRepository: IUnitRepository) {
+			return new FindNextUnitHandler(unitRepository);
 		},
 		inject: [PostgresUnitRepository],
 	},
