@@ -1,7 +1,7 @@
 import { DbService } from '@/infra/db/db.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { DbException } from '@infra/common';
-import { and, eq } from 'drizzle-orm';
+import { and, asc, eq } from 'drizzle-orm';
 import type { Order } from '@/domain/common';
 import type { LearningPathId } from '@/domain/learning-paths';
 import type {
@@ -134,7 +134,8 @@ export class PostgresSectionRepository implements ISectionRepository {
 					: undefined,
 			)
 			.limit(limit)
-			.offset(page * limit);
+			.offset(page * limit)
+			.orderBy(asc(sectionsTable.order));
 
 		return sections.map((item) =>
 			Section.fromDataSource({

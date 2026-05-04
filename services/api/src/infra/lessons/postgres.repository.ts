@@ -1,7 +1,7 @@
 import { DbService } from '@/infra/db/db.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { DbException } from '@infra/common';
-import { and, eq } from 'drizzle-orm';
+import { and, asc, eq } from 'drizzle-orm';
 import { Lesson } from '@/domain/lessons/lesson.aggregate';
 import type {
 	ILessonRepository,
@@ -135,7 +135,8 @@ export class PostgresLessonRepository implements ILessonRepository {
 			.from(lessonsTable)
 			.where(unitId ? eq(lessonsTable.unitId, unitId) : undefined)
 			.limit(limit)
-			.offset(page * limit);
+			.offset(page * limit)
+			.orderBy(asc(lessonsTable.order));
 
 		return lessons.map((item) =>
 			Lesson.fromDataSource({

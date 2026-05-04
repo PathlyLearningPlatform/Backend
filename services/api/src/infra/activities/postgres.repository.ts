@@ -1,7 +1,7 @@
 import { DbService } from '@/infra/db/db.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { DbException } from '@infra/common';
-import { and, eq } from 'drizzle-orm';
+import { and, asc, eq } from 'drizzle-orm';
 import type { Order } from '@/domain/common';
 import { Activity } from '@/domain/activities/activity.aggregate';
 import type { LessonId } from '@/domain/lessons';
@@ -84,7 +84,8 @@ export class PostgresActivityRepository implements IActivityRepository {
 			.from(activitiesTable)
 			.where(lessonId ? eq(activitiesTable.lessonId, lessonId) : undefined)
 			.limit(limit)
-			.offset(page * limit);
+			.offset(page * limit)
+			.orderBy(asc(activitiesTable.order));
 
 		return activities.map(Activity.fromDataSource);
 	}

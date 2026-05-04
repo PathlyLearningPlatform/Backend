@@ -1,7 +1,7 @@
 import { DbService } from '@/infra/db/db.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { DbException } from '@infra/common';
-import { and, eq } from 'drizzle-orm';
+import { and, asc, eq } from 'drizzle-orm';
 import type { Order } from '@/domain/common';
 import type { SectionId } from '@/domain/sections';
 import type {
@@ -129,7 +129,8 @@ export class PostgresUnitRepository implements IUnitRepository {
 			.from(unitsTable)
 			.where(sectionId ? eq(unitsTable.sectionId, sectionId) : undefined)
 			.limit(limit)
-			.offset(page * limit);
+			.offset(page * limit)
+			.orderBy(asc(unitsTable.order));
 
 		return units.map((item) =>
 			Unit.fromDataSource({
