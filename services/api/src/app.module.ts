@@ -21,6 +21,7 @@ import { WebhooksModule } from './infra/webhooks/webhooks.module';
 import { ProjectsModule } from './infra/projects/projects.module';
 import { EventsModule } from './infra/events/events.module';
 import { AdminModule } from './infra/admin/admin.module';
+import { ProgressModule } from './infra/progress/progress.module';
 
 @Module({
 	imports: [
@@ -50,6 +51,7 @@ import { AdminModule } from './infra/admin/admin.module';
 		WebhooksModule,
 		ProjectsModule,
 		EventsModule,
+		ProgressModule,
 		AdminModule,
 	],
 	providers: [

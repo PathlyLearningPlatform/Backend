@@ -44,6 +44,7 @@ import {
 } from './dtos';
 import { clientSectionProgressToResponseDto } from './helpers';
 import { listSectionProgressQuerySchema } from './schemas';
+import { FindCurrentSectionHandler } from '@/app/sections/queries/find-current.query';
 
 @ApiTags('progress/sections')
 @UseGuards(JwtGuard)
@@ -59,6 +60,8 @@ export class SectionProgressController {
 		private readonly findSectionProgressForUserHandler: FindSectionProgressForUserHandler,
 		@Inject(DiToken.LIST_SECTION_PROGRESS_HANDLER)
 		private readonly listSectionProgressHandler: ListSectionProgressHandler,
+		@Inject(DiToken.FIND_CURRENT_SECTION_HANDLER)
+		private readonly findCurrentHandler: FindCurrentSectionHandler,
 	) {}
 
 	@ApiQuery({ type: ListSectionProgressQueryDto })
@@ -85,6 +88,38 @@ export class SectionProgressController {
 				sectionProgress: result.map(clientSectionProgressToResponseDto),
 			};
 		} catch (err) {
+			throw new InternalServerErrorException(
+				new HttpErrorDto(ExceptionMessage.INTERNAL_ERROR),
+				{
+					cause: err,
+				},
+			);
+		}
+	}
+
+	@ApiNotFoundResponse({ type: HttpErrorDto })
+	@ApiOkResponse({ type: FindSectionProgressForUserResponseDto })
+	@Get('current')
+	async findCurrent(
+		@Query('learning_path_id', ParseUUIDPipe) learningPathId: string,
+		@User() user: UserInfo,
+	): Promise<FindSectionProgressForUserResponseDto> {
+		try {
+			const result = await this.findCurrentHandler.execute({
+				userId: user.id,
+				learningPathId: learningPathId,
+			});
+
+			return {
+				sectionProgress: clientSectionProgressToResponseDto(result),
+			};
+		} catch (err) {
+			if (err instanceof SectionProgressNotFoundException) {
+				throw new NotFoundException(
+					new HttpErrorDto(ExceptionMessage.SECTION_NOT_STARTED),
+				);
+			}
+
 			throw new InternalServerErrorException(
 				new HttpErrorDto(ExceptionMessage.INTERNAL_ERROR),
 				{

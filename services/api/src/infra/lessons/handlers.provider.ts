@@ -14,6 +14,7 @@ import {
 	ListLessonProgressHandler,
 	ListLessonsHandler,
 } from '@/app/lessons/queries';
+import { FindCurrentLessonHandler } from '@/app/lessons/queries/find-current.query';
 import { AddLessonHandler, ReorderLessonHandler } from '@/app/units/commands';
 import type {
 	ILessonProgressRepository,
@@ -57,6 +58,13 @@ export const lessonHandlersProvider: Provider[] = [
 			return new FindNextLessonHandler(lessonRepository);
 		},
 		inject: [PostgresLessonRepository],
+	},
+	{
+		provide: DiToken.FIND_CURRENT_LESSON_HANDLER,
+		useFactory(lessonProgressRepository: ILessonProgressRepository) {
+			return new FindCurrentLessonHandler(lessonProgressRepository);
+		},
+		inject: [PostgresLessonProgressRepository],
 	},
 	{
 		provide: DiToken.ADD_LESSON_HANDLER,

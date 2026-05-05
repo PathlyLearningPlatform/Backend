@@ -13,7 +13,7 @@ export class LearningPathId extends ValueObject<Props> {
 		return this._props.value.value;
 	}
 
-	static create(value: UUID | string): LearningPathId {
+	static create(value: string | UUID): LearningPathId {
 		return new LearningPathId({
 			value: typeof value === 'string' ? UUID.create(value) : value,
 		});

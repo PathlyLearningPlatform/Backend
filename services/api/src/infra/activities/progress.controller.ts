@@ -25,6 +25,7 @@ import type {
 	FindActivityProgressForUserHandler,
 	ListActivityProgressHandler,
 } from '@/app/activities/queries';
+import { FindCurrentActivityHandler } from '@/app/activities/queries/find-current.query';
 import { ActivityProgressNotFoundException } from '@/app/activities/exceptions';
 import { LessonProgressNotFoundException } from '@/app/lessons/exceptions';
 import { ActivityNotFoundException } from '@/app/common';
@@ -57,6 +58,8 @@ export class ActivityProgressController {
 		private readonly findActivityProgressForUserHandler: FindActivityProgressForUserHandler,
 		@Inject(DiToken.LIST_ACTIVITY_PROGRESS_HANDLER)
 		private readonly listActivityProgressHandler: ListActivityProgressHandler,
+		@Inject(DiToken.FIND_CURRENT_ACTIVITY_HANDLER)
+		private readonly findCurrentHandler: FindCurrentActivityHandler,
 	) {}
 
 	@ApiQuery({ type: ListActivityProgressQueryDto })
@@ -83,6 +86,38 @@ export class ActivityProgressController {
 				activityProgress: result.map(clientActivityProgressToResponseDto),
 			};
 		} catch (err) {
+			throw new InternalServerErrorException(
+				new HttpErrorDto(ExceptionMessage.INTERNAL_ERROR),
+				{
+					cause: err,
+				},
+			);
+		}
+	}
+
+	@ApiNotFoundResponse({ type: HttpErrorDto })
+	@ApiOkResponse({ type: FindActivityProgressForUserResponseDto })
+	@Get('current')
+	async findCurrent(
+		@Query('lesson_id', ParseUUIDPipe) lessonId: string,
+		@User() user: UserInfo,
+	): Promise<FindActivityProgressForUserResponseDto> {
+		try {
+			const result = await this.findCurrentHandler.execute({
+				userId: user.id,
+				lessonId: lessonId,
+			});
+
+			return {
+				activityProgress: clientActivityProgressToResponseDto(result),
+			};
+		} catch (err) {
+			if (err instanceof ActivityProgressNotFoundException) {
+				throw new NotFoundException(
+					new HttpErrorDto(ExceptionMessage.ACTIVITY_NOT_STARTED),
+				);
+			}
+
 			throw new InternalServerErrorException(
 				new HttpErrorDto(ExceptionMessage.INTERNAL_ERROR),
 				{

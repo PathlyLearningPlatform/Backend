@@ -12,6 +12,7 @@ import {
 	ListActivitiesHandler,
 	ListActivityProgressHandler,
 } from '@/app/activities/queries';
+import { FindCurrentActivityHandler } from '@/app/activities/queries/find-current.query';
 import type { IEventBus } from '@/app/common';
 import { ReorderActivityHandler } from '@/app/lessons/commands';
 import type {
@@ -59,6 +60,13 @@ export const activityHandlersProvider: Provider[] = [
 			return new FindNextActivityHandler(activityRepository);
 		},
 		inject: [PostgresActivityRepository],
+	},
+	{
+		provide: DiToken.FIND_CURRENT_ACTIVITY_HANDLER,
+		useFactory(activityProgressRepository: IActivityProgressRepository) {
+			return new FindCurrentActivityHandler(activityProgressRepository);
+		},
+		inject: [PostgresActivityProgressRepository],
 	},
 	{
 		provide: DiToken.LIST_ACTIVITY_PROGRESS_HANDLER,

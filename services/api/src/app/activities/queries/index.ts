@@ -4,3 +4,4 @@ export * from './list.query';
 export * from './list-progress.query';
 export * from './find-next.query';
 export * from './find-previous.query';
+export * from './find-current.query';

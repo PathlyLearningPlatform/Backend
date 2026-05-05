@@ -1,6 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DbException } from '@infra/common';
-import { and, eq } from 'drizzle-orm';
+import {
+	and,
+	asc,
+	desc,
+	eq,
+	getColumns,
+	isNotNull,
+	isNull,
+	ne,
+} from 'drizzle-orm';
 import {
 	type ISectionProgressRepository,
 	type ListSectionProgressOptions,
@@ -9,8 +18,10 @@ import {
 } from '@/domain/sections';
 import type { Db } from '@/infra/db/types';
 import { DbService } from '../db/db.service';
-import { sectionProgressTable } from '../db/schemas';
+import { sectionProgressTable, sectionsTable } from '../db/schemas';
 import { SectionsApiConstraints } from './enums';
+import { LearningPathId } from '@/domain/learning-paths';
+import { UserId } from '@/domain/common';
 
 @Injectable()
 export class PostgresSectionProgressRepository
@@ -20,6 +31,33 @@ export class PostgresSectionProgressRepository
 
 	constructor(@Inject(DbService) readonly dbService: DbService) {
 		this.db = dbService.getDb();
+	}
+
+	async list(dto?: ListSectionProgressOptions): Promise<SectionProgress[]> {
+		const limit = dto?.options?.limit ?? SectionsApiConstraints.DEFAULT_LIMIT;
+		const page = dto?.options?.page ?? SectionsApiConstraints.DEFAULT_PAGE;
+		const userId = dto?.where?.userId;
+		const learningPathId = dto?.where?.learningPathId;
+
+		try {
+			const rows = await this.db
+				.select()
+				.from(sectionProgressTable)
+				.where(
+					and(
+						learningPathId
+							? eq(sectionProgressTable.learningPathId, learningPathId)
+							: undefined,
+						userId ? eq(sectionProgressTable.userId, userId) : undefined,
+					),
+				)
+				.limit(limit)
+				.offset(limit * page);
+
+			return rows.map(SectionProgress.fromDataSource);
+		} catch (err) {
+			throw new DbException('drizzle err', err);
+		}
 	}
 
 	async findById(id: SectionProgressId): Promise<SectionProgress | null> {
@@ -39,6 +77,38 @@ export class PostgresSectionProgressRepository
 			}
 
 			return SectionProgress.fromDataSource(sectionProgress);
+		} catch (err) {
+			throw new DbException('drizzle err', err);
+		}
+	}
+
+	async findCurrent(
+		id: LearningPathId,
+		userId: UserId,
+	): Promise<SectionProgress | null> {
+		try {
+			const result = await this.db
+				.select(getColumns(sectionProgressTable))
+				.from(sectionProgressTable)
+				.innerJoin(
+					sectionsTable,
+					eq(sectionsTable.id, sectionProgressTable.sectionId),
+				)
+				.where(
+					and(
+						eq(sectionProgressTable.learningPathId, id.value),
+						eq(sectionProgressTable.userId, userId.value.value),
+						isNull(sectionProgressTable.completedAt),
+					),
+				)
+				.orderBy(asc(sectionsTable.order))
+				.limit(1);
+
+			if (result.length === 0) {
+				return null;
+			}
+
+			return SectionProgress.fromDataSource(result[0]);
 		} catch (err) {
 			throw new DbException('drizzle err', err);
 		}
@@ -80,33 +150,6 @@ export class PostgresSectionProgressRepository
 				);
 
 			return result.rows.length > 0;
-		} catch (err) {
-			throw new DbException('drizzle err', err);
-		}
-	}
-
-	async list(dto?: ListSectionProgressOptions): Promise<SectionProgress[]> {
-		const limit = dto?.options?.limit ?? SectionsApiConstraints.DEFAULT_LIMIT;
-		const page = dto?.options?.page ?? SectionsApiConstraints.DEFAULT_PAGE;
-		const userId = dto?.where?.userId;
-		const learningPathId = dto?.where?.learningPathId;
-
-		try {
-			const rows = await this.db
-				.select()
-				.from(sectionProgressTable)
-				.where(
-					and(
-						learningPathId
-							? eq(sectionProgressTable.learningPathId, learningPathId)
-							: undefined,
-						userId ? eq(sectionProgressTable.userId, userId) : undefined,
-					),
-				)
-				.limit(limit)
-				.offset(limit * page);
-
-			return rows.map(SectionProgress.fromDataSource);
 		} catch (err) {
 			throw new DbException('drizzle err', err);
 		}

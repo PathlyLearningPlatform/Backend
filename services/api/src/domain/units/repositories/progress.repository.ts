@@ -1,3 +1,5 @@
+import { UserId } from '@/domain/common';
+import { SectionId } from '@/domain/sections';
 import type { UnitProgress } from '../progress.aggregate';
 import type { UnitProgressId } from '../value-objects';
 
@@ -14,6 +16,8 @@ export type ListUnitProgressOptions = {
 
 export interface IUnitProgressRepository {
 	findById(id: UnitProgressId): Promise<UnitProgress | null>;
+
+	findCurrent(id: SectionId, userId: UserId): Promise<UnitProgress | null>;
 
 	save(aggregate: UnitProgress): Promise<void>;
 

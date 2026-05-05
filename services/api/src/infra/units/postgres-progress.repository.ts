@@ -1,15 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DbException } from '@infra/common';
-import { and, eq } from 'drizzle-orm';
+import { and, asc, eq, getColumns, isNull } from 'drizzle-orm';
 import {
 	type IUnitProgressRepository,
 	type ListUnitProgressOptions,
 	UnitProgress,
 	type UnitProgressId,
 } from '@/domain/units';
+import { UserId } from '@/domain/common';
+import { SectionId } from '@/domain/sections';
 import type { Db } from '@/infra/db/types';
 import { DbService } from '../db/db.service';
-import { unitProgressTable } from '../db/schemas';
+import { unitProgressTable, unitsTable } from '../db/schemas';
 import { UnitsApiConstraints } from './enums';
 
 @Injectable()
@@ -37,6 +39,35 @@ export class PostgresUnitProgressRepository implements IUnitProgressRepository {
 			}
 
 			return UnitProgress.fromDataSource(unitProgress);
+		} catch (err) {
+			throw new DbException('drizzle err', err);
+		}
+	}
+
+	async findCurrent(
+		sectionId: SectionId,
+		userId: UserId,
+	): Promise<UnitProgress | null> {
+		try {
+			const result = await this.db
+				.select(getColumns(unitProgressTable))
+				.from(unitProgressTable)
+				.innerJoin(unitsTable, eq(unitsTable.id, unitProgressTable.unitId))
+				.where(
+					and(
+						eq(unitProgressTable.sectionId, sectionId.value),
+						eq(unitProgressTable.userId, userId.value.value),
+						isNull(unitProgressTable.completedAt),
+					),
+				)
+				.orderBy(asc(unitsTable.order))
+				.limit(1);
+
+			if (result.length === 0) {
+				return null;
+			}
+
+			return UnitProgress.fromDataSource(result[0]);
 		} catch (err) {
 			throw new DbException('drizzle err', err);
 		}

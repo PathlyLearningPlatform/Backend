@@ -15,6 +15,7 @@ import {
 	ListUnitProgressHandler,
 	ListUnitsHandler,
 } from '@/app/units/queries';
+import { FindCurrentUnitHandler } from '@/app/units/queries/find-current.query';
 import type { ISectionRepository } from '@/domain/sections/repositories';
 import type { IUnitProgressRepository, IUnitRepository } from '@/domain/units';
 import { InMemoryEventBus } from '@infra/common';
@@ -54,6 +55,13 @@ export const unitHandlersProvider: Provider[] = [
 			return new FindNextUnitHandler(unitRepository);
 		},
 		inject: [PostgresUnitRepository],
+	},
+	{
+		provide: DiToken.FIND_CURRENT_UNIT_HANDLER,
+		useFactory(unitProgressRepository: IUnitProgressRepository) {
+			return new FindCurrentUnitHandler(unitProgressRepository);
+		},
+		inject: [PostgresUnitProgressRepository],
 	},
 	{
 		provide: DiToken.UPDATE_UNIT_HANDLER,

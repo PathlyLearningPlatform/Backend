@@ -1,15 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DbException } from '@infra/common';
-import { and, eq } from 'drizzle-orm';
+import { and, asc, eq, getColumns, isNull } from 'drizzle-orm';
 import {
 	type ILessonProgressRepository,
 	type ListLessonProgressOptions,
 	LessonProgress,
 	type LessonProgressId,
 } from '@/domain/lessons';
+import { UserId } from '@/domain/common';
+import { UnitId } from '@/domain/units';
 import type { Db } from '@/infra/db/types';
 import { DbService } from '../db/db.service';
-import { lessonProgressTable } from '../db/schemas';
+import { lessonProgressTable, lessonsTable } from '../db/schemas';
 import { LessonsApiConstraints } from './enums';
 
 @Injectable()
@@ -39,6 +41,38 @@ export class PostgresLessonProgressRepository
 			}
 
 			return LessonProgress.fromDataSource(lessonProgress);
+		} catch (err) {
+			throw new DbException('drizzle err', err);
+		}
+	}
+
+	async findCurrent(
+		unitId: UnitId,
+		userId: UserId,
+	): Promise<LessonProgress | null> {
+		try {
+			const result = await this.db
+				.select(getColumns(lessonProgressTable))
+				.from(lessonProgressTable)
+				.innerJoin(
+					lessonsTable,
+					eq(lessonsTable.id, lessonProgressTable.lessonId),
+				)
+				.where(
+					and(
+						eq(lessonProgressTable.unitId, unitId.value),
+						eq(lessonProgressTable.userId, userId.value.value),
+						isNull(lessonProgressTable.completedAt),
+					),
+				)
+				.orderBy(asc(lessonsTable.order))
+				.limit(1);
+
+			if (result.length === 0) {
+				return null;
+			}
+
+			return LessonProgress.fromDataSource(result[0]);
 		} catch (err) {
 			throw new DbException('drizzle err', err);
 		}

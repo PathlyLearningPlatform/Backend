@@ -27,6 +27,7 @@ import type {
 	FindUnitProgressForUserHandler,
 	ListUnitProgressHandler,
 } from '@/app/units/queries';
+import { FindCurrentUnitHandler } from '@/app/units/queries/find-current.query';
 import { UnitProgressNotFoundException } from '@/app/units/exceptions';
 import { SectionProgressNotFoundException } from '@/app/sections/exceptions';
 import { UnitNotFoundException } from '@/app/common';
@@ -59,6 +60,8 @@ export class UnitProgressController {
 		private readonly findUnitProgressForUserHandler: FindUnitProgressForUserHandler,
 		@Inject(DiToken.LIST_UNIT_PROGRESS_HANDLER)
 		private readonly listUnitProgressHandler: ListUnitProgressHandler,
+		@Inject(DiToken.FIND_CURRENT_UNIT_HANDLER)
+		private readonly findCurrentHandler: FindCurrentUnitHandler,
 	) {}
 
 	@ApiQuery({ type: ListUnitProgressQueryDto })
@@ -85,6 +88,38 @@ export class UnitProgressController {
 				unitProgress: result.map(clientUnitProgressToResponseDto),
 			};
 		} catch (err) {
+			throw new InternalServerErrorException(
+				new HttpErrorDto(ExceptionMessage.INTERNAL_ERROR),
+				{
+					cause: err,
+				},
+			);
+		}
+	}
+
+	@ApiNotFoundResponse({ type: HttpErrorDto })
+	@ApiOkResponse({ type: FindUnitProgressForUserResponseDto })
+	@Get('current')
+	async findCurrent(
+		@Query('section_id', ParseUUIDPipe) sectionId: string,
+		@User() user: UserInfo,
+	): Promise<FindUnitProgressForUserResponseDto> {
+		try {
+			const result = await this.findCurrentHandler.execute({
+				userId: user.id,
+				sectionId: sectionId,
+			});
+
+			return {
+				unitProgress: clientUnitProgressToResponseDto(result),
+			};
+		} catch (err) {
+			if (err instanceof UnitProgressNotFoundException) {
+				throw new NotFoundException(
+					new HttpErrorDto(ExceptionMessage.UNIT_NOT_STARTED),
+				);
+			}
+
 			throw new InternalServerErrorException(
 				new HttpErrorDto(ExceptionMessage.INTERNAL_ERROR),
 				{

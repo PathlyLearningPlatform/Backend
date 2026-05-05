@@ -31,6 +31,7 @@ import { PostgresSectionProgressRepository } from './postgres-progress.repositor
 import { PostgresLearningPathProgressRepository } from '../learning-paths/postgres-progress.repository';
 import { ILearningPathProgressRepository } from '@/domain/learning-paths';
 import { OnSectionCompletedHandler } from '@/app/sections/events';
+import { FindCurrentSectionHandler } from '@/app/sections/queries/find-current.query';
 
 export const sectionHandlersProvider: Provider[] = [
 	{
@@ -60,6 +61,13 @@ export const sectionHandlersProvider: Provider[] = [
 			return new FindNextSectionHandler(sectionRepository);
 		},
 		inject: [PostgresSectionRepository],
+	},
+	{
+		provide: DiToken.FIND_CURRENT_SECTION_HANDLER,
+		useFactory(sectionProgressRepository: ISectionProgressRepository) {
+			return new FindCurrentSectionHandler(sectionProgressRepository);
+		},
+		inject: [PostgresSectionProgressRepository],
 	},
 	{
 		provide: DiToken.ADD_SECTION_HANDLER,

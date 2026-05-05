@@ -1,3 +1,5 @@
+import { UserId } from '@/domain/common';
+import { LessonId } from '@/domain/lessons';
 import type { ActivityProgress } from '../progress.aggregate';
 import type { ActivityProgressId } from '../value-objects';
 
@@ -14,6 +16,8 @@ export type ListActivityProgressOptions = {
 
 export interface IActivityProgressRepository {
 	findById(id: ActivityProgressId): Promise<ActivityProgress | null>;
+
+	findCurrent(id: LessonId, userId: UserId): Promise<ActivityProgress | null>;
 
 	save(aggregate: ActivityProgress): Promise<void>;
 
