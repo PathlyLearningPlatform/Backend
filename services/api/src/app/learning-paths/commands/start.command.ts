@@ -49,6 +49,7 @@ export class StartLearningPathHandler
 		const id = LearningPathProgressId.create(learningPathId, userId);
 		const learningPathProgress = LearningPathProgress.create(id, {
 			totalSectionCount: learningPath.sectionCount,
+			createdAt: new Date(),
 		});
 
 		await this.learningPathProgressRepository.save(learningPathProgress);

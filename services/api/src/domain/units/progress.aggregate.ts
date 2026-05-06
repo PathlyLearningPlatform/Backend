@@ -1,6 +1,6 @@
 import { AggregateRoot, UserId, UUID } from '../common';
 import { SectionId } from '../sections/value-objects/id.vo';
-import { UnitCompletedEvent } from './events';
+import { UnitCompletedEvent, UnitStartedEvent } from './events';
 import { UnitId, UnitProgressId } from './value-objects';
 
 export type UnitProgressProps = {
@@ -8,6 +8,8 @@ export type UnitProgressProps = {
 	completedAt: Date | null;
 	completedLessonCount: number;
 	totalLessonCount: number;
+	createdAt: Date;
+	updatedAt: Date | null;
 };
 
 export type UnitProgressFromDataSourceProps = {
@@ -17,11 +19,14 @@ export type UnitProgressFromDataSourceProps = {
 	completedAt: Date | null;
 	completedLessonCount: number;
 	totalLessonCount: number;
+	createdAt: Date;
+	updatedAt: Date | null;
 };
 
 export type CreateUnitProgressProps = {
 	sectionId: SectionId;
 	totalLessonCount: number;
+	createdAt: Date;
 };
 
 export class UnitProgress extends AggregateRoot<
@@ -46,6 +51,8 @@ export class UnitProgress extends AggregateRoot<
 			completedAt: props.completedAt,
 			completedLessonCount: props.completedLessonCount,
 			totalLessonCount: props.totalLessonCount,
+			createdAt: props.createdAt,
+			updatedAt: props.updatedAt,
 		});
 	}
 
@@ -53,15 +60,27 @@ export class UnitProgress extends AggregateRoot<
 		id: UnitProgressId,
 		props: CreateUnitProgressProps,
 	): UnitProgress {
-		return new UnitProgress(id, {
+		const progress = new UnitProgress(id, {
 			sectionId: props.sectionId,
 			completedAt: null,
 			completedLessonCount: 0,
 			totalLessonCount: props.totalLessonCount,
+			createdAt: props.createdAt,
+			updatedAt: null,
 		});
+
+		progress.addEvent(
+			new UnitStartedEvent(progress.userId.toString(), props.createdAt, {
+				unitId: progress.unitId.value,
+			}),
+		);
+
+		return progress;
 	}
 
 	completeLesson(now: Date) {
+		this._props.updatedAt = now;
+
 		if (this._props.completedAt !== null) {
 			return;
 		}
@@ -94,6 +113,14 @@ export class UnitProgress extends AggregateRoot<
 
 	get completedAt(): Date | null {
 		return this._props.completedAt;
+	}
+
+	get createdAt(): Date {
+		return this._props.createdAt;
+	}
+
+	get updatedAt(): Date | null {
+		return this._props.updatedAt;
 	}
 
 	get totalLessonCount(): number {

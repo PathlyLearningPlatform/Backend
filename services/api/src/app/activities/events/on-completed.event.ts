@@ -16,11 +16,11 @@ export class OnActivityCompletedHandler
 	) {}
 
 	async handle(event: ActivityCompletedEvent): Promise<void> {
+		const lessonId = LessonId.create(event.payload.lessonId);
+		const userId = UserId.create(UUID.create(event.userId));
+
 		const lessonProgress = await this.lessonProgressRepository.findById(
-			LessonProgressId.create(
-				LessonId.create(event.payload.lessonId),
-				UserId.create(UUID.create(event.userId)),
-			),
+			LessonProgressId.create(lessonId, userId),
 		);
 
 		if (!lessonProgress) {
@@ -30,8 +30,6 @@ export class OnActivityCompletedHandler
 		lessonProgress.completeActivity(event.occuredAt);
 
 		await this.lessonProgressRepository.save(lessonProgress);
-
-		const events = lessonProgress.pullEvents();
-		await this.eventBus.publish(events);
+		await this.eventBus.publish(lessonProgress.pullEvents());
 	}
 }

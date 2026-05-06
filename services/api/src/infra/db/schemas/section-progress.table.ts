@@ -7,6 +7,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { learningPathsTable } from './learning-paths.table';
 import { sectionsTable } from './sections.table';
+import { createdAt, updatedAt } from './helpers';
 
 export const sectionProgressTable = pgTable(
 	'section_progress',
@@ -21,6 +22,8 @@ export const sectionProgressTable = pgTable(
 		completedAt: timestamp('completed_at'),
 		completedUnitCount: integer('completed_unit_count').notNull().default(0),
 		totalUnitCount: integer('total_unit_count').notNull(),
+		createdAt,
+		updatedAt,
 	},
 	(t) => [primaryKey({ columns: [t.sectionId, t.userId] })],
 );

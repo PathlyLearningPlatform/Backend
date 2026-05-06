@@ -1,17 +1,26 @@
 import type { IEventBus, IEventHandler } from '@/app/common';
-import { UserId, UUID } from '@/domain/common';
+import { Order, UserId, UUID } from '@/domain/common';
 import {
 	type ILearningPathProgressRepository,
 	LearningPathId,
 	LearningPathProgressId,
 } from '@/domain/learning-paths';
-import type { SectionCompletedEvent } from '@/domain/sections';
+import {
+	SectionId,
+	SectionProgress,
+	SectionProgressId,
+	type ISectionProgressRepository,
+	type ISectionRepository,
+	type SectionCompletedEvent,
+} from '@/domain/sections';
 
 export class OnSectionCompletedHandler
 	implements IEventHandler<SectionCompletedEvent>
 {
 	constructor(
 		private readonly learningPathProgressRepository: ILearningPathProgressRepository,
+		private readonly sectionProgressRepository: ISectionProgressRepository,
+		private readonly sectionRepository: ISectionRepository,
 		private readonly eventBus: IEventBus,
 	) {}
 
@@ -49,8 +58,39 @@ export class OnSectionCompletedHandler
 		learningPathProgress.completeSection(event.occuredAt);
 
 		await this.learningPathProgressRepository.save(learningPathProgress);
+		await this.eventBus.publish(learningPathProgress.pullEvents());
 
-		const events = learningPathProgress.pullEvents();
-		await this.eventBus.publish(events);
+		const sectionId = SectionId.create(event.payload.sectionId);
+		const section = await this.sectionRepository.findById(sectionId);
+
+		if (!section) {
+			return;
+		}
+
+		const nextSection =
+			await this.sectionRepository.findByLearningPathIdAndOrder(
+				learningPathId,
+				Order.create(section.order.value + 1),
+			);
+
+		if (!nextSection) {
+			console.log(
+				`Section ${section.id.value} is the last in learning path ${learningPathId.value}`,
+			);
+			return;
+		}
+
+		const nextSectionProgressId = SectionProgressId.create(
+			nextSection.id,
+			userId,
+		);
+		const nextSectionProgress = SectionProgress.create(nextSectionProgressId, {
+			createdAt: event.occuredAt,
+			totalUnitCount: nextSection.unitCount,
+			learningPathId: learningPathId,
+		});
+
+		await this.sectionProgressRepository.save(nextSectionProgress);
+		await this.eventBus.publish(nextSectionProgress.pullEvents());
 	}
 }

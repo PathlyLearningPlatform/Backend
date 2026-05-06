@@ -89,12 +89,15 @@ export class PostgresLessonProgressRepository
 					completedAt: aggregate.completedAt,
 					completedActivityCount: aggregate.completedActivityCount,
 					totalActivityCount: aggregate.totalActivityCount,
+					createdAt: aggregate.createdAt,
+					updatedAt: aggregate.updatedAt,
 				})
 				.onConflictDoUpdate({
 					target: [lessonProgressTable.lessonId, lessonProgressTable.userId],
 					set: {
 						completedAt: aggregate.completedAt,
 						completedActivityCount: aggregate.completedActivityCount,
+						updatedAt: aggregate.updatedAt,
 					},
 				});
 		} catch (err) {

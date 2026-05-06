@@ -63,4 +63,17 @@ export class ActivityProgressResponseDto {
 
 	@ApiProperty({ nullable: true })
 	declare completedAt: string | null;
+
+	@ApiProperty({
+		type: 'string',
+		format: 'date-time',
+	})
+	declare createdAt: string;
+
+	@ApiProperty({
+		type: 'string',
+		format: 'date-time',
+		nullable: true,
+	})
+	declare updatedAt: string | null;
 }

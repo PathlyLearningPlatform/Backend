@@ -16,4 +16,6 @@ export interface LessonProgressDto {
 	completedAt: Date | null;
 	totalActivityCount: number;
 	completedActivityCount: number;
+	createdAt: Date;
+	updatedAt: Date | null;
 }

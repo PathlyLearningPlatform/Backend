@@ -59,6 +59,7 @@ export class CompleteActivityHandler
 		const id = ActivityProgressId.create(activityId, userId);
 		const activityProgress = ActivityProgress.create(id, {
 			lessonId: activity.lessonId,
+			createdAt: new Date(),
 		});
 
 		activityProgress.complete(new Date());

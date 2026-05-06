@@ -125,12 +125,15 @@ export class PostgresSectionProgressRepository
 					completedAt: aggregate.completedAt,
 					completedUnitCount: aggregate.completedUnitCount,
 					totalUnitCount: aggregate.totalUnitCount,
+					createdAt: aggregate.createdAt,
+					updatedAt: aggregate.updatedAt,
 				})
 				.onConflictDoUpdate({
 					target: [sectionProgressTable.sectionId, sectionProgressTable.userId],
 					set: {
 						completedAt: aggregate.completedAt,
 						completedUnitCount: aggregate.completedUnitCount,
+						updatedAt: aggregate.updatedAt,
 					},
 				});
 		} catch (err) {

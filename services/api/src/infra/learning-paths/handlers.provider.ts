@@ -111,10 +111,4 @@ export const learningPathHandlersProvider: Provider[] = [
 		},
 		inject: [PostgresLearningPathProgressRepository],
 	},
-	{
-		provide: DiToken.ON_LEARNING_PATH_COMPLETED_HANDLER,
-		useFactory() {
-			return new OnLearningPathCompletedHandler();
-		},
-	},
 ];

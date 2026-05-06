@@ -6,6 +6,8 @@ import { ActivityId, ActivityProgressId } from './value-objects';
 export type ActivityProgressProps = {
 	lessonId: LessonId;
 	completedAt: Date | null;
+	createdAt: Date;
+	updatedAt: Date | null;
 };
 
 export type ActivityProgressFromDataSourceProps = {
@@ -13,10 +15,13 @@ export type ActivityProgressFromDataSourceProps = {
 	lessonId: string;
 	userId: string;
 	completedAt: Date | null;
+	createdAt: Date;
+	updatedAt: Date | null;
 };
 
 export type CreateActivityProgressProps = {
 	lessonId: LessonId;
+	createdAt: Date;
 };
 
 export class ActivityProgress extends AggregateRoot<
@@ -41,6 +46,8 @@ export class ActivityProgress extends AggregateRoot<
 		return new ActivityProgress(id, {
 			lessonId,
 			completedAt: props.completedAt,
+			createdAt: props.createdAt,
+			updatedAt: props.updatedAt,
 		});
 	}
 
@@ -51,10 +58,14 @@ export class ActivityProgress extends AggregateRoot<
 		return new ActivityProgress(id, {
 			lessonId: props.lessonId,
 			completedAt: null,
+			createdAt: props.createdAt,
+			updatedAt: null,
 		});
 	}
 
 	complete(now: Date) {
+		this._props.updatedAt = now;
+
 		if (this._props.completedAt !== null) {
 			return;
 		}
@@ -83,5 +94,13 @@ export class ActivityProgress extends AggregateRoot<
 
 	get completedAt(): Date | null {
 		return this._props.completedAt;
+	}
+
+	get createdAt(): Date {
+		return this._props.createdAt;
+	}
+
+	get updatedAt(): Date | null {
+		return this._props.updatedAt;
 	}
 }

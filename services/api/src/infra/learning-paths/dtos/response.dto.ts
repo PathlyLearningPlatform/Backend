@@ -53,4 +53,17 @@ export class LearningPathProgressResponseDto {
 
 	@ApiProperty()
 	completedSectionCount: number;
+
+	@ApiProperty({
+		type: 'string',
+		format: 'date-time',
+	})
+	createdAt: string;
+
+	@ApiProperty({
+		type: 'string',
+		format: 'date-time',
+		nullable: true,
+	})
+	updatedAt: string | null;
 }

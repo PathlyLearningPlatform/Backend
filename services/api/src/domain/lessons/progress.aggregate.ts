@@ -1,6 +1,6 @@
 import { AggregateRoot, UserId, UUID } from '../common';
 import { UnitId } from '../units/value-objects/id.vo';
-import { LessonCompletedEvent } from './events';
+import { LessonCompletedEvent, LessonStartedEvent } from './events';
 import { LessonId, LessonProgressId } from './value-objects';
 
 export type LessonProgressProps = {
@@ -8,6 +8,8 @@ export type LessonProgressProps = {
 	completedAt: Date | null;
 	completedActivityCount: number;
 	totalActivityCount: number;
+	createdAt: Date;
+	updatedAt: Date | null;
 };
 
 export type LessonProgressFromDataSourceProps = {
@@ -17,11 +19,14 @@ export type LessonProgressFromDataSourceProps = {
 	completedAt: Date | null;
 	completedActivityCount: number;
 	totalActivityCount: number;
+	createdAt: Date;
+	updatedAt: Date | null;
 };
 
 export type CreateLessonProgressProps = {
 	unitId: UnitId;
 	totalActivityCount: number;
+	createdAt: Date;
 };
 
 export class LessonProgress extends AggregateRoot<
@@ -48,6 +53,8 @@ export class LessonProgress extends AggregateRoot<
 			completedAt: props.completedAt,
 			completedActivityCount: props.completedActivityCount,
 			totalActivityCount: props.totalActivityCount,
+			createdAt: props.createdAt,
+			updatedAt: props.updatedAt,
 		});
 	}
 
@@ -55,15 +62,27 @@ export class LessonProgress extends AggregateRoot<
 		id: LessonProgressId,
 		props: CreateLessonProgressProps,
 	): LessonProgress {
-		return new LessonProgress(id, {
+		const progress = new LessonProgress(id, {
 			unitId: props.unitId,
 			completedAt: null,
 			completedActivityCount: 0,
 			totalActivityCount: props.totalActivityCount,
+			createdAt: props.createdAt,
+			updatedAt: null,
 		});
+
+		progress.addEvent(
+			new LessonStartedEvent(progress.userId.toString(), props.createdAt, {
+				lessonId: progress.lessonId.value,
+			}),
+		);
+
+		return progress;
 	}
 
 	completeActivity(now: Date) {
+		this._props.updatedAt = now;
+
 		if (this._props.completedAt !== null) {
 			return;
 		}
@@ -98,6 +117,14 @@ export class LessonProgress extends AggregateRoot<
 
 	get completedAt(): Date | null {
 		return this._props.completedAt;
+	}
+
+	get createdAt(): Date {
+		return this._props.createdAt;
+	}
+
+	get updatedAt(): Date | null {
+		return this._props.updatedAt;
 	}
 
 	get totalActivityCount(): number {

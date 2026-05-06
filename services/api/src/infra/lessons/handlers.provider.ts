@@ -146,14 +146,4 @@ export const lessonHandlersProvider: Provider[] = [
 		},
 		inject: [PostgresLessonProgressRepository],
 	},
-	{
-		provide: DiToken.ON_LESSON_COMPLETED_HANDLER,
-		useFactory(
-			unitProgressRepository: PostgresUnitProgressRepository,
-			eventBus: InMemoryEventBus,
-		) {
-			return new OnLessonCompletedHandler(unitProgressRepository, eventBus);
-		},
-		inject: [PostgresUnitProgressRepository, InMemoryEventBus],
-	},
 ];

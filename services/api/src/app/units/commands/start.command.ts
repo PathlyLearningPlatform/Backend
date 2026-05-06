@@ -77,6 +77,7 @@ export class StartUnitHandler
 		const unitProgress = UnitProgress.create(id, {
 			sectionId: unit.sectionId,
 			totalLessonCount: unit.lessonCount,
+			createdAt: new Date(),
 		});
 
 		await this.unitProgressRepository.save(unitProgress);

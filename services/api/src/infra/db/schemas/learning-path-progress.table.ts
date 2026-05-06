@@ -6,6 +6,7 @@ import {
 	primaryKey,
 } from 'drizzle-orm/pg-core';
 import { learningPathsTable } from './learning-paths.table';
+import { createdAt, updatedAt } from './helpers';
 
 export const learningPathProgressTable = pgTable(
 	'learning_path_progress',
@@ -19,6 +20,8 @@ export const learningPathProgressTable = pgTable(
 			.notNull()
 			.default(0),
 		totalSectionCount: integer('total_section_count').notNull(),
+		createdAt,
+		updatedAt,
 	},
 	(t) => [primaryKey({ columns: [t.learningPathId, t.userId] })],
 );

@@ -1,6 +1,7 @@
 import { pgTable, primaryKey, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { activitiesTable } from './activities.table';
 import { lessonsTable } from './lessons.table';
+import { createdAt, updatedAt } from './helpers';
 
 export const activityProgressTable = pgTable(
 	'activity_progress',
@@ -13,6 +14,8 @@ export const activityProgressTable = pgTable(
 			.references(() => lessonsTable.id),
 		userId: uuid('user_id').notNull(),
 		completedAt: timestamp('completed_at'),
+		createdAt,
+		updatedAt,
 	},
 	(t) => [primaryKey({ columns: [t.activityId, t.userId] })],
 );

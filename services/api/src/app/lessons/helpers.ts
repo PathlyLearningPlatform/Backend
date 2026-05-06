@@ -24,5 +24,7 @@ export function progressAggregateToDto(
 		completedAt: aggregate.completedAt,
 		totalActivityCount: aggregate.totalActivityCount,
 		completedActivityCount: aggregate.completedActivityCount,
+		createdAt: aggregate.createdAt,
+		updatedAt: aggregate.updatedAt,
 	};
 }

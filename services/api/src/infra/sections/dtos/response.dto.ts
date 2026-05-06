@@ -67,4 +67,17 @@ export class SectionProgressResponseDto {
 
 	@ApiProperty()
 	completedUnitCount: number;
+
+	@ApiProperty({
+		type: 'string',
+		format: 'date-time',
+	})
+	createdAt: string;
+
+	@ApiProperty({
+		type: 'string',
+		format: 'date-time',
+		nullable: true,
+	})
+	updatedAt: string | null;
 }

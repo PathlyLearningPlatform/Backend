@@ -71,6 +71,7 @@ export class StartLessonHandler
 		const lessonProgress = LessonProgress.create(id, {
 			unitId: lesson.unitId,
 			totalActivityCount: lesson.activityCount,
+			createdAt: new Date(),
 		});
 
 		await this.lessonProgressRepository.save(lessonProgress);

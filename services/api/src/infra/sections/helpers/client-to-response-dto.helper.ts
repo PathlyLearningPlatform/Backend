@@ -26,5 +26,7 @@ export function clientSectionProgressToResponseDto(
 		completedAt: progress.completedAt?.toISOString() ?? null,
 		totalUnitCount: progress.totalUnitCount,
 		completedUnitCount: progress.completedUnitCount,
+		createdAt: progress.createdAt.toISOString(),
+		updatedAt: progress.updatedAt ? progress.updatedAt.toISOString() : null,
 	};
 }

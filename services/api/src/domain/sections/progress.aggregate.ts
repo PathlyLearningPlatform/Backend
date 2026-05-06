@@ -1,6 +1,6 @@
 import { AggregateRoot, UserId, UUID } from '../common';
 import { LearningPathId } from '../learning-paths/value-objects';
-import { SectionCompletedEvent } from './events';
+import { SectionCompletedEvent, SectionStartedEvent } from './events';
 import { SectionId, SectionProgressId } from './value-objects';
 
 export type SectionProgressProps = {
@@ -8,6 +8,8 @@ export type SectionProgressProps = {
 	completedAt: Date | null;
 	completedUnitCount: number;
 	totalUnitCount: number;
+	createdAt: Date;
+	updatedAt: Date | null;
 };
 
 export type SectionProgressFromDataSourceProps = {
@@ -17,11 +19,14 @@ export type SectionProgressFromDataSourceProps = {
 	completedAt: Date | null;
 	completedUnitCount: number;
 	totalUnitCount: number;
+	createdAt: Date;
+	updatedAt: Date | null;
 };
 
 export type CreateSectionProgressProps = {
 	learningPathId: LearningPathId;
 	totalUnitCount: number;
+	createdAt: Date;
 };
 
 export class SectionProgress extends AggregateRoot<
@@ -50,6 +55,8 @@ export class SectionProgress extends AggregateRoot<
 			completedAt: props.completedAt,
 			completedUnitCount: props.completedUnitCount,
 			totalUnitCount: props.totalUnitCount,
+			createdAt: props.createdAt,
+			updatedAt: props.updatedAt,
 		});
 	}
 
@@ -57,15 +64,27 @@ export class SectionProgress extends AggregateRoot<
 		id: SectionProgressId,
 		props: CreateSectionProgressProps,
 	): SectionProgress {
-		return new SectionProgress(id, {
+		const progress = new SectionProgress(id, {
 			learningPathId: props.learningPathId,
 			completedAt: null,
 			completedUnitCount: 0,
 			totalUnitCount: props.totalUnitCount,
+			createdAt: props.createdAt,
+			updatedAt: null,
 		});
+
+		progress.addEvent(
+			new SectionStartedEvent(progress.userId.toString(), props.createdAt, {
+				sectionId: progress.sectionId.value,
+			}),
+		);
+
+		return progress;
 	}
 
 	completeUnit(now: Date) {
+		this._props.updatedAt = now;
+
 		if (this._props.completedAt !== null) {
 			return;
 		}
@@ -98,6 +117,14 @@ export class SectionProgress extends AggregateRoot<
 
 	get completedAt(): Date | null {
 		return this._props.completedAt;
+	}
+
+	get createdAt(): Date {
+		return this._props.createdAt;
+	}
+
+	get updatedAt(): Date | null {
+		return this._props.updatedAt;
 	}
 
 	get totalUnitCount(): number {

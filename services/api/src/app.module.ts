@@ -2,7 +2,11 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { HttpExceptionFilter, HttpRequestInterceptor } from '@infra/common';
+import {
+	HttpExceptionFilter,
+	HttpRequestInterceptor,
+	InMemoryEventBus,
+} from '@infra/common';
 import { AppService } from './app.service';
 import { ActivitiesModule } from './infra/activities/activities.module';
 import { validateConfig } from './infra/config';
@@ -22,6 +26,7 @@ import { ProjectsModule } from './infra/projects/projects.module';
 import { EventsModule } from './infra/events/events.module';
 import { AdminModule } from './infra/admin/admin.module';
 import { ProgressModule } from './infra/progress/progress.module';
+import { eventHandlerProviders } from './infra/event-handlers.provider';
 
 @Module({
 	imports: [
@@ -63,6 +68,8 @@ import { ProgressModule } from './infra/progress/progress.module';
 			provide: APP_FILTER,
 			useClass: HttpExceptionFilter,
 		},
+		InMemoryEventBus,
+		...eventHandlerProviders,
 		AppService,
 	],
 	controllers: [AppController],

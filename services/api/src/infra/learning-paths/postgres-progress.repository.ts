@@ -59,6 +59,8 @@ export class PostgresLearningPathProgressRepository
 					completedAt: aggregate.completedAt,
 					completedSectionCount: aggregate.completedSectionCount,
 					totalSectionCount: aggregate.totalSectionCount,
+					createdAt: aggregate.createdAt,
+					updatedAt: aggregate.updatedAt,
 				})
 				.onConflictDoUpdate({
 					target: [
@@ -68,6 +70,7 @@ export class PostgresLearningPathProgressRepository
 					set: {
 						completedAt: aggregate.completedAt,
 						completedSectionCount: aggregate.completedSectionCount,
+						updatedAt: aggregate.updatedAt,
 					},
 				});
 		} catch (err) {

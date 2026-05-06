@@ -87,6 +87,8 @@ export class PostgresActivityProgressRepository
 					lessonId: aggregate.lessonId.value,
 					userId: aggregate.userId.value.value,
 					completedAt: aggregate.completedAt,
+					createdAt: aggregate.createdAt,
+					updatedAt: aggregate.updatedAt,
 				})
 				.onConflictDoUpdate({
 					target: [
@@ -95,6 +97,7 @@ export class PostgresActivityProgressRepository
 					],
 					set: {
 						completedAt: aggregate.completedAt,
+						updatedAt: aggregate.updatedAt,
 					},
 				});
 		} catch (err) {

@@ -84,6 +84,7 @@ export class StartSectionHandler
 		const sectionProgress = SectionProgress.create(id, {
 			learningPathId: section.learningPathId,
 			totalUnitCount: section.unitCount,
+			createdAt: new Date(),
 		});
 
 		await this.sectionProgressRepository.save(sectionProgress);

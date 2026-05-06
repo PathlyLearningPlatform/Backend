@@ -29,5 +29,7 @@ export function clientLearningPathProgressToResponseDto(
 		learningPathId: progress.learningPathId,
 		totalSectionCount: progress.totalSectionCount,
 		userId: progress.userId,
+		createdAt: progress.createdAt.toISOString(),
+		updatedAt: progress.updatedAt ? progress.updatedAt.toISOString() : null,
 	};
 }

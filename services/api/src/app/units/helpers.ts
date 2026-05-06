@@ -24,5 +24,7 @@ export function progressAggregateToDto(
 		completedAt: aggregate.completedAt,
 		totalLessonCount: aggregate.totalLessonCount,
 		completedLessonCount: aggregate.completedLessonCount,
+		createdAt: aggregate.createdAt,
+		updatedAt: aggregate.updatedAt,
 	};
 }

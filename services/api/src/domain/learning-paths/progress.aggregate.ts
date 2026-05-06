@@ -1,11 +1,13 @@
 import { AggregateRoot, UserId, UUID } from '../common';
-import { LearningPathCompletedEvent } from './events';
+import { LearningPathCompletedEvent, LearningPathStartedEvent } from './events';
 import { LearningPathId, LearningPathProgressId } from './value-objects';
 
 export type LearningPathProgressProps = {
 	completedAt: Date | null;
 	completedSectionCount: number;
 	totalSectionCount: number;
+	createdAt: Date;
+	updatedAt: Date | null;
 };
 
 export type LearningPathProgressFromDataSourceProps = {
@@ -14,10 +16,13 @@ export type LearningPathProgressFromDataSourceProps = {
 	completedAt: Date | null;
 	completedSectionCount: number;
 	totalSectionCount: number;
+	createdAt: Date;
+	updatedAt: Date | null;
 };
 
 export type CreateLearningPathProgressProps = {
 	totalSectionCount: number;
+	createdAt: Date;
 };
 
 export class LearningPathProgress extends AggregateRoot<
@@ -47,6 +52,8 @@ export class LearningPathProgress extends AggregateRoot<
 			completedAt: props.completedAt,
 			completedSectionCount: props.completedSectionCount,
 			totalSectionCount: props.totalSectionCount,
+			createdAt: props.createdAt,
+			updatedAt: props.updatedAt,
 		});
 	}
 
@@ -54,14 +61,30 @@ export class LearningPathProgress extends AggregateRoot<
 		id: LearningPathProgressId,
 		props: CreateLearningPathProgressProps,
 	): LearningPathProgress {
-		return new LearningPathProgress(id, {
+		const progress = new LearningPathProgress(id, {
 			completedAt: null,
 			completedSectionCount: 0,
 			totalSectionCount: props.totalSectionCount,
+			createdAt: props.createdAt,
+			updatedAt: null,
 		});
+
+		progress.addEvent(
+			new LearningPathStartedEvent(
+				progress.userId.toString(),
+				props.createdAt,
+				{
+					learningPathId: progress.learningPathId.value,
+				},
+			),
+		);
+
+		return progress;
 	}
 
 	completeSection(now: Date) {
+		this._props.updatedAt = now;
+
 		if (this._props.completedAt !== null) {
 			return;
 		}
@@ -89,6 +112,14 @@ export class LearningPathProgress extends AggregateRoot<
 
 	get completedAt(): Date | null {
 		return this._props.completedAt;
+	}
+
+	get createdAt(): Date {
+		return this._props.createdAt;
+	}
+
+	get updatedAt(): Date | null {
+		return this._props.updatedAt;
 	}
 
 	get totalSectionCount(): number {

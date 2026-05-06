@@ -26,5 +26,7 @@ export function clientLessonProgressToResponseDto(
 		completedAt: progress.completedAt?.toISOString() ?? null,
 		totalActivityCount: progress.totalActivityCount,
 		completedActivityCount: progress.completedActivityCount,
+		createdAt: progress.createdAt.toISOString(),
+		updatedAt: progress.updatedAt ? progress.updatedAt.toISOString() : null,
 	};
 }

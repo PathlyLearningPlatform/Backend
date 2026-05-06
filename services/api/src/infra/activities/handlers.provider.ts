@@ -134,17 +134,4 @@ export const activityHandlersProvider: Provider[] = [
 		},
 		inject: [PostgresActivityProgressRepository],
 	},
-	// ──────────────────────────────────────────────
-	// Events
-	// ──────────────────────────────────────────────
-	{
-		provide: DiToken.ON_ACTIVITY_COMPLETED_HANDLER,
-		useFactory(
-			lessonProgressRepository: PostgresLessonProgressRepository,
-			eventBus: InMemoryEventBus,
-		) {
-			return new OnActivityCompletedHandler(lessonProgressRepository, eventBus);
-		},
-		inject: [PostgresLessonProgressRepository, InMemoryEventBus],
-	},
 ];

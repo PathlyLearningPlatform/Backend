@@ -143,14 +143,4 @@ export const unitHandlersProvider: Provider[] = [
 		},
 		inject: [PostgresUnitProgressRepository],
 	},
-	{
-		provide: DiToken.ON_UNIT_COMPLETED_HANDLER,
-		useFactory(
-			sectionProgressRepository: PostgresSectionProgressRepository,
-			eventBus: InMemoryEventBus,
-		) {
-			return new OnUnitCompletedHandler(sectionProgressRepository, eventBus);
-		},
-		inject: [PostgresSectionProgressRepository, InMemoryEventBus],
-	},
 ];

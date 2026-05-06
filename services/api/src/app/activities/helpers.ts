@@ -22,5 +22,7 @@ export function progressAggregateToDto(
 		lessonId: aggregate.lessonId.value,
 		userId: aggregate.userId.toString(),
 		completedAt: aggregate.completedAt,
+		createdAt: aggregate.createdAt,
+		updatedAt: aggregate.updatedAt,
 	};
 }

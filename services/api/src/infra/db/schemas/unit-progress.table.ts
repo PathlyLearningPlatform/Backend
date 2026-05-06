@@ -7,6 +7,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sectionsTable } from './sections.table';
 import { unitsTable } from './units.table';
+import { createdAt, updatedAt } from './helpers';
 
 export const unitProgressTable = pgTable(
 	'unit_progress',
@@ -23,6 +24,8 @@ export const unitProgressTable = pgTable(
 			.notNull()
 			.default(0),
 		totalLessonCount: integer('total_lesson_count').notNull(),
+		createdAt,
+		updatedAt,
 	},
 	(t) => [primaryKey({ columns: [t.unitId, t.userId] })],
 );

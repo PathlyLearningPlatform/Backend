@@ -24,5 +24,7 @@ export function clientUnitProgressToResponseDto(
 		completedAt: progress.completedAt?.toISOString() ?? null,
 		totalLessonCount: progress.totalLessonCount,
 		completedLessonCount: progress.completedLessonCount,
+		createdAt: progress.createdAt.toISOString(),
+		updatedAt: progress.updatedAt ? progress.updatedAt.toISOString() : null,
 	};
 }

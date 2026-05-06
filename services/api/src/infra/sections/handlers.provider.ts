@@ -155,17 +155,4 @@ export const sectionHandlersProvider: Provider[] = [
 		},
 		inject: [PostgresSectionProgressRepository],
 	},
-	{
-		provide: DiToken.ON_SECTION_COMPLETED_HANDLER,
-		useFactory(
-			learningPathProgressRepository: PostgresLearningPathProgressRepository,
-			eventBus: InMemoryEventBus,
-		) {
-			return new OnSectionCompletedHandler(
-				learningPathProgressRepository,
-				eventBus,
-			);
-		},
-		inject: [PostgresLearningPathProgressRepository, InMemoryEventBus],
-	},
 ];

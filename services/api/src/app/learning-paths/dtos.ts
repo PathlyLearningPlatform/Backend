@@ -13,4 +13,6 @@ export interface LearningPathProgressDto {
 	totalSectionCount: number;
 	completedSectionCount: number;
 	completedAt: Date | null;
+	createdAt: Date;
+	updatedAt: Date | null;
 }

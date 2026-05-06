@@ -16,4 +16,6 @@ export interface SectionProgressDto {
 	completedUnitCount: number;
 	totalUnitCount: number;
 	completedAt: Date | null;
+	createdAt: Date;
+	updatedAt: Date | null;
 }

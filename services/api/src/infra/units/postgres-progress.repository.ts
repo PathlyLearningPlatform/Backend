@@ -84,12 +84,15 @@ export class PostgresUnitProgressRepository implements IUnitProgressRepository {
 					completedAt: aggregate.completedAt,
 					completedLessonCount: aggregate.completedLessonCount,
 					totalLessonCount: aggregate.totalLessonCount,
+					createdAt: aggregate.createdAt,
+					updatedAt: aggregate.updatedAt,
 				})
 				.onConflictDoUpdate({
 					target: [unitProgressTable.unitId, unitProgressTable.userId],
 					set: {
 						completedAt: aggregate.completedAt,
 						completedLessonCount: aggregate.completedLessonCount,
+						updatedAt: aggregate.updatedAt,
 					},
 				});
 		} catch (err) {
