@@ -89,7 +89,13 @@ export class SectionsController {
 	): Promise<ListSectionsResponseDto> {
 		try {
 			const result = await this.listSectionsHandler.execute({
-				options: query,
+				options: {
+					limit: query.limit,
+					page: query.page,
+				},
+				where: {
+					learningPathId: query.learningPathId,
+				},
 			});
 
 			return {

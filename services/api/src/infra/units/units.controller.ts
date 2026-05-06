@@ -86,7 +86,13 @@ export class UnitsController {
 	): Promise<ListUnitsResponseDto> {
 		try {
 			const result = await this.listUnitsHandler.execute({
-				options: query,
+				options: {
+					limit: query.limit,
+					page: query.page,
+				},
+				where: {
+					sectionId: query.sectionId,
+				},
 			});
 
 			return {

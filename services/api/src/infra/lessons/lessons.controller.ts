@@ -86,7 +86,13 @@ export class LessonsController {
 	): Promise<ListLessonsResponseDto> {
 		try {
 			const result = await this.listLessonsHandler.execute({
-				options: query,
+				options: {
+					limit: query.limit,
+					page: query.page,
+				},
+				where: {
+					unitId: query.unitId,
+				},
 			});
 
 			return {
