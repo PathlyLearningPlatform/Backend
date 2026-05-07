@@ -1,4 +1,4 @@
-import { ICommandHandler } from '@/app/common';
+import { ICommandHandler, IEventBus } from '@/app/common';
 import {
 	IExerciseProgressRepository,
 	IExerciseSubmissionRepository,
@@ -35,6 +35,7 @@ export class UpdateExerciseSubmissionHandler
 	constructor(
 		private readonly exerciseSubmissionRepository: IExerciseSubmissionRepository,
 		private readonly exerciseProgressRepository: IExerciseProgressRepository,
+		private readonly eventBus: IEventBus,
 	) {}
 
 	async execute(
@@ -78,6 +79,7 @@ export class UpdateExerciseSubmissionHandler
 
 		await this.exerciseSubmissionRepository.save(submission);
 		await this.exerciseProgressRepository.save(progress);
+		await this.eventBus.publish(progress.pullEvents());
 
 		return submissionAggregateToDto(submission);
 	}

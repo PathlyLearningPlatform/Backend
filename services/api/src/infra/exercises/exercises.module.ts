@@ -12,6 +12,7 @@ import {
 	PostgresExerciseProgressRepository,
 	PostgresExerciseSubmissionRepository,
 } from './repositories';
+import { InMemoryEventBus } from '../common';
 
 @Module({
 	imports: [DbModule, AuthModule],
@@ -25,6 +26,7 @@ import {
 		PostgresExerciseRepository,
 		PostgresExerciseProgressRepository,
 		PostgresExerciseSubmissionRepository,
+		InMemoryEventBus,
 	],
 	exports: [
 		...exerciseHandlersProvider,

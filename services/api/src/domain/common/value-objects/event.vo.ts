@@ -8,4 +8,5 @@ export enum Event {
 	SECTION_STARTED = 'section.started',
 	LEARNING_PATH_COMPLETED = 'learning-path.completed',
 	LEARNING_PATH_STARTED = 'learning-path.started',
+	EXERCISE_COMPLETED = 'exercise.completed',
 }

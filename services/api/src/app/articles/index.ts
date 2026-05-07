@@ -2,3 +2,4 @@ export * from './commands';
 export * from './queries';
 export * from './dtos';
 export * from './helpers';
+export * from './events';

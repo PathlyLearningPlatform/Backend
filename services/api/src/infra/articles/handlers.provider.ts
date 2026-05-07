@@ -4,12 +4,12 @@ import {
 	FindArticleByIdHandler,
 	ListArticlesHandler,
 	CreateArticleHandler,
+	RemoveArticleHandler,
 } from '@app/articles';
-import type { ILessonRepository } from '@/domain/lessons/repositories';
 import { DiToken } from '@infra/common';
-import { PostgresLessonRepository } from '../lessons/postgres.repository';
 import { PostgresArticleRepository } from './postgres.repository';
 import { IArticleRepository } from '@/domain/articles/repositories';
+import { RemoveActivityHandler } from '@/app/activities/commands';
 
 export const articleHandlersProvider: Provider[] = [
 	// ──────────────────────────────────────────────
@@ -41,12 +41,16 @@ export const articleHandlersProvider: Provider[] = [
 	},
 	{
 		provide: DiToken.CREATE_ARTICLE_HANDLER,
-		useFactory(
-			lessonRepository: ILessonRepository,
-			articleRepository: IArticleRepository,
-		) {
-			return new CreateArticleHandler(lessonRepository, articleRepository);
+		useFactory(articleRepository: IArticleRepository) {
+			return new CreateArticleHandler(articleRepository);
 		},
-		inject: [PostgresLessonRepository, PostgresArticleRepository],
+		inject: [PostgresArticleRepository],
+	},
+	{
+		provide: DiToken.REMOVE_ARTICLE_HANDLER,
+		useFactory(articleRepository: IArticleRepository) {
+			return new RemoveArticleHandler(articleRepository);
+		},
+		inject: [PostgresArticleRepository],
 	},
 ];

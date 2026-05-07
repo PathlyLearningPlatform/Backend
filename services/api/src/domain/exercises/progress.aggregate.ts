@@ -1,4 +1,5 @@
 import { AggregateRoot, Url, UserId, UUID, RepositoryId } from '../common';
+import { ExerciseCompletedEvent } from './events';
 import {
 	ExerciseId,
 	ExerciseProgressId,
@@ -69,6 +70,13 @@ export class ExerciseProgress extends AggregateRoot<
 	}
 
 	complete(now: Date) {
+		if (this._props.completedAt === null) {
+			this.addEvent(
+				new ExerciseCompletedEvent(this._id.userId.toString(), now, {
+					exerciseId: this.exerciseId.primitive(),
+				}),
+			);
+		}
 		this._props.completedAt = now;
 		this._props.status = ExerciseStatus.COMPLETED;
 		this._props.updatedAt = now;

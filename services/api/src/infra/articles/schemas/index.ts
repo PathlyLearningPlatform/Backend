@@ -1,3 +1,1 @@
-export * from './create.schema';
-export * from './update.schema';
-export * from './fields.schema';
+export * from './list.schema';

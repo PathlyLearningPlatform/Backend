@@ -19,7 +19,7 @@ import {
 	UpdateExerciseHandler,
 	UpdateExerciseSubmissionHandler,
 } from '@app/exercises';
-import { DiToken } from '@infra/common';
+import { DiToken, InMemoryEventBus } from '@infra/common';
 import {
 	PostgresExerciseRepository,
 	PostgresExerciseProgressRepository,
@@ -30,6 +30,7 @@ import {
 	IExerciseProgressRepository,
 	IExerciseSubmissionRepository,
 } from '@/domain/exercises/repositories';
+import { IEventBus } from '@/app/common';
 
 export const exerciseHandlersProvider: Provider[] = [
 	{
@@ -118,15 +119,18 @@ export const exerciseHandlersProvider: Provider[] = [
 		useFactory(
 			exerciseProgressRepository: IExerciseProgressRepository,
 			exerciseSubmissionRepository: IExerciseSubmissionRepository,
+			eventBus: IEventBus,
 		) {
 			return new UpdateExerciseSubmissionHandler(
 				exerciseSubmissionRepository,
 				exerciseProgressRepository,
+				eventBus,
 			);
 		},
 		inject: [
 			PostgresExerciseProgressRepository,
 			PostgresExerciseSubmissionRepository,
+			InMemoryEventBus,
 		],
 	},
 	{

@@ -3,14 +3,11 @@ import { ArticleDto } from './dtos';
 
 export function aggregateToDto(aggregate: Article): ArticleDto {
 	return {
-		id: aggregate.id.value,
-		lessonId: aggregate.lessonId.value,
-		name: aggregate.name.value,
-		description: aggregate.description?.value ?? null,
+		id: aggregate.id.primitive(),
+		name: aggregate.name,
+		description: aggregate.description,
+		ref: aggregate.ref.value,
 		createdAt: aggregate.createdAt,
 		updatedAt: aggregate.updatedAt,
-		order: aggregate.order.value,
-		type: aggregate.type,
-		ref: aggregate.ref.value,
 	};
 }

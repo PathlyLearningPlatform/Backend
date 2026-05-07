@@ -1,8 +1,9 @@
 import { ArticleNotFoundException, type IQueryHandler } from '@/app/common';
-import { ActivityId } from '@/domain/activities';
 import type { ArticleDto } from '../dtos';
 import { aggregateToDto } from '../helpers';
 import { IArticleRepository } from '@/domain/articles/repositories';
+import { ArticleId } from '@/domain/articles';
+import { UUID } from '@/domain/common';
 
 type FindArticleByIdQuery = {
 	where: {
@@ -17,7 +18,7 @@ export class FindArticleByIdHandler
 	constructor(private readonly articleRepository: IArticleRepository) {}
 
 	async execute(query: FindArticleByIdQuery): Promise<FindArticleByIdResult> {
-		const articleId = ActivityId.create(query.where.id);
+		const articleId = ArticleId.create(UUID.create(query.where.id));
 		const article = await this.articleRepository.findById(articleId);
 
 		if (!article) {

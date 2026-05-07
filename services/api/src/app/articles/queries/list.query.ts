@@ -4,23 +4,16 @@ import { aggregateToDto } from '../helpers';
 import { IArticleRepository } from '@/domain/articles/repositories';
 
 type ListArticlesQuery = {
-	where?: {
-		lessonId?: string;
-	};
 	options?: OffsetPagination;
 };
-type ListArticlesResult = ArticleDto[];
 
 export class ListArticlesHandler
-	implements IQueryHandler<ListArticlesQuery, ListArticlesResult>
+	implements IQueryHandler<ListArticlesQuery, ArticleDto[]>
 {
 	constructor(private readonly articleRepository: IArticleRepository) {}
 
-	async execute(query: ListArticlesQuery): Promise<ListArticlesResult> {
+	async execute(query: ListArticlesQuery): Promise<ArticleDto[]> {
 		const articles = await this.articleRepository.list({
-			where: {
-				lessonId: query.where?.lessonId,
-			},
 			options: {
 				limit: query.options?.limit,
 				page: query.options?.page,

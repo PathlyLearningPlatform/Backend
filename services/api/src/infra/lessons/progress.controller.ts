@@ -18,6 +18,7 @@ import {
 	ApiNotFoundResponse,
 	ApiNotImplementedResponse,
 	ApiOkResponse,
+	ApiOperation,
 	ApiQuery,
 	ApiTags,
 } from '@nestjs/swagger';
@@ -167,6 +168,7 @@ export class LessonProgressController {
 		}
 	}
 
+	@ApiOperation({ deprecated: true })
 	@ApiConflictResponse({ type: HttpErrorDto })
 	@ApiNotFoundResponse({ type: HttpErrorDto })
 	@ApiOkResponse({ type: StartLessonResponseDto })

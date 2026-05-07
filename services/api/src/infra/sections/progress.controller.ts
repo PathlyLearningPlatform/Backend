@@ -18,6 +18,7 @@ import {
 	ApiNotFoundResponse,
 	ApiNotImplementedResponse,
 	ApiOkResponse,
+	ApiOperation,
 	ApiQuery,
 	ApiTags,
 } from '@nestjs/swagger';
@@ -170,6 +171,7 @@ export class SectionProgressController {
 	@ApiConflictResponse({ type: HttpErrorDto })
 	@ApiNotFoundResponse({ type: HttpErrorDto })
 	@ApiOkResponse({ type: StartSectionResponseDto })
+	@ApiOperation({ deprecated: true })
 	@Patch(':sectionId/start')
 	async start(
 		@Param('sectionId', ParseUUIDPipe) sectionId: string,

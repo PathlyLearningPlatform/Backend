@@ -1,5 +1,4 @@
 import {
-	Body,
 	Controller,
 	Get,
 	Inject,
@@ -7,37 +6,24 @@ import {
 	NotFoundException,
 	Param,
 	ParseUUIDPipe,
-	Patch,
-	Post,
+	Query,
 } from '@nestjs/common';
-import {
-	ApiBody,
-	ApiCreatedResponse,
-	ApiNotFoundResponse,
-	ApiOkResponse,
-	ApiTags,
-} from '@nestjs/swagger';
+import { ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { HttpErrorDto, HttpValidationPipe } from '@infra/common';
 import type {
-	UpdateArticleHandler,
 	FindArticleByIdHandler,
-	CreateArticleHandler,
+	ListArticlesHandler,
 } from '@/app/articles';
-import {
-	ActivityNotFoundException,
-	LessonNotFoundException,
-} from '@/app/common';
+import { ArticleNotFoundException } from '@/app/common';
 import { DiToken } from '@infra/common';
 import { ExceptionMessage } from '@infra/common';
 import {
-	CreateArticleDto,
-	UpdateArticleDto,
-	CreateArticleResponseDto,
 	FindArticleByIdResponseDto,
-	UpdateArticleResponseDto,
+	ListArticlesDto,
+	ListArticlesResponseDto,
 } from './dtos';
 import { clientArticleToResponseDto } from './helpers';
-import { createArticleSchema, updateArticlePropsSchema } from './schemas';
+import { listArticlesSchema } from './schemas';
 
 @ApiTags('articles')
 @Controller({
@@ -47,12 +33,34 @@ import { createArticleSchema, updateArticlePropsSchema } from './schemas';
 export class ArticlesController {
 	constructor(
 		@Inject(DiToken.FIND_ARTICLE_BY_ID_HANDLER)
-		private readonly findArticleByIdHandler: FindArticleByIdHandler,
-		@Inject(DiToken.CREATE_ARTICLE_HANDLER)
-		private readonly createArticleHandler: CreateArticleHandler,
-		@Inject(DiToken.UPDATE_ARTICLE_HANDLER)
-		private readonly updateArticleHandler: UpdateArticleHandler,
+		private readonly findByIdHandler: FindArticleByIdHandler,
+		@Inject(DiToken.LIST_ARTICLES_HANDLER)
+		private readonly listHandler: ListArticlesHandler,
 	) {}
+
+	@ApiOkResponse({ type: ListArticlesResponseDto })
+	@Get()
+	async list(
+		@Query(new HttpValidationPipe(listArticlesSchema)) query: ListArticlesDto,
+	): Promise<ListArticlesResponseDto> {
+		try {
+			const articles = await this.listHandler.execute({
+				options: {
+					limit: query.limit,
+					page: query.page,
+				},
+			});
+
+			return { data: articles.map(clientArticleToResponseDto) };
+		} catch (err) {
+			throw new InternalServerErrorException(
+				new HttpErrorDto(ExceptionMessage.INTERNAL_ERROR),
+				{
+					cause: err,
+				},
+			);
+		}
+	}
 
 	@ApiOkResponse({ type: FindArticleByIdResponseDto })
 	@ApiNotFoundResponse({ type: HttpErrorDto })
@@ -61,7 +69,7 @@ export class ArticlesController {
 		@Param('id', ParseUUIDPipe) id: string,
 	): Promise<FindArticleByIdResponseDto> {
 		try {
-			const result = await this.findArticleByIdHandler.execute({
+			const result = await this.findByIdHandler.execute({
 				where: { id },
 			});
 
@@ -69,82 +77,9 @@ export class ArticlesController {
 				article: clientArticleToResponseDto(result),
 			};
 		} catch (err) {
-			if (err instanceof ActivityNotFoundException) {
+			if (err instanceof ArticleNotFoundException) {
 				throw new NotFoundException(
-					new HttpErrorDto(ExceptionMessage.ACTIVITY_NOT_FOUND),
-				);
-			}
-
-			throw new InternalServerErrorException(
-				new HttpErrorDto(ExceptionMessage.INTERNAL_ERROR),
-				{
-					cause: err,
-				},
-			);
-		}
-	}
-
-	@ApiBody({ type: CreateArticleDto })
-	@ApiNotFoundResponse({ type: HttpErrorDto })
-	@ApiCreatedResponse({ type: CreateArticleResponseDto })
-	@Post()
-	async create(
-		@Body(new HttpValidationPipe(createArticleSchema))
-		body: CreateArticleDto,
-	): Promise<CreateArticleResponseDto> {
-		try {
-			const result = await this.createArticleHandler.execute({
-				name: body.name,
-				description: body.description,
-				lessonId: body.lessonId,
-				ref: body.ref,
-			});
-
-			return {
-				article: clientArticleToResponseDto(result),
-			};
-		} catch (err) {
-			if (err instanceof LessonNotFoundException) {
-				throw new NotFoundException(
-					new HttpErrorDto(ExceptionMessage.LESSON_NOT_FOUND),
-				);
-			}
-
-			throw new InternalServerErrorException(
-				new HttpErrorDto(ExceptionMessage.INTERNAL_ERROR),
-				{
-					cause: err,
-				},
-			);
-		}
-	}
-
-	@ApiBody({ type: UpdateArticleDto })
-	@ApiOkResponse({ type: UpdateArticleResponseDto })
-	@ApiNotFoundResponse({ type: HttpErrorDto })
-	@Patch(':id')
-	async update(
-		@Param('id', ParseUUIDPipe) id: string,
-		@Body(new HttpValidationPipe(updateArticlePropsSchema))
-		body: UpdateArticleDto,
-	): Promise<UpdateArticleResponseDto> {
-		try {
-			const result = await this.updateArticleHandler.execute({
-				where: { id },
-				props: {
-					name: body.name,
-					description: body.description,
-					ref: body.ref,
-				},
-			});
-
-			return {
-				article: clientArticleToResponseDto(result),
-			};
-		} catch (err) {
-			if (err instanceof ActivityNotFoundException) {
-				throw new NotFoundException(
-					new HttpErrorDto(ExceptionMessage.ACTIVITY_NOT_FOUND),
+					new HttpErrorDto(ExceptionMessage.ARTICLE_NOT_FOUND),
 				);
 			}
 

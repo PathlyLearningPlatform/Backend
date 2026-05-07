@@ -1,10 +1,7 @@
-import { ActivityId } from '@/domain/activities';
 import { Article } from '../article.aggregate';
+import { ArticleId } from '../value-objects';
 
 export type ListArticlesOptions = Partial<{
-	where: Partial<{
-		lessonId: string;
-	}>;
 	options: Partial<{
 		limit: number;
 		page: number;
@@ -14,9 +11,9 @@ export type ListArticlesOptions = Partial<{
 export interface IArticleRepository {
 	list(options?: ListArticlesOptions): Promise<Article[]>;
 
-	findById(id: ActivityId): Promise<Article | null>;
+	findById(id: ArticleId): Promise<Article | null>;
 
 	save(aggregate: Article): Promise<void>;
 
-	remove(id: ActivityId): Promise<boolean>;
+	remove(id: ArticleId): Promise<boolean>;
 }

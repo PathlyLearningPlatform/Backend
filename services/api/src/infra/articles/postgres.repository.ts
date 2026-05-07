@@ -1,16 +1,15 @@
 import { DbService } from '@/infra/db/db.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { DbException } from '@infra/common';
-import { and, eq } from 'drizzle-orm';
-import { ActivityId } from '@/domain/activities/value-objects';
+import { eq } from 'drizzle-orm';
 import type { Db } from '@/infra/db/types';
-import { activitiesTable, articlesTable } from '../db/schemas';
+import { articlesTable } from '../db/schemas';
 import { ActivitiesApiConstraints } from '../activities/enums';
 import {
 	IArticleRepository,
 	ListArticlesOptions,
 } from '@/domain/articles/repositories';
-import { Article } from '@/domain/articles';
+import { Article, ArticleId } from '@/domain/articles';
 
 @Injectable()
 export class PostgresArticleRepository implements IArticleRepository {
@@ -20,30 +19,23 @@ export class PostgresArticleRepository implements IArticleRepository {
 		this.db = this.dbService.getDb();
 	}
 
-	async findById(id: ActivityId): Promise<Article | null> {
+	async findById(id: ArticleId): Promise<Article | null> {
 		try {
-			const [activity] = await this.db
-				.select()
-				.from(activitiesTable)
-				.where(eq(activitiesTable.id, id.value));
-
 			const [article] = await this.db
 				.select()
 				.from(articlesTable)
-				.where(eq(articlesTable.activityId, id.value));
+				.where(eq(articlesTable.id, id.primitive()));
 
-			if (!activity || !article) {
+			if (!article) {
 				return null;
 			}
 
 			return Article.fromDataSource({
-				id: id.value,
-				lessonId: activity.lessonId,
-				createdAt: activity.createdAt,
-				updatedAt: activity.updatedAt,
-				name: activity.name,
-				description: activity.description,
-				order: activity.order,
+				id: article.id,
+				createdAt: article.createdAt,
+				updatedAt: article.updatedAt,
+				name: article.name,
+				description: article.description,
 				ref: article.ref,
 			});
 		} catch (err) {
@@ -60,43 +52,21 @@ export class PostgresArticleRepository implements IArticleRepository {
 		try {
 			const result = await this.db
 				.select()
-				.from(activitiesTable)
-				.innerJoin(
-					articlesTable,
-					eq(activitiesTable.id, articlesTable.activityId),
-				)
-				.where(
-					and(
-						options?.where?.lessonId
-							? eq(activitiesTable.lessonId, options.where.lessonId)
-							: undefined,
-					),
-				)
+				.from(articlesTable)
 				.limit(limit)
 				.offset(limit * page);
 
-			return result.map((item) =>
-				Article.fromDataSource({
-					id: item.articles.activityId,
-					createdAt: item.activities.createdAt,
-					description: item.activities.description,
-					lessonId: item.activities.lessonId,
-					name: item.activities.name,
-					order: item.activities.order,
-					ref: item.articles.ref,
-					updatedAt: item.activities.updatedAt,
-				}),
-			);
+			return result.map(Article.fromDataSource);
 		} catch (err) {
 			throw new DbException('postgres exception', err);
 		}
 	}
 
-	async remove(id: ActivityId): Promise<boolean> {
+	async remove(id: ArticleId): Promise<boolean> {
 		try {
 			const result = await this.db
-				.delete(activitiesTable)
-				.where(eq(activitiesTable.id, id.value));
+				.delete(articlesTable)
+				.where(eq(articlesTable.id, id.primitive()));
 
 			return result.rows.length > 0;
 		} catch (err) {
@@ -106,39 +76,25 @@ export class PostgresArticleRepository implements IArticleRepository {
 
 	async save(aggregate: Article): Promise<void> {
 		try {
-			await this.db.transaction(async (tx) => {
-				await tx
-					.insert(activitiesTable)
-					.values({
-						id: aggregate.id.value,
-						lessonId: aggregate.lessonId.value,
-						name: aggregate.name.value,
-						description: aggregate.description?.value ?? null,
-						order: aggregate.order.value,
-						type: aggregate.type,
-						createdAt: aggregate.createdAt,
-						updatedAt: aggregate.updatedAt,
-					})
-					.onConflictDoUpdate({
-						target: activitiesTable.id,
-						set: {
-							name: aggregate.name.value,
-							description: aggregate.description?.value ?? null,
-							order: aggregate.order.value,
-							updatedAt: aggregate.updatedAt,
-						},
-					});
-
-				await tx
-					.insert(articlesTable)
-					.values({
+			await this.db
+				.insert(articlesTable)
+				.values({
+					id: aggregate.id.primitive(),
+					name: aggregate.name,
+					description: aggregate.description,
+					createdAt: aggregate.createdAt,
+					updatedAt: aggregate.updatedAt,
+					ref: aggregate.ref.value,
+				})
+				.onConflictDoUpdate({
+					target: articlesTable.id,
+					set: {
+						name: aggregate.name,
+						description: aggregate.description,
 						ref: aggregate.ref.value,
-						activityId: aggregate.id.value,
-					})
-					.onConflictDoNothing({
-						target: articlesTable.activityId,
-					});
-			});
+						updatedAt: aggregate.updatedAt,
+					},
+				});
 		} catch (err) {
 			throw new DbException('postgres exception', err);
 		}
