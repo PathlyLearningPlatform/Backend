@@ -164,26 +164,4 @@ export class ActivitiesController {
 			);
 		}
 	}
-
-	@ApiOkResponse()
-	@ApiNotFoundResponse({ type: HttpErrorDto })
-	@Delete(':id')
-	async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
-		try {
-			await this.removeActivityHandler.execute({ activityId: id });
-		} catch (err) {
-			if (err instanceof ActivityNotFoundException) {
-				throw new NotFoundException(
-					new HttpErrorDto(ExceptionMessage.ACTIVITY_NOT_FOUND),
-				);
-			}
-
-			throw new InternalServerErrorException(
-				new HttpErrorDto(ExceptionMessage.INTERNAL_ERROR),
-				{
-					cause: err,
-				},
-			);
-		}
-	}
 }

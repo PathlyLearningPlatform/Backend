@@ -3,6 +3,7 @@ import {
 	CompleteActivityHandler,
 	RemoveActivityHandler,
 	RemoveActivityProgressHandler,
+	UpdateActivityHandler,
 } from '@/app/activities/commands';
 import {
 	FindActivityByIdHandler,
@@ -14,7 +15,10 @@ import {
 } from '@/app/activities/queries';
 import { FindCurrentActivityHandler } from '@/app/activities/queries/find-current.query';
 import type { IEventBus } from '@/app/common';
-import { ReorderActivityHandler } from '@/app/lessons/commands';
+import {
+	AddActivityHandler,
+	ReorderActivityHandler,
+} from '@/app/lessons/commands';
 import type {
 	IActivityProgressRepository,
 	IActivityRepository,
@@ -27,7 +31,6 @@ import { PostgresActivityRepository } from './postgres.repository';
 import { PostgresActivityProgressRepository } from './postgres-progress.repository';
 import { PostgresLessonProgressRepository } from '../lessons/postgres-progress.repository';
 import type { ILessonProgressRepository } from '@/domain/lessons/repositories';
-import { OnActivityCompletedHandler } from '@/app/activities/events';
 
 export const activityHandlersProvider: Provider[] = [
 	// ──────────────────────────────────────────────
@@ -85,6 +88,23 @@ export const activityHandlersProvider: Provider[] = [
 	// ──────────────────────────────────────────────
 	// Commands
 	// ──────────────────────────────────────────────
+	{
+		provide: DiToken.ADD_ACTIVITY_HANDLER,
+		useFactory(
+			activityRepository: IActivityRepository,
+			lessonRepository: ILessonRepository,
+		) {
+			return new AddActivityHandler(activityRepository, lessonRepository);
+		},
+		inject: [PostgresActivityRepository, PostgresLessonRepository],
+	},
+	{
+		provide: DiToken.UPDATE_ACTIVITY_HANDLER,
+		useFactory(activityRepository: IActivityRepository) {
+			return new UpdateActivityHandler(activityRepository);
+		},
+		inject: [PostgresActivityRepository],
+	},
 	{
 		provide: DiToken.REMOVE_ACTIVITY_HANDLER,
 		useFactory(
