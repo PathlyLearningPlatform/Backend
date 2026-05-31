@@ -36,7 +36,7 @@ After starting the backend in development mode following services will be availa
 
 | Service         | URL                        | Technology   |
 | --------------- | -------------------------- | ------------ |
-| db              | http://localhost:5173      | postgres     |
+| db              | http://localhost:5432      | postgres     |
 | graph-db        | http://localhost:7474      | neo4j        |
 | auth            | http://localhost:8080      | keycloak     |
 | api             | http://localhost:3000      | nodejs       |

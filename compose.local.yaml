@@ -71,14 +71,14 @@ services:
       - path: ./services/api/.env.example
         required: true
     volumes:
-      - ./services/api/src:/usr/src/app/services/api/src
-      - ./services/api/test:/usr/src/app/services/api/test
+      - ./services/api/src:/usr/src/app/src
+      - ./services/api/test:/usr/src/app/test
       - type: bind
         source: ./services/api/tsconfig.json
-        target: /usr/src/app/services/api/tsconfig.json
+        target: /usr/src/app/tsconfig.json
       - type: bind
         source: ./services/api/jest.config.ts
-        target: /usr/src/app/services/api/jest.config.ts
+        target: /usr/src/app/jest.config.ts
     depends_on:
       db:
         condition: service_healthy
