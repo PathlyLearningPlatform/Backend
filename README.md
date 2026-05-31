@@ -1,10 +1,6 @@
-# What is in this repository
+# What This Repository
 
-# Services
-
-# Libraries
-
-# Documentation
+This repository is a backend for Pathly written in Nestjs and Typescript.
 
 # How to run
 
@@ -32,10 +28,24 @@
 - open project root directory in terminal of your choice
 - run `.\scripts\win\start.bat`
 
-# For Developers
+# Services
 
-If you are a backend developer see [dev guide](./docs/dev/dev-guide.md).
+## Development
 
-[Collaboration](./collaboration.md)
+After starting the backend in development mode following services will be available:
 
-[git](./git.md)
+| Service         | URL                        | Technology   |
+| --------------- | -------------------------- | ------------ |
+| db              | http://localhost:5173      | postgres     |
+| graph-db        | http://localhost:7474      | neo4j        |
+| auth            | http://localhost:8080      | keycloak     |
+| api             | http://localhost:3000      | nodejs       |
+| reverse-proxy   | http://localhost:4000      | nginx        |
+
+### Api
+
+Swagger UI: http://localhost:3000/docs
+
+JSON OpenApi Spec: http://localhost:3000/docs/json
+
+YAML OpenApi Spec: http://localhost:3000/docs/yaml
