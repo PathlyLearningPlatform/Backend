@@ -63,8 +63,7 @@ services:
         - 8080:8080
   api:
     build:
-      context: .
-      dockerfile: ./services/api/Dockerfile
+      context: ./services/api
       target: dev
     env_file:
       - path: ./services/api/.env
